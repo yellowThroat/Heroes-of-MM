@@ -21,7 +21,7 @@ HRESULT mainGame::init(void)
 	SCENEMANAGER->addScene("mainMenu", new mainMenu);
 	SCENEMANAGER->addScene("mapTool", new mapTool);
 
-	SCENEMANAGER->changeScene("mainMenu");
+	SCENEMANAGER->changeScene("mapTool");
 
 
 

@@ -51,13 +51,13 @@ void timeManager::render(HDC hdc)
 #ifdef _DEBUG
 	{
 		wsprintf(str, "framePerSec(FPS) : %d", _timer->getFrameRate());
-		TextOut(hdc, 0, 0, str, strlen(str));
+		TextOut(hdc, 20, 20, str, strlen(str));
 
 		sprintf_s(str, "worldTime : %f", _timer->getWorldTime());
-		TextOut(hdc, 0, 20, str, strlen(str));
+		TextOut(hdc, 20, 40, str, strlen(str));
 
 		sprintf_s(str, "elapsedTime : %f", _timer->getElapsedTime());
-		TextOut(hdc, 0, 40, str, strlen(str));
+		TextOut(hdc, 20, 60, str, strlen(str));
 
 	}
 #else

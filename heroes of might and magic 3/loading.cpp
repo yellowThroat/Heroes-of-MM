@@ -111,8 +111,9 @@ loading::~loading(){}
 
 HRESULT loading::init()
 {
-	_background = IMAGEMANAGER->addImage("", "image/.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
-
+	_background = IMAGEMANAGER->addImage("loadingBackground", "image/ui/loadingBackground.bmp", 800, WINSIZEY, true, RGB(255, 0, 255));
+	_backgroundS = IMAGEMANAGER->addImage("loadingBackgroundS", "image/ui/mainMenuSecond.bmp", 300, WINSIZEY, true, RGB(255, 00, 255));
+	_backgroundS->setX(800);
 	_loadingBar = new progressBar;
 	_loadingBar->init("image/", "image/", WINSIZEX / 2, WINSIZEY - 20, WINSIZEX, 20);
 	_loadingBar->setGauge(0, 0);
@@ -131,8 +132,9 @@ void loading::update()
 }
 void loading::render() 
 {
-	_background->render(getMemDC(), 0, 0);
-	_loadingBar->render();
+	_background->render(getMemDC());
+	_backgroundS->render(getMemDC());
+	//_loadingBar->render();
 }
 
 void loading::loadImage(string keyName, int width, int height)																										 
@@ -187,6 +189,8 @@ void loading::loadSound(string keyName, const char* fileName, bool bgm, bool loo
 BOOL loading::loadingDone()
 {
 	//로딩이 끝났으면 다됐다고 전해라~
+	
+
 	if (_currentGauge >= _vLoadItem.size())
 	{
 		return TRUE;

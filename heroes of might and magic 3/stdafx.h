@@ -36,7 +36,7 @@ using namespace IOTA_UTIL;
 #define WINNAME (LPTSTR)(TEXT("Iota Team"))
 #define WINSTARTX 50
 #define WINSTARTY 10
-#define WINSIZEX 800 + 300 
+#define WINSIZEX 1100
 #define WINSIZEY 600 
 #define WINSTYLE WS_CAPTION | WS_SYSMENU
 
