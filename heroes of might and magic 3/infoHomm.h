@@ -6,6 +6,7 @@
 
 #define MINISIZE (216 / MAXTILE)
 
+
 enum TILE
 {
 	TILE_GREEN,
@@ -19,8 +20,8 @@ enum TILE
 enum ROAD
 {
 	ROAD_NORMAL,
-	ROAD_VOLCANO,
-	ROAD_WATER,
+	ROAD_ROCK,
+	ROAD_RIVER,
 	ROAD_END
 };
 
@@ -47,6 +48,7 @@ enum EVENT
 	EV_LUCK,
 	EV_SKILL,
 	EV_MAGIC,
+	EV_NULL,
 	EV_END
 };
 
@@ -59,6 +61,7 @@ enum MINE
 	MINE_SULFUR,
 	MINE_MERCURY,
 	MINE_GEM,
+	MINE_NULL,
 	MINE_END
 };
 
@@ -66,6 +69,7 @@ enum CAMP
 {
 	CAMP_CASTLE,
 	CAMP_DUNGEON,
+	CAMP_NULL,
 	CAMP_END
 };
 
@@ -76,17 +80,29 @@ enum TILEVIEW
 	TILEVIEW_END
 };
 
-enum CATEGORY
+typedef enum CATEGORY
 {
-	CATE_NULL,
 	CATE_TILE,
 	CATE_ROAD,
-	CATE_OBSTACLE,
+	CATE_BUILDING,
 	CATE_UNIT,
 	CATE_RESOURCE,
 	CATE_OBJ,
+	CATE_NULL,
 	CATE_END
-};
+}FIRST;
+
+typedef enum SMALLCATE
+{
+	SMC_ZERO,
+	SMC_ONE,
+	SMC_TWO,
+	SMC_THREE,
+	SMC_FOUR,
+	SMC_FIVE,
+	SMC_NULL,
+	SMC_END
+}SECOND;
 
 struct tagTileInfo
 {
@@ -109,6 +125,23 @@ struct tagRoadInfo
 	int destX, destY;
 
 };
+
+
+typedef struct tagBuildingInfo
+{
+	CAMP camp;
+	EVENT ev;
+	MINE mine;
+	image* img;
+	image* imgShadow;
+	int sourX, sourY;
+	int sizeX, sizeY;
+	int destX, destY;
+	int miniX;
+	bool move;
+
+
+}building;
 
 
 struct tagObjInfo

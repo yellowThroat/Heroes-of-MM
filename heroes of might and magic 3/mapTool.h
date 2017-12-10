@@ -3,21 +3,24 @@
 #define INPUTDELAY 8
 
 #include "gameNode.h"
-#include "loading.h"
 
 class mapTool : public gameNode
 {
 private:
 	vector<POINT> _vSaveCor;
 	vector<POINT>::iterator _viSaveCor;
+	
+	vector<building> _vBuild;
+	vector<building>::iterator _viBuild;
 
 private:
-	loading* _loading;
 
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
-	CATEGORY _categoryNum;
+	
+	FIRST _categoryLarge;
+	SECOND _categorySmall;
 	POINT _mouseArr;
 	POINT _saveIndex;
 	RECT _corX[MAXTILE], _corY[MAXTILE];
@@ -26,6 +29,7 @@ private:
 	RECT _largeCategory;
 	RECT _smallCategory;
 	RECT _contents;
+
 private:
 	float _mapX, _mapY;
 
@@ -42,11 +46,7 @@ private:
 	int _inputDelayX, _inputDelayY;
 	int _saveX, _saveY;
 	int _saveAreaX, _saveAreaY;
-	int _smallNum;
 	int _brushNum;
-	int _tileNum;
-	int _roadNum;
-	int _eraseNum;
 	int _page;
 	
 
@@ -56,24 +56,36 @@ public:
 	void release(void);
 	void update(void);
 	void render(void);
-	void tileDraw(void);
-	void miniDraw(void);
-	void buttonDraw(void);
-	void selectDraw(void);
-	void roadDraw(void);
-	void deleteAll(int arrX, int arrY);
+	
+
+	//=============== D R A W ===============
+	void tileDraw(void);			// TILE
+	void miniDraw(void);			// MINIMAP
+	void buttonDraw(void);			// BUTTON
+	void selectDraw(void);			// SELECT CURSOR
+	void buildingDraw(void);		// BUILDING
+	void roadDraw(void);			// ROAD
+
+	//=============== S E T T I N G ========
+	void setCor(void);
+	void cameraMove(void);
+	void keyControl(void);
+	void setButton(void);
+	void minimapMove(void);
+	void loadImg(void);
 
 
-
+	//=============== C O N T E N T S ===============
 	void setTile(int arrX, int arrY, TILE tile);
 	void setRoad(int arrX, int arrY, ROAD road);
-	void setCor(void);
-	void keyControl(void);
-	void cameraMove(void);
-	void minimapMove(void);
-	void setButton(void);
-	
-	void loadImg(void);
+	void deleteAll(int arrX, int arrY);
+	void addBuilding(int arrX, int arrY, CAMP camp);
+	void addBuilding(int arrX, int arrY, MINE mine);
+	void addBuilding(int arrX, int arrY, EVENT ev);
+
+
+
+
 
 
 
