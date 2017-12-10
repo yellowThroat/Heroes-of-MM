@@ -16,6 +16,7 @@ private:
 
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
+	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
 	CATEGORY _categoryNum;
 	POINT _mouseArr;
 	POINT _saveIndex;
@@ -31,6 +32,7 @@ private:
 	bool _clickUI;
 	bool _area;
 	bool _foldMini;
+	bool _erase;
 
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];
@@ -43,6 +45,8 @@ private:
 	int _smallNum;
 	int _brushNum;
 	int _tileNum;
+	int _roadNum;
+	int _eraseNum;
 	int _page;
 	
 
@@ -56,9 +60,13 @@ public:
 	void miniDraw(void);
 	void buttonDraw(void);
 	void selectDraw(void);
+	void roadDraw(void);
+	void deleteAll(int arrX, int arrY);
+
 
 
 	void setTile(int arrX, int arrY, TILE tile);
+	void setRoad(int arrX, int arrY, ROAD road);
 	void setCor(void);
 	void keyControl(void);
 	void cameraMove(void);

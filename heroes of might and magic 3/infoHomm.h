@@ -2,7 +2,7 @@
 
 #define TILESIZE 32
 
-#define MAXTILE 36
+#define MAXTILE 72
 
 #define MINISIZE (216 / MAXTILE)
 
@@ -10,10 +10,20 @@ enum TILE
 {
 	TILE_GREEN,
 	TILE_WATER,
+	TILE_VOLCANO,
 	TILE_SNOW,
 	TILE_NONE,
 	TILE_END
 };
+
+enum ROAD
+{
+	ROAD_NORMAL,
+	ROAD_VOLCANO,
+	ROAD_WATER,
+	ROAD_END
+};
+
 
 enum MAPOBJECT
 {
@@ -62,7 +72,8 @@ enum CAMP
 enum TILEVIEW
 {
 	TILEVIEW_DARK,
-	TILEVIEW_
+	TILEVIEW_BRIGHT,
+	TILEVIEW_END
 };
 
 enum CATEGORY
@@ -88,6 +99,17 @@ struct tagTileInfo
 	int miniX, miniY;
 
 };
+
+struct tagRoadInfo
+{
+	ROAD road;
+	image* img;
+	bool isChanged;
+	int sourX, sourY;
+	int destX, destY;
+
+};
+
 
 struct tagObjInfo
 {
@@ -120,3 +142,5 @@ struct tagObjInfo
 #define UP			LEFTTOP			+ MIDDLETOP		+ RIGHTTOP
 #define DOWN		LEFTBOTTOM		+ MIDDLEBOTTOM	+ RIGHTBOTTOM
 
+//========= ±æ Á¤ ¸® ==============
+#define ALL			LEFTMIDDLE		+ MIDDLETOP		+ RIGHTMIDDLE	+ MIDDLEBOTTOM
