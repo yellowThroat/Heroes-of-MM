@@ -284,6 +284,17 @@ void mapTool::selectDraw(void)
 				IMAGEMANAGER->findImage("building_castle_shadow")->alphaFrameRender(getMemDC(),
 					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
 					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,SHADOWALPHA);
+
+				for (int i = 0; i < 6; i++)
+				{
+					for (int j = 0; j < 6; j++)
+					{
+						if(_mapArr[_mouseArr.x -2 +i][_mouseArr.y -2 +j].tile == TILE_WATER)
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 2 + j)*TILESIZE - _mapY,150);
+					}
+				}
 				break;
 			case 1:
 				IMAGEMANAGER->findImage("point_dungeon")->render(getMemDC(),
@@ -292,10 +303,128 @@ void mapTool::selectDraw(void)
 				IMAGEMANAGER->findImage("building_dungeon_shadow")->alphaFrameRender(getMemDC(),
 					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
 					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,SHADOWALPHA);
+
+				for (int i = 0; i < 6; i++)
+				{
+					for (int j = 0; j < 6; j++)
+					{
+						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y - 2 + j].tile == TILE_WATER)
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 2 + j)*TILESIZE - _mapY, 150);
+					}
+				}
+
 				break;
 			}
 			break;
 		case SMC_ONE:
+			switch (_saveIndex.y)
+			{
+			case 0:
+				switch (_saveIndex.x)
+				{
+				case 0:
+					IMAGEMANAGER->findImage("mine_gold")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);					
+					break;
+				case 1:
+					IMAGEMANAGER->findImage("mine_crystal")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					break;
+				case 2:
+					IMAGEMANAGER->findImage("mine_wood")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+					break;
+				case 3:
+					IMAGEMANAGER->findImage("mine_iron")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					break;
+				}
+				break;
+			case 1:
+				switch (_saveIndex.x)
+				{
+				case 0:
+					IMAGEMANAGER->findImage("mine_sulfur")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					break;
+				case 1:
+					IMAGEMANAGER->findImage("mine_mercury")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					break;
+				case 2:
+					IMAGEMANAGER->findImage("mine_gem")->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					break;
+				case 3:
+					break;
+				}
+
+				break;
+			}
+
+			//============ 3 * 2 사이즈 금지 구역 표시
+			if ((_saveIndex.x + _saveIndex.y * 4) != 5 &&
+				(_saveIndex.x + _saveIndex.y * 4) != 2 &&
+				(_saveIndex.x + _saveIndex.y * 4) != 7)
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 2; j++)
+				{
+					if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+						IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+							20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
+				}
+			}
+			if ((_saveIndex.x + _saveIndex.y * 4) != 5 &&
+				(_saveIndex.x + _saveIndex.y * 4) != 2 &&
+				(_saveIndex.x + _saveIndex.y * 4) != 7)
+				for (int i = 0; i < 3; i++)
+				{
+					for (int j = 0; j < 2; j++)
+					{
+						if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
+					}
+				}
+
+			//============== 3 * 3 사이즈 금지 구역 표시 
+			if ((_saveIndex.x + _saveIndex.y * 4) == 5 )
+				for (int i = 0; i < 3; i++)
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
+					}
+				}
+			//============== 4 * 2 사이즈 금지 구역 표시 
+			if ((_saveIndex.x + _saveIndex.y * 4) == 2)
+				for (int i = 0; i < 4; i++)
+				{
+					for (int j = 0; j < 2; j++)
+					{
+						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
+					}
+				}
+
+
 			break;
 		case SMC_TWO:
 			break;
@@ -511,6 +640,7 @@ void mapTool::buildingDraw(void)
 				20 + _viBuild->destY * TILESIZE- _mapY,
 				_viBuild->sourX, _viBuild->sourY);
 
+			if(_viBuild->mine != MINE_IRON)
 			_viBuild->imgShadow->alphaFrameRender(getMemDC(),
 				20 + _viBuild->destX* TILESIZE - _mapX,
 				20 + _viBuild->destY* TILESIZE - _mapY,
@@ -631,6 +761,9 @@ void mapTool::buttonDraw(void)
 		IMAGEMANAGER->findImage("button_camp")->frameRender(getMemDC(),
 			_smallCategory.left, _smallCategory.top);
 
+		IMAGEMANAGER->findImage("button_mine")->frameRender(getMemDC(),
+			_smallCategory.left + 42, _smallCategory.top);
+
 		IMAGEMANAGER->findImage("erase")->frameRender(getMemDC(),
 			 _smallCategory.right - 74, _smallCategory.top);
 
@@ -646,7 +779,21 @@ void mapTool::buttonDraw(void)
 				_contents.left + 118, _contents.top);
 			break;
 		case SMC_ONE:
-			break;
+				IMAGEMANAGER->findImage("button_gold")->frameRender(getMemDC(),
+					_contents.left - 10, _contents.top);
+				IMAGEMANAGER->findImage("button_crystal")->frameRender(getMemDC(),
+					_contents.left + 54, _contents.top);
+				IMAGEMANAGER->findImage("button_wood")->frameRender(getMemDC(),
+					_contents.left + 118, _contents.top);
+				IMAGEMANAGER->findImage("button_iron")->frameRender(getMemDC(),
+					_contents.left + 182, _contents.top);
+				IMAGEMANAGER->findImage("button_sulfur")->frameRender(getMemDC(),
+					_contents.left - 10, _contents.top + 64);
+				IMAGEMANAGER->findImage("button_mercury")->frameRender(getMemDC(),
+					_contents.left + 54, _contents.top + 64);
+				IMAGEMANAGER->findImage("button_gem")->frameRender(getMemDC(),
+					_contents.left + 118, _contents.top + 64);
+				break;
 		case SMC_TWO:
 			break;
 		case SMC_THREE:
@@ -764,14 +911,56 @@ void mapTool::setButton(void)
 		if (_categorySmall == SMC_ZERO) IMAGEMANAGER->findImage("button_camp")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_camp")->setFrameX(1);
 	
+		if (_categorySmall == SMC_ONE) IMAGEMANAGER->findImage("button_mine")->setFrameX(0);
+		else IMAGEMANAGER->findImage("button_mine")->setFrameX(1);
+		
 		if (_categorySmall == SMC_FIVE) IMAGEMANAGER->findImage("move")->setFrameX(0);
 		else IMAGEMANAGER->findImage("move")->setFrameX(1);
 
-		if (_saveIndex.x == 0) IMAGEMANAGER->findImage("button_castle")->setFrameX(0);
-		else IMAGEMANAGER->findImage("button_castle")->setFrameX(1);
+		switch (_categorySmall)
+		{
+		case SMC_ZERO:
+			if (_saveIndex.x == 0) IMAGEMANAGER->findImage("button_castle")->setFrameX(0);
+			else IMAGEMANAGER->findImage("button_castle")->setFrameX(1);
 		
-		if (_saveIndex.x == 1) IMAGEMANAGER->findImage("button_dungeon")->setFrameX(0);
-		else IMAGEMANAGER->findImage("button_dungeon")->setFrameX(1);
+			if (_saveIndex.x == 1) IMAGEMANAGER->findImage("button_dungeon")->setFrameX(0);
+			else IMAGEMANAGER->findImage("button_dungeon")->setFrameX(1);
+
+			break;
+		case SMC_ONE:
+				if (_saveIndex.x == 0 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_gold")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_gold")->setFrameX(1);
+				
+				if (_saveIndex.x == 1 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_crystal")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_crystal")->setFrameX(1);
+				
+				if (_saveIndex.x == 2 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_wood")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_wood")->setFrameX(1);
+				
+				if (_saveIndex.x == 3 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_iron")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_iron")->setFrameX(1);
+
+				if (_saveIndex.x == 0 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_sulfur")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_sulfur")->setFrameX(1);
+				
+				if (_saveIndex.x == 1 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_mercury")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_mercury")->setFrameX(1);
+				
+				if (_saveIndex.x == 2 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_gem")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_gem")->setFrameX(1);
+
+				
+
+			break;
+
+		}
 
 	break;
 
@@ -1168,6 +1357,88 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 
 }
 
+void mapTool::addBuilding(int arrX, int arrY, MINE mine)
+{
+	building build;
+
+	build.mine = mine;
+	build.sourX = 0;
+	build.sourY = 0;
+	build.miniX = 1;
+	build.move = false;
+	switch (build.mine)
+	{
+	case MINE_GOLD:
+		build.img = IMAGEMANAGER->findImage("mine_gold");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_gold_shadow");
+		build.sizeX = 3;
+		build.sizeY = 2;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		break;
+	case MINE_CRYSTAL:
+		build.img = IMAGEMANAGER->findImage("mine_crystal");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_crystal_shadow");
+		build.sizeX = 3;
+		build.sizeY = 2;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		break;
+	case MINE_WOOD:
+		build.img = IMAGEMANAGER->findImage("mine_wood");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_wood_shadow");
+		build.sizeX = 4;
+		build.sizeY = 3;
+		build.destX = arrX - 2;
+		build.destY = arrY - 1;
+		break;
+	case MINE_IRON:
+		build.img = IMAGEMANAGER->findImage("mine_iron");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_iron_shadow");
+		build.sizeX = 3;
+		build.sizeY = 2;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		break;
+	case MINE_SULFUR:
+		build.img = IMAGEMANAGER->findImage("mine_sulfur");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_sulfur_shadow");
+		build.sizeX = 3;
+		build.sizeY = 2;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		break;
+	case MINE_MERCURY:
+		build.img = IMAGEMANAGER->findImage("mine_gold");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_gold_shadow");
+		build.sizeX = 3;
+		build.sizeY = 3;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		break;
+	case MINE_GEM:
+		build.img = IMAGEMANAGER->findImage("mine_gem");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_gem_shadow");
+		build.sizeX = 3;
+		build.sizeY = 2;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		break;
+	}
+
+	for (int i = 0; i < build.sizeX; i++)
+	{
+		for (int j = 0; j < build.sizeY; j++)
+		{
+			if (_mapArr[build.destX + i][build.destY + j].tile == TILE_WATER) return;
+		}
+	}
+
+	if (build.destX< 0 || build.destX + build.sizeX - 1 > MAXTILE ||
+		build.destY< 0 || build.destY + build.sizeY - 1 > MAXTILE)  return;
+	
+	_vBuild.push_back(build);
+}
 
 void mapTool::setTile(int arrX, int arrY, TILE tile)
 {
@@ -1704,7 +1975,7 @@ void mapTool::inputCommon(void)
 			{
 				_page++;
 
-				int maxPage = 0;;
+				int maxPage = 0;
 				switch (_categoryLarge)
 				{
 				case CATE_TILE:
@@ -1713,6 +1984,22 @@ void mapTool::inputCommon(void)
 				case CATE_ROAD:
 					maxPage = 1;
 					break;
+				case CATE_BUILDING:
+					switch (_categorySmall)
+					{
+					case SMC_ZERO: maxPage = 1;
+						break;
+					case SMC_ONE: maxPage = 1;
+						break;
+					case SMC_TWO:
+						break;
+					case SMC_THREE:
+						break;
+					case SMC_FOUR:
+						break;
+					case SMC_FIVE:
+						break;
+					}
 				}
 				if (_page > maxPage - 1) _page = maxPage - 1;
 
@@ -1955,6 +2242,7 @@ void mapTool::inputOnMap(void)
 				addBuilding(_mouseArr.x, _mouseArr.y, CAMP(_saveIndex.x));
 				break;
 			case SMC_ONE:
+				addBuilding(_mouseArr.x, _mouseArr.y, MINE(_saveIndex.x + _saveIndex.y * 2));
 				break;
 			case SMC_TWO:
 				break;
@@ -2161,6 +2449,15 @@ void mapTool::inputOnUI(void)
 					}
 
 					break;
+				case SMC_ONE:
+					if (_ptMouse.y <= _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) / 64;
+						_saveIndex.y = (_ptMouse.y - _contents.top)/64 ;
+
+					}
+
+					break;
 				case SMC_TWO:
 					break;
 				case SMC_THREE:
@@ -2217,6 +2514,7 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("road_river", "image/mapTool/road_river.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
 
 	//================ B U I L D I N G =========================
+	//============ C A M P 
 	IMAGEMANAGER->addFrameImage("building_castle", "image/mapTool/camp_castle.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("building_castle_shadow", "image/mapTool/camp_castle_shadow.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("building_dungeon", "image/mapTool/camp_dungeon.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
@@ -2226,6 +2524,26 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addImage("point_castle", "image/mapTool/point_castle.bmp", 192, 192, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("point_dungeon", "image/mapTool/point_dungeon.bmp", 192, 192, true, RGB(255, 0, 255));
 
+	//============ MINE
+	IMAGEMANAGER->addFrameImage("mine_gold", "image/mapTool/mine/mine_gold.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_crystal", "image/mapTool/mine/mine_crystal.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_wood", "image/mapTool/mine/mine_wood.bmp", 160, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_iron", "image/mapTool/mine/mine_iron.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_sulfur", "image/mapTool/mine/mine_sulfur.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_mercury", "image/mapTool/mine/mine_mercury.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_gem", "image/mapTool/mine/mine_gem.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_gold_shadow", "image/mapTool/mine/mine_gold_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_crystal_shadow", "image/mapTool/mine/mine_crystal_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_wood_shadow", "image/mapTool/mine/mine_wood_shadow.bmp", 160, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_sulfur_shadow", "image/mapTool/mine/mine_sulfur_shadow.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_mercury_shadow", "image/mapTool/mine/mine_mercury_shadow.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_gem_shadow", "image/mapTool/mine/mine_gem_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("mine_gold_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("mine_crystal_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("mine_wood_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("mine_sulfur_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("mine_mercury_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("mine_gem_shadow")->AlphaInit();
 
 	//================ M I N I   M A P =====================
 	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72.bmp", 72, 54, true, RGB(255, 0, 255));
@@ -2248,6 +2566,10 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addImage("select2", "image/mapTool/selectRect2.bmp", 64, 64, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("width", "image/mapTool/line_width.bmp", 768, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("height", "image/mapTool/line_height.bmp", 2, 576, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("closed", "image/mapTool/closedArea.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("closed")->AlphaInit();
+	IMAGEMANAGER->findImage("closed")->setAlphaSource(50);
+
 
 	//=============== B U T T O N =========================
 	//==================================== T I L E 
@@ -2277,6 +2599,16 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("button_dungeon", "image/mapTool/button_dungeon.bmp", 256, 128, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("buildingButton", "image/mapTool/buildingButton.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_camp", "image/mapTool/button_camp.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+
+	//==================================== M I N E
+	IMAGEMANAGER->addFrameImage("button_mine", "image/mapTool/button_mine.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_gold","image/mapTool/button_gold.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_crystal","image/mapTool/button_crystal.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_wood","image/mapTool/button_wood.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_iron","image/mapTool/button_iron.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_sulfur","image/mapTool/button_sulfur.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_mercury","image/mapTool/button_mercury.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_gem","image/mapTool/button_gem.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
 
 	//====================================== U I 
 	IMAGEMANAGER->addFrameImage("up", "image/mapTool/arrow_up.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));

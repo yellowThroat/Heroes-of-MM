@@ -6,7 +6,7 @@
 
 #define MINISIZE (216 / MAXTILE)
 
-#define SHADOWALPHA 210
+#define SHADOWALPHA 170
 
 
 enum TILE
