@@ -157,11 +157,14 @@ struct tagObjInfo
 
 struct tagRemember
 {
+	image* img;
 	CAMP camp;
 	MINE mine;
 	EVENT ev;
 	int destX;
 	int destY;
+	int sizeX;
+	int sizeY;
 	int type;
 };
 

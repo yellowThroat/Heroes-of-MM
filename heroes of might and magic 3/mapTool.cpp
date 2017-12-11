@@ -55,6 +55,10 @@ HRESULT mapTool::init(void)
 		}
 	}
 
+	ZeroMemory(&_remember, sizeof(tagRemember));
+	_remember.camp = CAMP_NULL;
+	_remember.mine = MINE_NULL;
+	_remember.ev = EV_NULL;
 
 
 	_categoryLarge = CATE_NULL;
@@ -444,7 +448,47 @@ void mapTool::selectDraw(void)
 
 			break;
 		case SMC_FIVE:
+			
+			//==================== 오브 젝트 이동 셀렉 =================
+			if (_move)
+			{
+				
+				switch (_remember.type)
+				{
+				case 0:
+					switch (_remember.camp)
+					{
+					case CAMP_CASTLE:
+						IMAGEMANAGER->findImage("point_castle")->render(getMemDC(),
+							20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+						break;
+					case CAMP_DUNGEON:
+						IMAGEMANAGER->findImage("point_dungeon")->render(getMemDC(),
+							20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+						break;
+						
+					}
+					break;
+				case 1:
+					if(_remember.mine != MINE_WOOD)
+						_remember.img->frameRender(getMemDC(),
+							20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					else
+						_remember.img->frameRender(getMemDC(),
+							20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+					break;
+				case 2:
+					break;
+				}
+			}
 			break;
+		case SMC_NULL:
+			break;
+
 		}
 	}
 	if (_area)
@@ -1338,13 +1382,16 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 	building build;
 	ZeroMemory(&build, sizeof(building));
 
+	build.mine = MINE_NULL;
+	build.ev = EV_NULL;
+
 	build.camp = camp;
-	build.destX = arrX - 2;
-	build.destY = arrY - 2;
-	build.sourX = 0;
-	build.sourY = 0;
 	build.sizeX = 6;
 	build.sizeY = 6;
+	build.destX = arrX - 2;
+	build.destY = arrY - 2;
+	build.sourX = 1;
+	build.sourY = 0;
 	build.miniX = 0;
 	build.move = false;
 
@@ -1375,6 +1422,11 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 {
 	building build;
+
+	ZeroMemory(&build, sizeof(building));
+
+	build.camp = CAMP_NULL;
+	build.ev = EV_NULL;
 
 	build.mine = mine;
 	if (build.mine >= (int)MINE_NULL) return;
@@ -1948,11 +2000,84 @@ void mapTool::inputCommon(void)
 
 		}
 
+		//================== 오브젝트 이동 뗄때======================
+		
+		if (_move)
+		{
+			bool overlap = false;
+			int sizeX, sizeY;
+			//============== 금지 구역 이라면
 
+			if (_ptMouse.x > 788) overlap = true;
+
+			for (int i = _mouseArr.x; i < _mouseArr.x + _remember.sizeX; i++)
+			{
+				for (int j = _mouseArr.y; j < _mouseArr.y+ _remember.sizeY; j++)
+				{
+					if (_mapArr[i][j].tile == TILE_WATER) overlap = true;
+					if (overlap) break;
+				}
+				if (overlap) break;
+			}
+
+			//=============== 이미 존재 한다면
+			for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); ++_viBuild)
+			{
+				if (_viBuild->destX <= _mouseArr.x && _viBuild->destX > _mouseArr.x &&
+					_viBuild->destY <= _mouseArr.y && _viBuild->destY > _mouseArr.y)
+				{
+					overlap = true;
+			
+					if (overlap) break;
+				}
+			}
+
+			if (overlap)
+			{
+				switch (_remember.type)
+				{
+				case 0:
+					addBuilding(_remember.destX + 2, _remember.destY + 2, _remember.camp);
+					break;
+				case 1:
+					if (_remember.mine != MINE_WOOD)
+						addBuilding(_remember.destX + 1, _remember.destY + 1, _remember.mine);
+
+					else
+						addBuilding(_remember.destX + 1, _remember.destY + 1, _remember.mine);
+					break;
+				case 2:
+					break;
+				}
+			}
+			
+			//================ 그렇지 않다면
+			if(!overlap)
+			switch (_remember.type)
+			{
+			case 0:
+				addBuilding(_mouseArr.x, _mouseArr.y, _remember.camp);
+				break;
+			case 1:
+				addBuilding(_mouseArr.x, _mouseArr.y, _remember.mine);
+				break;
+			case 2:
+				break;
+			}
+
+
+			ZeroMemory(&_remember, sizeof(tagRemember));
+			_remember.camp = CAMP_NULL;
+			_remember.mine = MINE_NULL;
+			_remember.ev = EV_NULL;
+			_move = false;
+
+		}
+		
 
 		//===================== 일단 지우자 ============
 		_area = false;
-
+		_move = false;
 		//=================== P U L L   A R R O W ================
 		if (!_foldMini)
 		{
@@ -2288,29 +2413,40 @@ void mapTool::inputOnMap(void)
 			case SMC_FOUR:
 				break;
 			case SMC_FIVE:
-				//================= 오브젝트 이동 ============
+
+				//================= 오브젝트 이동 누를때============
 				for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); )
 				{
 					if (_viBuild->destX <= _mouseArr.x && _viBuild->destX + _viBuild->sizeX > _mouseArr.x &&
 						_viBuild->destY <= _mouseArr.y && _viBuild->destY + _viBuild->sizeY > _mouseArr.y)
 					{
 						_move = true;
+
 						if (_viBuild->camp != CAMP_NULL) _remember.type = 0;
-						else if (_viBuild->mine != MINE_NULL) _remember.type = 1;
-						else if (_viBuild->ev != EV_NULL) _remember.type = 2;
+						if (_viBuild->mine != MINE_NULL) _remember.type = 1;
+						if (_viBuild->ev != EV_NULL) _remember.type = 2;
 						
 						switch (_remember.type)
 						{
-						case 0:	_remember.camp = _viBuild->camp;
+						case 0:
+							_remember.camp = _viBuild->camp;
+							_remember.sizeX = 6;
+							_remember.sizeY = 6;
 						break;
-						case 1: _remember.mine = _viBuild->mine;
+						case 1: 
+							_remember.mine = _viBuild->mine;
+							_remember.sizeX = 3;
+							_remember.sizeY = 2;
+							if (_remember.mine == MINE_WOOD) _remember.sizeX = 4;
+							if (_remember.mine == MINE_MERCURY) _remember.sizeY = 3;
 						break;
 						case 2: _remember.ev = _viBuild->ev;
 						break;
 						}
 
-						_remember.destX = _mouseArr.x;
-						_remember.destY = _mouseArr.y;
+						_remember.img = _viBuild->img;
+						_remember.destX = _viBuild->destX;
+						_remember.destY = _viBuild->destY;
 
 						_viBuild = _vBuild.erase(_viBuild);
 						break;
