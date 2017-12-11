@@ -70,7 +70,6 @@ HRESULT mapTool::init(void)
 	_boxLength = 128;
 	_area = false;
 	_foldMini= false;
-	_erase = false;
 	_move = false;
 
 	//============== R E C T   M A K E =====================
@@ -750,7 +749,7 @@ void mapTool::buttonDraw(void)
 
 		IMAGEMANAGER->findImage("erase")->frameRender(getMemDC(), _smallCategory.right - 32, _smallCategory.top);
 
-		if(!_erase && _categorySmall != SMC_NULL && _categorySmall != SMC_FOUR) 
+		if(_categorySmall != SMC_NULL && _categorySmall != SMC_FOUR) 
 			IMAGEMANAGER->findImage("size1")->frameRender(getMemDC(), _smallCategory.left, _smallCategory.bottom + 10);
 
 
@@ -837,7 +836,7 @@ void mapTool::buttonDraw(void)
 		break;
 	}
 
-	if (!_erase && _categoryLarge != CATE_BUILDING)
+	if (_categorySmall != SMC_FOUR && _categoryLarge != CATE_BUILDING)
 	{
 		if (!_foldMini)
 		{
@@ -856,7 +855,7 @@ void mapTool::buttonDraw(void)
 		}
 
 	}
-	else if(_erase)
+	else if(_categorySmall == SMC_FOUR)
 	{
 		{
 			IMAGEMANAGER->findImage("push")->render(getMemDC(),
@@ -987,7 +986,7 @@ void mapTool::setButton(void)
 
 
 	//======================= ERASE 업 다운
-	if (_erase) IMAGEMANAGER->findImage("erase")->setFrameX(0);
+	if (_categorySmall == SMC_FOUR) IMAGEMANAGER->findImage("erase")->setFrameX(0);
 	else IMAGEMANAGER->findImage("erase")->setFrameX(1);
 
 
@@ -1002,13 +1001,6 @@ void mapTool::setButton(void)
 		_saveIndex.y = 15;
 	}
 	
-	//==================== E R A S E ==========================
-	if (_categorySmall == SMC_FOUR ) _erase = true;
-	else _erase = false;
-
-	//==================== M O V E ===========================
-	if (_categorySmall == SMC_FIVE) _move = true;
-	else _move = false;
 
 }
 
@@ -1385,6 +1377,7 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 	building build;
 
 	build.mine = mine;
+	if (build.mine >= (int)MINE_NULL) return;
 	build.sourX = 0;
 	build.sourY = 0;
 	build.miniX = 1;
@@ -1449,6 +1442,8 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 		break;
 	}
 
+
+	//================ need for initialize 
 	for (int i = 0; i < build.sizeX; i++)
 	{
 		for (int j = 0; j < build.sizeY; j++)
@@ -1905,7 +1900,7 @@ void mapTool::inputCommon(void)
 		_vSaveCor.clear();
 
 		//===================== 범위형 지우기 ===================
-		if (_area  && _erase && _saveIndex.x == 2)
+		if (_area  && _categorySmall == SMC_FOUR && _saveIndex.x == 2)
 		{
 			_area = false;
 
@@ -2143,7 +2138,45 @@ void mapTool::inputOnMap(void)
 
 		else if (_categoryLarge == CATE_ROAD)
 		{
-			if (_brushNum == 0 && !_erase)
+			switch (_categorySmall)
+			{
+			case SMC_ZERO:
+				break;
+			case SMC_ONE:
+				break;
+			case SMC_TWO:
+				break;
+			case SMC_THREE:
+				break;
+			case SMC_FOUR:
+
+				switch (_saveIndex.x)
+				{
+				case 0:
+					deleteAll(_mouseArr.x, _mouseArr.y);
+					break;
+				case 1:
+					for (int i = 0; i < 2; i++)
+					{
+						for (int j = 0; j < 2; j++)
+						{
+							deleteAll(_mouseArr.x - i, _mouseArr.y - j);
+						}
+					}
+					break;
+				case 2:
+					break;
+
+				}
+
+				break;
+			case SMC_FIVE:
+				break;
+			case SMC_NULL:
+				break;
+			}
+
+			if (_brushNum == 0 && _categorySmall != SMC_FOUR)
 			{
 				setRoad(_mouseArr.x, _mouseArr.y, (ROAD)_categorySmall);
 
@@ -2156,7 +2189,7 @@ void mapTool::inputOnMap(void)
 					}
 				}
 			}
-			else if (_brushNum == 255 && !_erase && _categorySmall != SMC_NULL)
+			else if (_brushNum == 255 )
 			{
 				_roadArr[_mouseArr.x][_mouseArr.y].road = (ROAD)_categorySmall;
 				switch (_categorySmall)
@@ -2181,30 +2214,11 @@ void mapTool::inputOnMap(void)
 					break;
 				case SMC_FOUR:
 					break;
+				case SMC_FIVE:
+					break;
+				case SMC_NULL:
+					break;
 				}
-			}
-			else if (_erase)
-			{
-				switch (_saveIndex.x)
-				{
-				case 0:
-					deleteAll(_mouseArr.x, _mouseArr.y);
-					break;
-				case 1:
-					for (int i = 0; i < 2; i++)
-					{
-						for (int j = 0; j < 2; j++)
-						{
-							deleteAll(_mouseArr.x - i, _mouseArr.y - j);
-						}
-					}
-					break;
-				case 2:
-					break;
-
-				}
-
-
 			}
 		}
 
@@ -2273,10 +2287,44 @@ void mapTool::inputOnMap(void)
 				break;
 			case SMC_FOUR:
 				break;
+			case SMC_FIVE:
+				//================= 오브젝트 이동 ============
+				for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); )
+				{
+					if (_viBuild->destX <= _mouseArr.x && _viBuild->destX + _viBuild->sizeX > _mouseArr.x &&
+						_viBuild->destY <= _mouseArr.y && _viBuild->destY + _viBuild->sizeY > _mouseArr.y)
+					{
+						_move = true;
+						if (_viBuild->camp != CAMP_NULL) _remember.type = 0;
+						else if (_viBuild->mine != MINE_NULL) _remember.type = 1;
+						else if (_viBuild->ev != EV_NULL) _remember.type = 2;
+						
+						switch (_remember.type)
+						{
+						case 0:	_remember.camp = _viBuild->camp;
+						break;
+						case 1: _remember.mine = _viBuild->mine;
+						break;
+						case 2: _remember.ev = _viBuild->ev;
+						break;
+						}
+
+						_remember.destX = _mouseArr.x;
+						_remember.destY = _mouseArr.y;
+
+						_viBuild = _vBuild.erase(_viBuild);
+						break;
+
+					}
+					else ++_viBuild;
+				}
+				break;
 			}
 			break;
 
 		}
+
+
 
 		//================= 범위 그리기 ==============
 		if (_brushNum == 2  && !_area)
@@ -2288,7 +2336,7 @@ void mapTool::inputOnMap(void)
 
 
 		//================ 범위 지우기 ================
-		if (_erase && _saveIndex.x == 2&& !_area)
+		if (_categorySmall == SMC_FOUR && _saveIndex.x == 2&& !_area)
 		{
 			_area = true;
 			_saveAreaX = _mouseArr.x;
@@ -2437,6 +2485,7 @@ void mapTool::inputOnUI(void)
 		}
 
 		//================ C O N T E N T S   B O X ====================
+		//================ S E T T I N G   I N D E X =====================
 		if (PtInRect(&_contents, _ptMouse))
 		{
 			if (_categoryLarge != CATE_BUILDING)
@@ -2502,12 +2551,14 @@ void mapTool::inputOnUI(void)
 					break;
 				case SMC_FIVE:
 					break;
+				case SMC_NULL:
+					break;
 				}
 			}
 
 			_brushNum = 255;
 
-			if (_erase)
+			if (_categorySmall == SMC_FOUR)
 			{
 				if (_saveIndex.x > 2 || _saveIndex.y > 0)
 				{

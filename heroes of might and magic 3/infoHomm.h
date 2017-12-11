@@ -155,6 +155,16 @@ struct tagObjInfo
 
 };
 
+struct tagRemember
+{
+	CAMP camp;
+	MINE mine;
+	EVENT ev;
+	int destX;
+	int destY;
+	int type;
+};
+
 //========= 주변 타일 검출==========
 #define LEFTTOP				0x00001
 #define MIDDLETOP			0x00002

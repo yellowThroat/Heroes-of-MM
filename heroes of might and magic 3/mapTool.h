@@ -18,7 +18,7 @@ private:
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
-	
+	tagRemember _remember;
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
 	POINT _mouseArr;
@@ -35,7 +35,6 @@ private:
 
 	bool _area;
 	bool _foldMini;
-	bool _erase;
 	bool _move;
 
 	char _cor[256];
@@ -75,6 +74,7 @@ public:
 	void inputOnMap(void);
 	void inputOnUI(void);
 	void inputCommon(void);
+
 
 
 	//=============== C O N T E N T S ===============
