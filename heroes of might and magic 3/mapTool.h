@@ -36,6 +36,7 @@ private:
 	bool _area;
 	bool _foldMini;
 	bool _erase;
+	bool _move;
 
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];

@@ -71,6 +71,7 @@ HRESULT mapTool::init(void)
 	_area = false;
 	_foldMini= false;
 	_erase = false;
+	_move = false;
 
 	//============== R E C T   M A K E =====================
 	_miniMap = RectMake(836, WINSIZEY - 226, 216, 216);
@@ -584,14 +585,15 @@ void mapTool::miniDraw(void)
 				_miniMap.left + _viBuild->destX / TILESIZE * MINISIZE,
 				_miniMap.top + _viBuild->destY / TILESIZE*MINISIZE,
 				_viBuild->miniX, 0);
-
 		}
-
 	}
 
 	if(MAXTILE == 72) IMAGEMANAGER->findImage("miniView72")->render(getMemDC(), _miniView.left, _miniView.top);
 	else
 	IMAGEMANAGER->findImage("miniView36")->render(getMemDC(), _miniView.left, _miniView.top);
+
+
+
 }
 
 void mapTool::tileDraw()
@@ -635,12 +637,29 @@ void mapTool::buildingDraw(void)
 	{
 		if (!_viBuild->move)
 		{
+			if(_viBuild->mine != MINE_WOOD)
 			_viBuild->img->frameRender(getMemDC(),
 				20 + _viBuild->destX * TILESIZE- _mapX,
 				20 + _viBuild->destY * TILESIZE- _mapY,
 				_viBuild->sourX, _viBuild->sourY);
 
-			if(_viBuild->mine != MINE_IRON)
+			if (_viBuild->mine == MINE_WOOD)
+			{
+				
+				_viBuild->img->frameRender(getMemDC(),
+					20 + (_viBuild->destX-1) * TILESIZE - _mapX,
+					20 + (_viBuild->destY-1) * TILESIZE - _mapY,
+					_viBuild->sourX, _viBuild->sourY);
+
+				_viBuild->imgShadow->alphaFrameRender(getMemDC(),
+					20 + (_viBuild->destX - 1) * TILESIZE - _mapX,
+					20 + (_viBuild->destY - 1) * TILESIZE - _mapY,
+					_viBuild->sourX, _viBuild->sourY,SHADOWALPHA);
+
+
+			}
+
+			if(_viBuild->mine != MINE_IRON && _viBuild->mine != MINE_WOOD)
 			_viBuild->imgShadow->alphaFrameRender(getMemDC(),
 				20 + _viBuild->destX* TILESIZE - _mapX,
 				20 + _viBuild->destY* TILESIZE - _mapY,
@@ -986,6 +1005,10 @@ void mapTool::setButton(void)
 	//==================== E R A S E ==========================
 	if (_categorySmall == SMC_FOUR ) _erase = true;
 	else _erase = false;
+
+	//==================== M O V E ===========================
+	if (_categorySmall == SMC_FIVE) _move = true;
+	else _move = false;
 
 }
 
@@ -1388,7 +1411,7 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 		build.img = IMAGEMANAGER->findImage("mine_wood");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_wood_shadow");
 		build.sizeX = 4;
-		build.sizeY = 3;
+		build.sizeY = 2;
 		build.destX = arrX - 2;
 		build.destY = arrY - 1;
 		break;
@@ -1409,8 +1432,8 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 		build.destY = arrY - 1;
 		break;
 	case MINE_MERCURY:
-		build.img = IMAGEMANAGER->findImage("mine_gold");
-		build.imgShadow = IMAGEMANAGER->findImage("mine_gold_shadow");
+		build.img = IMAGEMANAGER->findImage("mine_mercury");
+		build.imgShadow = IMAGEMANAGER->findImage("mine_mercury_shadow");
 		build.sizeX = 3;
 		build.sizeY = 3;
 		build.destX = arrX - 1;
@@ -2242,7 +2265,7 @@ void mapTool::inputOnMap(void)
 				addBuilding(_mouseArr.x, _mouseArr.y, CAMP(_saveIndex.x));
 				break;
 			case SMC_ONE:
-				addBuilding(_mouseArr.x, _mouseArr.y, MINE(_saveIndex.x + _saveIndex.y * 2));
+				addBuilding(_mouseArr.x, _mouseArr.y, MINE(_saveIndex.x + _saveIndex.y * 4));
 				break;
 			case SMC_TWO:
 				break;
