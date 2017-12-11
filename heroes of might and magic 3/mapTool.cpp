@@ -61,8 +61,8 @@ HRESULT mapTool::init(void)
 	_categorySmall = SMC_NULL;
 	_mapX = _mapY = 0;
 	_inputDelayX = _inputDelayY = 0;
-	_mouseArr.x = 0;
-	_mouseArr.y = 0;
+	_mouseArr.x = ((_ptMouse.x - 20) / TILESIZE) + (int)_mapX / TILESIZE;
+	_mouseArr.y = ((_ptMouse.y - 20) / TILESIZE) + (int)_mapY / TILESIZE;
 	_saveX = _saveY = 0;
 	_saveAreaX = _saveAreaY = 0;
 	_brushNum = 0;
@@ -152,31 +152,21 @@ void mapTool::render(void)
 		sprintf(_cor, "%d", i);
 
 		
+		if (i < 10)
+		{
+			if (i - (int)_mapX / TILESIZE >= 0 && i - (int)_mapX / TILESIZE < 24)
+				TextOut(getMemDC(), 32 + i*TILESIZE - _mapX, 2, _cor, strlen(_cor));
+			if (i - (int)_mapY / TILESIZE >= 0 && i - (int)_mapY / TILESIZE < 18)
+				TextOut(getMemDC(), 5, 25 + i*TILESIZE - _mapY, _cor, strlen(_cor));
+		}
 
-		//if (i - _mapX/TILESIZE < 24)
-		//Rectangle(getMemDC(), _corX[i].left, _corX[i].top, _corX[i].right, _corX[i].bottom);
-
-		//if (_corY[i].top - (int)_mapY / TILESIZE > 0 && _corY[i].bottom - (int)_mapY / TILESIZE <= 18 * TILESIZE)
-		//Rectangle(getMemDC(), _corY[i].left, _corY[i].top, _corY[i].right, _corY[i].bottom);
-
-		
-			if (i < 10)
-			{
-				if (i - (int)_mapX / TILESIZE >= 0 && i - (int)_mapX / TILESIZE < 24)
-					TextOut(getMemDC(), 32 + i*TILESIZE - _mapX, 2, _cor, strlen(_cor));
-				if (i - (int)_mapY / TILESIZE >= 0 && i - (int)_mapY / TILESIZE < 18)
-					TextOut(getMemDC(), 5, 25 + i*TILESIZE - _mapY, _cor, strlen(_cor));
-			}
-
-			else
-			{
-				if (i - (int)_mapX / TILESIZE >= 0 && i - (int)_mapX / TILESIZE < 24)
-					TextOut(getMemDC(), 28 + i*TILESIZE - _mapX, 2, _cor, strlen(_cor));
-				if (i - (int)_mapY / TILESIZE >= 0 && i - (int)_mapY / TILESIZE < 18)
-					TextOut(getMemDC(), 2, 25 + i*TILESIZE - _mapY, _cor, strlen(_cor));
-			}
-
-		
+		else
+		{
+			if (i - (int)_mapX / TILESIZE >= 0 && i - (int)_mapX / TILESIZE < 24)
+				TextOut(getMemDC(), 28 + i*TILESIZE - _mapX, 2, _cor, strlen(_cor));
+			if (i - (int)_mapY / TILESIZE >= 0 && i - (int)_mapY / TILESIZE < 18)
+				TextOut(getMemDC(), 2, 25 + i*TILESIZE - _mapY, _cor, strlen(_cor));
+		}		
 	}
 
 	//================ MOUSE POINT RECT ================================
@@ -288,7 +278,7 @@ void mapTool::selectDraw(void)
 					20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
 				IMAGEMANAGER->findImage("building_castle_shadow")->alphaFrameRender(getMemDC(),
 					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,190);
+					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,SHADOWALPHA);
 				break;
 			case 1:
 				IMAGEMANAGER->findImage("point_dungeon")->render(getMemDC(),
@@ -296,13 +286,30 @@ void mapTool::selectDraw(void)
 					20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
 				IMAGEMANAGER->findImage("building_dungeon_shadow")->alphaFrameRender(getMemDC(),
 					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,190);
+					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,SHADOWALPHA);
 				break;
 			}
 			break;
 		case SMC_ONE:
 			break;
 		case SMC_TWO:
+			break;
+		case SMC_FOUR:
+
+			if (_saveIndex.x == 0)
+				IMAGEMANAGER->findImage("select")->render(getMemDC(),
+					20 + (_mouseArr.x) *TILESIZE - _mapX,
+					20 + (_mouseArr.y) *TILESIZE - _mapY);
+
+			if (_saveIndex.x == 1)
+			{
+				IMAGEMANAGER->findImage("select2")->render(getMemDC(),
+					20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+			}
+
+			break;
+		case SMC_FIVE:
 			break;
 		}
 	}
@@ -433,8 +440,8 @@ void mapTool::miniDraw(void)
 		if (MAXTILE == 72)
 		{
 			IMAGEMANAGER->findImage("miniBuilding72")->frameRender(getMemDC(),
-				_miniMap.left + _viBuild->destX / TILESIZE * MINISIZE,
-				_miniMap.top + _viBuild->destY / TILESIZE*MINISIZE,
+				_miniMap.left + _viBuild->destX * MINISIZE,
+				_miniMap.top + _viBuild->destY *MINISIZE,
 				_viBuild->miniX, 0);
 		}
 		else
@@ -495,14 +502,14 @@ void mapTool::buildingDraw(void)
 		if (!_viBuild->move)
 		{
 			_viBuild->img->frameRender(getMemDC(),
-				20 + _viBuild->destX - _mapX,
-				20 + _viBuild->destY - _mapY,
+				20 + _viBuild->destX * TILESIZE- _mapX,
+				20 + _viBuild->destY * TILESIZE- _mapY,
 				_viBuild->sourX, _viBuild->sourY);
 
 			_viBuild->imgShadow->alphaFrameRender(getMemDC(),
-				20 + _viBuild->destX - _mapX,
-				20 + _viBuild->destY - _mapY,
-				_viBuild->sourX, _viBuild->sourY, 190);
+				20 + _viBuild->destX* TILESIZE - _mapX,
+				20 + _viBuild->destY* TILESIZE - _mapY,
+				_viBuild->sourX, _viBuild->sourY, SHADOWALPHA);
 		}
 	}
 }
@@ -620,10 +627,10 @@ void mapTool::buttonDraw(void)
 			_smallCategory.left, _smallCategory.top);
 
 		IMAGEMANAGER->findImage("erase")->frameRender(getMemDC(),
-			 _smallCategory.right - 32, _smallCategory.top);
+			 _smallCategory.right - 74, _smallCategory.top);
 
 		IMAGEMANAGER->findImage("move")->frameRender(getMemDC(),
-			_smallCategory.right + 10, _smallCategory.top);
+			_smallCategory.right - 32, _smallCategory.top);
 
 		switch (_categorySmall)
 		{
@@ -638,6 +645,12 @@ void mapTool::buttonDraw(void)
 		case SMC_TWO:
 			break;
 		case SMC_THREE:
+			break;
+		case SMC_FOUR:
+			IMAGEMANAGER->findImage("button_brush_size")->render(getMemDC(),
+				_contents.left, _contents.top);
+			break;
+		case SMC_FIVE:
 			break;
 		}
 		break;
@@ -890,6 +903,21 @@ void mapTool::deleteAll(int arrX, int arrY)
 
 		break;
 	case CATE_BUILDING:
+		for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); )
+		{
+			if (_viBuild->destX <= arrX && _viBuild->destX + _viBuild->sizeX > arrX &&
+				_viBuild->destY <= arrY && _viBuild->destY + _viBuild->sizeY > arrY)
+			{
+
+
+
+				_viBuild = _vBuild.erase(_viBuild);
+				break;
+			}
+			else ++_viBuild;
+			
+
+		}
 		break;
 	case CATE_UNIT:
 		break;
@@ -1101,8 +1129,8 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 	ZeroMemory(&build, sizeof(building));
 
 	build.camp = camp;
-	build.destX = (arrX - 2)*TILESIZE;
-	build.destY = (arrY - 2)*TILESIZE;
+	build.destX = arrX - 2;
+	build.destY = arrY - 2;
 	build.sourX = 0;
 	build.sourY = 0;
 	build.sizeX = 6;
@@ -1374,7 +1402,7 @@ void mapTool::setTile(int arrX, int arrY, TILE tile)
 
 void mapTool::setCor(void)
 {
-	if (_ptMouse.x < 788)
+	if (_ptMouse.x <= 788)
 	{
 		_mouseArr.x = ((_ptMouse.x - 20) / TILESIZE) + (int)_mapX / TILESIZE;
 		_mouseArr.y = ((_ptMouse.y - 20) / TILESIZE) + (int)_mapY / TILESIZE;
@@ -1463,6 +1491,9 @@ void mapTool::keyControl(void)
 	{
 		_saveX = _mouseArr.x;
 		_saveY = _mouseArr.y;
+
+		//============== PREVENT OVERAP BETWEEN UI AND TILE==============
+		if (_ptMouse.x > 788) _clickUI = true;
 
 		//============== DRAW TILE=====================
 		if (PtInRect(&RectMake(0, 0, 788, WINSIZEY), _ptMouse) && !_clickUI && _brushNum != 2)
@@ -1634,12 +1665,28 @@ void mapTool::keyControl(void)
 				}
 			}
 
+			else if (_categoryLarge == CATE_BUILDING)
+			{
+				switch (_categorySmall)
+				{
+				case SMC_ZERO:
+					break;
+				case SMC_ONE:
+					break;
+				case SMC_TWO:
+					break;
+				case SMC_THREE:
+					break;
+				case SMC_FOUR: deleteAll(_mouseArr.x, _mouseArr.y);
+					break;
+				case SMC_FIVE:
+					break;
+				}
+			}
 
 		}
 
 
-		//============== PREVENT OVERAP BETWEEN UI AND TILE==============
-		if (_ptMouse.x > 788) _clickUI = true;
 
 		//================= MINI MAP CONTROL=================
 		if(!_foldMini)
@@ -1702,7 +1749,6 @@ void mapTool::keyControl(void)
 		if (PtInRect(&_smallCategory, _ptMouse))
 		{
 			_page = 0;
-			_erase = false;
 			_saveIndex.x = 0;
 			_saveIndex.y = 0;
 			switch (_categoryLarge)
@@ -1725,7 +1771,8 @@ void mapTool::keyControl(void)
 			case CATE_BUILDING:
 				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
 				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
-				else if (_ptMouse.x >= _smallCategory.right + 10 && _ptMouse.x < _smallCategory.right + 42 ) _categorySmall = SMC_FIVE;
+				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right -42  ) _categorySmall = SMC_FOUR;
+				else if (_ptMouse.x >= _smallCategory.right  - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
 				break;
 			case CATE_UNIT:
 				break;
@@ -1775,7 +1822,7 @@ void mapTool::keyControl(void)
 			_saveIndex.y = 15;
 		}
 
-		if (_erase && _saveIndex.x == 2 &&!_clickUI && !_area && _ptMouse.x < 788)
+		if (_erase && _saveIndex.x == 2 &&!_clickUI && !_area && _ptMouse.x <= 788)
 		{
 			_area = true;
 			_saveAreaX = _mouseArr.x;
@@ -1820,18 +1867,45 @@ void mapTool::keyControl(void)
 			}
 			if (_categoryLarge == CATE_BUILDING)
 			{
-				if (!_foldMini && _ptMouse.y <= _contents.top + 128)
+				switch (_categorySmall)
 				{
-					_saveIndex.x = (_ptMouse.x - _contents.left +10) / 128;
-					_saveIndex.y = 0;
+				case SMC_ZERO:
 
-				}
-				else if (_foldMini)
-				{
-					_saveIndex.x = (_ptMouse.x - _contents.left + 10) /128;
-					_saveIndex.y = 0;
-				}
+					if (!_foldMini && _ptMouse.y <= _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left +10) / 128;
+						_saveIndex.y = 0;
 
+					}
+					else if (_foldMini)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) /128;
+						_saveIndex.y = 0;
+					}
+
+				break;
+				case SMC_TWO:
+				break;
+				case SMC_THREE:
+				break;
+				case SMC_FOUR:
+
+					if (!_foldMini && _ptMouse.y <= _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
+
+					}
+					else if (_foldMini)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
+					}
+
+				break;
+				case SMC_FIVE:
+				break;
+				}
 			}
 
 			_brushNum = 255;
@@ -1854,7 +1928,7 @@ void mapTool::keyControl(void)
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
 		_clickUI = false;
-
+	
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -2009,6 +2083,9 @@ void mapTool::keyControl(void)
 
 		}
 
+
+		//===================== 일단 지우자 ============
+		_area = false;
 
 		//=================== P U L L   A R R O W ================
 		if (!_foldMini)

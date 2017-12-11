@@ -83,15 +83,15 @@ LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 		case WM_CREATE:
 
 		break;
-		//case WM_PAINT:
-		//{
-		//	hdc = BeginPaint(hWnd, &ps);
-		//
-		//	this->render();
-		//
-		//	EndPaint(hWnd, &ps);
-		//}
-		//break;
+		case WM_PAINT:
+		{
+			hdc = BeginPaint(hWnd, &ps);
+		
+			this->render();
+		
+			EndPaint(hWnd, &ps);
+		}
+		break;
 		//case WM_TIMER:
 		//	this->update();
 		break;
