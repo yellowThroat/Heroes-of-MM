@@ -33,7 +33,6 @@ private:
 private:
 	float _mapX, _mapY;
 
-	bool _clickUI;
 	bool _area;
 	bool _foldMini;
 	bool _erase;
@@ -69,10 +68,12 @@ public:
 	//=============== S E T T I N G ========
 	void setCor(void);
 	void cameraMove(void);
-	void keyControl(void);
 	void setButton(void);
 	void minimapMove(void);
 	void loadImg(void);
+	void inputOnMap(void);
+	void inputOnUI(void);
+	void inputCommon(void);
 
 
 	//=============== C O N T E N T S ===============

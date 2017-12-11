@@ -68,16 +68,20 @@ HRESULT mapTool::init(void)
 	_brushNum = 0;
 	_page = 0;
 	_boxLength = 128;
-	_clickUI = false;
 	_area = false;
 	_foldMini= false;
 	_erase = false;
+
 	//============== R E C T   M A K E =====================
 	_miniMap = RectMake(836, WINSIZEY - 226, 216, 216);
 	_miniView = RectMake(_miniMap.left, _miniMap.top, 72, 54);
 	_largeCategory = RectMake(808, 108, 242, 32);
 	_smallCategory = RectMake(808, 150, 242, 32);
 	_contents = RectMake(830, 192, 256, 288);
+
+	//=============  S E T T I N G ====================
+	setCor();
+
 	return S_OK;
 }
 
@@ -97,11 +101,12 @@ void mapTool::update(void)
 
 	//================= F U N C T I O N ==========================
 	setCor();
-	keyControl();
 	cameraMove();
 	setButton();
 	minimapMove();
-
+	inputCommon();
+	if (_ptMouse.x < 788) inputOnMap();
+	else inputOnUI();
 
 }
 
@@ -398,7 +403,7 @@ void mapTool::miniDraw(void)
 	if (!_foldMini)
 	{
 		IMAGEMANAGER->findImage("down")->frameRender(getMemDC(), _miniMap.left - 30, WINSIZEY - 40);
-		if (_miniMap.top == WINSIZEY - 226 && _categoryLarge != CATE_NULL)
+		if (_miniMap.top == WINSIZEY - 226 && _categoryLarge != CATE_NULL && _categorySmall != SMC_NULL)
 		{
 			IMAGEMANAGER->findImage("left")->frameRender(getMemDC(), 903, 335);
 			IMAGEMANAGER->findImage("right")->frameRender(getMemDC(), 964, 335);
@@ -790,8 +795,9 @@ void mapTool::setButton(void)
 	}
 	
 	//==================== E R A S E ==========================
-	if (_categorySmall == SMC_FOUR) _erase = true;
+	if (_categorySmall == SMC_FOUR ) _erase = true;
 	else _erase = false;
+
 }
 
 void mapTool::cameraMove(void)
@@ -1402,22 +1408,20 @@ void mapTool::setTile(int arrX, int arrY, TILE tile)
 
 void mapTool::setCor(void)
 {
-	if (_ptMouse.x <= 788)
-	{
-		_mouseArr.x = ((_ptMouse.x - 20) / TILESIZE) + (int)_mapX / TILESIZE;
-		_mouseArr.y = ((_ptMouse.y - 20) / TILESIZE) + (int)_mapY / TILESIZE;
-	}
+
+	_mouseArr.x = ((_ptMouse.x - 20) / TILESIZE) + (int)_mapX / TILESIZE;
+	_mouseArr.y = ((_ptMouse.y - 20) / TILESIZE) + (int)_mapY / TILESIZE;
 	
 	sprintf(_msCorX, "%d", _mouseArr.x );
 	sprintf(_msCorY, "%d", _mouseArr.y );
-
+	
 	if (_mouseArr.x != _saveX || _mouseArr.y != _saveY)
 	{
 		for (int i = -1; i < 2; i++)
 		{
 			for (int j = -1; j < 2; j++)
 			{
-				if (_saveX - i >= 0 && _saveY - j >= 0)
+				if (_saveX + i >= 0 && _saveY + j >= 0)
 				{
 					switch (_categoryLarge)
 					{
@@ -1447,10 +1451,20 @@ void mapTool::setCor(void)
 			}
 		}
 	}
+	
+
 }
 
-void mapTool::keyControl(void)
+void mapTool::inputCommon(void)
 {
+	if (KEYMANAGER->isOnceKeyDown('T'))
+	{
+		_categoryLarge = CATE_TILE;
+		_categorySmall = SMC_ZERO;
+		_saveIndex.x = 0;
+		_saveIndex.y = 0;
+	}
+
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
 		if (!_inputDelayX)
@@ -1487,449 +1501,12 @@ void mapTool::keyControl(void)
 		}
 	}
 
-	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
-	{
-		_saveX = _mouseArr.x;
-		_saveY = _mouseArr.y;
 
-		//============== PREVENT OVERAP BETWEEN UI AND TILE==============
-		if (_ptMouse.x > 788) _clickUI = true;
-
-		//============== DRAW TILE=====================
-		if (PtInRect(&RectMake(0, 0, 788, WINSIZEY), _ptMouse) && !_clickUI && _brushNum != 2)
-		{
-			if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL)
-			{
-				if (_brushNum == 255)
-				{
-					_mapArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
-					_mapArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
-					_mapArr[_mouseArr.x][_mouseArr.y].tile = (TILE)_categorySmall;
-					
-					switch (_categorySmall)
-					{
-					case SMC_ZERO:
-						_mapArr[_mouseArr.x][_mouseArr.y].miniX = 0;
-						_mapArr[_mouseArr.x][_mouseArr.y].miniY = 0;
-						_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_GREEN;
-						_mapArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("terrain_green");
-					break;
-					case SMC_ONE:
-						_mapArr[_mouseArr.x][_mouseArr.y].miniX = 1;
-						_mapArr[_mouseArr.x][_mouseArr.y].miniY = 0;
-						_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_WATER;
-						_mapArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("terrain_water");
-					break;
-					case SMC_TWO:
-						_mapArr[_mouseArr.x][_mouseArr.y].miniX = 2;
-						_mapArr[_mouseArr.x][_mouseArr.y].miniY = 0;
-						_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_VOLCANO;
-						_mapArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("terrain_volcano");
-
-					break;
-					}
-				}
-				if (_brushNum == 0)
-				{
-					POINT point;
-					_mapArr[_mouseArr.x ][_mouseArr.y ].sourX = 0;
-					_mapArr[_mouseArr.x ][_mouseArr.y ].sourY = 0;
-						switch (_categorySmall)
-						{
-						case SMC_ZERO:
-							_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_GREEN;
-							_mapArr[_mouseArr.x][_mouseArr.y].img =
-								IMAGEMANAGER->findImage("terrain_green");
-						break;
-						case SMC_ONE:
-							_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_WATER;
-							_mapArr[_mouseArr.x][_mouseArr.y].img =
-								IMAGEMANAGER->findImage("terrain_water");
-
-						break;
-						case SMC_TWO:
-							_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_VOLCANO;
-							_mapArr[_mouseArr.x][_mouseArr.y].img =
-								IMAGEMANAGER->findImage("terrain_volcano");
-							break;
-						}
-					point.x = _mouseArr.x;
-					point.y = _mouseArr.y;
-					_vSaveCor.push_back(point);
-						
-					
-
-				}
-				else if (_brushNum == 1)
-				{
-
-					for (int i = 0; i < 2; i++)
-					{
-						for (int j = 0; j < 2; j++)
-						{
-							POINT point;
-							_mapArr[_mouseArr.x -i][_mouseArr.y -j].sourX = 0;
-							_mapArr[_mouseArr.x -i][_mouseArr.y -j].sourY = 0;
-							switch (_categorySmall)
-							{
-							case SMC_ZERO:
-								_mapArr[_mouseArr.x - i][_mouseArr.y - j].tile = TILE_GREEN;
-								_mapArr[_mouseArr.x - i][_mouseArr.y - j].img =
-									IMAGEMANAGER->findImage("terrain_green");
-								break;
-							case SMC_ONE:
-								_mapArr[_mouseArr.x - i][_mouseArr.y - j].tile = TILE_WATER;
-								_mapArr[_mouseArr.x - i][_mouseArr.y - j].img =
-									IMAGEMANAGER->findImage("terrain_water");
-
-								break;
-							case SMC_TWO:
-								_mapArr[_mouseArr.x - i][_mouseArr.y - j].tile = TILE_VOLCANO;
-								_mapArr[_mouseArr.x - i][_mouseArr.y - j].img =
-									IMAGEMANAGER->findImage("terrain_volcano");
-								break;
-							}
-							point.x = _mouseArr.x -i;
-							point.y = _mouseArr.y - j;
-							_vSaveCor.push_back(point);
-
-						}
-					}
-				}
-			}
-
-			else if (_categoryLarge == CATE_ROAD)
-			{
-				if (_brushNum == 0 && !_erase)
-				{
-					setRoad(_mouseArr.x, _mouseArr.y, (ROAD)_categorySmall);
-
-					for (int i = -1; i < 2; i++)
-					{
-						for (int j = -1; j < 2; j++)
-						{
-							if (!(i == 0 && j == 0) && _roadArr[_mouseArr.x + i][_mouseArr.y + j].road == (ROAD)_categorySmall)
-								setRoad(_mouseArr.x + i, _mouseArr.y + j, (ROAD)_categorySmall);
-						}
-					}
-				}
-				else if (_brushNum == 255 && !_erase && _categorySmall != SMC_NULL)
-				{
-					_roadArr[_mouseArr.x][_mouseArr.y].road = (ROAD)_categorySmall;
-					switch (_categorySmall)
-					{
-					case SMC_ZERO:
-						_roadArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("road_normal");
-						_roadArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
-						_roadArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
-						_roadArr[_mouseArr.x][_mouseArr.y].isChanged = true;
-					break;
-					case SMC_ONE:
-						_roadArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("road_rock");
-						_roadArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
-						_roadArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
-						_roadArr[_mouseArr.x][_mouseArr.y].isChanged = true;
-						break;
-					case SMC_TWO:
-						_roadArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("road_river");
-						_roadArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
-						_roadArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
-						_roadArr[_mouseArr.x][_mouseArr.y].isChanged = true;
-						break;
-					case SMC_FOUR:
-						break;
-					}
-				}
-				else if (_erase)
-				{
-					switch (_saveIndex.x)
-					{
-					case 0:
-						deleteAll(_mouseArr.x, _mouseArr.y);
-						break;
-					case 1:
-						for (int i = 0; i < 2; i++)
-						{
-							for (int j = 0; j < 2; j++)
-							{
-								deleteAll(_mouseArr.x -i,_mouseArr.y - j);
-							}
-						}
-						break;
-					case 2:
-						break;
-
-					}
-
-
-				}
-			}
-
-			else if (_categoryLarge == CATE_BUILDING)
-			{
-				switch (_categorySmall)
-				{
-				case SMC_ZERO:
-					break;
-				case SMC_ONE:
-					break;
-				case SMC_TWO:
-					break;
-				case SMC_THREE:
-					break;
-				case SMC_FOUR: deleteAll(_mouseArr.x, _mouseArr.y);
-					break;
-				case SMC_FIVE:
-					break;
-				}
-			}
-
-		}
-
-
-
-		//================= MINI MAP CONTROL=================
-		if(!_foldMini)
-		if (PtInRect(&_miniMap, _ptMouse))
-		{
-			_mapX = (_ptMouse.x - 12 * MINISIZE - _miniMap.left) / MINISIZE * TILESIZE;
-			_mapY = (_ptMouse.y - 9 * MINISIZE - _miniMap.top) / MINISIZE * TILESIZE;
-
-			if (_mapX < 0) _mapX = 0;
-			if (_mapX > TILESIZE * (MAXTILE - 24)) _mapX = TILESIZE *  (MAXTILE - 24);
-			if (_mapY < 0) _mapY = 0;
-			if (_mapY > TILESIZE *  (MAXTILE - 18)) _mapY = TILESIZE *  (MAXTILE - 18);
-
-		}
-
-
-	}
-
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	{
-		//================= D R A W   O B J E C T =====================
-		if(_ptMouse.x <= 788)
-		switch (_categoryLarge)
-		{
-		case CATE_BUILDING:
-			switch (_categorySmall)
-			{
-			case SMC_ZERO:
-				addBuilding(_mouseArr.x, _mouseArr.y, CAMP(_saveIndex.x));
-				break;
-			case SMC_ONE:
-				break;
-			case SMC_TWO:
-				break;
-			case SMC_THREE:
-				break;
-			case SMC_FOUR:
-				break;
-			}
-			break;
-
-		}
-
-		//================= LARGE CATEGORY SELECT =====================
-		if (PtInRect(&_largeCategory, _ptMouse))
-		{
-			_page = 0;
-			_brushNum = 255;
-			_erase = false;
-			_categorySmall = SMC_NULL;
-			if (_ptMouse.x < _largeCategory.left + 32) _categoryLarge = CATE_TILE;
-			else if (_ptMouse.x >= _largeCategory.left + 42 && _ptMouse.x < _largeCategory.left + 74) _categoryLarge = CATE_ROAD;
-			else if (_ptMouse.x >= _largeCategory.left + 84 && _ptMouse.x < _largeCategory.left + 116) _categoryLarge = CATE_BUILDING;
-			else if (_ptMouse.x >= _largeCategory.left + 126 && _ptMouse.x <_largeCategory.left + 158) _categoryLarge = CATE_UNIT;
-			else if (_ptMouse.x >= _largeCategory.left + 168 && _ptMouse.x <_largeCategory.left + 200) _categoryLarge = CATE_RESOURCE;
-			else if (_ptMouse.x >= _largeCategory.left + 210 && _ptMouse.y <_largeCategory.left + 242) _categoryLarge = CATE_OBJ;
-		}
-
-		//================== SMALL CATEGORY SELECT =======================
-		if (PtInRect(&_smallCategory, _ptMouse))
-		{
-			_page = 0;
-			_saveIndex.x = 0;
-			_saveIndex.y = 0;
-			switch (_categoryLarge)
-			{
-			case CATE_NULL:
-				break;
-			case CATE_TILE:
-
-				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
-				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
-				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
-				break;
-			case CATE_ROAD:
-				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
-				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
-				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
-				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FOUR;
-
-				break;
-			case CATE_BUILDING:
-				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
-				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
-				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right -42  ) _categorySmall = SMC_FOUR;
-				else if (_ptMouse.x >= _smallCategory.right  - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
-				break;
-			case CATE_UNIT:
-				break;
-			case CATE_RESOURCE:
-				break;
-			case CATE_OBJ:
-				break;
-			case CATE_END:
-				break;
-			default:
-				break;
-			}
-		}
-
-
-		//================== C O N T E N T S ======================
-
-		//================== B R U S H ============================
-		if ((_categoryLarge == CATE_TILE || _categoryLarge == CATE_ROAD) &&
-			_categorySmall != SMC_NULL &&  PtInRect(&RectMake(
-			_smallCategory.left, _smallCategory.bottom + 10, 16, 16), _ptMouse))
-		{
-			_brushNum = 0;
-		}
-		else if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL && PtInRect(&RectMake(
-			_smallCategory.left, _smallCategory.bottom + 36, 16, 16), _ptMouse))
-		{
-			_brushNum = 1;
-		}
-		else if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL && PtInRect(&RectMake(
-			_smallCategory.left, _smallCategory.bottom + 62, 16, 16), _ptMouse))
-		{
-			_brushNum = 2;
-		}
-
-
-		if (_brushNum == 2 && !_clickUI && !_area)
-		{
-			_area = true;
-			_saveAreaX = _mouseArr.x;
-			_saveAreaY = _mouseArr.y;
-		}
-
-		if (_brushNum != 255)
-		{
-			_saveIndex.x = 15;
-			_saveIndex.y = 15;
-		}
-
-		if (_erase && _saveIndex.x == 2 &&!_clickUI && !_area && _ptMouse.x <= 788)
-		{
-			_area = true;
-			_saveAreaX = _mouseArr.x;
-			_saveAreaY = _mouseArr.y;
-		}
-
-		//================= P U S H   A R R O W ===================
-
-		if (!_foldMini && PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
-		{
-			IMAGEMANAGER->findImage("down")->setFrameX(1);
-		}
-		if (_foldMini && PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
-		{
-			IMAGEMANAGER->findImage("up")->setFrameX(1);
-		}
-		if (PtInRect(&RectMake(903, 335, 21, 21), _ptMouse))
-		{
-			IMAGEMANAGER->findImage("left")->setFrameX(1);
-		}
-		if (PtInRect(&RectMake(964, 335, 21, 21), _ptMouse))
-		{
-			IMAGEMANAGER->findImage("right")->setFrameX(1);
-		}
-
-		//================ C O N T E N T S   B O X ====================
-		if (PtInRect(&_contents, _ptMouse) )
-		{
-			if (_categoryLarge != CATE_BUILDING)
-			{
-				if (!_foldMini && _ptMouse.y <= _contents.top + 128 )
-				{
-					_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
-					_saveIndex.y = _page * 4 +(_ptMouse.y - _contents.top) / TILESIZE;
-
-				}
-				else if (_foldMini)
-				{
-					_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
-					_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
-				}
-			}
-			if (_categoryLarge == CATE_BUILDING)
-			{
-				switch (_categorySmall)
-				{
-				case SMC_ZERO:
-
-					if (!_foldMini && _ptMouse.y <= _contents.top + 128)
-					{
-						_saveIndex.x = (_ptMouse.x - _contents.left +10) / 128;
-						_saveIndex.y = 0;
-
-					}
-					else if (_foldMini)
-					{
-						_saveIndex.x = (_ptMouse.x - _contents.left + 10) /128;
-						_saveIndex.y = 0;
-					}
-
-				break;
-				case SMC_TWO:
-				break;
-				case SMC_THREE:
-				break;
-				case SMC_FOUR:
-
-					if (!_foldMini && _ptMouse.y <= _contents.top + 128)
-					{
-						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
-						_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
-
-					}
-					else if (_foldMini)
-					{
-						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
-						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
-					}
-
-				break;
-				case SMC_FIVE:
-				break;
-				}
-			}
-
-			_brushNum = 255;
-
-			if (_erase)
-			{
-				if (_saveIndex.x > 2 || _saveIndex.y > 0)
-				{
-					_saveIndex.x = 15;
-					_saveIndex.y = 15;
-				}
-
-			}
-		}
-
-		
-
-	}
 
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
-		_clickUI = false;
-	
 
+		//=================== 마우스 움직일때 체인지 변수 변환 ============
 		for (int i = 0; i < 2; i++)
 		{
 			for (int j = 0; j < 2; j++)
@@ -1953,28 +1530,27 @@ void mapTool::keyControl(void)
 
 			}
 		}
-
 		//============================범위형 타일 깔기
 		if (_area && _brushNum == 2)
 		{
 			_area = false;
 			POINT point;
-			if(_mouseArr.x != _saveAreaX && _mouseArr.y != _saveAreaY)
-			for (int i = _saveAreaX; i != _mouseArr.x + (_mouseArr.x - _saveAreaX) / abs(_mouseArr.x - _saveAreaX); )
-			{
-				for (int j = _saveAreaY; j != _mouseArr.y + (_mouseArr.y - _saveAreaY) / abs(_mouseArr.y - _saveAreaY); )
+			if (_mouseArr.x != _saveAreaX && _mouseArr.y != _saveAreaY)
+				for (int i = _saveAreaX; i != _mouseArr.x + (_mouseArr.x - _saveAreaX) / abs(_mouseArr.x - _saveAreaX); )
 				{
-					point.x = i;
-					point.y = j;
+					for (int j = _saveAreaY; j != _mouseArr.y + (_mouseArr.y - _saveAreaY) / abs(_mouseArr.y - _saveAreaY); )
+					{
+						point.x = i;
+						point.y = j;
 
-					_vSaveCor.push_back(point);
+						_vSaveCor.push_back(point);
 
 
 
-					j += (_mouseArr.y - _saveAreaY) / abs(_mouseArr.y - _saveAreaY);
+						j += (_mouseArr.y - _saveAreaY) / abs(_mouseArr.y - _saveAreaY);
+					}
+					i += (_mouseArr.x - _saveAreaX) / abs(_mouseArr.x - _saveAreaX);
 				}
-				i += (_mouseArr.x - _saveAreaX) / abs(_mouseArr.x - _saveAreaX);
-			}
 			else
 			{
 				if (_mouseArr.x == _saveAreaX && _mouseArr.y != _saveAreaY)
@@ -1995,10 +1571,10 @@ void mapTool::keyControl(void)
 				{
 					for (int i = _saveAreaX; i != _mouseArr.x + (_mouseArr.x - _saveAreaX) / abs(_mouseArr.x - _saveAreaX); )
 					{
-							point.x = i;
-							point.y = _mouseArr.y;
+						point.x = i;
+						point.y = _mouseArr.y;
 
-							_vSaveCor.push_back(point);
+						_vSaveCor.push_back(point);
 
 
 
@@ -2012,7 +1588,7 @@ void mapTool::keyControl(void)
 					point.y = _mouseArr.y;
 					_vSaveCor.push_back(point);
 				}
-			}			
+			}
 		}
 
 
@@ -2035,7 +1611,7 @@ void mapTool::keyControl(void)
 		_vSaveCor.clear();
 
 		//===================== 범위형 지우기 ===================
-		if (_area && _categoryLarge == CATE_ROAD && _erase && _saveIndex.x == 2)
+		if (_area  && _erase && _saveIndex.x == 2)
 		{
 			_area = false;
 
@@ -2084,6 +1660,7 @@ void mapTool::keyControl(void)
 		}
 
 
+
 		//===================== 일단 지우자 ============
 		_area = false;
 
@@ -2093,8 +1670,8 @@ void mapTool::keyControl(void)
 			if (IMAGEMANAGER->findImage("down")->getFrameX() == 1)
 			{
 				IMAGEMANAGER->findImage("down")->setFrameX(0);
-				if(PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
-				_foldMini = true;
+				if (PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+					_foldMini = true;
 
 			}
 		}
@@ -2103,8 +1680,8 @@ void mapTool::keyControl(void)
 			if (IMAGEMANAGER->findImage("up")->getFrameX() == 1)
 			{
 				IMAGEMANAGER->findImage("up")->setFrameX(0);
-				if(PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
-				_foldMini = false;
+				if (PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+					_foldMini = false;
 
 			}
 		}
@@ -2116,10 +1693,10 @@ void mapTool::keyControl(void)
 			{
 				_page--;
 				if (_page < 0) _page = 0;
-			
+
 			}
 		}
-		
+
 		if (IMAGEMANAGER->findImage("right")->getFrameX() == 1)
 		{
 			IMAGEMANAGER->findImage("right")->setFrameX(0);
@@ -2137,11 +1714,493 @@ void mapTool::keyControl(void)
 					maxPage = 1;
 					break;
 				}
-				if (_page > maxPage-1) _page = maxPage -1;
+				if (_page > maxPage - 1) _page = maxPage - 1;
 
 			}
 		}
+
 	}
+
+}
+
+void mapTool::inputOnMap(void)
+{
+	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON) && _brushNum != 2)
+	{
+		_saveX = _mouseArr.x;
+		_saveY = _mouseArr.y;
+
+		//============== DRAW TILE=====================
+		if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL)
+		{
+			if (_brushNum == 255)
+			{
+				_mapArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
+				_mapArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
+				_mapArr[_mouseArr.x][_mouseArr.y].tile = (TILE)_categorySmall;
+
+				switch (_categorySmall)
+				{
+				case SMC_ZERO:
+					_mapArr[_mouseArr.x][_mouseArr.y].miniX = 0;
+					_mapArr[_mouseArr.x][_mouseArr.y].miniY = 0;
+					_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_GREEN;
+					_mapArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("terrain_green");
+					break;
+				case SMC_ONE:
+					_mapArr[_mouseArr.x][_mouseArr.y].miniX = 1;
+					_mapArr[_mouseArr.x][_mouseArr.y].miniY = 0;
+					_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_WATER;
+					_mapArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("terrain_water");
+					break;
+				case SMC_TWO:
+					_mapArr[_mouseArr.x][_mouseArr.y].miniX = 2;
+					_mapArr[_mouseArr.x][_mouseArr.y].miniY = 0;
+					_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_VOLCANO;
+					_mapArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("terrain_volcano");
+
+					break;
+				}
+			}
+			if (_brushNum == 0)
+			{
+				POINT point;
+				_mapArr[_mouseArr.x][_mouseArr.y].sourX = 0;
+				_mapArr[_mouseArr.x][_mouseArr.y].sourY = 0;
+				switch (_categorySmall)
+				{
+				case SMC_ZERO:
+					_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_GREEN;
+					_mapArr[_mouseArr.x][_mouseArr.y].img =
+						IMAGEMANAGER->findImage("terrain_green");
+					break;
+				case SMC_ONE:
+					_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_WATER;
+					_mapArr[_mouseArr.x][_mouseArr.y].img =
+						IMAGEMANAGER->findImage("terrain_water");
+
+					break;
+				case SMC_TWO:
+					_mapArr[_mouseArr.x][_mouseArr.y].tile = TILE_VOLCANO;
+					_mapArr[_mouseArr.x][_mouseArr.y].img =
+						IMAGEMANAGER->findImage("terrain_volcano");
+					break;
+				}
+				point.x = _mouseArr.x;
+				point.y = _mouseArr.y;
+				_vSaveCor.push_back(point);
+
+
+
+			}
+			else if (_brushNum == 1)
+			{
+
+				for (int i = 0; i < 2; i++)
+				{
+					for (int j = 0; j < 2; j++)
+					{
+						POINT point;
+						_mapArr[_mouseArr.x - i][_mouseArr.y - j].sourX = 0;
+						_mapArr[_mouseArr.x - i][_mouseArr.y - j].sourY = 0;
+						switch (_categorySmall)
+						{
+						case SMC_ZERO:
+							_mapArr[_mouseArr.x - i][_mouseArr.y - j].tile = TILE_GREEN;
+							_mapArr[_mouseArr.x - i][_mouseArr.y - j].img =
+								IMAGEMANAGER->findImage("terrain_green");
+							break;
+						case SMC_ONE:
+							_mapArr[_mouseArr.x - i][_mouseArr.y - j].tile = TILE_WATER;
+							_mapArr[_mouseArr.x - i][_mouseArr.y - j].img =
+								IMAGEMANAGER->findImage("terrain_water");
+
+							break;
+						case SMC_TWO:
+							_mapArr[_mouseArr.x - i][_mouseArr.y - j].tile = TILE_VOLCANO;
+							_mapArr[_mouseArr.x - i][_mouseArr.y - j].img =
+								IMAGEMANAGER->findImage("terrain_volcano");
+							break;
+						}
+						point.x = _mouseArr.x - i;
+						point.y = _mouseArr.y - j;
+						_vSaveCor.push_back(point);
+
+					}
+				}
+			}
+		}
+
+		else if (_categoryLarge == CATE_ROAD)
+		{
+			if (_brushNum == 0 && !_erase)
+			{
+				setRoad(_mouseArr.x, _mouseArr.y, (ROAD)_categorySmall);
+
+				for (int i = -1; i < 2; i++)
+				{
+					for (int j = -1; j < 2; j++)
+					{
+						if (!(i == 0 && j == 0) && _roadArr[_mouseArr.x + i][_mouseArr.y + j].road == (ROAD)_categorySmall)
+							setRoad(_mouseArr.x + i, _mouseArr.y + j, (ROAD)_categorySmall);
+					}
+				}
+			}
+			else if (_brushNum == 255 && !_erase && _categorySmall != SMC_NULL)
+			{
+				_roadArr[_mouseArr.x][_mouseArr.y].road = (ROAD)_categorySmall;
+				switch (_categorySmall)
+				{
+				case SMC_ZERO:
+					_roadArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("road_normal");
+					_roadArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
+					_roadArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
+					_roadArr[_mouseArr.x][_mouseArr.y].isChanged = true;
+					break;
+				case SMC_ONE:
+					_roadArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("road_rock");
+					_roadArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
+					_roadArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
+					_roadArr[_mouseArr.x][_mouseArr.y].isChanged = true;
+					break;
+				case SMC_TWO:
+					_roadArr[_mouseArr.x][_mouseArr.y].img = IMAGEMANAGER->findImage("road_river");
+					_roadArr[_mouseArr.x][_mouseArr.y].sourX = _saveIndex.x;
+					_roadArr[_mouseArr.x][_mouseArr.y].sourY = _saveIndex.y;
+					_roadArr[_mouseArr.x][_mouseArr.y].isChanged = true;
+					break;
+				case SMC_FOUR:
+					break;
+				}
+			}
+			else if (_erase)
+			{
+				switch (_saveIndex.x)
+				{
+				case 0:
+					deleteAll(_mouseArr.x, _mouseArr.y);
+					break;
+				case 1:
+					for (int i = 0; i < 2; i++)
+					{
+						for (int j = 0; j < 2; j++)
+						{
+							deleteAll(_mouseArr.x - i, _mouseArr.y - j);
+						}
+					}
+					break;
+				case 2:
+					break;
+
+				}
+
+
+			}
+		}
+
+		else if (_categoryLarge == CATE_BUILDING)
+		{
+			switch (_categorySmall)
+			{
+			case SMC_ZERO:
+				break;
+			case SMC_ONE:
+				break;
+			case SMC_TWO:
+				break;
+			case SMC_THREE:
+				break;
+			case SMC_FOUR:
+				switch (_saveIndex.x)
+				{
+				case 0:
+					deleteAll(_mouseArr.x, _mouseArr.y);
+				break;
+				case 1:
+					for (int i = 0; i < 2; i++)
+					{
+						for (int j = 0; j < 2; j++)
+						{
+							deleteAll(_mouseArr.x - i, _mouseArr.y - j);
+						}
+					}
+				break;
+				case 2:
+					break;
+				}
+			
+				break;
+			case SMC_FIVE:
+				break;
+			}
+		}
+
+	
+
+	}
+
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		//================ Draw Object =====================
+		switch (_categoryLarge)
+		{
+		case CATE_TILE:
+			break;
+		case CATE_ROAD:
+			break;
+		case CATE_BUILDING:
+			switch (_categorySmall)
+			{
+			case SMC_ZERO:
+				addBuilding(_mouseArr.x, _mouseArr.y, CAMP(_saveIndex.x));
+				break;
+			case SMC_ONE:
+				break;
+			case SMC_TWO:
+				break;
+			case SMC_THREE:
+				break;
+			case SMC_FOUR:
+				break;
+			}
+			break;
+
+		}
+
+		//================= 범위 그리기 ==============
+		if (_brushNum == 2  && !_area)
+		{
+			_area = true;
+			_saveAreaX = _mouseArr.x;
+			_saveAreaY = _mouseArr.y;
+		}
+
+
+		//================ 범위 지우기 ================
+		if (_erase && _saveIndex.x == 2&& !_area)
+		{
+			_area = true;
+			_saveAreaX = _mouseArr.x;
+			_saveAreaY = _mouseArr.y;
+		}
+
+	}
+
+
+}
+
+void mapTool::inputOnUI(void)
+{
+	
+	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
+	{
+
+		//================= MINI MAP CONTROL=================
+
+		if (!_foldMini)
+			if (PtInRect(&_miniMap, _ptMouse))
+			{
+				_mapX = (_ptMouse.x - 12 * MINISIZE - _miniMap.left) / MINISIZE * TILESIZE;
+				_mapY = (_ptMouse.y - 9 * MINISIZE - _miniMap.top) / MINISIZE * TILESIZE;
+
+				if (_mapX < 0) _mapX = 0;
+				if (_mapX > TILESIZE * (MAXTILE - 24)) _mapX = TILESIZE *  (MAXTILE - 24);
+				if (_mapY < 0) _mapY = 0;
+				if (_mapY > TILESIZE *  (MAXTILE - 18)) _mapY = TILESIZE *  (MAXTILE - 18);
+
+			}
+
+
+
+	}
+	
+
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		
+		
+		//================= LARGE CATEGORY SELECT =====================
+		if (PtInRect(&_largeCategory, _ptMouse))
+		{
+			_page = 0;
+			_brushNum = 255;
+			_categorySmall = SMC_NULL;
+			if (_ptMouse.x < _largeCategory.left + 32) _categoryLarge = CATE_TILE;
+			else if (_ptMouse.x >= _largeCategory.left + 42 && _ptMouse.x < _largeCategory.left + 74) _categoryLarge = CATE_ROAD;
+			else if (_ptMouse.x >= _largeCategory.left + 84 && _ptMouse.x < _largeCategory.left + 116) _categoryLarge = CATE_BUILDING;
+			else if (_ptMouse.x >= _largeCategory.left + 126 && _ptMouse.x <_largeCategory.left + 158) _categoryLarge = CATE_UNIT;
+			else if (_ptMouse.x >= _largeCategory.left + 168 && _ptMouse.x <_largeCategory.left + 200) _categoryLarge = CATE_RESOURCE;
+			else if (_ptMouse.x >= _largeCategory.left + 210 && _ptMouse.y <_largeCategory.left + 242) _categoryLarge = CATE_OBJ;
+		}
+
+		//================== SMALL CATEGORY SELECT =======================
+		if (PtInRect(&_smallCategory, _ptMouse))
+		{
+			_page = 0;
+			_saveIndex.x = 0;
+			_saveIndex.y = 0;
+			switch (_categoryLarge)
+			{
+			case CATE_NULL:
+				break;
+			case CATE_TILE:
+
+				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
+				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
+				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
+				break;
+			case CATE_ROAD:
+				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
+				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
+				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
+				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FOUR;
+
+				break;
+			case CATE_BUILDING:
+				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
+				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
+				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right - 42) _categorySmall = SMC_FOUR;
+				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
+				break;
+			case CATE_UNIT:
+				break;
+			case CATE_RESOURCE:
+				break;
+			case CATE_OBJ:
+				break;
+			case CATE_END:
+				break;
+			default:
+				break;
+			}
+		}
+
+		
+		
+		//================== C O N T E N T S ======================
+
+		//================== B R U S H ============================
+		if ((_categoryLarge == CATE_TILE || _categoryLarge == CATE_ROAD) &&
+			_categorySmall != SMC_NULL &&  PtInRect(&RectMake(
+				_smallCategory.left, _smallCategory.bottom + 10, 16, 16), _ptMouse))
+		{
+			_brushNum = 0;
+		}
+		else if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL && PtInRect(&RectMake(
+			_smallCategory.left, _smallCategory.bottom + 36, 16, 16), _ptMouse))
+		{
+			_brushNum = 1;
+		}
+		else if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL && PtInRect(&RectMake(
+			_smallCategory.left, _smallCategory.bottom + 62, 16, 16), _ptMouse))
+		{
+			_brushNum = 2;
+		}
+
+
+
+		//=============== 자동 그리기 아니면 인덱스 날려버리기
+		if (_brushNum != 255)
+		{
+			_saveIndex.x = 15;
+			_saveIndex.y = 15;
+		}
+
+		//================= P U S H   A R R O W ===================
+
+		if (!_foldMini && PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("down")->setFrameX(1);
+		}
+		if (_foldMini && PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("up")->setFrameX(1);
+		}
+		if (PtInRect(&RectMake(903, 335, 21, 21), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("left")->setFrameX(1);
+		}
+		if (PtInRect(&RectMake(964, 335, 21, 21), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("right")->setFrameX(1);
+		}
+
+		//================ C O N T E N T S   B O X ====================
+		if (PtInRect(&_contents, _ptMouse))
+		{
+			if (_categoryLarge != CATE_BUILDING)
+			{
+				if (!_foldMini && _ptMouse.y <= _contents.top + 128)
+				{
+					_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+					_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
+
+				}
+				else if (_foldMini)
+				{
+					_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+					_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
+				}
+			}
+			if (_categoryLarge == CATE_BUILDING)
+			{
+				switch (_categorySmall)
+				{
+				case SMC_ZERO:
+
+					if (!_foldMini && _ptMouse.y <= _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) / 128;
+						_saveIndex.y = 0;
+
+					}
+					else if (_foldMini)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) / 128;
+						_saveIndex.y = 0;
+					}
+
+					break;
+				case SMC_TWO:
+					break;
+				case SMC_THREE:
+					break;
+				case SMC_FOUR:
+
+					if (!_foldMini && _ptMouse.y <= _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
+
+					}
+					else if (_foldMini)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
+					}
+
+					break;
+				case SMC_FIVE:
+					break;
+				}
+			}
+
+			_brushNum = 255;
+
+			if (_erase)
+			{
+				if (_saveIndex.x > 2 || _saveIndex.y > 0)
+				{
+					_saveIndex.x = 15;
+					_saveIndex.y = 15;
+				}
+
+			}
+		}
+		
+	}
+	
+
 }
 
 void mapTool::loadImg(void)
