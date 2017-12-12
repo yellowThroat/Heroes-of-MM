@@ -19,6 +19,7 @@ private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
 	tagBuildingInfo _buildArr[MAXTILE][MAXTILE];
+
 	tagRemember _remember;
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
@@ -58,9 +59,6 @@ public:
 	void update(void);
 	void render(void);
 	
-	//=============== UTIL =================
-	int getRise(int x, int division);
-
 	//=============== D R A W ===============
 	void tileDraw(void);			// TILE
 	void miniDraw(void);			// MINIMAP

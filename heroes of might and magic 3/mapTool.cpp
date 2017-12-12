@@ -118,10 +118,12 @@ void mapTool::release(void)
 
 void mapTool::update(void)
 {
+	//================= A R R A Y =========================
+	sort(_vBuild.begin(), _vBuild.end());
+
 	//================= T I M E R ================================
 	if (_inputDelayX) _inputDelayX--;
 	if (_inputDelayY) _inputDelayY--;
-
 
 
 
@@ -812,7 +814,7 @@ void mapTool::roadDraw(void)
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
-			if (_roadArr[i][j].road != ROAD_END &&
+			if (_roadArr[i][j].img != NULL && _roadArr[i][j].road != ROAD_END &&
 				i - _mapX / TILESIZE >= 0 && 
 				j - _mapY / TILESIZE >= 0)
 				_roadArr[i][j].img->frameRender(getMemDC(),
@@ -1391,9 +1393,9 @@ void mapTool::deleteAll(int arrX, int arrY)
 		{
 			_roadArr[arrX][arrY].sourX = 0;
 			_roadArr[arrX][arrY].sourY = 0;
+			_roadArr[arrX][arrY].road = ROAD_END;
 			_roadArr[arrX][arrY].img = NULL;
 			_roadArr[arrX][arrY].isChanged = false;
-			_roadArr[arrX][arrY].road = ROAD_END;
 
 
 			setRoad(arrX - 1, arrY, _roadArr[arrX - 1][arrY].road);
@@ -1569,7 +1571,7 @@ void mapTool::setRoad(int arrX, int arrY, ROAD road)
 			}
 		}
 		//============== 포 문 위치 헷갈린다 여기가 끝이다~ 
-
+		
 
 		switch (direction)
 		{
@@ -2968,7 +2970,8 @@ void mapTool::inputOnMap(void)
 
 void mapTool::inputOnUI(void)
 {
-	
+
+
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
 
@@ -3392,16 +3395,3 @@ void mapTool::loadImg(void)
 
 }
 
-int mapTool::getRise(int x, int division)
-{
-	int a;
-	a = x;
-	
-	if (a % division)
-	{
-		a = a / division + 1;
-	}
-	else a = a / division;
-	
-	return a;
-}

@@ -122,6 +122,7 @@ struct tagTileInfo
 	int destX, destY;
 	int miniX, miniY;
 
+
 };
 
 struct tagRoadInfo
@@ -150,6 +151,9 @@ typedef struct tagBuildingInfo
 	bool isClosed;
 	bool enter;
 
+	bool operator<(const tagBuildingInfo &v) const {
+		return (destY < v.destY);
+	}
 
 }building;
 

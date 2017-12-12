@@ -4,6 +4,7 @@
 
 namespace IOTA_UTIL
 {
+
 	//거리 가져오는 함수
 	float getDistance(float startX, float startY, float endX, float endY)
 	{
@@ -37,8 +38,8 @@ namespace IOTA_UTIL
 	float getAngle(float x, float y)
 	{
 		float angle;
-		if (y > 0) 	angle = atan2f(y, x);		
-		else angle = PI2 + atan2f(y, x);		
+		if (y > 0) 	angle = atan2f(y, x);
+		else angle = PI2 + atan2f(y, x);
 		return angle;
 	}
 
@@ -85,15 +86,15 @@ namespace IOTA_UTIL
 
 		if (clockwise)
 		{
-			if (frameX)	img->setFrameX(frame);		
+			if (frameX)	img->setFrameX(frame);
 			else img->setFrameY(frame);
 		}
 		else
 		{
 			if (frame)
 			{
-				if (frameX) img->setFrameX(division-frame);
-				else img->setFrameY(division-frame);
+				if (frameX) img->setFrameX(division - frame);
+				else img->setFrameY(division - frame);
 
 			}
 			else
@@ -104,17 +105,23 @@ namespace IOTA_UTIL
 		}
 	}
 
-
-	// int 형 올림
-	int getRise(int x)
+	int getRise(int x, int division)
 	{
-		int a = x/2 +1; 
-		
+		int a;
+		a = x;
+
+		if (a % division)
+		{
+			a = a / division + 1;
+		}
+		else a = a / division;
+
 		return a;
 	}
+	
 
 	/*
-	폰트 
+	폰트
 		CreateFont(
 	40,						//문자폭
 	0,						//문자 넓이

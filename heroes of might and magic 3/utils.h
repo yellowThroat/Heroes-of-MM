@@ -31,4 +31,8 @@ namespace IOTA_UTIL
 	//이미지 회전 프레임
 	void frameRotation(image* img, int division, float angle, bool frameX, bool clockwise);
 
+	//올림
+	int getRise(int x, int division);
+
+
 }
