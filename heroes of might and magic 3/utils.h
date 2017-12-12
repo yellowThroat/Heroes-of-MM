@@ -34,5 +34,7 @@ namespace IOTA_UTIL
 	//올림
 	int getRise(int x, int division);
 
+	//범위 구하는용
+	int maxRange(int a, int division);
 
 }

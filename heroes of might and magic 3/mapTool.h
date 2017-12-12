@@ -13,7 +13,6 @@ private:
 	vector<building> _vBuild;
 	vector<building>::iterator _viBuild;
 
-private:
 
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
@@ -23,6 +22,7 @@ private:
 	tagRemember _remember;
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
+
 	POINT _mouseArr;
 	POINT _saveIndex;
 	RECT _corX[MAXTILE], _corY[MAXTILE];
@@ -69,25 +69,27 @@ public:
 	void attributeDraw(void);		// ATTRIBUTE
 	void cordinateDraw(void);		// CORDINATE
 
+	void selectBox(int arrX, int arrY,int destX, int destY); // SELECT BOX
+
 	//=============== S E T T I N G ========
-	void setCor(void);
-	void cameraMove(void);
-	void setButton(void);
-	void minimapMove(void);
-	void loadImg(void);
-	void inputOnMap(void);
-	void inputOnUI(void);
-	void inputCommon(void);
+	void loadImg(void);				// Load Img
+	void setCor(void);				// Cordinate
+	void cameraMove(void);			// Camera
+	void minimapMove(void);			// Mini Map
+	void setButton(void);			// Button Setting
+	void inputOnMap(void);			// Key input On Map
+	void inputOnUI(void);			// Key input On UI
+	void inputCommon(void);			// Common Key input
 
 
 
-	//=============== C O N T E N T S ===============
-	void setTile(int arrX, int arrY, TILE tile);
-	void setRoad(int arrX, int arrY, ROAD road);
-	void deleteAll(int arrX, int arrY);
-	void addBuilding(int arrX, int arrY, CAMP camp);
-	void addBuilding(int arrX, int arrY, MINE mine);
-	void addBuilding(int arrX, int arrY, EVENT ev);
+	//=============== C O N T E N T S =========================
+	void setTile(int arrX, int arrY, TILE tile);		// DRAW TILE
+	void setRoad(int arrX, int arrY, ROAD road);		// DRAW ROAD
+	void addBuilding(int arrX, int arrY, CAMP camp);	// DRAW BUILDING
+	void addBuilding(int arrX, int arrY, MINE mine);	// DRAW BUILDING
+	void addBuilding(int arrX, int arrY, EVENT ev);		// DRAW BUILDING
+	void deleteAll(int arrX, int arrY);					// ERASE BUILDING
 
 
 

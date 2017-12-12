@@ -120,6 +120,19 @@ namespace IOTA_UTIL
 	}
 	
 
+	//================ 범위 구하는용
+	int maxRange(int x, int division)
+	{
+		int a;
+		a = x;
+		if (a%division)
+		{
+			a = a / division ;
+		}
+		else a = a / division - 1;
+		return a;
+	}
+
 	/*
 	폰트
 		CreateFont(

@@ -152,7 +152,7 @@ typedef struct tagBuildingInfo
 	bool enter;
 
 	bool operator<(const tagBuildingInfo &v) const {
-		return (destY < v.destY);
+		return (enterY < v.enterY);
 	}
 
 }building;

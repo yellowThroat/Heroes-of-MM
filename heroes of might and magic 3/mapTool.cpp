@@ -71,8 +71,6 @@ HRESULT mapTool::init(void)
 			_buildArr[i][j].sourY = 0;
 			_buildArr[i][j].sizeX = 0;
 			_buildArr[i][j].sizeY = 0;
-
-			
 		}
 	}
 
@@ -177,6 +175,26 @@ void mapTool::render(void)
 	cordinateDraw();
 
 
+}
+
+void mapTool::selectBox(int arrX, int arrY, int destX, int destY)
+{
+	IMAGEMANAGER->findImage("width")->render(getMemDC(),
+		20 + arrX*TILESIZE - _mapX,
+		20 + arrY*TILESIZE - _mapY,
+		0,0,(destX- arrX+1)*TILESIZE, 2);
+	IMAGEMANAGER->findImage("width")->render(getMemDC(),
+		20 + arrX*TILESIZE - _mapX,
+		18 + (destY+1)*TILESIZE - _mapY,
+		0, 0, (destX - arrX+1)*TILESIZE, 2);
+	IMAGEMANAGER->findImage("height")->render(getMemDC(),
+		20 + arrX*TILESIZE - _mapX,
+		20 + arrY*TILESIZE - _mapY,
+		0, 0,2, (destY- arrY+1)*TILESIZE);
+	IMAGEMANAGER->findImage("height")->render(getMemDC(),
+		18 + (destX+1)*TILESIZE - _mapX,
+		20 + arrY*TILESIZE - _mapY,
+		0, 0, 2, (destY - arrY+1)*TILESIZE);
 }
 
 void mapTool::cordinateDraw(void)
@@ -342,14 +360,15 @@ void mapTool::selectDraw(void)
 					20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
 					20 + (_mouseArr.y - 3)*TILESIZE - _mapY,1,0,SHADOWALPHA);
 
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < 5; i++)
 				{
-					for (int j = 0; j < 6; j++)
+					for (int j = 0; j < 3; j++)
 					{
-						if(_mapArr[_mouseArr.x -3 +i][_mouseArr.y -3 +j].tile == TILE_WATER)
+						if(_mapArr[_mouseArr.x -2 +i][_mouseArr.y  +j].tile == TILE_WATER ||
+							_buildArr[_mouseArr.x - 2 +i][_mouseArr.y +j].isClosed)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
-								20 + (_mouseArr.x - 3 + i)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 3 + j)*TILESIZE - _mapY,150);
+								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y  + j)*TILESIZE - _mapY,150);
 					}
 				}
 				break;
@@ -361,14 +380,15 @@ void mapTool::selectDraw(void)
 					20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
 					20 + (_mouseArr.y - 3)*TILESIZE - _mapY,1,0,SHADOWALPHA);
 
-				for (int i = 0; i < 6; i++)
+				for (int i = 0; i < 5; i++)
 				{
-					for (int j = 0; j < 6; j++)
+					for (int j = 0; j < 3; j++)
 					{
-						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y - 2 + j].tile == TILE_WATER)
+						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y + j].tile == TILE_WATER ||
+							_buildArr[_mouseArr.x - 2 + i][_mouseArr.y + j].isClosed)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
-								20 + (_mouseArr.x - 3 + i)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 3 + j)*TILESIZE - _mapY, 150);
+								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y + j)*TILESIZE - _mapY, 150);
 					}
 				}
 
@@ -386,13 +406,13 @@ void mapTool::selectDraw(void)
 
 			if(_saveIndex.x + _saveIndex.y * 4 == 2)
 				IMAGEMANAGER->findImage("point_wood")->render(getMemDC(),
-					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+					20 + (_mouseArr.y )*TILESIZE - _mapY);
 
 			if(_saveIndex.x + _saveIndex.y * 4 == 5)
 				IMAGEMANAGER->findImage("point_mercury")->render(getMemDC(),
 					20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+					20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
 
 			switch (_saveIndex.y)
 			{
@@ -411,8 +431,8 @@ void mapTool::selectDraw(void)
 					break;
 				case 2:
 					IMAGEMANAGER->findImage("mine_wood")->frameRender(getMemDC(),
-						20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+						20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
 					break;
 				case 3:
 					IMAGEMANAGER->findImage("mine_iron")->frameRender(getMemDC(),
@@ -432,7 +452,7 @@ void mapTool::selectDraw(void)
 				case 1:
 					IMAGEMANAGER->findImage("mine_mercury")->frameRender(getMemDC(),
 						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+						20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
 					break;
 				case 2:
 					IMAGEMANAGER->findImage("mine_gem")->frameRender(getMemDC(),
@@ -449,28 +469,45 @@ void mapTool::selectDraw(void)
 			//============ 3 * 2 사이즈 금지 구역 표시
 			if ((_saveIndex.x + _saveIndex.y * 4) != 5 &&
 				(_saveIndex.x + _saveIndex.y * 4) != 2 &&
-				(_saveIndex.x + _saveIndex.y * 4) != 7)
+				(_saveIndex.x + _saveIndex.y * 4) != 7 && 
+				(_saveIndex.x + _saveIndex.y * 4) != 4)
 				for (int i = 0; i < 3; i++)
 				{
 					for (int j = 0; j < 2; j++)
 					{
-						if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+						if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER ||
+							_buildArr[_mouseArr.x - 1 + i][_mouseArr.y -1 + j].isClosed)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
 								20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
 								20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
 					}
 				}
+			if ((_saveIndex.x + _saveIndex.y) * 4 == 4)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y ].tile == TILE_WATER ||
+						_buildArr[_mouseArr.x - 1 + i][_mouseArr.y ].isClosed)
+						IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+							20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
+							20 + (_mouseArr.y )*TILESIZE - _mapY, 150);
+
+				}
+			}
+
 
 			//============== 3 * 3 사이즈 금지 구역 표시 
 			if ((_saveIndex.x + _saveIndex.y * 4) == 5 )
 				for (int i = 0; i < 3; i++)
 				{
-					for (int j = 0; j < 3; j++)
+					for (int j = 0; j < 2; j++)
 					{
-						if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+						if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y -1 +j].tile == TILE_WATER ||
+							_buildArr[_mouseArr.x - 1 + i][_mouseArr.y -1 + j].isClosed)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
 								20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
+								20 + (_mouseArr.y - 1 +j )*TILESIZE - _mapY, 150);
+
 					}
 				}
 			//============== 4 * 2 사이즈 금지 구역 표시 
@@ -479,7 +516,8 @@ void mapTool::selectDraw(void)
 				{
 					for (int j = 0; j < 2; j++)
 					{
-						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
+						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y - 1 + j].tile == TILE_WATER ||
+							_buildArr[_mouseArr.x - 2 + i][_mouseArr.y -1 + j].isClosed)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
 								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
 								20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
@@ -489,70 +527,150 @@ void mapTool::selectDraw(void)
 
 			break;
 		case SMC_TWO:
-			char evName[256];
-			switch (_saveIndex.y)
+			if (_categorySmall == SMC_TWO)
 			{
-			case 0:
-				if(_page ==0 || _foldMini)
-				switch (_saveIndex.x)
+
+
+				char evName[256];
+				int adjustX = 0;
+				int adjustY = 0;
+				int sizeX = 0;
+				int sizeY = 0;
+				switch (_saveIndex.y)
 				{
-				case 0:	sprintf(evName, "ev_lvlup");
+				case 0:
+					if (_page == 0 || _foldMini)
+						switch (_saveIndex.x)
+						{
+						case 0:
+							sprintf(evName, "ev_lvlup");
+							adjustY = 1;
+							adjustX = 0;
+							sizeX = 1;
+							sizeY = 1;
+							break;
+						case 1:
+							sprintf(evName, "ev_physical");
+							adjustY = 1;
+							adjustX = 0;
+							sizeX = 2;
+							sizeY = 1;
+							break;
+						case 2: sprintf(evName, "ev_magical");
+							adjustY = 0;
+							adjustX = 0;
+							sizeX = 1;
+							sizeY = 1;
+							break;
+						case 3: sprintf(evName, "ev_skill");
+							adjustY = 0;
+							adjustX = -1;
+							sizeX = 3;
+							sizeY = 1;
+							break;
+						}
+					else if (_page == 1 && !_foldMini)
+						switch (_saveIndex.x)
+						{
+						case 0:	sprintf(evName, "ev_movement");
+							adjustY = 0;
+							adjustX = 0;
+							sizeX = 2;
+							sizeY = 1;
+							break;
+						case 1:	sprintf(evName, "ev_resource");
+							adjustY = 0;
+							adjustX = -1;
+							sizeX = 3;
+							sizeY = 2;
+							break;
+						}
+					else sprintf(evName, "empty");
 					break;
-				case 1: sprintf(evName, "ev_physical");
+				case 1:
+					if (_page == 0 || _foldMini)
+						switch (_saveIndex.x)
+						{
+						case 0: sprintf(evName, "ev_magic");
+							adjustY = 0;
+							adjustX = 0;
+							sizeX = 1;
+							sizeY = 1;
+							break;
+						case 1: sprintf(evName, "ev_luck");
+							adjustY = 0;
+							adjustX = 0;
+							sizeX = 2;
+							sizeY = 1;
+							break;
+						case 2: sprintf(evName, "ev_morale");
+							adjustY = 0;
+							adjustX = 0;
+							sizeX = 2;
+							sizeY = 1;
+							break;
+						case 3: sprintf(evName, "ev_explore");
+							adjustY = 1;
+							adjustX = 0;
+							sizeX = 1;
+							sizeY = 1;
+							break;
+						}
+					else sprintf(evName, "empty");
+
 					break;
-				case 2: sprintf(evName, "ev_magical");
-					break;
-				case 3: sprintf(evName, "ev_skill");
+				case 2:
+					if (_foldMini)
+						switch (_saveIndex.x)
+						{
+						case 0: sprintf(evName, "ev_movement");
+							adjustY = 0;
+							adjustX = 0;
+							sizeX = 2;
+							sizeY = 1;
+							break;
+						case 1: sprintf(evName, "ev_resource");
+							adjustY = 0;
+							adjustX = -1;
+							sizeX = 3;
+							sizeY = 2;
+							break;
+						}
+					else sprintf(evName, "empty");
 					break;
 				}
-				else if (_page ==1 && !_foldMini)
-					switch (_saveIndex.x)
+
+				if (!((_page == 0 || _foldMini) && (_saveIndex.x == 1 && _saveIndex.y == 1)))
+					IMAGEMANAGER->findImage(evName)->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+				else
+					IMAGEMANAGER->findImage(evName)->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y)*TILESIZE - _mapY);
+
+				for (int i = adjustX; i < adjustX + sizeX; i++)
+				{
+					for (int j = adjustY; j < adjustY + sizeY; j++)
 					{
-					case 0:	sprintf(evName, "ev_movement");
-						break;
-					case 1:	sprintf(evName, "ev_resource");
-						break;
+						if (_mapArr[_mouseArr.x + i][_mouseArr.y + j].tile == TILE_WATER ||
+							_buildArr[_mouseArr.x + i][_mouseArr.y + j].isClosed)
+						{
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + (_mouseArr.x + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y + j)*TILESIZE - _mapY, 150);
+						}
+
 					}
-				else sprintf(evName, "empty");
-				break;
-			case 1:
-				if(_page == 0 || _foldMini)
-				switch (_saveIndex.x)
-				{
-				case 0: sprintf(evName, "ev_magic");
-					break;
-				case 1: sprintf(evName, "ev_luck");
-					break;
-				case 2: sprintf(evName, "ev_morale");
-					break;
-				case 3: sprintf(evName, "ev_explore");
-					break;
 				}
-				else sprintf(evName, "empty");
-
-				break;
-			case 2:
-				if(_foldMini)
-				switch (_saveIndex.x)
-				{
-				case 0: sprintf(evName, "ev_movement");
-					break;
-				case 1: sprintf(evName, "ev_resource");
-					break;
-				}
-				else sprintf(evName, "empty");
-				break;
+				selectBox(_mouseArr.x - IMAGEMANAGER->findImage(evName)->getFrameWidth() / 2/TILESIZE,
+					_mouseArr.y - IMAGEMANAGER->findImage(evName)->getFrameHeight() / 2/TILESIZE,
+					_mouseArr.x + maxRange(IMAGEMANAGER->findImage(evName)->getFrameWidth() / TILESIZE, 2),
+					_mouseArr.y + maxRange(IMAGEMANAGER->findImage(evName)->getFrameHeight() / TILESIZE, 2));
 			}
-			if(!((_page == 0 || _foldMini) &&(_saveIndex.x ==1 && _saveIndex.y ==1 )))
-			IMAGEMANAGER->findImage(evName)->frameRender(getMemDC(),
-				20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-				20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
-			else
-				IMAGEMANAGER->findImage(evName)->frameRender(getMemDC(),
-					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y)*TILESIZE - _mapY);
+		break;
 
-
+		case SMC_THREE:
 			break;
 		case SMC_FOUR:
 
@@ -583,45 +701,43 @@ void mapTool::selectDraw(void)
 					{
 					case CAMP_CASTLE:
 						IMAGEMANAGER->findImage("point_castle")->render(getMemDC(),
-							20 + (_mouseArr.x - _remember.sizeX/2)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - _remember.sizeY/2)*TILESIZE - _mapY);
+							20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 3)*TILESIZE - _mapY);
 
 						break;
 					case CAMP_DUNGEON:
 						IMAGEMANAGER->findImage("point_dungeon")->render(getMemDC(),
-							20 + (_mouseArr.x - _remember.sizeX/2)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - _remember.sizeY/2)*TILESIZE - _mapY);
+							20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - 3)*TILESIZE - _mapY);
 						break;
 						
 					}
 					break;
 				case 1:
 						_remember.img->frameRender(getMemDC(),
-							20 + (_mouseArr.x - _remember.sizeX/2)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - _remember.sizeY/2)*TILESIZE - _mapY);
+							20 + (_mouseArr.x - _remember.sizeX/2 - _remember.imgX)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - _remember.sizeY/2 - _remember.imgY)*TILESIZE - _mapY);
 						
-						//====================== 테두리 그리기
-						if (_remember.mine != MINE_WOOD &&
-							_remember.mine != MINE_MERCURY)
-							IMAGEMANAGER->findImage("point_mine")->render(getMemDC(),
-								20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+						selectBox(_mouseArr.x - _remember.sizeX / 2 - _remember.imgX,
+							_mouseArr.y - _remember.sizeY / 2 - _remember.imgY,
+							_mouseArr.x + getRise(_remember.sizeX,2),
+							_mouseArr.y + getRise(_remember.sizeY,2));
 
-						if (_remember.mine == MINE_WOOD)
-							IMAGEMANAGER->findImage("point_wood")->render(getMemDC(),
-								20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
-
-						if (_remember.mine == MINE_MERCURY)
-							IMAGEMANAGER->findImage("point_mercury")->render(getMemDC(),
-								20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
 						break;
 
 				case 2:
-					_remember.img->frameRender(getMemDC(),
-						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+
+						_remember.img->frameRender(getMemDC(),
+							20 + (_mouseArr.x - (_remember.sizeX + _remember.imgX)/ 2)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - (_remember.sizeY + _remember.imgY)/2)*TILESIZE - _mapY);
+
+
+					selectBox(_mouseArr.x - (_remember.sizeX + _remember.imgX) / 2,
+						_mouseArr.y - (_remember.sizeY + _remember.imgY) / 2,
+						_mouseArr.x + maxRange(_remember.img->getFrameWidth()/TILESIZE,2),
+						_mouseArr.y + maxRange(_remember.img->getFrameHeight()/TILESIZE,2));
+
+
 					break;
 				}
 				//============== 금지 구역 표시
@@ -629,10 +745,36 @@ void mapTool::selectDraw(void)
 				{
 					for (int j = _mouseArr.y - _remember.sizeY / 2; j < _mouseArr.y + getRise(_remember.sizeY, 2); j++)
 					{
-						if (_buildArr[i][j].isClosed ||
-							_mapArr[i][j].tile == TILE_WATER)
+						int adjustX = 0;
+						int adjustY = 0;
+						switch (_remember.ev)
+						{
+						case EV_LVUP:		adjustY = 1;
+							break;
+						case EV_PHYSICAL:	adjustX = 1; adjustY = 1;
+							break;
+						case EV_MAGICAL:	 
+							break;
+						case EV_SKILL:		
+							break;
+						case EV_MAGIC:		
+							break;
+						case EV_LUCK:		adjustX = 1;
+							break;
+						case EV_MORALE:		adjustX = 1; 
+							break;
+						case EV_EXPLORE:	adjustY = 1;
+							break;
+						case EV_MOVEMENT:	adjustX = 1;
+							break;
+						case EV_RESOURCE:	adjustY = 1;
+							break;
+
+						}
+						if (_buildArr[i + adjustX][j + adjustY].isClosed ||
+							_mapArr[i + adjustX][j+ adjustY].tile == TILE_WATER)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
-								20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY, 150);
+								20 + (i+adjustX)*TILESIZE - _mapX, 20 + (j+ adjustY)*TILESIZE - _mapY, 150);
 					}
 				}
 			}
@@ -827,14 +969,6 @@ void mapTool::roadDraw(void)
 
 void mapTool::buildingDraw(void)
 {
-	for (int i = 0; i < _vBuild.size(); i++)
-	{
-		
-
-
-
-
-	}
 
 	for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); ++_viBuild)
 	{
@@ -843,18 +977,7 @@ void mapTool::buildingDraw(void)
 				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE- _mapY,
 				_viBuild->sourX, _viBuild->sourY);
 
-			if (_viBuild->mine == MINE_WOOD)
-			{
-
-				_viBuild->imgShadow->alphaFrameRender(getMemDC(),
-					20 + (_viBuild->destX - 1) * TILESIZE - _mapX,
-					20 + (_viBuild->destY - 1) * TILESIZE - _mapY,
-					_viBuild->sourX, _viBuild->sourY,SHADOWALPHA);
-
-
-			}
-
-			if(_viBuild->mine != MINE_IRON && _viBuild->mine != MINE_WOOD)
+			if(_viBuild->mine != MINE_IRON)
 			_viBuild->imgShadow->alphaFrameRender(getMemDC(),
 				20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE - _mapX,
 				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE - _mapY,
@@ -1635,8 +1758,6 @@ void mapTool::setRoad(int arrX, int arrY, ROAD road)
 
 void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 {
-	if (arrX - 2 < 0 || arrX + 3 > MAXTILE ||
-		arrY - 2 < 0 || arrY + 3 > MAXTILE )  return;
 
 
 	building build;
@@ -1646,23 +1767,18 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 	build.ev = EV_NULL;
 
 	build.camp = camp;
-	build.sizeX = 6;
-	build.sizeY = 6;
-	build.destX = arrX - build.sizeX/2;
-	build.destY = arrY - build.sizeY/2;
+	build.sizeX = 5;
+	build.sizeY = 3;
+	build.destX = arrX - 2;
+	build.destY = arrY ;
+	build.imgX = 1;
+	build.imgY = 3;
 	build.sourX = 1;
 	build.sourY = 0;
 	build.miniX = 0;
-	build.enterX = 3;
-	build.enterY = 5;
+	build.enterX = 2;
+	build.enterY = 2;
 
-	for (int i = 0; i < build.sizeX; i++)
-	{
-		for (int j = 0; j < build.sizeY; j++)
-		{
-			if (_mapArr[build.destX + i][build.destY + j].tile == TILE_WATER) return;
-		}
-	}
 
 	switch (build.camp)
 	{
@@ -1677,10 +1793,25 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 	}
 
 
-	//================== 금지 구역 설정
-	for (int i = build.destX + 1; i < build.destX + build.sizeX; i++)
+	//================== 응 아니야 돌아가
+	
+	//================== 맵 타일 제한 넘어가면?
+	if (build.destX<0 || build.destY <= 0 || build.destX >MAXTILE || build.destY > MAXTILE) return;
+	
+	//================== 타일이 물이거나 건물이 있다면?
+	for (int i = build.destX; i < build.destX + build.sizeX; i++)
 	{
-		for (int j = build.destY +2 ; j < build.destY +build.sizeY; j++)
+		for (int j = build.destY; j < build.destY + build.sizeY; j++)
+		{
+			if (_mapArr[i][j].tile == TILE_WATER ||
+				_buildArr[i][j].isClosed) return;
+		}
+	}
+
+	//================== 금지 구역 설정
+	for (int i = build.destX ; i < build.destX + build.sizeX; i++)
+	{
+		for (int j = build.destY ; j < build.destY + build.sizeY; j++)
 		{
 			_buildArr[i][j].camp = build.camp;
 			_buildArr[i][j].isClosed = true;
@@ -1718,62 +1849,103 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 		build.imgShadow = IMAGEMANAGER->findImage("mine_gold_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
+		build.imgX = 0;
+		build.imgY = 0;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		build.enterX = 1;
+		build.enterY = 1;
 		break;
 	case MINE_CRYSTAL:
 		build.img = IMAGEMANAGER->findImage("mine_crystal");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_crystal_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
+		build.imgX = 0;
+		build.imgY = 0;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		build.enterX = 1;
+		build.enterY = 1;
 		break;
 	case MINE_WOOD:
 		build.img = IMAGEMANAGER->findImage("mine_wood");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_wood_shadow");
 		build.sizeX = 4;
 		build.sizeY = 2;
+		build.imgX = 1;
+		build.imgY = 1;
+		build.destX = arrX - 2;
+		build.destY = arrY - 1;
 		build.enterX = 2;
+		build.enterY = 1;
 		break;
 	case MINE_IRON:
 		build.img = IMAGEMANAGER->findImage("mine_iron");
-		build.imgShadow = IMAGEMANAGER->findImage("mine_iron_shadow");
+		build.imgShadow = IMAGEMANAGER->findImage("empty");
 		build.sizeX = 3;
 		build.sizeY = 2;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
+		build.imgX = 0;
+		build.imgY = 0;
+		build.enterX = 1;
+		build.enterY = 1;
 		break;
 	case MINE_SULFUR:
 		build.img = IMAGEMANAGER->findImage("mine_sulfur");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_sulfur_shadow");
 		build.sizeX = 3;
-		build.sizeY = 2;
+		build.sizeY = 1;
+		build.destX = arrX - 1;
+		build.destY = arrY;
+		build.imgX = 0;
+		build.imgY = 1;
+		build.enterX = 1;
+		build.enterY = 0;
 		break;
 	case MINE_MERCURY:
 		build.img = IMAGEMANAGER->findImage("mine_mercury");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_mercury_shadow");
 		build.sizeX = 3;
-		build.sizeY = 3;
-		build.enterY = 2;
+		build.sizeY = 2;
+		build.enterX = 1;
+		build.enterY = 1;
+		build.imgX = 0;
+		build.imgY = 1;
+		build.destX = arrX - 1;
+		build.destY = arrY - 1;
 		break;
 	case MINE_GEM:
 		build.img = IMAGEMANAGER->findImage("mine_gem");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_gem_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
+		build.enterX = 1;
+		build.enterY = 1;
+		build.imgX = 0;
+		build.imgY = 0;
+		build.destX = arrX -1;
+		build.destY = arrY -1;
 		break;
 	}
-	build.destX = arrX - build.sizeX/2;
-	build.destY = arrY - build.sizeY/2;
 
 
-	//================ need for initialize 
-	for (int i = 0; i < build.sizeX; i++)
+	//================== 응 아니야 돌아가
+
+	//================== 맵 타일 제한 넘어가면?
+	if (build.destX<0 || build.destY <= 0 || build.destX >MAXTILE || build.destY > MAXTILE) return;
+
+	//================== 타일이 물이거나 건물이 있다면?
+	for (int i = build.destX; i < build.destX + build.sizeX; i++)
 	{
-		for (int j = 0; j < build.sizeY; j++)
+		for (int j = build.destY; j < build.destY + build.sizeY; j++)
 		{
-			if (_mapArr[build.destX + i][build.destY + j].tile == TILE_WATER) return;
+			if (_mapArr[i][j].tile == TILE_WATER ||
+				_buildArr[i][j].isClosed) return;
 		}
 	}
 
-	if (build.destX< 0 || build.destX + build.sizeX - 1 > MAXTILE ||
-		build.destY< 0 || build.destY + build.sizeY - 1 > MAXTILE)  return;
-	
 
 	//=============== 금지 구역 설정
 	for (int i = build.destX ; i < build.destX + build.sizeX ; i++)
@@ -1871,11 +2043,11 @@ void mapTool::addBuilding(int arrX, int arrY, EVENT ev)
 		build.imgShadow = IMAGEMANAGER->findImage("ev_luck_shadow");
 		build.sizeX = 2;
 		build.sizeY = 1;
-		build.enterX = 1;
+		build.enterX = 0;
 		build.enterY = 0;
 		build.imgX = 1;
 		build.imgY = 0;
-		build.destX = arrX -1;
+		build.destX = arrX ;
 		build.destY = arrY;
 		break;
 	case EV_MORALE:
@@ -1929,16 +2101,21 @@ void mapTool::addBuilding(int arrX, int arrY, EVENT ev)
 	}
 
 
-	for (int i = 0; i < build.sizeX; i++)
+	//================== 응 아니야 돌아가
+
+	//================== 맵 타일 제한 넘어가면?
+	if (build.destX<0 || build.destY <= 0 || build.destX >MAXTILE || build.destY > MAXTILE) return;
+
+	//================== 타일이 물이거나 건물이 있다면?
+	for (int i = build.destX; i < build.destX + build.sizeX; i++)
 	{
-		for (int j = 0; j < build.sizeY; j++)
+		for (int j = build.destY; j < build.destY + build.sizeY; j++)
 		{
-			if (_mapArr[build.destX + i][build.destY + j].tile == TILE_WATER) return;
+			if (_mapArr[i][j].tile == TILE_WATER ||
+				_buildArr[i][j].isClosed) return;
 		}
 	}
 
-	if (build.destX< 0 || build.destX + build.sizeX - 1 > MAXTILE ||
-		build.destY< 0 || build.destY + build.sizeY - 1 > MAXTILE)  return;
 
 
 	//=============== 금지 구역 설정
@@ -2016,11 +2193,13 @@ void mapTool::setTile(int arrX, int arrY, TILE tile)
 		
 
 		//============ 주변 ==================
+		
 		for (int i = -1; i < 2; i++)
 		{
 			for (int j = -1; j < 2; j++)
 			{
-				if (_mapArr[arrX + i][arrY + j].tile != (TILE)_categorySmall)
+				if(arrX + i >= 0 && arrX + i <MAXTILE && arrY + j >= 0 && arrY + j <MAXTILE)
+				if (_mapArr[arrX + i][arrY + j].tile != (TILE)_categorySmall )
 				{
 					switch (i)
 					{
@@ -2062,6 +2241,7 @@ void mapTool::setTile(int arrX, int arrY, TILE tile)
 			}
 		}
 		
+
 		if ((direction & EDGE1) == EDGE1)
 		{
 			_mapArr[arrX][arrY].sourX = ranNum;
@@ -2124,74 +2304,78 @@ void mapTool::setTile(int arrX, int arrY, TILE tile)
 		}
 
 		//========= 옆 타일 정비
-		if (_mapArr[arrX - 1][arrY].tile != (TILE)_categorySmall)
+		if (arrX -1 >= 0 && arrX +1 < MAXTILE && arrY -1 >= 0 && arrY + 1 < MAXTILE)
 		{
-			if (_mapArr[arrX - 1][arrY].sourY == 0)
+			if (_mapArr[arrX - 1][arrY].tile != (TILE)_categorySmall)
 			{
-				_mapArr[arrX - 1][arrY].sourX = 4 + ranNum;
-				_mapArr[arrX - 1][arrY].sourY = 1;
-			}
-			if (_mapArr[arrX - 1][arrY].sourY == 2)
-			{
-
-				if (_mapArr[arrX - 1][arrY].sourX < 4)
+				if (_mapArr[arrX - 1][arrY].sourY == 0)
 				{
-					_mapArr[arrX - 1][arrY].sourY = 3;
+					_mapArr[arrX - 1][arrY].sourX = 4 + ranNum;
+					_mapArr[arrX - 1][arrY].sourY = 1;
 				}
-				else
+				if (_mapArr[arrX - 1][arrY].sourY == 2)
 				{
-					_mapArr[arrX - 1][arrY].sourY = 4;
-				}
-				_mapArr[arrX - 1][arrY].sourX = 4 + ranNum;
 
-			}
-		}
-		if (_mapArr[arrX + 1][arrY].tile != (TILE)_categorySmall)
-		{
-			if (_mapArr[arrX + 1][arrY].sourY == 0)
-			{
-				_mapArr[arrX + 1][arrY].sourX = ranNum;
-				_mapArr[arrX + 1][arrY].sourY = 1;
-			}
+					if (_mapArr[arrX - 1][arrY].sourX < 4)
+					{
+						_mapArr[arrX - 1][arrY].sourY = 3;
+					}
+					else
+					{
+						_mapArr[arrX - 1][arrY].sourY = 4;
+					}
+					_mapArr[arrX - 1][arrY].sourX = 4 + ranNum;
 
-			if (_mapArr[arrX + 1][arrY].sourY == 2)
-			{
-				if (_mapArr[arrX + 1][arrY].sourX < 4)
-				{
-					_mapArr[arrX + 1][arrY].sourY = 3;
 				}
-				else
+			}
+			if (_mapArr[arrX + 1][arrY].tile != (TILE)_categorySmall)
+			{
+				if (_mapArr[arrX + 1][arrY].sourY == 0)
 				{
 					_mapArr[arrX + 1][arrY].sourX = ranNum;
-					_mapArr[arrX + 1][arrY].sourY = 4;
+					_mapArr[arrX + 1][arrY].sourY = 1;
+				}
+
+				if (_mapArr[arrX + 1][arrY].sourY == 2)
+				{
+					if (_mapArr[arrX + 1][arrY].sourX < 4)
+					{
+						_mapArr[arrX + 1][arrY].sourY = 3;
+					}
+					else
+					{
+						_mapArr[arrX + 1][arrY].sourX = ranNum;
+						_mapArr[arrX + 1][arrY].sourY = 4;
+					}
+
 				}
 
 			}
+			if (_mapArr[arrX][arrY - 1].tile != (TILE)_categorySmall)
+			{
+				if (_mapArr[arrX][arrY - 1].sourY == 0)
+				{
+					_mapArr[arrX][arrY - 1].sourX = 4 + ranNum;
+					_mapArr[arrX][arrY - 1].sourY = 2;
+				}
+				else if (_mapArr[arrX][arrY - 1].sourY == 1)
+				{
+					_mapArr[arrX][arrY - 1].sourY = 4;
+				}
+			}
+			if (_mapArr[arrX][arrY + 1].tile != (TILE)_categorySmall)
+			{
+				if (_mapArr[arrX][arrY + 1].sourY == 0)
+				{
+					_mapArr[arrX][arrY + 1].sourX = ranNum;
+					_mapArr[arrX][arrY + 1].sourY = 2;
+				}
+				else if (_mapArr[arrX][arrY + 1].sourY == 1)
+				{
+					_mapArr[arrX][arrY + 1].sourY = 3;
+				}
+			}
 
-		}
-		if (_mapArr[arrX][arrY - 1].tile != (TILE)_categorySmall)
-		{
-			if (_mapArr[arrX][arrY - 1].sourY == 0)
-			{
-				_mapArr[arrX][arrY - 1].sourX = 4 + ranNum;
-				_mapArr[arrX][arrY - 1].sourY = 2;
-			}
-			else if (_mapArr[arrX][arrY - 1].sourY == 1)
-			{
-				_mapArr[arrX][arrY - 1].sourY = 4;
-			}
-		}
-		if (_mapArr[arrX][arrY + 1].tile != (TILE)_categorySmall)
-		{
-			if (_mapArr[arrX][arrY + 1].sourY == 0)
-			{
-				_mapArr[arrX][arrY + 1].sourX = ranNum;
-				_mapArr[arrX][arrY + 1].sourY = 2;
-			}
-			else if (_mapArr[arrX][arrY + 1].sourY == 1)
-			{
-				_mapArr[arrX][arrY + 1].sourY = 3;
-			}
 		}
 	}
 }
@@ -3110,7 +3294,7 @@ void mapTool::inputOnUI(void)
 		//================ S E T T I N G   I N D E X =====================
 		if (PtInRect(&RectMake(_contents.left - 10, _contents.top, 256, 288), _ptMouse))
 		{
-			if (_categoryLarge != CATE_BUILDING)
+			if (_categoryLarge != CATE_BUILDING && _ptMouse.x >= _contents.left)
 			{
 				if (!_foldMini && _ptMouse.y <= _contents.top + 128)
 				{
@@ -3200,7 +3384,7 @@ void mapTool::inputOnUI(void)
 				}
 			}
 
-			if(!PtInRect(&_miniMap,_ptMouse)) _brushNum = 255;
+			if(!PtInRect(&_miniMap,_ptMouse) && _ptMouse.x >= _contents.left) _brushNum = 255;
 			 
 
 			if (_categorySmall == SMC_FOUR)
@@ -3224,7 +3408,7 @@ void mapTool::loadImg(void)
 	//================ T E R R A I N ==========================
 	IMAGEMANAGER->addFrameImage("terrain", "image/mapTool/terrain_idle.bmp", 32, 32,1,1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("terrain_green", "image/mapTool/terrain_green.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("terrain_water", "image/mapTool/terrain_water.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("terrain_water", "image/mapTool/terrain_test.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("terrain_volcano", "image/mapTool/terrain_volcano.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
 
 	//================ R O A D =================================
@@ -3246,7 +3430,7 @@ void mapTool::loadImg(void)
 	//============ MINE
 	IMAGEMANAGER->addFrameImage("mine_gold", "image/mapTool/mine/mine_gold.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_crystal", "image/mapTool/mine/mine_crystal.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_wood", "image/mapTool/mine/mine_wood.bmp", 128, 64, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_wood", "image/mapTool/mine/mine_wood.bmp", 160, 96, 1, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_iron", "image/mapTool/mine/mine_iron.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_sulfur", "image/mapTool/mine/mine_sulfur.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_mercury", "image/mapTool/mine/mine_mercury.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
@@ -3264,7 +3448,7 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->findImage("mine_mercury_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("mine_gem_shadow")->AlphaInit();
 	IMAGEMANAGER->addImage("point_mine", "image/mapTool/point_mine.bmp", 96, 64, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("point_wood", "image/mapTool/point_wood.bmp", 128, 64, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("point_wood", "image/mapTool/point_wood.bmp", 160, 96, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("point_mercury", "image/mapTool/point_mercury.bmp", 96, 96, true, RGB(255, 0, 255));
 
 	//============= E V E N T 
