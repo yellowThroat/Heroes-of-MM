@@ -18,6 +18,7 @@ private:
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
+	tagBuildingInfo _buildArr[MAXTILE][MAXTILE];
 	tagRemember _remember;
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
@@ -33,6 +34,7 @@ private:
 private:
 	float _mapX, _mapY;
 
+	bool _buildAttribute;
 	bool _area;
 	bool _foldMini;
 	bool _move;
@@ -56,6 +58,8 @@ public:
 	void update(void);
 	void render(void);
 	
+	//=============== UTIL =================
+	int getRise(int x, int division);
 
 	//=============== D R A W ===============
 	void tileDraw(void);			// TILE
@@ -64,6 +68,8 @@ public:
 	void selectDraw(void);			// SELECT CURSOR
 	void buildingDraw(void);		// BUILDING
 	void roadDraw(void);			// ROAD
+	void attributeDraw(void);		// ATTRIBUTE
+	void cordinateDraw(void);		// CORDINATE
 
 	//=============== S E T T I N G ========
 	void setCor(void);

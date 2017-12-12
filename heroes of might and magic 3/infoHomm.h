@@ -47,9 +47,15 @@ enum MAPOBJECT
 enum EVENT
 {
 	EV_LVUP,
-	EV_LUCK,
+	EV_PHYSICAL,
+	EV_MAGICAL,
 	EV_SKILL,
 	EV_MAGIC,
+	EV_LUCK,
+	EV_MORALE,
+	EV_EXPLORE,
+	EV_MOVEMENT,
+	EV_RESOURCE,
 	EV_NULL,
 	EV_END
 };
@@ -128,7 +134,6 @@ struct tagRoadInfo
 
 };
 
-
 typedef struct tagBuildingInfo
 {
 	CAMP camp;
@@ -136,11 +141,14 @@ typedef struct tagBuildingInfo
 	MINE mine;
 	image* img;
 	image* imgShadow;
-	int sourX, sourY;
+	int imgX, imgY;
 	int sizeX, sizeY;
+	int sourX, sourY;
 	int destX, destY;
+	int enterX, enterY;
 	int miniX;
-	bool move;
+	bool isClosed;
+	bool enter;
 
 
 }building;
@@ -165,6 +173,8 @@ struct tagRemember
 	int destY;
 	int sizeX;
 	int sizeY;
+	int imgX;
+	int imgY;
 	int type;
 };
 

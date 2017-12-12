@@ -32,6 +32,7 @@ namespace IOTA_UTIL
 		return angle;
 	}
 
+
 	//각도 가져오는 함수 0 ~ 2PI
 	float getAngle(float x, float y)
 	{
@@ -101,6 +102,15 @@ namespace IOTA_UTIL
 				img->setFrameY(0);
 			}
 		}
+	}
+
+
+	// int 형 올림
+	int getRise(int x)
+	{
+		int a = x/2 +1; 
+		
+		return a;
 	}
 
 	/*

@@ -55,6 +55,27 @@ HRESULT mapTool::init(void)
 		}
 	}
 
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		for (int j = 0; j < MAXTILE; j++)
+		{
+			ZeroMemory(&_buildArr[i][j], sizeof(tagBuildingInfo));
+
+			_buildArr[i][j].camp = CAMP_NULL;
+			_buildArr[i][j].mine = MINE_NULL;
+			_buildArr[i][j].ev = EV_NULL;
+			_buildArr[i][j].destX = i;
+			_buildArr[i][j].destY = j;
+			_buildArr[i][j].miniX = 0;
+			_buildArr[i][j].sourX = 0;
+			_buildArr[i][j].sourY = 0;
+			_buildArr[i][j].sizeX = 0;
+			_buildArr[i][j].sizeY = 0;
+
+			
+		}
+	}
+
 	ZeroMemory(&_remember, sizeof(tagRemember));
 	_remember.camp = CAMP_NULL;
 	_remember.mine = MINE_NULL;
@@ -75,6 +96,7 @@ HRESULT mapTool::init(void)
 	_area = false;
 	_foldMini= false;
 	_move = false;
+	_buildAttribute = false;
 
 	//============== R E C T   M A K E =====================
 	_miniMap = RectMake(836, WINSIZEY - 226, 216, 216);
@@ -110,7 +132,7 @@ void mapTool::update(void)
 	minimapMove();
 	inputCommon();
 	if (_ptMouse.x < 788) inputOnMap();
-	else inputOnUI();
+	else if(_ptMouse.x > 788 && !_move) inputOnUI();
 
 }
 
@@ -144,8 +166,19 @@ void mapTool::render(void)
 	//=============== M I N I   M A P====================
 	miniDraw();
 
+	//==================  A T T R I B U T E ==================
+	
+	attributeDraw();
+
 	//====================== CORDINATE =========================
 
+	cordinateDraw();
+
+
+}
+
+void mapTool::cordinateDraw(void)
+{
 	for (int i = 0; i < 24; i++)
 	{
 		Rectangle(getMemDC(), 20 + i*TILESIZE, 0, 20 + (i + 1)*TILESIZE, 20);
@@ -160,7 +193,7 @@ void mapTool::render(void)
 
 		sprintf(_cor, "%d", i);
 
-		
+
 		if (i < 10)
 		{
 			if (i - (int)_mapX / TILESIZE >= 0 && i - (int)_mapX / TILESIZE < 24)
@@ -175,7 +208,7 @@ void mapTool::render(void)
 				TextOut(getMemDC(), 28 + i*TILESIZE - _mapX, 2, _cor, strlen(_cor));
 			if (i - (int)_mapY / TILESIZE >= 0 && i - (int)_mapY / TILESIZE < 18)
 				TextOut(getMemDC(), 2, 25 + i*TILESIZE - _mapY, _cor, strlen(_cor));
-		}		
+		}
 	}
 
 	//================ MOUSE POINT RECT ================================
@@ -189,7 +222,7 @@ void mapTool::render(void)
 			_corX[_mouseArr.x - (int)_mapX / TILESIZE].top,
 			_corX[_mouseArr.x - (int)_mapX / TILESIZE].right,
 			_corX[_mouseArr.x - (int)_mapX / TILESIZE].bottom);
-	
+
 		Rectangle(getMemDC(),
 			_corY[_mouseArr.y - (int)_mapY / TILESIZE].left,
 			_corY[_mouseArr.y - (int)_mapY / TILESIZE].top,
@@ -204,25 +237,43 @@ void mapTool::render(void)
 
 	SetTextColor(getMemDC(), RGB(255, 255, 255));
 	SetBkMode(getMemDC(), TRANSPARENT);
-	
+
 	if (_ptMouse.x <= 788)
 	{
 		if (_mouseArr.x < 10)
-			TextOut(getMemDC(), 32 + (_mouseArr.x - (int)_mapX/TILESIZE)*TILESIZE , 2, _msCorX, strlen(_msCorX));
+			TextOut(getMemDC(), 32 + (_mouseArr.x - (int)_mapX / TILESIZE)*TILESIZE, 2, _msCorX, strlen(_msCorX));
 		else
-			TextOut(getMemDC(), 28 + (_mouseArr.x - (int)_mapX / TILESIZE)*TILESIZE , 2, _msCorX, strlen(_msCorX));
-	
-		if (_mouseArr.y < 10  )
-			TextOut(getMemDC(), 5, 25 + (_mouseArr.y - (int)_mapY/TILESIZE)*TILESIZE  , _msCorY, strlen(_msCorY));
+			TextOut(getMemDC(), 28 + (_mouseArr.x - (int)_mapX / TILESIZE)*TILESIZE, 2, _msCorX, strlen(_msCorX));
+
+		if (_mouseArr.y < 10)
+			TextOut(getMemDC(), 5, 25 + (_mouseArr.y - (int)_mapY / TILESIZE)*TILESIZE, _msCorY, strlen(_msCorY));
 		else
-			TextOut(getMemDC(), 2, 25 + (_mouseArr.y - (int)_mapY / TILESIZE)*TILESIZE , _msCorY, strlen(_msCorY));
+			TextOut(getMemDC(), 2, 25 + (_mouseArr.y - (int)_mapY / TILESIZE)*TILESIZE, _msCorY, strlen(_msCorY));
 
 	}
 
 	SetTextColor(getMemDC(), RGB(0, 0, 0));
 
+}
 
-
+void mapTool::attributeDraw(void)
+{
+	if (_buildAttribute)
+	{
+		for (int i = 0; i < MAXTILE; i++)
+		{
+			for (int j = 0; j < MAXTILE; j++)
+			{
+				if (_buildArr[i][j].isClosed)
+					IMAGEMANAGER->findImage("closed")->render(getMemDC(),
+						20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
+				if (_buildArr[i][j].enter)
+					IMAGEMANAGER->findImage("enter")->render(getMemDC(),
+						20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
+					
+			}
+		}
+	}
 }
 
 void mapTool::selectDraw(void)
@@ -283,30 +334,30 @@ void mapTool::selectDraw(void)
 			{
 			case 0:
 				IMAGEMANAGER->findImage("point_castle")->render(getMemDC(),
-					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+					20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 3)*TILESIZE - _mapY);
 				IMAGEMANAGER->findImage("building_castle_shadow")->alphaFrameRender(getMemDC(),
-					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,SHADOWALPHA);
+					20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 3)*TILESIZE - _mapY,1,0,SHADOWALPHA);
 
 				for (int i = 0; i < 6; i++)
 				{
 					for (int j = 0; j < 6; j++)
 					{
-						if(_mapArr[_mouseArr.x -2 +i][_mouseArr.y -2 +j].tile == TILE_WATER)
+						if(_mapArr[_mouseArr.x -3 +i][_mouseArr.y -3 +j].tile == TILE_WATER)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
-								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 2 + j)*TILESIZE - _mapY,150);
+								20 + (_mouseArr.x - 3 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 3 + j)*TILESIZE - _mapY,150);
 					}
 				}
 				break;
 			case 1:
 				IMAGEMANAGER->findImage("point_dungeon")->render(getMemDC(),
-					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+					20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 3)*TILESIZE - _mapY);
 				IMAGEMANAGER->findImage("building_dungeon_shadow")->alphaFrameRender(getMemDC(),
-					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-					20 + (_mouseArr.y - 2)*TILESIZE - _mapY,1,0,SHADOWALPHA);
+					20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 3)*TILESIZE - _mapY,1,0,SHADOWALPHA);
 
 				for (int i = 0; i < 6; i++)
 				{
@@ -314,8 +365,8 @@ void mapTool::selectDraw(void)
 					{
 						if (_mapArr[_mouseArr.x - 2 + i][_mouseArr.y - 2 + j].tile == TILE_WATER)
 							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
-								20 + (_mouseArr.x - 2 + i)*TILESIZE - _mapX,
-								20 + (_mouseArr.y - 2 + j)*TILESIZE - _mapY, 150);
+								20 + (_mouseArr.x - 3 + i)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 3 + j)*TILESIZE - _mapY, 150);
 					}
 				}
 
@@ -323,6 +374,24 @@ void mapTool::selectDraw(void)
 			}
 			break;
 		case SMC_ONE:
+
+			//====================== 테두리 그리기
+			if(_saveIndex.x + _saveIndex.y*4 != 2 &&
+				_saveIndex.x + _saveIndex.y * 4 != 5)
+				IMAGEMANAGER->findImage("point_mine")->render(getMemDC(),
+					20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+
+			if(_saveIndex.x + _saveIndex.y * 4 == 2)
+				IMAGEMANAGER->findImage("point_wood")->render(getMemDC(),
+					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+
+			if(_saveIndex.x + _saveIndex.y * 4 == 5)
+				IMAGEMANAGER->findImage("point_mercury")->render(getMemDC(),
+					20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+
 			switch (_saveIndex.y)
 			{
 			case 0:
@@ -340,8 +409,8 @@ void mapTool::selectDraw(void)
 					break;
 				case 2:
 					IMAGEMANAGER->findImage("mine_wood")->frameRender(getMemDC(),
-						20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
-						20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+						20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
 					break;
 				case 3:
 					IMAGEMANAGER->findImage("mine_iron")->frameRender(getMemDC(),
@@ -376,19 +445,6 @@ void mapTool::selectDraw(void)
 			}
 
 			//============ 3 * 2 사이즈 금지 구역 표시
-			if ((_saveIndex.x + _saveIndex.y * 4) != 5 &&
-				(_saveIndex.x + _saveIndex.y * 4) != 2 &&
-				(_saveIndex.x + _saveIndex.y * 4) != 7)
-			for (int i = 0; i < 3; i++)
-			{
-				for (int j = 0; j < 2; j++)
-				{
-					if (_mapArr[_mouseArr.x - 1 + i][_mouseArr.y - 1 + j].tile == TILE_WATER)
-						IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
-							20 + (_mouseArr.x - 1 + i)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - 1 + j)*TILESIZE - _mapY, 150);
-				}
-			}
 			if ((_saveIndex.x + _saveIndex.y * 4) != 5 &&
 				(_saveIndex.x + _saveIndex.y * 4) != 2 &&
 				(_saveIndex.x + _saveIndex.y * 4) != 7)
@@ -431,6 +487,70 @@ void mapTool::selectDraw(void)
 
 			break;
 		case SMC_TWO:
+			char evName[256];
+			switch (_saveIndex.y)
+			{
+			case 0:
+				if(_page ==0 || _foldMini)
+				switch (_saveIndex.x)
+				{
+				case 0:	sprintf(evName, "ev_lvlup");
+					break;
+				case 1: sprintf(evName, "ev_physical");
+					break;
+				case 2: sprintf(evName, "ev_magical");
+					break;
+				case 3: sprintf(evName, "ev_skill");
+					break;
+				}
+				else if (_page ==1 && !_foldMini)
+					switch (_saveIndex.x)
+					{
+					case 0:	sprintf(evName, "ev_movement");
+						break;
+					case 1:	sprintf(evName, "ev_resource");
+						break;
+					}
+				else sprintf(evName, "empty");
+				break;
+			case 1:
+				if(_page == 0 || _foldMini)
+				switch (_saveIndex.x)
+				{
+				case 0: sprintf(evName, "ev_magic");
+					break;
+				case 1: sprintf(evName, "ev_luck");
+					break;
+				case 2: sprintf(evName, "ev_morale");
+					break;
+				case 3: sprintf(evName, "ev_explore");
+					break;
+				}
+				else sprintf(evName, "empty");
+
+				break;
+			case 2:
+				if(_foldMini)
+				switch (_saveIndex.x)
+				{
+				case 0: sprintf(evName, "ev_movement");
+					break;
+				case 1: sprintf(evName, "ev_resource");
+					break;
+				}
+				else sprintf(evName, "empty");
+				break;
+			}
+			if(!((_page == 0 || _foldMini) &&(_saveIndex.x ==1 && _saveIndex.y ==1 )))
+			IMAGEMANAGER->findImage(evName)->frameRender(getMemDC(),
+				20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+				20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+			else
+				IMAGEMANAGER->findImage(evName)->frameRender(getMemDC(),
+					20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
+					20 + (_mouseArr.y)*TILESIZE - _mapY);
+
+
 			break;
 		case SMC_FOUR:
 
@@ -452,7 +572,8 @@ void mapTool::selectDraw(void)
 			//==================== 오브 젝트 이동 셀렉 =================
 			if (_move)
 			{
-				
+
+
 				switch (_remember.type)
 				{
 				case 0:
@@ -460,29 +581,57 @@ void mapTool::selectDraw(void)
 					{
 					case CAMP_CASTLE:
 						IMAGEMANAGER->findImage("point_castle")->render(getMemDC(),
-							20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+							20 + (_mouseArr.x - _remember.sizeX/2)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - _remember.sizeY/2)*TILESIZE - _mapY);
+
 						break;
 					case CAMP_DUNGEON:
 						IMAGEMANAGER->findImage("point_dungeon")->render(getMemDC(),
-							20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
+							20 + (_mouseArr.x - _remember.sizeX/2)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - _remember.sizeY/2)*TILESIZE - _mapY);
 						break;
 						
 					}
 					break;
 				case 1:
-					if(_remember.mine != MINE_WOOD)
 						_remember.img->frameRender(getMemDC(),
-							20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
-					else
-						_remember.img->frameRender(getMemDC(),
-							20 + (_mouseArr.x - 3)*TILESIZE - _mapX,
-							20 + (_mouseArr.y - 2)*TILESIZE - _mapY);
-					break;
+							20 + (_mouseArr.x - _remember.sizeX/2)*TILESIZE - _mapX,
+							20 + (_mouseArr.y - _remember.sizeY/2)*TILESIZE - _mapY);
+						
+						//====================== 테두리 그리기
+						if (_remember.mine != MINE_WOOD &&
+							_remember.mine != MINE_MERCURY)
+							IMAGEMANAGER->findImage("point_mine")->render(getMemDC(),
+								20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+
+						if (_remember.mine == MINE_WOOD)
+							IMAGEMANAGER->findImage("point_wood")->render(getMemDC(),
+								20 + (_mouseArr.x - 2)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+
+						if (_remember.mine == MINE_MERCURY)
+							IMAGEMANAGER->findImage("point_mercury")->render(getMemDC(),
+								20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+								20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
+						break;
+
 				case 2:
+					_remember.img->frameRender(getMemDC(),
+						20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
+						20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
 					break;
+				}
+				//============== 금지 구역 표시
+				for (int i = _mouseArr.x - _remember.sizeX / 2; i < _mouseArr.x + getRise(_remember.sizeX, 2); i++)
+				{
+					for (int j = _mouseArr.y - _remember.sizeY / 2; j < _mouseArr.y + getRise(_remember.sizeY, 2); j++)
+					{
+						if (_buildArr[i][j].isClosed ||
+							_mapArr[i][j].tile == TILE_WATER)
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY, 150);
+					}
 				}
 			}
 			break;
@@ -676,23 +825,24 @@ void mapTool::roadDraw(void)
 
 void mapTool::buildingDraw(void)
 {
+	for (int i = 0; i < _vBuild.size(); i++)
+	{
+		
+
+
+
+
+	}
+
 	for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); ++_viBuild)
 	{
-		if (!_viBuild->move)
-		{
-			if(_viBuild->mine != MINE_WOOD)
 			_viBuild->img->frameRender(getMemDC(),
-				20 + _viBuild->destX * TILESIZE- _mapX,
-				20 + _viBuild->destY * TILESIZE- _mapY,
+				20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE- _mapX,
+				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE- _mapY,
 				_viBuild->sourX, _viBuild->sourY);
 
 			if (_viBuild->mine == MINE_WOOD)
 			{
-				
-				_viBuild->img->frameRender(getMemDC(),
-					20 + (_viBuild->destX-1) * TILESIZE - _mapX,
-					20 + (_viBuild->destY-1) * TILESIZE - _mapY,
-					_viBuild->sourX, _viBuild->sourY);
 
 				_viBuild->imgShadow->alphaFrameRender(getMemDC(),
 					20 + (_viBuild->destX - 1) * TILESIZE - _mapX,
@@ -704,10 +854,10 @@ void mapTool::buildingDraw(void)
 
 			if(_viBuild->mine != MINE_IRON && _viBuild->mine != MINE_WOOD)
 			_viBuild->imgShadow->alphaFrameRender(getMemDC(),
-				20 + _viBuild->destX* TILESIZE - _mapX,
-				20 + _viBuild->destY* TILESIZE - _mapY,
+				20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE - _mapX,
+				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE - _mapY,
 				_viBuild->sourX, _viBuild->sourY, SHADOWALPHA);
-		}
+		
 	}
 }
 
@@ -826,6 +976,9 @@ void mapTool::buttonDraw(void)
 		IMAGEMANAGER->findImage("button_mine")->frameRender(getMemDC(),
 			_smallCategory.left + 42, _smallCategory.top);
 
+		IMAGEMANAGER->findImage("button_ev")->frameRender(getMemDC(),
+			_smallCategory.left + 84, _smallCategory.top);
+
 		IMAGEMANAGER->findImage("erase")->frameRender(getMemDC(),
 			 _smallCategory.right - 74, _smallCategory.top);
 
@@ -857,6 +1010,40 @@ void mapTool::buttonDraw(void)
 					_contents.left + 118, _contents.top + 64);
 				break;
 		case SMC_TWO:
+				if (_page == 0 || _foldMini)
+				{
+					IMAGEMANAGER->findImage("button_lvlup")->frameRender(getMemDC(),
+						_contents.left - 10, _contents.top);
+					IMAGEMANAGER->findImage("button_physical")->frameRender(getMemDC(),
+						_contents.left + 54, _contents.top);
+					IMAGEMANAGER->findImage("button_magical")->frameRender(getMemDC(),
+						_contents.left + 118, _contents.top);
+					IMAGEMANAGER->findImage("button_skill")->frameRender(getMemDC(),
+						_contents.left + 182, _contents.top);
+					IMAGEMANAGER->findImage("button_magic")->frameRender(getMemDC(),
+						_contents.left - 10, _contents.top + 64);
+					IMAGEMANAGER->findImage("button_luck")->frameRender(getMemDC(),
+						_contents.left + 54, _contents.top + 64);
+					IMAGEMANAGER->findImage("button_morale")->frameRender(getMemDC(),
+						_contents.left + 118, _contents.top + 64);
+					IMAGEMANAGER->findImage("button_explore")->frameRender(getMemDC(),
+						_contents.left + 182, _contents.top + 64);
+				}
+				else if(_page = 1 && !_foldMini)
+				{
+					IMAGEMANAGER->findImage("button_movement")->frameRender(getMemDC(),
+						_contents.left - 10 , _contents.top );
+					IMAGEMANAGER->findImage("button_resource")->frameRender(getMemDC(),
+						_contents.left + 54, _contents.top );
+				}
+				if (_foldMini)
+				{
+					IMAGEMANAGER->findImage("button_movement")->frameRender(getMemDC(),
+						_contents.left - 10, _contents.top + 128);
+					IMAGEMANAGER->findImage("button_resource")->frameRender(getMemDC(),
+						_contents.left + 54, _contents.top + 128);
+
+				}
 			break;
 		case SMC_THREE:
 			break;
@@ -976,6 +1163,9 @@ void mapTool::setButton(void)
 		if (_categorySmall == SMC_ONE) IMAGEMANAGER->findImage("button_mine")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_mine")->setFrameX(1);
 		
+		if (_categorySmall == SMC_TWO) IMAGEMANAGER->findImage("button_ev")->setFrameX(0);
+		else IMAGEMANAGER->findImage("button_ev")->setFrameX(1);
+
 		if (_categorySmall == SMC_FIVE) IMAGEMANAGER->findImage("move")->setFrameX(0);
 		else IMAGEMANAGER->findImage("move")->setFrameX(1);
 
@@ -1018,7 +1208,65 @@ void mapTool::setButton(void)
 					IMAGEMANAGER->findImage("button_gem")->setFrameX(0);
 				else IMAGEMANAGER->findImage("button_gem")->setFrameX(1);
 
-				
+			break;
+		case SMC_TWO:
+			if (_page == 0 || _foldMini)
+			{
+				if (_saveIndex.x == 0 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_lvlup")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_lvlup")->setFrameX(1);
+
+				if (_saveIndex.x == 1 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_physical")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_physical")->setFrameX(1);
+
+				if (_saveIndex.x == 2 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_magical")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_magical")->setFrameX(1);
+
+				if (_saveIndex.x == 3 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_skill")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_skill")->setFrameX(1);
+
+				if (_saveIndex.x == 0 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_magic")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_magic")->setFrameX(1);
+
+				if (_saveIndex.x == 1 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_luck")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_luck")->setFrameX(1);
+
+				if (_saveIndex.x == 2 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_morale")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_morale")->setFrameX(1);
+
+				if (_saveIndex.x == 3 && _saveIndex.y == 1)
+					IMAGEMANAGER->findImage("button_explore")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_explore")->setFrameX(1);
+
+				if (_saveIndex.x == 0 && _saveIndex.y == 2)
+					IMAGEMANAGER->findImage("button_movement")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_movement")->setFrameX(1);
+
+				if (_saveIndex.x == 1 && _saveIndex.y == 2)
+					IMAGEMANAGER->findImage("button_resource")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_resource")->setFrameX(1);
+
+
+			}
+
+			if (_page == 1 && !_foldMini)
+			{
+				if (_saveIndex.x == 0 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_movement")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_movement")->setFrameX(1);
+
+				if (_saveIndex.x == 1 && _saveIndex.y == 0)
+					IMAGEMANAGER->findImage("button_resource")->setFrameX(0);
+				else IMAGEMANAGER->findImage("button_resource")->setFrameX(1);
+
+			}
+
 
 			break;
 
@@ -1162,8 +1410,17 @@ void mapTool::deleteAll(int arrX, int arrY)
 			if (_viBuild->destX <= arrX && _viBuild->destX + _viBuild->sizeX > arrX &&
 				_viBuild->destY <= arrY && _viBuild->destY + _viBuild->sizeY > arrY)
 			{
-
-
+				for (int i = _viBuild->destX ; i < _viBuild->destX +_viBuild->sizeX; i++)
+				{
+					for (int j = _viBuild->destY; j < _viBuild->destY + _viBuild->sizeY; j++)
+					{
+						_buildArr[i][j].camp = CAMP_NULL;
+						_buildArr[i][j].mine = MINE_NULL;
+						_buildArr[i][j].ev = EV_NULL;
+						_buildArr[i][j].isClosed = false;
+					}
+				}
+				_buildArr[_viBuild->destX + _viBuild->enterX][_viBuild->destY + _viBuild->enterY].enter = false;
 
 				_viBuild = _vBuild.erase(_viBuild);
 				break;
@@ -1184,6 +1441,7 @@ void mapTool::deleteAll(int arrX, int arrY)
 	default:
 		break;
 	}
+	
 }
 
 void mapTool::setRoad(int arrX, int arrY, ROAD road)
@@ -1388,18 +1646,19 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 	build.camp = camp;
 	build.sizeX = 6;
 	build.sizeY = 6;
-	build.destX = arrX - 2;
-	build.destY = arrY - 2;
+	build.destX = arrX - build.sizeX/2;
+	build.destY = arrY - build.sizeY/2;
 	build.sourX = 1;
 	build.sourY = 0;
 	build.miniX = 0;
-	build.move = false;
+	build.enterX = 3;
+	build.enterY = 5;
 
 	for (int i = 0; i < build.sizeX; i++)
 	{
 		for (int j = 0; j < build.sizeY; j++)
 		{
-			if (_mapArr[arrX - 2 + i][arrY - 2 + j].tile == TILE_WATER) return;
+			if (_mapArr[build.destX + i][build.destY + j].tile == TILE_WATER) return;
 		}
 	}
 
@@ -1414,6 +1673,21 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 		build.imgShadow = IMAGEMANAGER->findImage("building_dungeon_shadow");
 		break;
 	}
+
+
+	//================== 금지 구역 설정
+	for (int i = build.destX + 1; i < build.destX + build.sizeX; i++)
+	{
+		for (int j = build.destY +2 ; j < build.destY +build.sizeY; j++)
+		{
+			_buildArr[i][j].camp = build.camp;
+			_buildArr[i][j].isClosed = true;
+		}
+	}
+	//================= 입구 설정
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+
+
 
 	_vBuild.push_back(build);
 
@@ -1433,7 +1707,8 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 	build.sourX = 0;
 	build.sourY = 0;
 	build.miniX = 1;
-	build.move = false;
+	build.enterX = 1;
+	build.enterY = 1;
 	switch (build.mine)
 	{
 	case MINE_GOLD:
@@ -1441,58 +1716,48 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 		build.imgShadow = IMAGEMANAGER->findImage("mine_gold_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
-		build.destX = arrX - 1;
-		build.destY = arrY - 1;
 		break;
 	case MINE_CRYSTAL:
 		build.img = IMAGEMANAGER->findImage("mine_crystal");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_crystal_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
-		build.destX = arrX - 1;
-		build.destY = arrY - 1;
 		break;
 	case MINE_WOOD:
 		build.img = IMAGEMANAGER->findImage("mine_wood");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_wood_shadow");
 		build.sizeX = 4;
 		build.sizeY = 2;
-		build.destX = arrX - 2;
-		build.destY = arrY - 1;
+		build.enterX = 2;
 		break;
 	case MINE_IRON:
 		build.img = IMAGEMANAGER->findImage("mine_iron");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_iron_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
-		build.destX = arrX - 1;
-		build.destY = arrY - 1;
 		break;
 	case MINE_SULFUR:
 		build.img = IMAGEMANAGER->findImage("mine_sulfur");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_sulfur_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
-		build.destX = arrX - 1;
-		build.destY = arrY - 1;
 		break;
 	case MINE_MERCURY:
 		build.img = IMAGEMANAGER->findImage("mine_mercury");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_mercury_shadow");
 		build.sizeX = 3;
 		build.sizeY = 3;
-		build.destX = arrX - 1;
-		build.destY = arrY - 1;
+		build.enterY = 2;
 		break;
 	case MINE_GEM:
 		build.img = IMAGEMANAGER->findImage("mine_gem");
 		build.imgShadow = IMAGEMANAGER->findImage("mine_gem_shadow");
 		build.sizeX = 3;
 		build.sizeY = 2;
-		build.destX = arrX - 1;
-		build.destY = arrY - 1;
 		break;
 	}
+	build.destX = arrX - build.sizeX/2;
+	build.destY = arrY - build.sizeY/2;
 
 
 	//================ need for initialize 
@@ -1507,7 +1772,189 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 	if (build.destX< 0 || build.destX + build.sizeX - 1 > MAXTILE ||
 		build.destY< 0 || build.destY + build.sizeY - 1 > MAXTILE)  return;
 	
+
+	//=============== 금지 구역 설정
+	for (int i = build.destX ; i < build.destX + build.sizeX ; i++)
+	{
+		for (int j = build.destY ; j < build.destY + build.sizeY ; j++)
+		{
+			_buildArr[i][j].mine = build.mine;
+			_buildArr[i][j].isClosed = true;
+		}
+	}
+
+	//================ 입구 설정
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+
 	_vBuild.push_back(build);
+}
+
+void mapTool::addBuilding(int arrX, int arrY, EVENT ev)
+{
+	building build;
+
+	ZeroMemory(&build, sizeof(building));
+
+	build.camp = CAMP_NULL;
+	build.mine = MINE_NULL;
+
+	build.ev = ev;
+	build.sourX = 0;
+	build.sourY = 0;
+	build.miniX = 2;
+	switch (build.ev)
+	{
+	case EV_LVUP:
+		build.img =IMAGEMANAGER->findImage("ev_lvlup");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_lvlup_shadow");
+		build.sizeX = 1;
+		build.sizeY = 1;
+		build.enterX = 0;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 2;
+		build.destX = arrX ;
+		build.destY = arrY + 1;
+		break;
+	case EV_PHYSICAL:
+		build.img = IMAGEMANAGER->findImage("ev_physical");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_physical_shadow");
+		build.sizeX = 2;
+		build.sizeY = 1;
+		build.enterX = 1;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 2;
+		build.destX = arrX;
+		build.destY = arrY + 1;
+		break;
+	case EV_MAGICAL:
+		build.img = IMAGEMANAGER->findImage("ev_magical");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_magical_shadow");
+		build.sizeX = 1;
+		build.sizeY = 1;
+		build.enterX = 0;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 1;
+		build.destX = arrX;
+		build.destY = arrY;
+		break;
+	case EV_SKILL:
+		build.img = IMAGEMANAGER->findImage("ev_skill");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_skill_shadow");
+		build.sizeX = 3;
+		build.sizeY = 1;
+		build.enterX = 1;
+		build.enterY = 0;
+		build.imgX = 0;
+		build.imgY = 1;
+		build.destX = arrX - 1;
+		build.destY = arrY;
+		break;
+	case EV_MAGIC:
+		build.img = IMAGEMANAGER->findImage("ev_magic");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_magic_shadow");
+		build.sizeX = 1;
+		build.sizeY = 1;
+		build.enterX = 0;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 1;
+		build.destX = arrX;
+		build.destY = arrY;
+		break;
+	case EV_LUCK:
+		build.img = IMAGEMANAGER->findImage("ev_luck");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_luck_shadow");
+		build.sizeX = 2;
+		build.sizeY = 1;
+		build.enterX = 1;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 0;
+		build.destX = arrX -1;
+		build.destY = arrY;
+		break;
+	case EV_MORALE:
+		build.img = IMAGEMANAGER->findImage("ev_morale");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_morale_shadow");
+		build.sizeX = 2;
+		build.sizeY = 1;
+		build.enterX = 0;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 1;
+		build.destX = arrX ;
+		build.destY = arrY;
+		break;
+	case EV_EXPLORE:
+		build.img = IMAGEMANAGER->findImage("ev_explore");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_explore_shadow");
+		build.sizeX = 1;
+		build.sizeY = 1;
+		build.enterX = 0;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 2;
+		build.destX = arrX;
+		build.destY = arrY + 1;
+		break;
+	case EV_MOVEMENT:
+		build.img = IMAGEMANAGER->findImage("ev_movement");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_movement_shadow");
+		build.sizeX = 2;
+		build.sizeY = 1;
+		build.enterX = 0;
+		build.enterY = 0;
+		build.imgX = 1;
+		build.imgY = 1;
+		build.destX = arrX ;
+		build.destY = arrY;
+		break;
+	case EV_RESOURCE:
+		build.img = IMAGEMANAGER->findImage("ev_resource");
+		build.imgShadow = IMAGEMANAGER->findImage("ev_resource_shadow");
+		build.sizeX = 3;
+		build.sizeY = 2;
+		build.enterX = 2;
+		build.enterY = 1;
+		build.imgX = 0;
+		build.imgY = 1;
+		build.destX = arrX -1;
+		build.destY = arrY;
+		break;
+	}
+
+
+	for (int i = 0; i < build.sizeX; i++)
+	{
+		for (int j = 0; j < build.sizeY; j++)
+		{
+			if (_mapArr[build.destX + i][build.destY + j].tile == TILE_WATER) return;
+		}
+	}
+
+	if (build.destX< 0 || build.destX + build.sizeX - 1 > MAXTILE ||
+		build.destY< 0 || build.destY + build.sizeY - 1 > MAXTILE)  return;
+
+
+	//=============== 금지 구역 설정
+	for (int i = build.destX; i < build.destX + build.sizeX; i++)
+	{
+		for (int j = build.destY; j < build.destY + build.sizeY; j++)
+		{
+			_buildArr[i][j].mine = build.mine;
+			_buildArr[i][j].isClosed = true;
+		}
+	}
+
+	//================ 입구 설정
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+
+	_vBuild.push_back(build);
+
+
 }
 
 void mapTool::setTile(int arrX, int arrY, TILE tile)
@@ -1806,6 +2253,19 @@ void mapTool::inputCommon(void)
 		_saveIndex.y = 0;
 	}
 
+	if (KEYMANAGER->isOnceKeyDown('B'))
+	{
+		switch (_buildAttribute)
+		{
+		case TRUE:
+			_buildAttribute = false;
+			break;
+		case FALSE:
+			_buildAttribute = true;
+			break;
+		}
+	}
+
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
 		if (!_inputDelayX)
@@ -2008,26 +2468,27 @@ void mapTool::inputCommon(void)
 			int sizeX, sizeY;
 			//============== 금지 구역 이라면
 
-			if (_ptMouse.x > 788) overlap = true;
-
-			for (int i = _mouseArr.x; i < _mouseArr.x + _remember.sizeX; i++)
+			if (_ptMouse.x <= 788)
 			{
-				for (int j = _mouseArr.y; j < _mouseArr.y+ _remember.sizeY; j++)
+				for (int i = _mouseArr.x - _remember.sizeX/2; i < _mouseArr.x + getRise(_remember.sizeX,2); i++)
 				{
-					if (_mapArr[i][j].tile == TILE_WATER) overlap = true;
+					for (int j = _mouseArr.y - _remember.sizeY/2; j < _mouseArr.y+ getRise(_remember.sizeY,2) ; j++)
+					{
+						if (_mapArr[i][j].tile == TILE_WATER) overlap = true;
+						if (overlap) break;
+					}
 					if (overlap) break;
 				}
-				if (overlap) break;
-			}
 
-			//=============== 이미 존재 한다면
-			for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); ++_viBuild)
-			{
-				if (_viBuild->destX <= _mouseArr.x && _viBuild->destX > _mouseArr.x &&
-					_viBuild->destY <= _mouseArr.y && _viBuild->destY > _mouseArr.y)
+				//=============== 이미 존재 한다면
+				for (int i = _mouseArr.x - _remember.sizeX/2; i < _mouseArr.x + getRise(_remember.sizeX,2) ; i++)
 				{
-					overlap = true;
-			
+					for (int j = _mouseArr.y - _remember.sizeY/2; j < _mouseArr.y + getRise(_remember.sizeY,2); j++)
+					{
+						if (_buildArr[i][j].isClosed) overlap = true;
+
+						if (overlap) break;
+					}
 					if (overlap) break;
 				}
 			}
@@ -2037,16 +2498,16 @@ void mapTool::inputCommon(void)
 				switch (_remember.type)
 				{
 				case 0:
-					addBuilding(_remember.destX + 2, _remember.destY + 2, _remember.camp);
+					addBuilding(_remember.destX + _remember.sizeX/2 ,
+						_remember.destY + _remember.sizeY/2, _remember.camp);
 					break;
 				case 1:
-					if (_remember.mine != MINE_WOOD)
-						addBuilding(_remember.destX + 1, _remember.destY + 1, _remember.mine);
-
-					else
-						addBuilding(_remember.destX + 1, _remember.destY + 1, _remember.mine);
+					addBuilding(_remember.destX + _remember.sizeX/2,
+							_remember.destY + _remember.sizeY/2, _remember.mine);
 					break;
 				case 2:
+					addBuilding(_remember.destX - _remember.imgX ,
+						_remember.destY - _remember.imgY, _remember.ev);
 					break;
 				}
 			}
@@ -2062,6 +2523,7 @@ void mapTool::inputCommon(void)
 				addBuilding(_mouseArr.x, _mouseArr.y, _remember.mine);
 				break;
 			case 2:
+				addBuilding(_mouseArr.x, _mouseArr.y, _remember.ev);
 				break;
 			}
 
@@ -2085,7 +2547,10 @@ void mapTool::inputCommon(void)
 			{
 				IMAGEMANAGER->findImage("down")->setFrameX(0);
 				if (PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+				{
+					_page = 0;
 					_foldMini = true;
+				}
 
 			}
 		}
@@ -2095,7 +2560,10 @@ void mapTool::inputCommon(void)
 			{
 				IMAGEMANAGER->findImage("up")->setFrameX(0);
 				if (PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+				{
+					_page = 0;
 					_foldMini = false;
+				}
 
 			}
 		}
@@ -2105,6 +2573,11 @@ void mapTool::inputCommon(void)
 			IMAGEMANAGER->findImage("left")->setFrameX(0);
 			if (PtInRect(&RectMake(903, 335, 21, 21), _ptMouse))
 			{
+				if (_page)
+				{
+					_saveIndex.x = 0;
+					_saveIndex.y = 0;
+				}
 				_page--;
 				if (_page < 0) _page = 0;
 
@@ -2116,7 +2589,6 @@ void mapTool::inputCommon(void)
 			IMAGEMANAGER->findImage("right")->setFrameX(0);
 			if (PtInRect(&RectMake(964, 335, 21, 21), _ptMouse))
 			{
-				_page++;
 
 				int maxPage = 0;
 				switch (_categoryLarge)
@@ -2134,7 +2606,7 @@ void mapTool::inputCommon(void)
 						break;
 					case SMC_ONE: maxPage = 1;
 						break;
-					case SMC_TWO:
+					case SMC_TWO: maxPage = 2;
 						break;
 					case SMC_THREE:
 						break;
@@ -2144,6 +2616,13 @@ void mapTool::inputCommon(void)
 						break;
 					}
 				}
+				if (_page != maxPage)
+				{
+					_saveIndex.x = 0;
+					_saveIndex.y = 0;
+				}
+				_page++;
+
 				if (_page > maxPage - 1) _page = maxPage - 1;
 
 			}
@@ -2407,6 +2886,13 @@ void mapTool::inputOnMap(void)
 				addBuilding(_mouseArr.x, _mouseArr.y, MINE(_saveIndex.x + _saveIndex.y * 4));
 				break;
 			case SMC_TWO:
+				if(_page == 0 && !_foldMini)
+				addBuilding(_mouseArr.x, _mouseArr.y, EVENT(_saveIndex.x + _saveIndex.y * 4));
+				else if(_page == 1 && !_foldMini)
+				addBuilding(_mouseArr.x, _mouseArr.y, EVENT(8+ _saveIndex.x + _saveIndex.y * 4));
+				else if(_foldMini)
+				addBuilding(_mouseArr.x, _mouseArr.y, EVENT(_saveIndex.x + _saveIndex.y * 4));
+
 				break;
 			case SMC_THREE:
 				break;
@@ -2428,27 +2914,23 @@ void mapTool::inputOnMap(void)
 						
 						switch (_remember.type)
 						{
-						case 0:
-							_remember.camp = _viBuild->camp;
-							_remember.sizeX = 6;
-							_remember.sizeY = 6;
+						case 0: _remember.camp = _viBuild->camp;
 						break;
-						case 1: 
-							_remember.mine = _viBuild->mine;
-							_remember.sizeX = 3;
-							_remember.sizeY = 2;
-							if (_remember.mine == MINE_WOOD) _remember.sizeX = 4;
-							if (_remember.mine == MINE_MERCURY) _remember.sizeY = 3;
+						case 1: _remember.mine = _viBuild->mine;
 						break;
 						case 2: _remember.ev = _viBuild->ev;
 						break;
 						}
-
 						_remember.img = _viBuild->img;
+						_remember.sizeX = _viBuild->sizeX;
+						_remember.sizeY = _viBuild->sizeY;
 						_remember.destX = _viBuild->destX;
 						_remember.destY = _viBuild->destY;
+						_remember.imgX = _viBuild->imgX;
+						_remember.imgY = _viBuild->imgY;
 
-						_viBuild = _vBuild.erase(_viBuild);
+
+						deleteAll(_mouseArr.x, _mouseArr.y);
 						break;
 
 					}
@@ -2554,6 +3036,7 @@ void mapTool::inputOnUI(void)
 			case CATE_BUILDING:
 				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
 				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
+				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
 				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right - 42) _categorySmall = SMC_FOUR;
 				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
 				break;
@@ -2622,14 +3105,23 @@ void mapTool::inputOnUI(void)
 
 		//================ C O N T E N T S   B O X ====================
 		//================ S E T T I N G   I N D E X =====================
-		if (PtInRect(&_contents, _ptMouse))
+		if (PtInRect(&RectMake(_contents.left - 10, _contents.top, 256, 288), _ptMouse))
 		{
 			if (_categoryLarge != CATE_BUILDING)
 			{
 				if (!_foldMini && _ptMouse.y <= _contents.top + 128)
 				{
-					_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
-					_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
+					if (_page != 2)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
+					}
+					else if (_page == 2 && _ptMouse.y <= _contents.top + 32)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = _page * 4 + (_ptMouse.y - _contents.top) / TILESIZE;
+					}
+
 
 				}
 				else if (_foldMini)
@@ -2667,6 +3159,19 @@ void mapTool::inputOnUI(void)
 
 					break;
 				case SMC_TWO:
+					
+					if (_ptMouse.y <= _contents.top + 128 && !_foldMini)
+					{ 
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) / 64;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / 64;
+
+					}
+					if (_ptMouse.y <= _contents.top + 192 && _foldMini)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) / 64;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / 64;
+					}
+
 					break;
 				case SMC_THREE:
 					break;
@@ -2692,7 +3197,8 @@ void mapTool::inputOnUI(void)
 				}
 			}
 
-			_brushNum = 255;
+			if(!PtInRect(&_miniMap,_ptMouse)) _brushNum = 255;
+			 
 
 			if (_categorySmall == SMC_FOUR)
 			{
@@ -2737,7 +3243,7 @@ void mapTool::loadImg(void)
 	//============ MINE
 	IMAGEMANAGER->addFrameImage("mine_gold", "image/mapTool/mine/mine_gold.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_crystal", "image/mapTool/mine/mine_crystal.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_wood", "image/mapTool/mine/mine_wood.bmp", 160, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("mine_wood", "image/mapTool/mine/mine_wood.bmp", 128, 64, 1, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_iron", "image/mapTool/mine/mine_iron.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_sulfur", "image/mapTool/mine/mine_sulfur.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("mine_mercury", "image/mapTool/mine/mine_mercury.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
@@ -2754,6 +3260,43 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->findImage("mine_sulfur_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("mine_mercury_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("mine_gem_shadow")->AlphaInit();
+	IMAGEMANAGER->addImage("point_mine", "image/mapTool/point_mine.bmp", 96, 64, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("point_wood", "image/mapTool/point_wood.bmp", 128, 64, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("point_mercury", "image/mapTool/point_mercury.bmp", 96, 96, true, RGB(255, 0, 255));
+
+	//============= E V E N T 
+	IMAGEMANAGER->addFrameImage("ev_lvlup", "image/mapTool/ev/ev_lvlup.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_physical", "image/mapTool/ev/ev_physical.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_magical", "image/mapTool/ev/ev_magical.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_skill", "image/mapTool/ev/ev_skill.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_magic", "image/mapTool/ev/ev_magic.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_luck", "image/mapTool/ev/ev_luck.bmp", 768, 32, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_morale", "image/mapTool/ev/ev_morale.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_explore", "image/mapTool/ev/ev_explore.bmp", 64, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_movement", "image/mapTool/ev/ev_movement.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_resource", "image/mapTool/ev/ev_resource.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
+
+	IMAGEMANAGER->addFrameImage("ev_lvlup_shadow", "image/mapTool/ev/ev_lvlup_shadow.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_physical_shadow", "image/mapTool/ev/ev_physical_shadow.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_magical_shadow", "image/mapTool/ev/ev_magical_shadow.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_skill_shadow", "image/mapTool/ev/ev_skill_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_magic_shadow", "image/mapTool/ev/ev_magic_shadow.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_luck_shadow", "image/mapTool/ev/ev_luck_shadow.bmp", 768, 32, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_morale_shadow", "image/mapTool/ev/ev_morale_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_explore_shadow", "image/mapTool/ev/ev_explore_shadow.bmp", 64, 96, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_movement_shadow", "image/mapTool/ev/ev_movement_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ev_resource_shadow", "image/mapTool/ev/ev_resource_shadow.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
+
+	IMAGEMANAGER->findImage("ev_lvlup_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_physical_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_magical_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_skill_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_magic_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_luck_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_morale_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_explore_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_movement_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("ev_resource_shadow")->AlphaInit();
 
 	//================ M I N I   M A P =====================
 	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72.bmp", 72, 54, true, RGB(255, 0, 255));
@@ -2779,7 +3322,8 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addImage("closed", "image/mapTool/closedArea.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("closed")->AlphaInit();
 	IMAGEMANAGER->findImage("closed")->setAlphaSource(50);
-
+	IMAGEMANAGER->addImage("enter", "image/mapTool/enter.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("enter")->AlphaInit();
 
 	//=============== B U T T O N =========================
 	//==================================== T I L E 
@@ -2819,8 +3363,22 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("button_sulfur","image/mapTool/button_sulfur.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_mercury","image/mapTool/button_mercury.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_gem","image/mapTool/button_gem.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-
+	//==================================== E V E N T 
+	IMAGEMANAGER->addFrameImage("button_ev", "image/mapTool/button_ev.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_lvlup", "image/mapTool/button_lvlup.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_physical", "image/mapTool/button_physical.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_magical", "image/mapTool/button_magical.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_skill", "image/mapTool/button_skill.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_magic", "image/mapTool/button_magic.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_luck", "image/mapTool/button_luck.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_morale", "image/mapTool/button_morale.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_explore", "image/mapTool/button_explore.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_movement", "image/mapTool/button_movement.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_resource", "image/mapTool/button_resource.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	
 	//====================================== U I 
+	IMAGEMANAGER->addFrameImage("empty", "image/mapTool/empty.bmp", 32, 32, 1, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("emptyS", "image/mapTool/empty.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("up", "image/mapTool/arrow_up.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("down", "image/mapTool/arrow_down.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("left", "image/mapTool/arrow_left.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
@@ -2832,4 +3390,18 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addImage("button_brush_size", "image/mapTool/buttonBrushSize.bmp", 96, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("move", "image/mapTool/moveIcon.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 
+}
+
+int mapTool::getRise(int x, int division)
+{
+	int a;
+	a = x;
+	
+	if (a % division)
+	{
+		a = a / division + 1;
+	}
+	else a = a / division;
+	
+	return a;
 }
