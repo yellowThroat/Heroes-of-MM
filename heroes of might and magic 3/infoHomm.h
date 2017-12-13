@@ -93,9 +93,9 @@ typedef enum CATEGORY
 	CATE_TILE,
 	CATE_ROAD,
 	CATE_BUILDING,
+	CATE_OBS,
 	CATE_UNIT,
 	CATE_RESOURCE,
-	CATE_OBJ,
 	CATE_NULL,
 	CATE_END
 }FIRST;
@@ -152,7 +152,7 @@ typedef struct tagBuildingInfo
 	bool enter;
 
 	bool operator<(const tagBuildingInfo &v) const {
-		return (enterY < v.enterY);
+		return (destY + enterY < v.destY + v.enterY);
 	}
 
 }building;
@@ -191,6 +191,7 @@ struct tagRemember
 #define LEFTBOTTOM			0x00020
 #define MIDDLEBOTTOM		0x00040
 #define RIGHTBOTTOM			0x00080
+#define ALLDIRECTION		255
 
 //========= ╦П╪╜╦╝ а╓го╠Б ===========
 #define EDGE1		LEFTTOP			+ MIDDLETOP		+ LEFTMIDDLE		// аб ╩С
@@ -198,8 +199,13 @@ struct tagRemember
 #define EDGE3		LEFTMIDDLE		+ LEFTBOTTOM	+ MIDDLEBOTTOM		// аб го
 #define EDGE4		MIDDLEBOTTOM	+ RIGHTBOTTOM	+ RIGHTMIDDLE		// ©Л го
 
+#define EDGE5		LEFTMIDDLE		+ MIDDLETOP			// аб ╩С	
+#define EDGE6		MIDDLETOP		+ RIGHTMIDDLE		// ©Л ╩С
+#define EDGE7		RIGHTMIDDLE		+ MIDDLEBOTTOM		// ©Л го
+#define EDGE8		MIDDLEBOTTOM	+ LEFTMIDDLE		// аб го
+
 //========= ╩С го аб ©Л =============
-#define LEFT		LEFTTOP			+ LEFTMIDDLE	+ LEFTBOTTOM
+#define LEFT		LEFTTOP			+ LEFTMIDDLE	+ LEFTBOTTOM	
 #define RIGHT		RIGHTTOP		+ RIGHTMIDDLE	+ RIGHTBOTTOM
 #define UP			LEFTTOP			+ MIDDLETOP		+ RIGHTTOP
 #define DOWN		LEFTBOTTOM		+ MIDDLEBOTTOM	+ RIGHTBOTTOM

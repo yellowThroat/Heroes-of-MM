@@ -89,6 +89,7 @@ public:
 	void addBuilding(int arrX, int arrY, CAMP camp);	// DRAW BUILDING
 	void addBuilding(int arrX, int arrY, MINE mine);	// DRAW BUILDING
 	void addBuilding(int arrX, int arrY, EVENT ev);		// DRAW BUILDING
+	void addObstacle(int arrX, int arrY); // DRAW OBSTACLE
 	void deleteAll(int arrX, int arrY);					// ERASE BUILDING
 
 
