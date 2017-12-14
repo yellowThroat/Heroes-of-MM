@@ -8,7 +8,7 @@ HRESULT mapTool::init(void)
 {
 
 
-	//====================== A L L O C A T I O N ================
+	//====================== A L L O C A T I O N ================7
 
 
 	//======================  F U N C T I O N =================
@@ -73,7 +73,7 @@ HRESULT mapTool::init(void)
 			_buildArr[i][j].sizeY = 0;
 		}
 	}
-
+	
 	ZeroMemory(&_remember, sizeof(tagRemember));
 	_remember.camp = CAMP_NULL;
 	_remember.mine = MINE_NULL;
@@ -1038,13 +1038,13 @@ void mapTool::selectDraw(void)
 			break;
 
 			case 2:
-				IMAGEMANAGER->findImage("artifact_shield")->frameRender(getMemDC(),
+				IMAGEMANAGER->findImage("artifact_helmet")->frameRender(getMemDC(),
 					20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
 					20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x, 0);
 			break;
 
 			case 3:
-				IMAGEMANAGER->findImage("artifact_helmet")->frameRender(getMemDC(),
+				IMAGEMANAGER->findImage("artifact_shield")->frameRender(getMemDC(),
 					20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
 					20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x, 0);
 			break;
@@ -1643,8 +1643,12 @@ void mapTool::buttonDraw(void)
 
 		case SMC_ONE:
 
-			IMAGEMANAGER->findImage("button_rooting_artifact")->frameRender(getMemDC(),
-				_contents.left - 20, _contents.top, 0, _page);
+			if (_miniMap.top <= WINSIZEY - 226)
+				IMAGEMANAGER->findImage("button_rooting_artifact")->frameRender(getMemDC(),
+					_contents.left - 20, _contents.top, 0, _page);
+			else
+				IMAGEMANAGER->findImage("button_rooting_artifact_large")->render(getMemDC(),
+					_contents.left - 20, _contents.top, 0, 0, 256, _boxLength);
 
 		break;
 
@@ -2050,8 +2054,10 @@ void mapTool::minimapMove(void)
 	}
 
 	if (_boxLength < 128) _boxLength = 128;
-	if (_boxLength > 288 && _categoryLarge != CATE_OBS) _boxLength = 288;
+	if (_boxLength > 288 && _categoryLarge != CATE_OBS && _categoryLarge != CATE_ROOTING) _boxLength = 288;
 	if (_boxLength > 256 && _categoryLarge == CATE_OBS) _boxLength = 256;
+	if (_boxLength > 320 && _categoryLarge == CATE_ROOTING) _boxLength = 320;
+	
 
 
 	if (_miniMap.top < WINSIZEY - 226)
@@ -2142,9 +2148,31 @@ void mapTool::deleteAll(int arrX, int arrY)
 			else ++_viBuild;
 		}
 		break;
-	case CATE_UNIT:
-		break;
 	case CATE_ROOTING:
+		for (_viRoot = _vRoot.begin(); _viRoot != _vRoot.end(); )
+		{
+			if (_viRoot->destX <= arrX && _viRoot->destX + _viRoot->sizeX > arrX &&
+				_viRoot->destY <= arrY && _viRoot->destY + _viRoot->sizeY > arrY)
+			{
+				for (int i = _viRoot->destX; i < _viRoot->destX + _viRoot->sizeX; i++)
+				{
+					for (int j = _viRoot->destY; j < _viRoot->destY + _viRoot->sizeY; j++)
+					{
+						_buildArr[i][j].camp = CAMP_NULL;
+						_buildArr[i][j].mine = MINE_NULL;
+						_buildArr[i][j].ev = EV_NULL;
+						_buildArr[i][j].isClosed = false;
+					}
+				}
+				_buildArr[_viRoot->destX + _viRoot->enterX][_viRoot->destY + _viRoot->enterY].enter = false;
+
+				_viRoot = _vRoot.erase(_viRoot);
+				break;
+			}
+			else ++_viRoot;
+		}
+		break;
+	case CATE_UNIT:
 		break;
 	case CATE_END:
 		break;
@@ -3074,11 +3102,11 @@ void mapTool::addRooting(int arrX, int arrY)
 
 		break;
 		case 2:
-			build.img = IMAGEMANAGER->findImage("artifact_shield");
+			build.img = IMAGEMANAGER->findImage("artifact_helmet");
 
 		break;
 		case 3:
-			build.img = IMAGEMANAGER->findImage("artifact_helmet");
+			build.img = IMAGEMANAGER->findImage("artifact_shield");
 
 		break;
 		case 4:
@@ -3111,7 +3139,8 @@ void mapTool::addRooting(int arrX, int arrY)
 		}
 	}
 
-
+	//================= 입구 설정
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
 
 	//=============== 금지 구역 설정
 	for (int i = build.destX; i < build.destX + build.sizeX; i++)
@@ -4474,7 +4503,38 @@ void mapTool::inputOnMap(void)
 	
 		else if (_categoryLarge == CATE_ROOTING)
 		{
-
+			switch (_categorySmall)
+			{
+			case SMC_ZERO:
+				break;
+			case SMC_ONE:
+				break;
+			case SMC_TWO:
+				break;
+			case SMC_THREE:
+				break;
+			case SMC_FOUR:
+				switch (_saveIndex.x)
+				{
+				case 0:
+					deleteAll(_mouseArr.x, _mouseArr.y);
+					break;
+				case 1:
+					for (int i = 0; i < 2; i++)
+					{
+						for (int j = 0; j < 2; j++)
+						{
+							deleteAll(_mouseArr.x - i, _mouseArr.y - j);
+						}
+					}
+					break;
+				case 2:
+					break;
+				}
+				break;
+			case SMC_FIVE:
+				break;
+			}
 		}
 	}
 
@@ -4627,7 +4687,6 @@ void mapTool::inputOnMap(void)
 
 				break;
 			case SMC_FOUR:
-
 				break;
 			case SMC_FIVE:
 
@@ -5266,6 +5325,7 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("button_resources", "image/mapTool/resource/button_resource.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_artifact", "image/mapTool/resource/button_artifact.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_rooting_artifact", "image/mapTool/resource/button_rooting_artifact.bmp", 256, 384, 1, 3, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("button_rooting_artifact_large", "image/mapTool/resource/button_rooting_artifact.bmp", 256, 384, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("button_rooting_resources", "image/mapTool/resource/button_rooting_resources.bmp", 192, 96, true, RGB(255, 0, 255));
 
 

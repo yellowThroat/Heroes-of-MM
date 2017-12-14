@@ -106,3 +106,5 @@ public:
 	mapTool();
 	~mapTool();
 };
+
+//HRGN 폴리곤; 1. 점을 배치해줌 2. 점들간에 선을 그어줘 CreateRGN(폴리곤이름, 선을 넣어줌, 몇개인가? )
