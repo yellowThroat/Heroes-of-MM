@@ -13,6 +13,8 @@ private:
 	vector<building> _vBuild;
 	vector<building>::iterator _viBuild;
 
+	vector<building> _vRoot;
+	vector<building>::iterator _viRoot;
 
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
@@ -65,11 +67,13 @@ public:
 	void buttonDraw(void);			// BUTTON
 	void selectDraw(void);			// SELECT CURSOR
 	void buildingDraw(void);		// BUILDING
+	void rootingDraw(void);			// ROOTING
 	void roadDraw(void);			// ROAD
 	void attributeDraw(void);		// ATTRIBUTE
 	void cordinateDraw(void);		// CORDINATE
 
 	void selectBox(int arrX, int arrY,int destX, int destY); // SELECT BOX
+	void closedBox(int arrX, int arrY, int destX, int destY);// CLOSED BOX 
 
 	//=============== S E T T I N G ========
 	void loadImg(void);				// Load Img
@@ -89,7 +93,8 @@ public:
 	void addBuilding(int arrX, int arrY, CAMP camp);	// DRAW BUILDING
 	void addBuilding(int arrX, int arrY, MINE mine);	// DRAW BUILDING
 	void addBuilding(int arrX, int arrY, EVENT ev);		// DRAW BUILDING
-	void addObstacle(int arrX, int arrY); // DRAW OBSTACLE
+	void addObstacle(int arrX, int arrY);				// DRAW OBSTACLE
+	void addRooting(int arrX, int arrY);
 	void deleteAll(int arrX, int arrY);					// ERASE BUILDING
 
 

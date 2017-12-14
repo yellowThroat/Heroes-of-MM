@@ -6,7 +6,7 @@
 
 #define MINISIZE (216 / MAXTILE)
 
-#define SHADOWALPHA 170
+#define SHADOWALPHA 210
 
 
 enum TILE
@@ -94,8 +94,8 @@ typedef enum CATEGORY
 	CATE_ROAD,
 	CATE_BUILDING,
 	CATE_OBS,
+	CATE_ROOTING,
 	CATE_UNIT,
-	CATE_RESOURCE,
 	CATE_NULL,
 	CATE_END
 }FIRST;
@@ -170,6 +170,7 @@ struct tagObjInfo
 struct tagRemember
 {
 	image* img;
+	image* imgShadow;
 	CAMP camp;
 	MINE mine;
 	EVENT ev;
@@ -177,8 +178,11 @@ struct tagRemember
 	int destY;
 	int sizeX;
 	int sizeY;
+	int sourX;
+	int sourY;
 	int imgX;
 	int imgY;
+	int miniX;
 	int type;
 };
 

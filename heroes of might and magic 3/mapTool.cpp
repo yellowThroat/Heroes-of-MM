@@ -118,6 +118,7 @@ void mapTool::update(void)
 {
 	//================= A R R A Y =========================
 	sort(_vBuild.begin(), _vBuild.end());
+	sort(_vRoot.begin(), _vRoot.end());
 
 	//================= T I M E R ================================
 	if (_inputDelayX) _inputDelayX--;
@@ -153,6 +154,7 @@ void mapTool::render(void)
 
 
 	buildingDraw();
+	rootingDraw();
 
 	//=============== S E L E C T   R E C T ==========================
 	if(_ptMouse.x < 788) selectDraw();
@@ -195,6 +197,21 @@ void mapTool::selectBox(int arrX, int arrY, int destX, int destY)
 		18 + (destX+1)*TILESIZE - _mapX,
 		20 + arrY*TILESIZE - _mapY,
 		0, 0, 2, (destY - arrY+1)*TILESIZE);
+}
+
+void mapTool::closedBox(int arrX, int arrY, int destX, int destY)
+{
+	for (int i = arrX; i <= destX; i++)
+	{
+		for (int j = arrY; j <= destY; j++)
+		{
+			if (_mapArr[i][j].tile == TILE_WATER ||	_buildArr[i][j].isClosed)
+			{
+				IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+					20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY, 150);
+			}
+		}
+	}
 }
 
 void mapTool::cordinateDraw(void)
@@ -394,9 +411,10 @@ void mapTool::selectDraw(void)
 
 				break;
 			}
-			break;
+		break;
+		
 		case SMC_ONE:
-
+		{
 			//====================== 테두리 그리기
 			if(_saveIndex.x + _saveIndex.y*4 != 2 &&
 				_saveIndex.x + _saveIndex.y * 4 != 5)
@@ -525,7 +543,10 @@ void mapTool::selectDraw(void)
 				}
 
 
-			break;
+
+		}
+		break;
+
 		case SMC_TWO:
 			if (_categorySmall == SMC_TWO)
 			{
@@ -671,12 +692,10 @@ void mapTool::selectDraw(void)
 		break;
 
 		case SMC_THREE:
-			
+		break;
 
-
-			break;
 		case SMC_FOUR:
-
+		{
 			if (_saveIndex.x == 0)
 				IMAGEMANAGER->findImage("select")->render(getMemDC(),
 					20 + (_mouseArr.x) *TILESIZE - _mapX,
@@ -688,10 +707,11 @@ void mapTool::selectDraw(void)
 					20 + (_mouseArr.x - 1)*TILESIZE - _mapX,
 					20 + (_mouseArr.y - 1)*TILESIZE - _mapY);
 			}
+		}
 
 			break;
 		case SMC_FIVE:
-			
+		{
 			//==================== 오브 젝트 이동 셀렉 =================
 			if (_move)
 			{
@@ -781,7 +801,10 @@ void mapTool::selectDraw(void)
 					}
 				}
 			}
-			break;
+
+		}
+		break;
+	
 		case SMC_NULL:
 			break;
 
@@ -792,6 +815,7 @@ void mapTool::selectDraw(void)
 		switch (_categorySmall)
 		{
 		case SMC_ZERO:
+		{
 			//===================== 드로우 위치 
 			IMAGEMANAGER->findImage("obstacle_1x1")->frameRender(getMemDC(),
 				20 + _mouseArr.x * TILESIZE - _mapX,
@@ -807,11 +831,13 @@ void mapTool::selectDraw(void)
 			}
 			//==================== 셀렉 박스
 			selectBox(_mouseArr.x, _mouseArr.y, _mouseArr.x, _mouseArr.y);
-			
-			break;
+
+		}
+		break;
+
 		case SMC_ONE:
-			
-			//==================== 드로우 위치
+		{
+				//==================== 드로우 위치
 			IMAGEMANAGER->findImage("obstacle_2x2")->frameRender(getMemDC(),
 				20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
 				20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x , _saveIndex.y + _page*2);
@@ -841,9 +867,10 @@ void mapTool::selectDraw(void)
 			//===================셀렉 박스
 			selectBox(_mouseArr.x - 1, _mouseArr.y - 1, _mouseArr.x, _mouseArr.y);
 
+	
+		}
+		break;
 
-
-			break;
 		case SMC_TWO:
 			switch (_foldMini)
 			{
@@ -936,17 +963,120 @@ void mapTool::selectDraw(void)
 				}
 			break;
 			}
-			
-			break;
+		break;
+
 		case SMC_THREE:
-			break;
+		break;
+	
 		case SMC_FOUR:
-			break;
+		break;
+		
 		case SMC_FIVE:
+		{
+			if (_move)
+			{
+				//============= 이동 중인거 그림
+				_remember.img->frameRender(getMemDC(),
+					20 + (_mouseArr.x - _remember.sizeX / 2 - _remember.imgX) *TILESIZE - _mapX,
+					20 + (_mouseArr.y - _remember.sizeY / 2 - _remember.imgY) * TILESIZE - _mapY,
+					_remember.sourX, _remember.sourY);
+
+				//============= 이동 중인거 셀렉
+				selectBox(_mouseArr.x - _remember.sizeX/2 - _remember.imgX ,
+					_mouseArr.y - _remember.sizeY/2 - _remember.imgY,
+					_mouseArr.x - _remember.sizeX/2 + _remember.sizeX - 1,
+					_mouseArr.y - _remember.sizeY/2 + _remember.sizeY - 1);
+
+				//============= 이동 중인거 금지 구역
+				for (int i = _mouseArr.x - _remember.sizeX/2; i < _mouseArr.x - _remember.sizeX/2 + _remember.sizeX; i++)
+				{
+					for (int j = _mouseArr.y - _remember.sizeY/2; j < _mouseArr.y - _remember.sizeY/2 + _remember.sizeY; j++)
+					{
+						if (_mapArr[i][j].tile == TILE_WATER)
+						{
+							IMAGEMANAGER->findImage("closed")->alphaRender(getMemDC(),
+								20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY, 150);
+						}
+					}
+
+				}
+			}
+		}
 			break;
 		}
 	}
-	
+	else if (_categoryLarge == CATE_ROOTING)
+	{
+		switch (_categorySmall)
+		{
+		case SMC_ZERO:
+		{
+			IMAGEMANAGER->findImage("resources")->frameRender(getMemDC(),
+				20 + (_mouseArr.x -1) * TILESIZE - _mapX,
+				20 + _mouseArr.y * TILESIZE - _mapY , _saveIndex.x, _saveIndex.y);
+			//================= 셀렉 박스
+			selectBox(_mouseArr.x - 1, _mouseArr.y , _mouseArr.x, _mouseArr.y);
+
+			//================= 금지 구역
+			closedBox(_mouseArr.x, _mouseArr.y, _mouseArr.x, _mouseArr.y);
+		}
+			break;
+		
+		case SMC_ONE:
+			switch ( _saveIndex.y + _page * 2)
+			{
+			case 0:
+				IMAGEMANAGER->findImage("artifact_weapon")->frameRender(getMemDC(),
+					20 + (_mouseArr.x -1) * TILESIZE - _mapX,
+					20 + (_mouseArr.y -1) * TILESIZE - _mapY, _saveIndex.x, 0);
+			break;
+
+			case 1:
+				IMAGEMANAGER->findImage("artifact_armor")->frameRender(getMemDC(),
+					20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x, 0);
+			break;
+
+			case 2:
+				IMAGEMANAGER->findImage("artifact_shield")->frameRender(getMemDC(),
+					20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x, 0);
+			break;
+
+			case 3:
+				IMAGEMANAGER->findImage("artifact_helmet")->frameRender(getMemDC(),
+					20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x, 0);
+			break;
+
+			case 4:
+				IMAGEMANAGER->findImage("artifact_acc")->frameRender(getMemDC(),
+					20 + (_mouseArr.x - 1) * TILESIZE - _mapX,
+					20 + (_mouseArr.y - 1) * TILESIZE - _mapY, _saveIndex.x, 0);
+			break;
+			}
+			//================= 셀렉 박스
+			selectBox(_mouseArr.x - 1, _mouseArr.y - 1, _mouseArr.x, _mouseArr.y);
+
+			//================= 금지 박스
+			closedBox(_mouseArr.x, _mouseArr.y, _mouseArr.x, _mouseArr.y);
+
+			break;
+		
+		case SMC_TWO:
+			break;
+		
+		case SMC_THREE:
+			break;
+		
+		case SMC_FOUR:
+			break;
+		
+		case SMC_FIVE:
+			break;
+
+		}
+	}
 	
 	
 	if (_area)
@@ -1079,20 +1209,42 @@ void mapTool::miniDraw(void)
 
 	for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); ++_viBuild)
 	{
-		if (MAXTILE == 72)
+		if (_viBuild->camp != CAMP_NULL || _viBuild->mine != MINE_NULL || _viBuild->ev != EV_NULL)
 		{
-			IMAGEMANAGER->findImage("miniBuilding72")->frameRender(getMemDC(),
-				_miniMap.left + _viBuild->destX * MINISIZE,
-				_miniMap.top + _viBuild->destY *MINISIZE,
-				_viBuild->miniX, 0);
+			if (MAXTILE == 72)
+			{
+				IMAGEMANAGER->findImage("miniBuilding72")->frameRender(getMemDC(),
+					_miniMap.left + _viBuild->destX * MINISIZE,
+					_miniMap.top + _viBuild->destY *MINISIZE,
+					_viBuild->miniX, 0);
+			}
+			else
+			{
+				IMAGEMANAGER->findImage("miniBuilding36")->frameRender(getMemDC(),
+					_miniMap.left + _viBuild->destX  * MINISIZE,
+					_miniMap.top + _viBuild->destY *MINISIZE,
+					_viBuild->miniX, 0);
+			}
 		}
 		else
 		{
-			IMAGEMANAGER->findImage("miniBuilding36")->frameRender(getMemDC(),
-				_miniMap.left + _viBuild->destX / TILESIZE * MINISIZE,
-				_miniMap.top + _viBuild->destY / TILESIZE*MINISIZE,
-				_viBuild->miniX, 0);
+			if (MAXTILE == 72)
+			{
+				IMAGEMANAGER->findImage("miniObstacle72")->alphaFrameRender(getMemDC(),
+					_miniMap.left + _viBuild->destX * MINISIZE,
+					_miniMap.top + _viBuild->destY * MINISIZE,
+					_viBuild->miniX, 0, 150);
+			}
+			else
+			{
+				IMAGEMANAGER->findImage("miniObstacle36")->alphaFrameRender(getMemDC(),
+					_miniMap.left + _viBuild->destX * MINISIZE,
+					_miniMap.top + _viBuild->destY * MINISIZE,
+					_viBuild->miniX, 0, 150);
+
+			}
 		}
+
 	}
 
 	if(MAXTILE == 72) IMAGEMANAGER->findImage("miniView72")->render(getMemDC(), _miniView.left, _miniView.top);
@@ -1157,26 +1309,44 @@ void mapTool::buildingDraw(void)
 	}
 }
 
+void mapTool::rootingDraw(void)
+{
+	for ( _viRoot = _vRoot.begin(); _viRoot != _vRoot.end(); ++_viRoot)
+	{
+		_viRoot->img->frameRender(getMemDC(),
+			20 + (_viRoot->destX - _viRoot->imgX) * TILESIZE - _mapX,
+			20 + (_viRoot->destY - _viRoot->imgY) * TILESIZE - _mapY,
+			_viRoot->sourX, _viRoot->sourY);
+
+		if(_viRoot->imgShadow != NULL)
+		_viRoot->imgShadow->alphaFrameRender(getMemDC(),
+			20 + (_viRoot->destX - _viRoot->imgX) * TILESIZE - _mapX,
+			20 + (_viRoot->destY - _viRoot->imgY) * TILESIZE - _mapY,
+			_viRoot->sourX, _viRoot->sourY, SHADOWALPHA);
+	}
+}
+
 void mapTool::buttonDraw(void)
 {
 	IMAGEMANAGER->findImage("tileButton")->frameRender(getMemDC(), _largeCategory.left, _largeCategory.top);
 	IMAGEMANAGER->findImage("roadButton")->frameRender(getMemDC(), _largeCategory.left +42, _largeCategory.top);
 	IMAGEMANAGER->findImage("buildingButton")->frameRender(getMemDC(), _largeCategory.left + 84, _largeCategory.top);
 	IMAGEMANAGER->findImage("button_obstacle")->frameRender(getMemDC(), _largeCategory.left + 126, _largeCategory.top);
-	
+	IMAGEMANAGER->findImage("button_rooting")->frameRender(getMemDC(), _largeCategory.left + 168, _largeCategory.top);
+
 	switch (_categoryLarge)
 	{
 	case CATE_NULL:
-		break;
+	break;
+	
 	case CATE_TILE:
-
+	{
 		IMAGEMANAGER->findImage("button_green")->frameRender(getMemDC(), _smallCategory.left, _smallCategory.top);
 
 		IMAGEMANAGER->findImage("button_water")->frameRender(getMemDC(), _smallCategory.left + 42, _smallCategory.top);
 
 		IMAGEMANAGER->findImage("button_volcano")->frameRender(getMemDC(), _smallCategory.left + 84, _smallCategory.top);
-
-
+	
 		if (_categorySmall != SMC_NULL)
 		{
 			IMAGEMANAGER->findImage("size1")->frameRender(getMemDC(), _smallCategory.left, _smallCategory.bottom + 10);
@@ -1231,8 +1401,12 @@ void mapTool::buttonDraw(void)
 			}
 			break;
 		}
-		break;
+
+	}
+	break;
+
 	case CATE_ROAD:
+	{
 		IMAGEMANAGER->findImage("button_normal")->frameRender(getMemDC(), _smallCategory.left, _smallCategory.top);
 
 		IMAGEMANAGER->findImage("button_rock")->frameRender(getMemDC(), _smallCategory.left + 42, _smallCategory.top);
@@ -1265,9 +1439,12 @@ void mapTool::buttonDraw(void)
 				_contents.left, _contents.top);
 			break;
 		}
-		break;
-	case CATE_BUILDING:
 
+	}
+	break;
+	
+	case CATE_BUILDING:
+	{
 		IMAGEMANAGER->findImage("button_camp")->frameRender(getMemDC(),
 			_smallCategory.left, _smallCategory.top);
 
@@ -1282,7 +1459,7 @@ void mapTool::buttonDraw(void)
 
 		IMAGEMANAGER->findImage("move")->frameRender(getMemDC(),
 			_smallCategory.right - 32, _smallCategory.top);
-
+	
 		switch (_categorySmall)
 		{
 		case SMC_ZERO:
@@ -1352,8 +1529,12 @@ void mapTool::buttonDraw(void)
 		case SMC_FIVE:
 			break;
 		}
-		break;
+
+	}
+	break;
+
 	case CATE_OBS:
+	{
 		IMAGEMANAGER->findImage("button_1x1")->frameRender(getMemDC(),
 			_smallCategory.left, _smallCategory.top);
 
@@ -1371,7 +1552,7 @@ void mapTool::buttonDraw(void)
 
 		IMAGEMANAGER->findImage("move")->frameRender(getMemDC(),
 			_smallCategory.right - 32, _smallCategory.top);
-
+	
 		switch (_categorySmall)
 		{
 		case SMC_ZERO:
@@ -1433,10 +1614,62 @@ void mapTool::buttonDraw(void)
 				break;
 
 		}
+
+	}
+	break;
+	
+	case CATE_ROOTING:
+	{
+		IMAGEMANAGER->findImage("button_resources")->frameRender(getMemDC(),
+			_smallCategory.left, _smallCategory.top);
+		
+		IMAGEMANAGER->findImage("button_artifact")->frameRender(getMemDC(),
+			_smallCategory.left + 42, _smallCategory.top);
+		
+		IMAGEMANAGER->findImage("erase")->frameRender(getMemDC(),
+			_smallCategory.right - 74, _smallCategory.top);
+
+		IMAGEMANAGER->findImage("move")->frameRender(getMemDC(),
+			_smallCategory.right - 32, _smallCategory.top);
+
+		switch (_categorySmall)
+		{
+		case SMC_ZERO:
+			
+			IMAGEMANAGER->findImage("button_rooting_resources")->render(getMemDC(),
+			_contents.left, _contents.top);
+
 		break;
+
+		case SMC_ONE:
+
+			IMAGEMANAGER->findImage("button_rooting_artifact")->frameRender(getMemDC(),
+				_contents.left - 20, _contents.top, 0, _page);
+
+		break;
+
+		case SMC_TWO:
+			break;
+
+		case SMC_THREE:
+			break;
+
+		case SMC_FOUR:
+		{
+			IMAGEMANAGER->findImage("button_brush_size")->render(getMemDC(),
+				_contents.left, _contents.top);
+		}
+		break;
+
+		case SMC_FIVE:
+			break;
+		}
+
+	}
+
+
+	break;
 	case CATE_UNIT:
-		break;
-	case CATE_RESOURCE:
 		break;
 	case CATE_END:
 		break;
@@ -1444,7 +1677,8 @@ void mapTool::buttonDraw(void)
 		break;
 	}
 
-	if (_categorySmall != SMC_FOUR && _categoryLarge != CATE_BUILDING )
+	if (_categorySmall != SMC_FOUR && _categoryLarge != CATE_BUILDING &&
+		_categorySmall != SMC_FIVE && _categoryLarge != CATE_ROOTING)
 	{
 
 		if (!(_categoryLarge == CATE_OBS && _categorySmall == SMC_ONE) &&
@@ -1499,6 +1733,9 @@ void mapTool::setButton(void)
 	if (_categoryLarge == CATE_OBS) IMAGEMANAGER->findImage("button_obstacle")->setFrameX(0);
 	else IMAGEMANAGER->findImage("button_obstacle")->setFrameX(1);
 	
+	if (_categoryLarge == CATE_ROOTING) IMAGEMANAGER->findImage("button_rooting")->setFrameX(0);
+	else IMAGEMANAGER->findImage("button_rooting")->setFrameX(1);
+
 	//================ 브러쉬를 크기를 정할때 ==================
 	if (_brushNum == 0) IMAGEMANAGER->findImage("size1")->setFrameX(0);
 	else IMAGEMANAGER->findImage("size1")->setFrameX(1);
@@ -1514,7 +1751,7 @@ void mapTool::setButton(void)
 	switch (_categoryLarge)
 	{
 	case CATE_TILE:
-
+	{
 		if (_categorySmall == SMC_ZERO) IMAGEMANAGER->findImage("button_green")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_green")->setFrameX(1);
 
@@ -1527,11 +1764,11 @@ void mapTool::setButton(void)
 		IMAGEMANAGER->findImage("button_terrain_green")->setFrameY(_page);
 		IMAGEMANAGER->findImage("button_terrain_water")->setFrameY(_page);
 		IMAGEMANAGER->findImage("button_terrain_volcano")->setFrameY(_page);
-
-
+	}
 	break;
+	
 	case CATE_ROAD:
-
+	{
 		if (_categorySmall == SMC_ZERO) IMAGEMANAGER->findImage("button_normal")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_normal")->setFrameX(1);
 
@@ -1540,9 +1777,11 @@ void mapTool::setButton(void)
 
 		if (_categorySmall == SMC_TWO) IMAGEMANAGER->findImage("button_river")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_river")->setFrameX(1);
-
+	}
 	break;
+	
 	case CATE_BUILDING:
+	{
 		if (_categorySmall == SMC_ZERO) IMAGEMANAGER->findImage("button_camp")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_camp")->setFrameX(1);
 	
@@ -1658,10 +1897,11 @@ void mapTool::setButton(void)
 
 		}
 
+	}
 	break;
 
 	case CATE_OBS:
-		
+	{
 		if (_categorySmall == SMC_ZERO) IMAGEMANAGER->findImage("button_1x1")->setFrameX(0);
 		else IMAGEMANAGER->findImage("button_1x1")->setFrameX(1);
 
@@ -1707,12 +1947,22 @@ void mapTool::setButton(void)
 			break;
 
 		}
-		break;
-		
-	case CATE_RESOURCE:
-		break;
-	
 
+	}
+	break;
+		
+	case CATE_ROOTING:
+	{
+		if (_categorySmall == SMC_ZERO) IMAGEMANAGER->findImage("button_resources")->setFrameX(0);
+		else IMAGEMANAGER->findImage("button_resources")->setFrameX(1);
+
+		if (_categorySmall == SMC_ONE) IMAGEMANAGER->findImage("button_artifact")->setFrameX(0);
+		else IMAGEMANAGER->findImage("button_artifact")->setFrameX(1);
+		
+		if (_categorySmall == SMC_FIVE) IMAGEMANAGER->findImage("move")->setFrameX(0);
+		else IMAGEMANAGER->findImage("move")->setFrameX(1);
+	}
+	break;
 	}
 
 
@@ -1894,7 +2144,7 @@ void mapTool::deleteAll(int arrX, int arrY)
 		break;
 	case CATE_UNIT:
 		break;
-	case CATE_RESOURCE:
+	case CATE_ROOTING:
 		break;
 	case CATE_END:
 		break;
@@ -2481,7 +2731,6 @@ void mapTool::addObstacle(int arrX, int arrY)
 	build.ev	= EV_NULL;
 	build.sourX = _saveIndex.x;
 	build.sourY = _saveIndex.y;
-	build.miniX = 2;
 
 	switch (_categorySmall)
 	{
@@ -2495,6 +2744,7 @@ void mapTool::addObstacle(int arrX, int arrY)
 		build.imgY = 0;
 		build.sizeX = 1;
 		build.sizeY = 1;
+		build.miniX = 0;
 	}
 	break;
 
@@ -2505,6 +2755,7 @@ void mapTool::addObstacle(int arrX, int arrY)
 		build.sourY = _saveIndex.y + 2 * _page;
 		if (build.sourX == 3)
 		{
+			build.miniX = 1;
 			build.imgX = 0;
 			build.imgY = 0;
 			build.sizeX = 2;
@@ -2513,6 +2764,7 @@ void mapTool::addObstacle(int arrX, int arrY)
 		}
 		else
 		{
+			build.miniX = 0;
 			build.imgX = 1;
 			build.imgY = 1;
 			build.sizeX = 1;
@@ -2525,6 +2777,8 @@ void mapTool::addObstacle(int arrX, int arrY)
 
 	case SMC_TWO:
 	{
+		build.miniX = 2;
+		build.sourX = _saveIndex.x;
 		if (_foldMini) build.sourY = _saveIndex.y + _page * 2;
 		else build.sourY = _saveIndex.y + _page;
 
@@ -2549,6 +2803,7 @@ void mapTool::addObstacle(int arrX, int arrY)
 				build.sizeY = 4;
 				build.imgX = 1;
 				build.imgY = 0;
+				build.sourX = 0;
 				build.sourY = _saveIndex.y + _page - 2;
 			}
 
@@ -2573,7 +2828,8 @@ void mapTool::addObstacle(int arrX, int arrY)
 				build.sizeY = 4;
 				build.imgX = 1;
 				build.imgY = 0;
-				build.sourY = _saveIndex.y + _page-4;
+				build.sourX = 0;
+				build.sourY = _page - 4;
 
 			}
 			break;
@@ -2624,6 +2880,7 @@ void mapTool::addObstacle(int arrX, int arrY)
 			build.imgY = 0;
 			build.sizeX = 1;
 			build.sizeY = 1;
+			build.miniX = 0;
 			if (_mapArr[build.destX][build.destY].tile != TILE_VOLCANO)
 			build.sourX = RND->getInt(7);
 			else
@@ -2632,17 +2889,88 @@ void mapTool::addObstacle(int arrX, int arrY)
 			}
 		build.sourY = RND->getInt(4);
 		}
-		if (width <= 3 || height <= 3)
+		else if ((width < 3 || height < 3) && build.destX != destX && build.destY != destY)
 		{
-			ranNum1 = RND->getInt(3);
-			if (ranNum1)
+			build.img = IMAGEMANAGER->findImage("obstacle_2x2");
+			build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
+			build.sourX = RND->getInt(4);
+			build.sourY = RND->getInt(4);
+			if (build.sourX == 3)
 			{
+				build.miniX = 1;
+				build.imgX = 0;
+				build.imgY = 0;
+				build.sizeX = 2;
+				build.sizeY = 2;
+
+			}
+			else
+			{
+				build.miniX = 0;
+				build.imgX = 1;
+				build.imgY = 1;
+				build.sizeX = 1;
+				build.sizeY = 1;
+			}
+		}
+		else if (width>=3 && width<5 && height >= 3 )
+		{
+			if ((build.destX == initX || build.destX == initX + 2) &&
+				!((build.destY - initY)%2) &&
+				build.destX <= destX -2 && build.destY <=destY -2)
+			{
+				build.img = IMAGEMANAGER->findImage("obstacle_4x4");
+				build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
+				build.sizeX = 3;
+				build.sizeY = 3;
+				build.imgX = 1;
+				build.imgY = 1;
+				build.sourX = RND->getInt(2);
+				build.sourY = RND->getInt(4);
+				build.miniX = 2;
+				if (build.sourY == 3) build.sourX = 0;
+			}
+			else return;
+		}
+		else if (width >= 5 && height >=3)
+		{
+			ranNum0 = RND->getInt(6);
+			if (!ranNum0 && build.destX < destX - 3 && build.destY < destY - 2)
+			{
+				build.img = IMAGEMANAGER->findImage("obstacle_6x4");
+				build.imgShadow = IMAGEMANAGER->findImage("obstacle_6x4_shadow");
+				build.sizeX = 5;
+				build.sizeY = 4;
+				build.imgX = 1;
+				build.imgY = 0;
+				build.sourX = 0;
+				build.miniX = 3;
+				build.sourY = RND->getInt(2);
+			}
+			else if(ranNum0 ==1&& build.destX < destX-1 && build.destY < destY - 1)
+			{
+				build.img = IMAGEMANAGER->findImage("obstacle_4x4");
+				build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
+				build.sizeX = 3;
+				build.sizeY = 3;
+				build.imgX = 1;
+				build.imgY = 1;
+				build.miniX = 2;
+				build.sourX = RND->getInt(2);
+				build.sourY = RND->getInt(4);
+				if (build.sourY == 3) build.sourX = 0;
+
+			}
+			else
+			{
+				if (_buildArr[build.destX][build.destY].isClosed) return;
 				build.img = IMAGEMANAGER->findImage("obstacle_2x2");
 				build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
 				build.sourX = RND->getInt(4);
 				build.sourY = RND->getInt(4);
 				if (build.sourX == 3)
 				{
+					build.miniX = 1;
 					build.imgX = 0;
 					build.imgY = 0;
 					build.sizeX = 2;
@@ -2651,44 +2979,35 @@ void mapTool::addObstacle(int arrX, int arrY)
 				}
 				else
 				{
+					build.miniX = 0;
 					build.imgX = 1;
 					build.imgY = 1;
 					build.sizeX = 1;
 					build.sizeY = 1;
 				}
+
 			}
-			else return;
 		}
-		if (range == 9)
-		{
-
-		}
-
-		/*
-		switch (ranNum0)
-		{
-		case 0:
-			build.img = IMAGEMANAGER->findImage("obstacle_1x1");
-			build.imgShadow = IMAGEMANAGER->findImage("obstacle_1x1_shadow");
-
-			break;
-		case 1:
-			build.img = IMAGEMANAGER->findImage("obstacle_2x2");
-			build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
-			break;
-		case 2:
-			build.img = IMAGEMANAGER->findImage("obstacle_4x4");
-			build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
-			break;
-		case 3:
-			build.img = IMAGEMANAGER->findImage("obstacle_6x4");
-			build.imgShadow = IMAGEMANAGER->findImage("obstacle_6x4_shadow");
-			break;
-		}
-		*/
+		else return;
 	}
-
 	break;
+
+	case SMC_FIVE:
+	{
+		build.img = _remember.img;
+		build.imgShadow = _remember.imgShadow;
+		build.sizeX = _remember.sizeX;
+		build.sizeY = _remember.sizeY;
+		build.imgX = _remember.imgX;
+		build.imgY = _remember.imgY;
+		build.miniX = _remember.miniX;
+		build.sourX = _remember.sourX;
+		build.sourY = _remember.sourY;
+		build.destX = arrX - build.sizeX / 2;
+		build.destY = arrY - build.sizeY / 2;
+	}
+		break;
+
 	}
 
 	//================== 응 아니야 돌아가
@@ -2718,6 +3037,96 @@ void mapTool::addObstacle(int arrX, int arrY)
 	}
 
 	_vBuild.push_back(build);
+}
+
+void mapTool::addRooting(int arrX, int arrY)
+{
+	building build;
+	
+	ZeroMemory(&build, sizeof(building));
+
+	build.camp = CAMP_NULL;
+	build.mine = MINE_NULL;
+	build.ev = EV_NULL;
+	build.destX = arrX;
+	build.destY = arrY;
+	switch (_categorySmall)
+	{
+	case SMC_ZERO:
+		build.img = IMAGEMANAGER->findImage("resources");
+		build.imgShadow = IMAGEMANAGER->findImage("resources_shadow");
+		build.imgX = 1;
+		build.sizeX = 1;
+		build.sizeY = 1;
+		build.sourX = _saveIndex.x;
+		build.sourY = _saveIndex.y;
+		break;
+
+	case SMC_ONE:
+		switch (_saveIndex.y + _page*2)
+		{
+		case 0:
+			build.img = IMAGEMANAGER->findImage("artifact_weapon");
+
+		break;
+		case 1:
+			build.img = IMAGEMANAGER->findImage("artifact_armor");
+
+		break;
+		case 2:
+			build.img = IMAGEMANAGER->findImage("artifact_shield");
+
+		break;
+		case 3:
+			build.img = IMAGEMANAGER->findImage("artifact_helmet");
+
+		break;
+		case 4:
+			build.img = IMAGEMANAGER->findImage("artifact_acc");
+
+		break;
+		}
+		build.imgShadow = NULL;
+		build.imgX = 1;
+		build.imgY = 1;
+		build.sizeX = 1;
+		build.sizeY = 1;
+		build.sourX = _saveIndex.x;
+		build.sourY = 0;
+		break;
+	}
+
+
+	//================== 응 아니야 돌아가
+
+	//================== 맵 타일 제한 넘어가면?
+	if (build.destX<0 || build.destY <= 0 || build.destX >MAXTILE || build.destY > MAXTILE) return;
+
+	//================== 타일이 물이거나 건물이 있다면?
+	for (int i = build.destX; i < build.destX + build.sizeX; i++)
+	{
+		for (int j = build.destY; j < build.destY + build.sizeY; j++)
+		{
+			if (_mapArr[i][j].tile == TILE_WATER || _buildArr[i][j].isClosed) return;
+		}
+	}
+
+
+
+	//=============== 금지 구역 설정
+	for (int i = build.destX; i < build.destX + build.sizeX; i++)
+	{
+		for (int j = build.destY; j < build.destY + build.sizeY; j++)
+		{
+			_buildArr[i][j].mine = build.mine;
+			_buildArr[i][j].isClosed = true;
+		}
+	}
+
+	_vRoot.push_back(build);
+
+
+
 }
 
 void mapTool::setTile(int arrX, int arrY, TILE tile)
@@ -3192,7 +3601,7 @@ void mapTool::setCor(void)
 						break;
 					case CATE_UNIT:
 						break;
-					case CATE_RESOURCE:
+					case CATE_ROOTING:
 						break;
 					case CATE_END:
 						break;
@@ -3473,7 +3882,38 @@ void mapTool::inputCommon(void)
 
 		//================== 오브젝트 이동 뗄때======================
 		
-		if (_move)
+		//============ O B S T A C L E   M O V E =================
+		if (_move && _categoryLarge == CATE_OBS && _ptMouse.x < 788)
+		{
+			bool overlap = false;
+			int sizeX, sizeY;
+			//금지 구역 이라면
+			for (int i = _mouseArr.x - _remember.sizeX/2; i < _mouseArr.x - _remember.sizeX/2 + _remember.sizeX; i++)
+			{
+				for (int j = _mouseArr.y - _remember.sizeY/2; j < _mouseArr.y - _remember.sizeY/2 + _remember.sizeY; j++)
+				{
+					if (_mapArr[i][j].tile == TILE_WATER)
+					{
+						overlap = true;
+						addObstacle(_remember.destX + _remember.sizeX/2,
+							_remember.destY + _remember.sizeY/2);
+					}
+					if (overlap) break;
+				}
+				if (overlap) break;
+			}
+
+			if (!overlap)
+			{
+				addObstacle(_mouseArr.x, _mouseArr.y);
+			}
+
+
+			_move = false;
+		}
+
+
+		if (_move && _categoryLarge != CATE_OBS)
 		{
 			bool overlap = false;
 			int sizeX, sizeY;
@@ -3683,6 +4123,24 @@ void mapTool::inputCommon(void)
 					}
 					break;
 
+				case CATE_ROOTING:
+					switch (_categorySmall)
+					{
+					case SMC_ZERO: maxPage = 1;
+						break;
+					case SMC_ONE: maxPage = 3;
+						break;
+					case SMC_TWO:  maxPage = 1;
+						break;
+					case SMC_THREE: maxPage = 1;
+						break;
+					case SMC_FOUR: maxPage = 1;
+						break;
+					case SMC_FIVE: maxPage = 1;
+						break;
+
+					}
+					break;
 				}
 				if (_page != maxPage)
 				{
@@ -3704,8 +4162,12 @@ void mapTool::inputOnMap(void)
 {
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON) && _brushNum != 2)
 	{
-		_saveX = _mouseArr.x;
-		_saveY = _mouseArr.y;
+		if (_categoryLarge != CATE_OBS)
+		{
+			_saveX = _mouseArr.x;
+			_saveY = _mouseArr.y;
+
+		}
 
 		//============== DRAW TILE=====================
 		if (_categoryLarge == CATE_TILE && _categorySmall != SMC_NULL)
@@ -3961,13 +4423,28 @@ void mapTool::inputOnMap(void)
 			switch (_categorySmall)
 			{
 			case SMC_ZERO: 
-				addObstacle(_mouseArr.x, _mouseArr.y);
+				if (_mouseArr.x != _saveX || _mouseArr.y != _saveY)
+				{
+					addObstacle(_mouseArr.x, _mouseArr.y);
+					_saveX = _mouseArr.x;
+					_saveY = _mouseArr.y;
+				}
 				break;
 			case SMC_ONE:
-				addObstacle(_mouseArr.x, _mouseArr.y);
+				if (_mouseArr.x != _saveX || _mouseArr.y != _saveY)
+				{
+					addObstacle(_mouseArr.x, _mouseArr.y);
+					_saveX = _mouseArr.x;
+					_saveY = _mouseArr.y;
+				}
 				break;
 			case SMC_TWO:
-				addObstacle(_mouseArr.x, _mouseArr.y);
+				if (_mouseArr.x != _saveX || _mouseArr.y != _saveY)
+				{
+					addObstacle(_mouseArr.x, _mouseArr.y);
+					_saveX = _mouseArr.x;
+					_saveY = _mouseArr.y;
+				}
 				break;
 			case SMC_THREE:
 				break;
@@ -3995,7 +4472,10 @@ void mapTool::inputOnMap(void)
 			}
 		}
 	
+		else if (_categoryLarge == CATE_ROOTING)
+		{
 
+		}
 	}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
@@ -4059,6 +4539,9 @@ void mapTool::inputOnMap(void)
 						_remember.destY = _viBuild->destY;
 						_remember.imgX = _viBuild->imgX;
 						_remember.imgY = _viBuild->imgY;
+						_remember.sourX = _viBuild->sourX;
+						_remember.sourY = _viBuild->sourY;
+						_remember.miniX = _viBuild->miniX;
 
 
 						deleteAll(_mouseArr.x, _mouseArr.y);
@@ -4087,9 +4570,70 @@ void mapTool::inputOnMap(void)
 			case SMC_FOUR:
 				break;
 			case SMC_FIVE:
+			{
+				//================= 오브젝트 이동 누를때============
+				for (_viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); )
+				{
+					if (_viBuild->destX <= _mouseArr.x && _viBuild->destX + _viBuild->sizeX > _mouseArr.x &&
+						_viBuild->destY <= _mouseArr.y && _viBuild->destY + _viBuild->sizeY > _mouseArr.y)
+					{
+						_move = true;
+						
+						ZeroMemory(&_remember, sizeof(tagRemember));
+
+						_remember.camp = CAMP_NULL;
+						_remember.mine = MINE_NULL;
+						_remember.ev = EV_NULL;
+
+						_remember.img = _viBuild->img;
+						_remember.imgShadow = _viBuild->imgShadow;
+						_remember.sizeX = _viBuild->sizeX;
+						_remember.sizeY = _viBuild->sizeY;
+						_remember.destX = _viBuild->destX;
+						_remember.destY = _viBuild->destY;
+						_remember.imgX = _viBuild->imgX;
+						_remember.imgY = _viBuild->imgY;
+						_remember.sourX = _viBuild->sourX;
+						_remember.sourY = _viBuild->sourY;
+
+
+
+
+						deleteAll(_mouseArr.x, _mouseArr.y);
+						break;
+
+					}
+					else ++_viBuild;
+				}
+
+			}
 				break;
 			}
-			break;
+		break;
+		
+		case CATE_ROOTING:
+			switch (_categorySmall)
+			{
+			case SMC_ZERO:
+				addRooting(_mouseArr.x, _mouseArr.y);
+				break;
+			case SMC_ONE:
+				addRooting(_mouseArr.x, _mouseArr.y);
+				break;
+			case SMC_TWO:
+
+				break;
+			case SMC_THREE:
+
+				break;
+			case SMC_FOUR:
+
+				break;
+			case SMC_FIVE:
+
+				break;
+			}
+		break;
 
 		}
 
@@ -4158,7 +4702,7 @@ void mapTool::inputOnUI(void)
 			else if (_ptMouse.x >= _largeCategory.left + 42 && _ptMouse.x < _largeCategory.left + 74) _categoryLarge = CATE_ROAD;
 			else if (_ptMouse.x >= _largeCategory.left + 84 && _ptMouse.x < _largeCategory.left + 116) _categoryLarge = CATE_BUILDING;
 			else if (_ptMouse.x >= _largeCategory.left + 126 && _ptMouse.x <_largeCategory.left + 158) _categoryLarge = CATE_OBS;
-			else if (_ptMouse.x >= _largeCategory.left + 168 && _ptMouse.x <_largeCategory.left + 200) _categoryLarge = CATE_RESOURCE;
+			else if (_ptMouse.x >= _largeCategory.left + 168 && _ptMouse.x <_largeCategory.left + 200) _categoryLarge = CATE_ROOTING;
 			else if (_ptMouse.x >= _largeCategory.left + 210 && _ptMouse.y <_largeCategory.left + 242) _categoryLarge = CATE_UNIT;
 		}
 
@@ -4173,36 +4717,55 @@ void mapTool::inputOnUI(void)
 			case CATE_NULL:
 				break;
 			case CATE_TILE:
-
+			{
 				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
 				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
 				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
-				break;
+
+			}
+			break;
+			
 			case CATE_ROAD:
+			{
 				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
 				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
 				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
 				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FOUR;
 
-				break;
+			}
+			break;
+			
 			case CATE_BUILDING:
+			{
 				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
 				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
 				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
 				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right - 42) _categorySmall = SMC_FOUR;
 				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
-				break;
+			}
+			break;
+
 			case CATE_OBS:
+			{
 				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
 				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
 				else if (_ptMouse.x >= _smallCategory.left + 84 && _ptMouse.x < _smallCategory.left + 116) _categorySmall = SMC_TWO;
 				else if (_ptMouse.x >= _smallCategory.left + 126 && _ptMouse.x < _smallCategory.left + 158) _categorySmall = SMC_THREE;
 				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right - 42) _categorySmall = SMC_FOUR;
 				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
+			}
+			break;
+
+			case CATE_ROOTING:
+			{
+				if (_ptMouse.x < _smallCategory.left + 32) _categorySmall = SMC_ZERO;
+				else if (_ptMouse.x >= _smallCategory.left + 42 && _ptMouse.x < _smallCategory.left + 74) _categorySmall = SMC_ONE;
+				else if (_ptMouse.x >= _smallCategory.right - 74 && _ptMouse.x < _smallCategory.right - 42) _categorySmall = SMC_FOUR;
+				else if (_ptMouse.x >= _smallCategory.right - 32 && _ptMouse.x < _smallCategory.right) _categorySmall = SMC_FIVE;
+			}
 				break;
+
 			case CATE_UNIT:
-				break;
-			case CATE_RESOURCE:
 				break;
 			case CATE_END:
 				break;
@@ -4363,13 +4926,18 @@ void mapTool::inputOnUI(void)
 				switch (_categorySmall)
 				{
 				case SMC_ZERO:
+				{
 					if (_ptMouse.y < _contents.top + 128)
 					{
 						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
 						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
 					}
-					break;
+
+				}
+				break;
+				
 				case SMC_ONE:
+				{
 					switch (_foldMini)
 					{
 					case TRUE:
@@ -4387,8 +4955,12 @@ void mapTool::inputOnUI(void)
 						}
 						break;
 					}
-					break;
+
+				}
+				break;
+				
 				case SMC_TWO:
+				{
 					switch (_foldMini)
 					{
 					case TRUE:
@@ -4407,22 +4979,62 @@ void mapTool::inputOnUI(void)
 						}
 						break;
 					}
-					break;
+
+				}
+				break;
+				
 				case SMC_THREE:
-					break;
+				
+				break;
+				
 				case SMC_FOUR:
 					if (_ptMouse.y < _contents.top + 128)
 					{
 						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE ;
 						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE ;
 					}
+				break;
 
+				case SMC_FIVE:
+				break;
+				}
+			}
+			if (_categoryLarge == CATE_ROOTING)
+			{
+				switch (_categorySmall)
+				{
+				case SMC_ZERO:
+
+					if (_ptMouse.y < _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE/2;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
+					}
+
+					break;
+				case SMC_ONE:
+					if (_ptMouse.y < _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left + 10) / TILESIZE / 2;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE / 2;
+					}
+
+					break;
+				case SMC_TWO:
+					break;
+				case SMC_THREE:
+					break;
+				case SMC_FOUR:
+					if (_ptMouse.y < _contents.top + 128)
+					{
+						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE;
+						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;
+					}
 					break;
 				case SMC_FIVE:
 					break;
 				}
 			}
-
 
 			//================ 브러시 날리기
 			if(!PtInRect(&_miniMap,_ptMouse) && _ptMouse.x >= _contents.left) _brushNum = 255;
@@ -4542,6 +5154,16 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->findImage("obstacle_4x4_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("obstacle_6x4_shadow")->AlphaInit();
 
+	//==================== R O O T I N G ====================
+	IMAGEMANAGER->addFrameImage("resources", "image/mapTool/resource/resource.bmp", 192, 96, 3, 3, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("resources_shadow", "image/mapTool/resource/resource_shadow.bmp", 192, 96, 3, 3, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("resources_shadow")->AlphaInit();
+	IMAGEMANAGER->addFrameImage("artifact_weapon", "image/mapTool/resource/artifact_weapon.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("artifact_shield", "image/mapTool/resource/artifact_shield.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("artifact_armor", "image/mapTool/resource/artifact_armor.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("artifact_helmet", "image/mapTool/resource/artifact_helmet.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("artifact_acc", "image/mapTool/resource/artifact_acc.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+
 	//================ M I N I   M A P =====================
 	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72.bmp", 72, 54, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("miniView36", "image/mapTool/miniView36.bmp", 144, 108, true, RGB(255, 0, 255));
@@ -4550,6 +5172,10 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("miniTerrain36", "image/mapTool/miniTerrain36.bmp", 30, 30, 5, 5, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("miniBuilding72", "image/mapTool/miniBuilding72.bmp", 54, 18, 3, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("miniBuilding36", "image/mapTool/miniBuilding36.bmp", 108, 36, 3, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("miniObstacle72", "image/mapTool/1x1/miniObstacle72.bmp", 60, 15, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("miniObstacle36", "image/mapTool/1x1/miniObstacle36.bmp", 120, 30, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("miniObstacle72")->AlphaInit();
+	IMAGEMANAGER->findImage("miniObstacle36")->AlphaInit();
 
 	//================ U S E R   I N T E R F A C E =================
 	IMAGEMANAGER->addImage("mapToolUI", "image/ui/mapToolUI.bmp", 312, WINSIZEY, true, RGB(255, 0, 255));
@@ -4607,6 +5233,7 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("button_sulfur","image/mapTool/button_sulfur.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_mercury","image/mapTool/button_mercury.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_gem","image/mapTool/button_gem.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	
 	//==================================== E V E N T 
 	IMAGEMANAGER->addFrameImage("button_ev", "image/mapTool/button_ev.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_lvlup", "image/mapTool/button_lvlup.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
@@ -4634,6 +5261,13 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("button_obstacle_4x4_large", "image/mapTool/1x1/4x4_obstacle.bmp", 256, 512, 1, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("button_obstacle_6x4_large", "image/mapTool/1x1/6x4_obstacle.bmp", 192, 256, true, RGB(255, 0, 255));
 
+	//==================================== R E S O U R C E 
+	IMAGEMANAGER->addFrameImage("button_rooting", "image/mapTool/resource/button_rooting.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_resources", "image/mapTool/resource/button_resource.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_artifact", "image/mapTool/resource/button_artifact.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("button_rooting_artifact", "image/mapTool/resource/button_rooting_artifact.bmp", 256, 384, 1, 3, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("button_rooting_resources", "image/mapTool/resource/button_rooting_resources.bmp", 192, 96, true, RGB(255, 0, 255));
+
 
 
 	//====================================== U I 
@@ -4651,4 +5285,3 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("move", "image/mapTool/moveIcon.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 
 }
-
