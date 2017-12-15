@@ -73,6 +73,15 @@ HRESULT mapTool::init(void)
 			_buildArr[i][j].sizeY = 0;
 		}
 	}
+
+	for (int i = 0; i < MAXSAVE; i++)
+	{
+		ZeroMemory(&_saveFile, sizeof(SAVE));
+
+		_saveFile[i].number = i;
+	}
+
+	loadFileList();
 	
 	ZeroMemory(&_remember, sizeof(tagRemember));
 	_remember.camp = CAMP_NULL;
@@ -92,11 +101,14 @@ HRESULT mapTool::init(void)
 	_brushNum = 0;
 	_page = 0;
 	_boxLength = 128;
+	_saveNum = 0;
 	_area = false;
 	_foldMini= false;
 	_move = false;
 	_buildAttribute = false;
-	_menu = false;
+	_confirm = false;
+	_saveAndLoad = false;
+	_changeName = false;
 	_vBuild.clear();
 	_vLoot.clear();
 
@@ -107,9 +119,12 @@ HRESULT mapTool::init(void)
 	_smallCategory = RectMake(808, 150, 242, 32);
 	_contents = RectMake(830, 192, 256, 288);
 	_confirmBox = RectMakeCenter(788 / 2, WINSIZEY / 2, 420, 180);
+	_saveWindow = RectMake(-450, 10, 450, 580);
 
 	//=============  S E T T I N G ====================
 	setCor();
+
+	//============== T E S T =================
 
 	return S_OK;
 }
@@ -132,7 +147,7 @@ void mapTool::update(void)
 
 
 	//================= F U N C T I O N ==========================
-	if (!_menu)
+	if (!_confirm && !_saveAndLoad)
 	{
 		setCor();
 		cameraMove();
@@ -142,7 +157,11 @@ void mapTool::update(void)
 		if (_ptMouse.x < 788) inputOnMap();
 		else if(_ptMouse.x > 788 && !_move) inputOnUI();
 	}
-	else inputConfirm();
+	else inputWindow();
+
+	windowMove();
+
+
 
 }
 
@@ -186,7 +205,7 @@ void mapTool::render(void)
 	cordinateDraw();
 
 	//====================== C O N F I R M =====================
-	if(_menu) confirmBox();
+	windowDraw();
 
 }
 
@@ -199,6 +218,19 @@ void mapTool::newMap(void)
 {
 	_vBuild.clear();
 	_vLoot.clear();
+
+	_categoryLarge = CATE_NULL;
+	_categorySmall = SMC_NULL;
+	_saveIndex.x = 0;
+	_saveIndex.y = 0;
+	_page = 0;
+	_mapX = 0;
+	_mapY = 0;
+	_selectMenu = MENU_NULL;
+	_saveNum = 0;
+	_changeName = false;
+	_saveAndLoad = false;
+	_confirm = false;
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -254,14 +286,131 @@ void mapTool::newMap(void)
 
 void mapTool::saveMap(void)
 {
+	HANDLE file;
+	DWORD write;
+	
+	file = CreateFile("map/mapSave.map", GENERIC_WRITE, 0, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(file, _mapArr, sizeof(tagTileInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _roadArr, sizeof(tagRoadInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _buildArr, sizeof(tagBuildingInfo)*MAXTILE*MAXTILE, &write, NULL);
+	
+
+
+	CloseHandle(file);
+
+
+}
+
+void mapTool::saveMap(string fileName)
+{
+	HANDLE file;
+	DWORD write;
+
+	string tmp = TEXT("map/");
+	string tmp1 = fileName;
+	
+
+	for (int i = 0; i < tmp1.size(); i++)
+	{
+		tmp.push_back(tmp1.at(i));
+	}
+
+	tmp.push_back('.');
+	tmp.push_back('m');
+	tmp.push_back('a');
+	tmp.push_back('p');
+
+
+	file = CreateFile(tmp.c_str(), GENERIC_WRITE, 0, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(file, _mapArr, sizeof(tagTileInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _roadArr, sizeof(tagRoadInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _buildArr, sizeof(tagBuildingInfo)*MAXTILE*MAXTILE, &write, NULL);
+
+
+	saveFileList();
+
+
+	CloseHandle(file);
+
 
 }
 
 void mapTool::loadMap(void)
 {
+	HANDLE file;
+	DWORD read;
 
+	file = CreateFile("map/mapSave.map", GENERIC_READ,0,NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	
+	ReadFile(file, _mapArr, sizeof(tagTileInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _roadArr, sizeof(tagRoadInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _buildArr, sizeof(tagBuildingInfo)*MAXTILE*MAXTILE, &read, NULL);
+
+	CloseHandle(file);
 }
 
+void mapTool::loadMap(string fileName)
+{
+
+	this->init();
+
+	HANDLE file;
+	DWORD read;
+
+	string tmp = TEXT("map/");
+	string tmp1 = fileName;
+
+
+	for (int i = 0; i < tmp1.size(); i++)
+	{
+		tmp.push_back(tmp1.at(i));
+	}
+
+	tmp.push_back('.');
+	tmp.push_back('m');
+	tmp.push_back('a');
+	tmp.push_back('p');
+
+	file = CreateFile(tmp.c_str(), GENERIC_READ, 0, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _mapArr, sizeof(tagTileInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _roadArr, sizeof(tagRoadInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _buildArr, sizeof(tagBuildingInfo)*MAXTILE*MAXTILE, &read, NULL);
+
+	CloseHandle(file);
+}
+
+void mapTool::saveFileList(void)
+{
+	HANDLE file;
+	DWORD write;
+
+	file = CreateFile("map/save.map", GENERIC_WRITE, 0, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	
+	WriteFile(file, _saveFile, sizeof(SAVE)*MAXSAVE, &write, NULL);
+
+	CloseHandle(file);
+}
+
+void mapTool::loadFileList(void)
+{
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile("map/save.map",GENERIC_READ,0,NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _saveFile, sizeof(SAVE)*MAXSAVE, &read, NULL);
+
+	CloseHandle(file);
+
+
+}
 
 void mapTool::selectBox(int arrX, int arrY, int destX, int destY)
 {
@@ -336,7 +485,7 @@ void mapTool::cordinateDraw(void)
 	HBRUSH brush = (HBRUSH)CreateSolidBrush(RGB(0, 0, 0));
 	HBRUSH oldbrush = (HBRUSH)SelectObject(getMemDC(), brush);
 
-	if (_ptMouse.x <= 788)
+	if (_ptMouse.x <= 788 && !_saveAndLoad && !_confirm)
 	{
 		Rectangle(getMemDC(),
 			_corX[_mouseArr.x - (int)_mapX / TILESIZE].left,
@@ -352,14 +501,14 @@ void mapTool::cordinateDraw(void)
 	}
 
 	SelectObject(getMemDC(), oldbrush);
-	DeleteObject(brush);
+	DeleteObject(brush); 
 
 	//================ MOUSE POINT NUMBER ================================
 
 	SetTextColor(getMemDC(), RGB(255, 255, 255));
 	SetBkMode(getMemDC(), TRANSPARENT);
 
-	if (_ptMouse.x <= 788)
+	if (_ptMouse.x <= 788 && !_saveAndLoad && !_confirm)
 	{
 		if (_mouseArr.x < 10)
 			TextOut(getMemDC(), 32 + (_mouseArr.x - (int)_mapX / TILESIZE)*TILESIZE, 2, _msCorX, strlen(_msCorX));
@@ -1981,10 +2130,33 @@ void mapTool::buttonDraw(void)
 
 }
 
-void mapTool::confirmBox(void)
+void mapTool::windowDraw(void)
 {
-	IMAGEMANAGER->findImage("button_confirm")->render(getMemDC(),
+	if(_confirm)
+	IMAGEMANAGER->findImage("window_confirm")->render(getMemDC(),
 		_confirmBox.left, _confirmBox.top);
+	
+	IMAGEMANAGER->findImage("window_save")->render(getMemDC(),
+		_saveWindow.left, _saveWindow.top);
+
+	IMAGEMANAGER->findImage("save_selectbox")->render(getMemDC(),
+		_saveWindow.left + 23, _saveWindow.top + 116 + 25*_saveNum);
+
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+	for (int i = 0; i < MAXSAVE; i++)
+	{
+		if(!(_changeName && _saveNum == i))
+		TextOut(getMemDC(), _saveWindow.left + 70, _saveWindow.top + 118 + 25 * _saveFile[i].number,
+			_saveFile[i].fileName.c_str(), _saveFile[i].fileName.length());
+	}
+
+	if(_changeName)
+	TextOut(getMemDC(), _saveWindow.left + 70, _saveWindow.top + 118 + 25 * _saveNum,
+		_tmp.c_str(), _tmp.length());
+
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+
 }
 
 void mapTool::setButton(void)
@@ -2319,6 +2491,34 @@ void mapTool::cameraMove(void)
 	if (_mapX > TILESIZE * (MAXTILE - 24)) _mapX = TILESIZE *  (MAXTILE - 24);
 	if (_mapY < 0) _mapY = 0;
 	if (_mapY > TILESIZE *  (MAXTILE - 18)) _mapY = TILESIZE *  (MAXTILE - 18);
+
+}
+
+void mapTool::windowMove(void)
+{
+	if (_saveAndLoad)
+	{
+		_saveWindow.left += 20;
+		_saveWindow.right += 20;
+
+		if (_saveWindow.right >= 450)
+		{
+			_saveWindow.right = 450;
+			_saveWindow.left = 0;
+		}
+
+	}
+
+	else
+	{
+		_saveWindow.left -= 20;
+		_saveWindow.right -= 20;
+		if (_saveWindow.right < 0)
+		{
+			_saveWindow.left = -450;
+			_saveWindow.right = 0;
+		}
+	}
 
 }
 
@@ -3311,48 +3511,6 @@ void mapTool::addObstacle(int arrX, int arrY)
 				if (build.sourY == 3) build.sourX = 0;
 			
 			}
-
-			//else if(ranNum0 ==1&& build.destX < destX-1 && build.destY < destY - 1 &&
-			//	!(build.destX%2))
-			//{
-			//	build.img = IMAGEMANAGER->findImage("obstacle_4x4");
-			//	build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
-			//	build.sizeX = 3;
-			//	build.sizeY = 3;
-			//	build.imgX = 1;
-			//	build.imgY = 1;
-			//	build.miniX = 2;
-			//	build.sourX = RND->getInt(2);
-			//	build.sourY = RND->getInt(4);
-			//	if (build.sourY == 3) build.sourX = 0;
-			//
-			//}
-			//else
-			//{
-			//	if (_buildArr[build.destX][build.destY].isClosed) return;
-			//	build.img = IMAGEMANAGER->findImage("obstacle_2x2");
-			//	build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
-			//	build.sourX = RND->getInt(4);
-			//	build.sourY = RND->getInt(4);
-			//	if (build.sourX == 3)
-			//	{
-			//		build.miniX = 1;
-			//		build.imgX = 0;
-			//		build.imgY = 0;
-			//		build.sizeX = 2;
-			//		build.sizeY = 2;
-			//		if (build.sourY == 0 || build.sourY == 1) return;
-			//	}
-			//	else
-			//	{
-			//		build.miniX = 0;
-			//		build.imgX = 1;
-			//		build.imgY = 1;
-			//		build.sizeX = 1;
-			//		build.sizeY = 1;
-			//	}
-			//
-			//}
 		}
 		else return;
 	}
@@ -4101,39 +4259,194 @@ void mapTool::setCor(void)
 
 }
 
-void mapTool::inputConfirm(void)
+void mapTool::inputWindow(void)
 {
+	if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+	{
+		_saveNum++;
+
+		_changeName = false;
+
+		_tmp.clear();
+
+		if (_saveNum > 9) _saveNum = 9;
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_UP))
+	{
+		_saveNum--;
+
+		_changeName = false;
+
+		_tmp.clear();
+		if (_saveNum < 0) _saveNum = 0;
+	}
+
+	for (int i = 0x01; i < 126; i++)
+	{
+
+		if (KEYMANAGER->isOnceKeyDown(i))
+		{
+			if (i == VK_LBUTTON) break;
+
+			if (KEYMANAGER->isToggleKey(VK_CAPITAL) && i >= 65 && i <= 90)
+			{
+				if (!_changeName)
+				{
+					_changeName = true;
+					for (int i = 0; i < _saveFile[_saveNum].fileName.size(); i++)
+					{
+						_tmp.push_back(_saveFile[_saveNum].fileName.at(i));
+					}
+				}
+
+				_tmp.push_back(i);
+			}
+			else if (!KEYMANAGER->isToggleKey(VK_CAPITAL) && i >= 65 && i <= 90)
+			{
+				if (!_changeName)
+				{
+					_changeName = true;
+					for (int i = 0; i < _saveFile[_saveNum].fileName.size(); i++)
+					{
+						_tmp.push_back(_saveFile[_saveNum].fileName.at(i));
+					}
+				}
+				_tmp.push_back(i+32);
+
+			}
+			else if (i == VK_BACK)
+			{
+				if (!_changeName)
+				{
+					_changeName = true;
+					for (int i = 0; i < _saveFile[_saveNum].fileName.size(); i++)
+					{
+						_tmp.push_back(_saveFile[_saveNum].fileName.at(i));
+					}
+				}
+				_tmp.erase(_tmp.end() - 1);
+			}
+			else if (i == VK_SPACE)
+			{
+				if (!_changeName)
+				{
+					_changeName = true;
+					for (int i = 0; i < _saveFile[_saveNum].fileName.size(); i++)
+					{
+						_tmp.push_back(_saveFile[_saveNum].fileName.at(i));
+					}
+				}
+				_tmp.push_back(' ');
+			}
+			else if (i == VK_RETURN)
+			{
+				if (_changeName)
+				{
+					_saveFile[_saveNum].fileName.clear();
+				
+					for (int i = 0; i < _tmp.size(); i++)
+					{
+						_saveFile[_saveNum].fileName.push_back(_tmp.at(i));
+					}
+
+					_tmp.clear();
+					saveFileList();
+					_changeName = false;
+				}
+
+			}
+		}
+	}
+
 	if(KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
-		//==================== Y E S =====================
-		if (PtInRect(&RectMake(_confirmBox.left + 144, _confirmBox.top + 125, 58, 26), _ptMouse))
+		if (_confirm)
 		{
-			_menu = false;
-			switch (_selectMenu)
+			//==================== Y E S =====================
+			if (PtInRect(&RectMake(_confirmBox.left + 144, _confirmBox.top + 125, 58, 26), _ptMouse))
 			{
-			case MENU_MAIN:
-				SCENEMANAGER->changeScene("mainMenu");
-				break;
-			case MENU_RESTART:
-				newMap();
-				break;
-			case MENU_SAVE:
-				break;
-			case MENU_LOAD:
-				break;
-			case MENU_NULL:
-				break;
-			case MENU_END:
-				break;
+				_confirm = false;
+				switch (_selectMenu)
+				{
+				case MENU_MAIN:
+					SCENEMANAGER->changeScene("mainMenu");
+					break;
+				case MENU_RESTART:
+					newMap();
+					break;
+				case MENU_SAVE:
+					break;
+				case MENU_LOAD:
+					_saveAndLoad = true;
+					break;
+				case MENU_NULL:
+					break;
+				case MENU_END:
+					break;
+				}
+			}
+
+			//==================== N O =======================
+			if (PtInRect(&RectMake(_confirmBox.left + 220,_confirmBox.top+ 125, 58, 26), _ptMouse))
+			{
+				_selectMenu = MENU_NULL;
+				_confirm = false;
+			}
+
+		}
+
+		if (_saveAndLoad && PtInRect(&RectMake(_saveWindow.left + 88, _saveWindow.top + 460, 90, 40), _ptMouse))
+		{
+			if (_changeName)
+			{
+				_saveFile[_saveNum].fileName.clear();
+
+				for (int i = 0; i < _tmp.size(); i++)
+				{
+					_saveFile[_saveNum].fileName.push_back(_tmp.at(i));
+				}
+
+				_tmp.clear();
+				saveFileList();
+
+				_changeName = false;
+			}
+
+			saveMap(_saveFile[_saveNum].fileName);
+		}
+		if (_saveAndLoad && PtInRect(&RectMake(_saveWindow.left + 258, _saveWindow.top + 460, 90, 40), _ptMouse))
+		{
+			loadMap(_saveFile[_saveNum].fileName);
+
+		}
+
+
+
+
+
+		if (_saveAndLoad && _ptMouse.x >= 450)
+		{
+			_saveAndLoad = false;
+		}
+		if (_saveAndLoad && _ptMouse.x < 450)
+		{
+			for (int i = 0; i < MAXSAVE; i++)
+			{
+				if (PtInRect(&RectMake(_saveWindow.left + 23,
+					_saveWindow.top + 116 + i * 25, 360, 25), _ptMouse))
+				{
+					_saveNum = i;
+				}
+			}
+
+			if (!PtInRect(&RectMake(_saveWindow.left + 23,
+				_saveWindow.top + 116 , 360, 244), _ptMouse))
+			{
+				_changeName = false;
+				_tmp.clear();
 			}
 		}
 
-		//==================== N O =======================
-		if (PtInRect(&RectMake(_confirmBox.left + 220,_confirmBox.top+ 125, 58, 26), _ptMouse))
-		{
-			_selectMenu = MENU_NULL;
-			_menu = false;
-		}
 	}
 }
 
@@ -4147,7 +4460,7 @@ void mapTool::inputCommon(void)
 		_saveIndex.y = 0;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown('B'))
+	if (KEYMANAGER->isOnceKeyDown(VK_BACK))
 	{
 		switch (_buildAttribute)
 		{
@@ -4746,7 +5059,7 @@ void mapTool::inputCommon(void)
 			IMAGEMANAGER->findImage("button_ma")->setFrameX(0);
 			if (PtInRect(&RectMake(_miniMap.left - 20 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
-				_menu = true;
+				_confirm = true;
 				_selectMenu = MENU_MAIN;
 			}
 		}
@@ -4756,7 +5069,7 @@ void mapTool::inputCommon(void)
 			IMAGEMANAGER->findImage("button_re")->setFrameX(0);
 			if (PtInRect(&RectMake(_miniMap.left + 22 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
-				_menu = true;
+				_confirm = true;
 				_selectMenu = MENU_RESTART;
 			}
 		}
@@ -4766,6 +5079,7 @@ void mapTool::inputCommon(void)
 			if (PtInRect(&RectMake(_miniMap.right - 54 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_selectMenu = MENU_SAVE;
+				_saveAndLoad = true;
 			}
 		}
 		if (IMAGEMANAGER->findImage("button_load")->getFrameX() == 1)
@@ -4773,7 +5087,7 @@ void mapTool::inputCommon(void)
 			IMAGEMANAGER->findImage("button_load")->setFrameX(0);
 			if (PtInRect(&RectMake(_miniMap.right - 12 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
-				_menu = true;
+				_confirm = true;
 				_selectMenu = MENU_LOAD;
 			}
 		}
@@ -6060,7 +6374,6 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addFrameImage("button_re", "image/mapTool/button_re.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_save", "image/mapTool/button_save.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("button_load", "image/mapTool/button_load.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_confirm", "image/mapTool/button_confirm.bmp", 420, 180, true, RGB(255, 0, 255));
 
 	//==================================== T I L E 
 	IMAGEMANAGER->addFrameImage("tileButton", "image/mapTool/tileButton.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
@@ -6157,4 +6470,8 @@ void mapTool::loadImg(void)
 	IMAGEMANAGER->addImage("button_brush_size", "image/mapTool/buttonBrushSize.bmp", 96, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("move", "image/mapTool/moveIcon.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 
+	//====================================== W I N D O W ==============
+	IMAGEMANAGER->addImage("window_confirm", "image/mapTool/button_confirm.bmp", 420, 180, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_save", "image/mapTool/window_save.bmp", 450, 580, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("save_selectbox", "image/mapTool/save_selectbox.bmp", 360, 26, true, RGB(255, 0, 255));
 }

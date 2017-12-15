@@ -12,6 +12,8 @@
 #define MAXCAMERAX 30
 #define MAXCAMERAY 24
 
+#define MAXSAVE 10
+
 enum TILE
 {
 	TILE_GREEN,
@@ -200,6 +202,13 @@ struct tagRemember
 	int miniX;
 	int type;
 };
+
+typedef struct tagSaveFile
+{
+	int number;
+	string fileName;
+
+}SAVE;
 
 //========= 주변 타일 검출==========
 #define LEFTTOP				0x00001

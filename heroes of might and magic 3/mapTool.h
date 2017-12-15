@@ -20,12 +20,14 @@ private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
 	tagBuildingInfo _buildArr[MAXTILE][MAXTILE];
-	 
+	SAVE _saveFile[MAXSAVE];
+
 	tagRemember _remember;
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
 	SELECTMENU _selectMenu;
 
+	string _tmp;
 	POINT _mouseArr;
 	POINT _cameraArr;
 	POINT _saveIndex;
@@ -36,6 +38,7 @@ private:
 	RECT _smallCategory;
 	RECT _contents;
 	RECT _confirmBox;
+	RECT _saveWindow;
 
 private:
 	float _mapX, _mapY;
@@ -44,7 +47,9 @@ private:
 	bool _area;
 	bool _foldMini;
 	bool _move;
-	bool _menu;
+	bool _confirm;
+	bool _saveAndLoad;
+	bool _changeName;
 
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];
@@ -57,6 +62,7 @@ private:
 	int _saveAreaX, _saveAreaY;
 	int _brushNum;
 	int _page;
+	int _saveNum;
 	
 
 
@@ -76,7 +82,7 @@ public:
 	void roadDraw(void);			// ROAD
 	void attributeDraw(void);		// ATTRIBUTE
 	void cordinateDraw(void);		// CORDINATE
-	void confirmBox(void);				// CONFIRM
+	void windowDraw(void);				// CONFIRM
 
 	void selectBox(int arrX, int arrY,int destX, int destY); // SELECT BOX
 	void closedBox(int arrX, int arrY, int destX, int destY);// CLOSED BOX 
@@ -90,13 +96,18 @@ public:
 	void inputOnMap(void);			// Key input On Map
 	void inputOnUI(void);			// Key input On UI
 	void inputCommon(void);			// Common Key input
-	void inputConfirm(void);
+	void inputWindow(void);			// Key input On window
+	void windowMove(void);
 
 	//=============== M E N U ================
 	void goMain(void);				// Main Menu
 	void newMap(void);				// New Map
 	void saveMap(void);				// save Map
 	void loadMap(void);				// load Map
+	void saveMap(string fileName);
+	void loadMap(string fileName);
+	void saveFileList(void);
+	void loadFileList(void);		// load Save File
 
 
 	//=============== C O N T E N T S =========================
