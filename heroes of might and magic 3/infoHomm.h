@@ -6,7 +6,7 @@
 
 #define MINISIZE (216 / MAXTILE)
 
-#define SHADOWALPHA 210
+#define SHADOWALPHA 200
 
 
 enum TILE
@@ -94,7 +94,7 @@ typedef enum CATEGORY
 	CATE_ROAD,
 	CATE_BUILDING,
 	CATE_OBS,
-	CATE_ROOTING,
+	CATE_LOOTING,
 	CATE_UNIT,
 	CATE_NULL,
 	CATE_END
@@ -111,6 +111,16 @@ typedef enum SMALLCATE
 	SMC_NULL,
 	SMC_END
 }SECOND;
+
+enum SELECTMENU
+{
+	MENU_MAIN,
+	MENU_RESTART,
+	MENU_SAVE,
+	MENU_LOAD,
+	MENU_NULL,
+	MENU_END
+};
 
 struct tagTileInfo
 {
@@ -142,6 +152,7 @@ typedef struct tagBuildingInfo
 	MINE mine;
 	image* img;
 	image* imgShadow;
+	int elements;
 	int imgX, imgY;
 	int sizeX, sizeY;
 	int sourX, sourY;
@@ -174,6 +185,7 @@ struct tagRemember
 	CAMP camp;
 	MINE mine;
 	EVENT ev;
+	int elements;
 	int destX;
 	int destY;
 	int sizeX;
@@ -216,3 +228,10 @@ struct tagRemember
 
 //========= ±æ Á¤ ¸® ==============
 #define ALL			LEFTMIDDLE		+ MIDDLETOP		+ RIGHTMIDDLE	+ MIDDLEBOTTOM
+
+//========= ELEMENTS===============
+#define CASTLE				100
+#define DUNGEON				200
+
+#define TIERONE				010
+#define TIERTWO				020

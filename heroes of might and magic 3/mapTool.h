@@ -13,17 +13,18 @@ private:
 	vector<building> _vBuild;
 	vector<building>::iterator _viBuild;
 
-	vector<building> _vRoot;
-	vector<building>::iterator _viRoot;
+	vector<building> _vLoot;
+	vector<building>::iterator _viLoot;
 
 private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
 	tagBuildingInfo _buildArr[MAXTILE][MAXTILE];
-
+	 
 	tagRemember _remember;
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
+	SELECTMENU _selectMenu;
 
 	POINT _mouseArr;
 	POINT _saveIndex;
@@ -33,6 +34,7 @@ private:
 	RECT _largeCategory;
 	RECT _smallCategory;
 	RECT _contents;
+	RECT _confirmBox;
 
 private:
 	float _mapX, _mapY;
@@ -41,12 +43,14 @@ private:
 	bool _area;
 	bool _foldMini;
 	bool _move;
+	bool _menu;
 
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];
 	char _temp[256];
 	
 	int _boxLength;
+	int _menuLength;
 	int _inputDelayX, _inputDelayY;
 	int _saveX, _saveY;
 	int _saveAreaX, _saveAreaY;
@@ -67,10 +71,11 @@ public:
 	void buttonDraw(void);			// BUTTON
 	void selectDraw(void);			// SELECT CURSOR
 	void buildingDraw(void);		// BUILDING
-	void rootingDraw(void);			// ROOTING
+	void lootingDraw(void);			// ROOTING
 	void roadDraw(void);			// ROAD
 	void attributeDraw(void);		// ATTRIBUTE
 	void cordinateDraw(void);		// CORDINATE
+	void confirmBox(void);				// CONFIRM
 
 	void selectBox(int arrX, int arrY,int destX, int destY); // SELECT BOX
 	void closedBox(int arrX, int arrY, int destX, int destY);// CLOSED BOX 
@@ -84,7 +89,13 @@ public:
 	void inputOnMap(void);			// Key input On Map
 	void inputOnUI(void);			// Key input On UI
 	void inputCommon(void);			// Common Key input
+	void inputConfirm(void);
 
+	//=============== M E N U ================
+	void goMain(void);				// Main Menu
+	void newMap(void);				// New Map
+	void saveMap(void);				// save Map
+	void loadMap(void);				// load Map
 
 
 	//=============== C O N T E N T S =========================
@@ -94,10 +105,11 @@ public:
 	void addBuilding(int arrX, int arrY, MINE mine);	// DRAW BUILDING
 	void addBuilding(int arrX, int arrY, EVENT ev);		// DRAW BUILDING
 	void addObstacle(int arrX, int arrY);				// DRAW OBSTACLE
-	void addRooting(int arrX, int arrY);
+	void addLooting(int arrX, int arrY);
+	void addUnit(int arrX, int arrY);
 	void deleteAll(int arrX, int arrY);					// ERASE BUILDING
 
-
+	//=============== A D D R E S S   L I N K ==================
 
 
 

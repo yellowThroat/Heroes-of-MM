@@ -1,8 +1,11 @@
 #pragma once
 #include "gameNode.h"
 
+
 class mainMenu : public gameNode
 {
+private:
+
 private:
 	RECT _mapTool;
 
@@ -16,6 +19,8 @@ public:
 	
 	void imageInit(void);
 
+
+	//===============  A D D R E S S   L I N K ===================
 
 	mainMenu();
 	~mainMenu();

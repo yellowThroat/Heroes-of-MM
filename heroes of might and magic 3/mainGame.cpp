@@ -24,7 +24,8 @@ HRESULT mainGame::init(void)
 	SCENEMANAGER->changeScene("mapTool");
 
 
-
+	//============== A D D R E S S   L I N K ===================
+	
 	
 
 	return S_OK;

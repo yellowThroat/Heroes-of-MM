@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "mainMenu.h"
+#include "mapTool.h"
 
 mainMenu::mainMenu() {}
 mainMenu::~mainMenu() {}
@@ -8,7 +9,6 @@ HRESULT	mainMenu::init(void)
 {
 	//============================= I N I T ============================
 	imageInit();
-
 
 	//==================================================================
 	_mapTool = RectMakeCenter(641, 300, 68, 72);
@@ -28,6 +28,7 @@ void mainMenu::update(void)
 		if (PtInRect(&_mapTool, _ptMouse))
 		{
 			SCENEMANAGER->changeScene("mapTool");
+			
 		}
 	}
 }
