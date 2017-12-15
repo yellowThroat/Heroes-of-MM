@@ -304,6 +304,28 @@ void mapTool::saveMap(void)
 
 void mapTool::saveMap(string fileName)
 {
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		for (int j = 0; j < MAXTILE; j++)
+		{
+			//====================== 타일 저장 ==================
+			_mapSaveInfo[i][j].sourX = _mapArr[i][j].sourX;
+			_mapSaveInfo[i][j].sourY = _mapArr[i][j].sourY;
+			_mapSaveInfo[i][j].type = _mapArr[i][j].tile;
+			//====================== 길 저장 ====================
+			if (_roadArr[i][j].road != ROAD_END)
+			{
+				 _roadSaveInfo[i][j].sourX = _roadArr[i][j].sourX;
+				 _roadSaveInfo[i][j].sourY = _roadArr[i][j].sourY;
+				 _roadSaveInfo[i][j].type = _roadArr[i][j].road;
+			}
+			//====================== closed & enter ==============
+			_buildSaveInfo[i][j].closed = _buildArr[i][j].isClosed;
+			_buildSaveInfo[i][j].enter = _buildArr[i][j].enter;
+
+		}
+	}
+
 	HANDLE file;
 	DWORD write;
 
@@ -324,9 +346,9 @@ void mapTool::saveMap(string fileName)
 
 	file = CreateFile(tmp.c_str(), GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	WriteFile(file, _mapArr, sizeof(tagTileInfo)*MAXTILE*MAXTILE, &write, NULL);
-	WriteFile(file, _roadArr, sizeof(tagRoadInfo)*MAXTILE*MAXTILE, &write, NULL);
-	WriteFile(file, _buildArr, sizeof(tagBuildingInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _mapSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _roadSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _buildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
 
 
 	saveFileList();
@@ -377,9 +399,69 @@ void mapTool::loadMap(string fileName)
 	file = CreateFile(tmp.c_str(), GENERIC_READ, 0, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	ReadFile(file, _mapArr, sizeof(tagTileInfo)*MAXTILE*MAXTILE, &read, NULL);
-	ReadFile(file, _roadArr, sizeof(tagRoadInfo)*MAXTILE*MAXTILE, &read, NULL);
-	ReadFile(file, _buildArr, sizeof(tagBuildingInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _mapSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _roadSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _buildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		for (int j = 0; j < MAXTILE; j++)
+		{
+			//===================== load terrain =================
+			switch (_mapSaveInfo[i][j].type)
+			{
+			case TILE_GREEN:
+				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_green");
+				_mapArr[i][j].tile = TILE_GREEN;
+				_mapArr[i][j].miniX = 0;
+
+			break;
+			
+			case TILE_WATER:
+				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_water");
+				_mapArr[i][j].tile = TILE_WATER;
+				_mapArr[i][j].miniX = 1;
+				break;
+			
+			case TILE_VOLCANO:
+				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_volcano");
+				_mapArr[i][j].tile = TILE_VOLCANO;
+				_mapArr[i][j].miniX = 2;
+				break;
+			}
+			_mapArr[i][j].sourX = _mapSaveInfo[i][j].sourX;
+			_mapArr[i][j].sourY = _mapSaveInfo[i][j].sourY;
+
+
+			//====================== load road ========================
+			switch (_roadSaveInfo[i][j].type)
+			{
+			case ROAD_NORMAL:
+				_roadArr[i][j].img = IMAGEMANAGER->findImage("road_normal");
+				_roadArr[i][j].road = ROAD_NORMAL;
+			break;
+			case ROAD_ROCK:
+				_roadArr[i][j].img = IMAGEMANAGER->findImage("road_rock");
+				_roadArr[i][j].road = ROAD_ROCK;
+
+			break;
+			case ROAD_RIVER:
+				_roadArr[i][j].img = IMAGEMANAGER->findImage("road_river");
+				_roadArr[i][j].road = ROAD_RIVER;
+
+			break;
+			}
+			_roadArr[i][j].sourX = _roadSaveInfo[i][j].sourX;
+			_roadArr[i][j].sourY = _roadSaveInfo[i][j].sourY;
+
+			//====================== load build ========================
+			_buildArr[i][j].isClosed = _buildSaveInfo[i][j].closed;
+			_buildArr[i][j].enter = _buildSaveInfo[i][j].enter;
+
+		}
+	}
+
+
 
 	CloseHandle(file);
 }

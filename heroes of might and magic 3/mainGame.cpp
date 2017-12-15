@@ -41,7 +41,7 @@ void mainGame::update(void)
 {
 	gameNode::update();
 	TIMEMANAGER->getElapsedTime();
-	if (KEYMANAGER->isOnceKeyDown('O')) {
+	if (KEYMANAGER->isOnceKeyDown(VK_F10)) {
 		switch (_option)
 		{
 		case true:

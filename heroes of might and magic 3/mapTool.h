@@ -20,6 +20,11 @@ private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
 	tagBuildingInfo _buildArr[MAXTILE][MAXTILE];
+	tagSaveInfo _mapSaveInfo[MAXTILE][MAXTILE];
+	tagSaveInfo _roadSaveInfo[MAXTILE][MAXTILE];
+	tagSaveInfo _buildSaveInfo[MAXTILE][MAXTILE];
+	
+
 	SAVE _saveFile[MAXSAVE];
 
 	tagRemember _remember;
