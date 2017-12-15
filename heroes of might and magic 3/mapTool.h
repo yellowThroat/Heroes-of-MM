@@ -27,6 +27,7 @@ private:
 	SELECTMENU _selectMenu;
 
 	POINT _mouseArr;
+	POINT _cameraArr;
 	POINT _saveIndex;
 	RECT _corX[MAXTILE], _corY[MAXTILE];
 	RECT _miniMap;

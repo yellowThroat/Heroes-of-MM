@@ -385,12 +385,17 @@ void mapTool::attributeDraw(void)
 		{
 			for (int j = 0; j < MAXTILE; j++)
 			{
-				if (_buildArr[i][j].isClosed)
-					IMAGEMANAGER->findImage("closed")->render(getMemDC(),
-						20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
-				if (_buildArr[i][j].enter)
-					IMAGEMANAGER->findImage("enter")->render(getMemDC(),
-						20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
+				if (i - _cameraArr.x >= 0 && i - _cameraArr.x < 24 &&
+					j - _cameraArr.y >= 0 && j - _cameraArr.y < 18)
+				{
+					if (_buildArr[i][j].isClosed)
+						IMAGEMANAGER->findImage("closed")->render(getMemDC(),
+							20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
+					if (_buildArr[i][j].enter)
+						IMAGEMANAGER->findImage("enter")->render(getMemDC(),
+							20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
+
+				}
 					
 			}
 		}
@@ -1444,11 +1449,16 @@ void mapTool::tileDraw()
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
-			if (i - _mapX / TILESIZE >= 0 && j - _mapY / TILESIZE >= 0)
-				_mapArr[i][j].img->frameRender(getMemDC(),
-					20 + _mapArr[i][j].destX * TILESIZE - _mapX,
-					20 + _mapArr[i][j].destY * TILESIZE - _mapY,
-					_mapArr[i][j].sourX, _mapArr[i][j].sourY);
+			if (i - _cameraArr.x >= MINCAMERA && i - _cameraArr.x < MAXCAMERAX &&
+				j - _cameraArr.y >= MINCAMERA && j - _cameraArr.y < MAXCAMERAY)
+			{
+				if (i - _mapX / TILESIZE >= 0 && j - _mapY / TILESIZE >= 0)
+					_mapArr[i][j].img->frameRender(getMemDC(),
+						20 + _mapArr[i][j].destX * TILESIZE - _mapX,
+						20 + _mapArr[i][j].destY * TILESIZE - _mapY,
+						_mapArr[i][j].sourX, _mapArr[i][j].sourY);
+
+			}
 
 		}
 	}
@@ -1461,13 +1471,18 @@ void mapTool::roadDraw(void)
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
-			if (_roadArr[i][j].img != NULL && _roadArr[i][j].road != ROAD_END &&
-				i - _mapX / TILESIZE >= 0 && 
-				j - _mapY / TILESIZE >= 0)
-				_roadArr[i][j].img->frameRender(getMemDC(),
-					20 + _roadArr[i][j].destX * TILESIZE - _mapX,
-					30 + _roadArr[i][j].destY * TILESIZE - _mapY,
-					_roadArr[i][j].sourX, _roadArr[i][j].sourY);
+			if (i - _cameraArr.x >= MINCAMERA && i - _cameraArr.x < MAXCAMERAX &&
+				j - _cameraArr.y >= MINCAMERA && j - _cameraArr.y < MAXCAMERAY)
+			{
+				if (_roadArr[i][j].img != NULL && _roadArr[i][j].road != ROAD_END &&
+					i - _mapX / TILESIZE >= 0 && 
+					j - _mapY / TILESIZE >= 0)
+					_roadArr[i][j].img->frameRender(getMemDC(),
+						20 + _roadArr[i][j].destX * TILESIZE - _mapX,
+						30 + _roadArr[i][j].destY * TILESIZE - _mapY,
+						_roadArr[i][j].sourX, _roadArr[i][j].sourY);
+
+			}
 		}
 	}
 }
@@ -1477,6 +1492,9 @@ void mapTool::buildingDraw(void)
 
 	for ( _viBuild = _vBuild.begin(); _viBuild != _vBuild.end(); ++_viBuild)
 	{
+		if (_viBuild->destX - _cameraArr.x > MINCAMERA && _viBuild->destX - _cameraArr.x < MAXCAMERAX &&
+			_viBuild->destY - _cameraArr.y > MINCAMERA && _viBuild->destY - _cameraArr.y < MAXCAMERAY)
+		{
 			_viBuild->img->frameRender(getMemDC(),
 				20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE- _mapX,
 				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE- _mapY,
@@ -1487,6 +1505,8 @@ void mapTool::buildingDraw(void)
 				20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE - _mapX,
 				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE - _mapY,
 				_viBuild->sourX, _viBuild->sourY, SHADOWALPHA);
+
+		}
 		
 	}
 }
@@ -1495,16 +1515,23 @@ void mapTool::lootingDraw(void)
 {
 	for ( _viLoot = _vLoot.begin(); _viLoot != _vLoot.end(); ++_viLoot)
 	{
-		_viLoot->img->frameRender(getMemDC(),
-			20 + (_viLoot->destX - _viLoot->imgX) * TILESIZE - _mapX,
-			20 + (_viLoot->destY - _viLoot->imgY) * TILESIZE - _mapY,
-			_viLoot->sourX, _viLoot->sourY);
 
-		if(_viLoot->imgShadow != NULL)
-		_viLoot->imgShadow->alphaFrameRender(getMemDC(),
-			20 + (_viLoot->destX - _viLoot->imgX) * TILESIZE - _mapX,
-			20 + (_viLoot->destY - _viLoot->imgY) * TILESIZE - _mapY,
-			_viLoot->sourX, _viLoot->sourY, SHADOWALPHA);
+		if (_viLoot->destX - _cameraArr.x > MINCAMERA && _viLoot->destX - _cameraArr.x < MAXCAMERAX &&
+			_viLoot->destY - _cameraArr.y > MINCAMERA && _viLoot->destY - _cameraArr.y < MAXCAMERAY)
+		{
+			_viLoot->img->frameRender(getMemDC(),
+				20 + (_viLoot->destX - _viLoot->imgX) * TILESIZE - _mapX,
+				20 + (_viLoot->destY - _viLoot->imgY) * TILESIZE - _mapY,
+				_viLoot->sourX, _viLoot->sourY);
+
+			if(_viLoot->imgShadow != NULL)
+			_viLoot->imgShadow->alphaFrameRender(getMemDC(),
+				20 + (_viLoot->destX - _viLoot->imgX) * TILESIZE - _mapX,
+				20 + (_viLoot->destY - _viLoot->imgY) * TILESIZE - _mapY,
+				_viLoot->sourX, _viLoot->sourY, SHADOWALPHA);
+
+		}
+
 	}
 }
 
@@ -2254,7 +2281,7 @@ void mapTool::cameraMove(void)
 
 	if (_ptMouse.x > WINSIZEX - 15 && _ptMouse.x < WINSIZEX)
 	{
-		if (!_inputDelayX)
+		if (!_inputDelayX && _cameraArr.x < MAXTILE - 24)
 		{
 			_mapX += TILESIZE;
 			_inputDelayX = INPUTDELAY;
@@ -2262,7 +2289,7 @@ void mapTool::cameraMove(void)
 	}
 	if (_ptMouse.x < 15)
 	{
-		if (!_inputDelayX)
+		if (!_inputDelayX && _cameraArr.x > 0)
 		{
 			_mapX -= TILESIZE;
 			_inputDelayX = INPUTDELAY;
@@ -2270,7 +2297,7 @@ void mapTool::cameraMove(void)
 	}
 	if (_ptMouse.y < 15)
 	{
-		if (!_inputDelayY)
+		if (!_inputDelayY && _cameraArr.y >0)
 		{
 			_mapY -= TILESIZE;
 			_inputDelayY = INPUTDELAY;
@@ -2278,13 +2305,15 @@ void mapTool::cameraMove(void)
 	}
 	if (_ptMouse.y > WINSIZEY - 15 && _ptMouse.y < WINSIZEY)
 	{
-		if (!_inputDelayY)
+		if (!_inputDelayY && _cameraArr.y < MAXTILE - 18)
 		{
 			_mapY += TILESIZE;
 			_inputDelayY = INPUTDELAY;
 		}
 	}
 
+	_cameraArr.x = _mapX / TILESIZE;
+	_cameraArr.y = _mapY / TILESIZE;
 
 	if (_mapX < 0) _mapX = 0;
 	if (_mapX > TILESIZE * (MAXTILE - 24)) _mapX = TILESIZE *  (MAXTILE - 24);
@@ -3250,8 +3279,10 @@ void mapTool::addObstacle(int arrX, int arrY)
 		}
 		else if (width >= 5 && height >=3)
 		{
-			ranNum0 = RND->getInt(6);
-			if (!ranNum0 && build.destX < destX - 3 && build.destY < destY - 2)
+			ranNum0 = RND->getFromIntTo(2,4);
+			ranNum1 = RND->getInt(2);
+			if (!ranNum1 && build.destX < destX - 3 && build.destY < destY - 2 && 
+				!(build.destX %ranNum0) && !(build.destY%ranNum0))
 			{
 				build.img = IMAGEMANAGER->findImage("obstacle_6x4");
 				build.imgShadow = IMAGEMANAGER->findImage("obstacle_6x4_shadow");
@@ -3263,8 +3294,11 @@ void mapTool::addObstacle(int arrX, int arrY)
 				build.miniX = 3;
 				build.sourY = RND->getInt(2);
 			}
-			else if(ranNum0 ==1&& build.destX < destX-1 && build.destY < destY - 1)
+			else 
 			{
+				ranNum0 = RND->getInt(20);
+				if (_buildArr[build.destX][build.destY].isClosed && ranNum0 >0) return;
+			
 				build.img = IMAGEMANAGER->findImage("obstacle_4x4");
 				build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
 				build.sizeX = 3;
@@ -3275,34 +3309,50 @@ void mapTool::addObstacle(int arrX, int arrY)
 				build.sourX = RND->getInt(2);
 				build.sourY = RND->getInt(4);
 				if (build.sourY == 3) build.sourX = 0;
-
+			
 			}
-			else
-			{
-				if (_buildArr[build.destX][build.destY].isClosed) return;
-				build.img = IMAGEMANAGER->findImage("obstacle_2x2");
-				build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
-				build.sourX = RND->getInt(4);
-				build.sourY = RND->getInt(4);
-				if (build.sourX == 3)
-				{
-					build.miniX = 1;
-					build.imgX = 0;
-					build.imgY = 0;
-					build.sizeX = 2;
-					build.sizeY = 2;
 
-				}
-				else
-				{
-					build.miniX = 0;
-					build.imgX = 1;
-					build.imgY = 1;
-					build.sizeX = 1;
-					build.sizeY = 1;
-				}
-
-			}
+			//else if(ranNum0 ==1&& build.destX < destX-1 && build.destY < destY - 1 &&
+			//	!(build.destX%2))
+			//{
+			//	build.img = IMAGEMANAGER->findImage("obstacle_4x4");
+			//	build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
+			//	build.sizeX = 3;
+			//	build.sizeY = 3;
+			//	build.imgX = 1;
+			//	build.imgY = 1;
+			//	build.miniX = 2;
+			//	build.sourX = RND->getInt(2);
+			//	build.sourY = RND->getInt(4);
+			//	if (build.sourY == 3) build.sourX = 0;
+			//
+			//}
+			//else
+			//{
+			//	if (_buildArr[build.destX][build.destY].isClosed) return;
+			//	build.img = IMAGEMANAGER->findImage("obstacle_2x2");
+			//	build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
+			//	build.sourX = RND->getInt(4);
+			//	build.sourY = RND->getInt(4);
+			//	if (build.sourX == 3)
+			//	{
+			//		build.miniX = 1;
+			//		build.imgX = 0;
+			//		build.imgY = 0;
+			//		build.sizeX = 2;
+			//		build.sizeY = 2;
+			//		if (build.sourY == 0 || build.sourY == 1) return;
+			//	}
+			//	else
+			//	{
+			//		build.miniX = 0;
+			//		build.imgX = 1;
+			//		build.imgY = 1;
+			//		build.sizeX = 1;
+			//		build.sizeY = 1;
+			//	}
+			//
+			//}
 		}
 		else return;
 	}
@@ -4006,6 +4056,7 @@ void mapTool::setCor(void)
 
 	_mouseArr.x = ((_ptMouse.x - 20) / TILESIZE) + (int)_mapX / TILESIZE;
 	_mouseArr.y = ((_ptMouse.y - 20) / TILESIZE) + (int)_mapY / TILESIZE;
+
 	
 	sprintf(_msCorX, "%d", _mouseArr.x );
 	sprintf(_msCorY, "%d", _mouseArr.y );
@@ -4111,7 +4162,7 @@ void mapTool::inputCommon(void)
 
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
-		if (!_inputDelayX)
+		if (!_inputDelayX && _cameraArr.x < MAXTILE-24)
 		{
 			_mapX += 32;
 			_inputDelayX = INPUTDELAY;
@@ -4120,7 +4171,7 @@ void mapTool::inputCommon(void)
 
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
 	{
-		if (!_inputDelayX)
+		if (!_inputDelayX && _cameraArr.x >0)
 		{
 			_mapX -= 32;
 			_inputDelayX = INPUTDELAY;
@@ -4129,7 +4180,7 @@ void mapTool::inputCommon(void)
 
 	if (KEYMANAGER->isStayKeyDown(VK_UP))
 	{
-		if (!_inputDelayY)
+		if (!_inputDelayY && _cameraArr.x >0)
 		{
 			_mapY -= 32;
 			_inputDelayY = INPUTDELAY;
@@ -4138,7 +4189,7 @@ void mapTool::inputCommon(void)
 
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
 	{
-		if (!_inputDelayY)
+		if (!_inputDelayY && _cameraArr.y < MAXTILE - 18)
 		{
 			_mapY += 32;
 			_inputDelayY = INPUTDELAY;

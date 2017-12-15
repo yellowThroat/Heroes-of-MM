@@ -8,6 +8,9 @@
 
 #define SHADOWALPHA 200
 
+#define MINCAMERA -6
+#define MAXCAMERAX 30
+#define MAXCAMERAY 24
 
 enum TILE
 {
