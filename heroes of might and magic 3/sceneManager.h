@@ -35,7 +35,6 @@ public:
 	gameNode* addLoadingScene(string loadingSceneName, gameNode* scene);
 
 	HRESULT changeScene(string sceneName);
-	HRESULT changeScene(string sceneName, string fileName);
 	HRESULT changeScene(string sceneName, string loadingSceneName);
 
 	friend DWORD CALLBACK loadingThread(LPVOID prc);

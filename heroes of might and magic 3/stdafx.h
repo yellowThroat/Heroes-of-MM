@@ -26,6 +26,7 @@
 #include "txtData.h"
 #include "collision.h"
 #include "infoHomm.h"
+#include "dataBase.h"
 
 using namespace std;
 using namespace IOTA_UTIL;
@@ -51,6 +52,7 @@ using namespace IOTA_UTIL;
 #define KEYANIMANAGER keyAniManager::getSingleton()
 #define EFFECTMANAGER effectManager::getSingleton()
 #define INIDATA iniDataManager::getSingleton()
+#define DATABASE dataBase::getSingleton()
 
 //==================================
 // ## 매크로 함수 ## 17.08.07 ##

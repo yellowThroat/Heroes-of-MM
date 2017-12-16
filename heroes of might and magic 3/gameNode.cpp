@@ -20,13 +20,6 @@ HRESULT gameNode::init(void)
 	return S_OK;
 }
 
-HRESULT gameNode::init(string fileName)
-{
-
-
-	return S_OK;
-}
-
 HRESULT gameNode::init(bool managerInit)
 {
 	_hdc = GetDC(_hWnd);
@@ -43,6 +36,7 @@ HRESULT gameNode::init(bool managerInit)
 		EFFECTMANAGER->init();
 		SCENEMANAGER->init();	
 		KEYANIMANAGER->init();
+		DATABASE->init();
 	}
 
 	return S_OK;
@@ -62,6 +56,7 @@ void gameNode::release(void)
 		EFFECTMANAGER->releaseSingleton();
 		SCENEMANAGER->releaseSingleton();
 		KEYANIMANAGER->releaseSingleton();
+		DATABASE->release();
 	}
 
 	ReleaseDC(_hWnd, _hdc);

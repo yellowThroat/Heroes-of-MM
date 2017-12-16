@@ -103,29 +103,7 @@ HRESULT sceneManager::changeScene(string sceneName)
 	return E_FAIL;
 }
 
-HRESULT sceneManager::changeScene(string sceneName, string fileName)
-{
-	mapSceneIter find = _mSceneList.find(sceneName);
 
-	//해당 씬을 찾지 못했다면         실패했습니다!
-	if (find == _mSceneList.end()) return E_FAIL;
-
-	//찾으려는 씬이 하필 현재 씬이면	 괜찮다고 전해라
-	if (find->second == _currentScene) return S_OK;
-
-	//무사히 바꿨으면
-	if (SUCCEEDED(find->second->init(fileName)))
-	{
-		if (_currentScene) _currentScene->release();
-
-		_currentScene = find->second;
-
-		return S_OK;
-	}
-
-
-	return E_FAIL;
-}
 
 HRESULT sceneManager::changeScene(string sceneName, string loadingSceneName)
 {

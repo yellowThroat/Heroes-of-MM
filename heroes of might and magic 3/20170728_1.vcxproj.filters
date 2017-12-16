@@ -64,6 +64,15 @@
     <Filter Include="MainGame\mainMenuScene">
       <UniqueIdentifier>{bf8a5ada-abd8-4109-ab0a-ade1e8f3ea97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\dataBase">
+      <UniqueIdentifier>{c8d70ea4-adbb-42db-9a2d-2a642f6d2956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\gameScene\map">
+      <UniqueIdentifier>{24330d74-3dd4-4c5b-af09-a28a44918ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\gameScene\ui">
+      <UniqueIdentifier>{be3aae6b-2455-42df-8117-254169659463}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -162,6 +171,15 @@
     <ClInclude Include="gameScene.h">
       <Filter>MainGame\gameScene</Filter>
     </ClInclude>
+    <ClInclude Include="dataBase.h">
+      <Filter>MainGame\dataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="playMap.h">
+      <Filter>MainGame\gameScene\map</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>MainGame\gameScene\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -241,6 +259,15 @@
     </ClCompile>
     <ClCompile Include="gameScene.cpp">
       <Filter>MainGame\gameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="dataBase.cpp">
+      <Filter>MainGame\dataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="playMap.cpp">
+      <Filter>MainGame\gameScene\map</Filter>
+    </ClCompile>
+    <ClCompile Include="ui.cpp">
+      <Filter>MainGame\gameScene\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

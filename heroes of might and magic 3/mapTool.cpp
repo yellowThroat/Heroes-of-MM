@@ -950,10 +950,20 @@ void mapTool::attributeDraw(void)
 							20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
 
 				}
-					
 			}
 		}
+		for (int i = 0; i < 24; i++)
+		{
+			MoveToEx(getMemDC(), 20 + (i+1)*TILESIZE, 0, NULL);
+			LineTo(getMemDC(), 20 + (i + 1)*TILESIZE, WINSIZEY);
+		}
+		for (int i = 0; i < 18; i++)
+		{
+			MoveToEx(getMemDC(), 0, 20 + (i + 1)*TILESIZE, NULL);
+			LineTo(getMemDC(), 788, 20 + (i + 1)*TILESIZE);
+		}
 	}
+
 }
 
 void mapTool::selectDraw(void)
@@ -4912,7 +4922,7 @@ void mapTool::inputCommon(void)
 		_saveIndex.y = 0;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown('B'))
+	if (KEYMANAGER->isOnceKeyDown(VK_F9))
 	{
 		switch (_buildAttribute)
 		{
@@ -4945,7 +4955,7 @@ void mapTool::inputCommon(void)
 
 	if (KEYMANAGER->isStayKeyDown(VK_UP))
 	{
-		if (!_inputDelayY && _cameraArr.x >0)
+		if (!_inputDelayY && _cameraArr.y >0)
 		{
 			_mapY -= 32;
 			_inputDelayY = INPUTDELAY;

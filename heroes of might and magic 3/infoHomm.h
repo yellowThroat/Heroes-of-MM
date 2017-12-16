@@ -150,6 +150,8 @@ struct tagTileInfo
 	image* img;
 	image* miniImg;
 	bool isChanged;
+	bool isClosed;
+	bool entrance;
 	int sourX, sourY;
 	int destX, destY;
 	int miniX, miniY;

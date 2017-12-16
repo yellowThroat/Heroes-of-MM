@@ -66,7 +66,7 @@ void mainGame::update(void)
 void mainGame::render(void)	
 {
 	//흰색 도화지 한 장 필요
-	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, WHITENESS);
+	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, BLACKNESS);
 	//==============================================================
 	SCENEMANAGER->render();
 

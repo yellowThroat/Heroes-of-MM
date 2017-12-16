@@ -185,6 +185,7 @@ void mainMenu::sceneChange(void)
 			switch (_currentButton)
 			{
 			case MMB_NEW:
+				DATABASE->setSaveNum(_saveNum);
 				SCENEMANAGER->changeScene("gameScene");
 				break;
 			case MMB_LOAD:
@@ -253,6 +254,8 @@ void mainMenu::inputMenu(void)
 
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
+		//====258 460
+
 
 		if (_buttonActive)
 		{
@@ -283,6 +286,11 @@ void mainMenu::inputMenu(void)
 					_saveNum = i;
 				}
 			}
+
+			if (PtInRect(&RectMake(_saveWindow.left + 258, _saveWindow.top + 460, 94, 42), _ptMouse))
+			{
+				_sceneChange = true;
+			}
 		}
 
 	}
@@ -304,7 +312,15 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("button_main_quit", "image/mainMenu/button_mainMenu_quit.bmp", 111, 107, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("fade", "image/ui/fade.bmp", 1100, 600, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("fade")->AlphaInit();
-
+	
+	//===================== G A M E S C E N E ============================
+	IMAGEMANAGER->addImage("gameUI", "image/gameScene/ui/gameUI.bmp", 1100, 600, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gameMiniview", "image/gameScene/ui/miniView72.bmp", 48, 36, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("game_background", "image/gameScene/ui/background.bmp", 788, 600, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("edge_left", "image/gameScene/ui/edge_left.bmp", 32, 2368, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("edge_right", "image/gameScene/ui/edge_right.bmp", 32, 2368, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("edge_top", "image/gameScene/ui/edge_top.bmp", 2368, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("edge_bottom", "image/gameScene/ui/edge_bottom.bmp", 2368, 32, true, RGB(255, 0, 255));
 
 	//================ T E R R A I N ==========================
 	IMAGEMANAGER->addFrameImage("terrain", "image/mapTool/terrain_idle.bmp", 32, 32, 1, 1, true, RGB(255, 0, 255));
