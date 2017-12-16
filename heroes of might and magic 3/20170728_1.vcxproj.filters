@@ -159,6 +159,9 @@
     <ClInclude Include="mainMenu.h">
       <Filter>MainGame\mainMenuScene</Filter>
     </ClInclude>
+    <ClInclude Include="gameScene.h">
+      <Filter>MainGame\gameScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -235,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="mainMenu.cpp">
       <Filter>MainGame\mainMenuScene</Filter>
+    </ClCompile>
+    <ClCompile Include="gameScene.cpp">
+      <Filter>MainGame\gameScene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -20,8 +20,9 @@ HRESULT mainGame::init(void)
 	//============================
 	SCENEMANAGER->addScene("mainMenu", new mainMenu);
 	SCENEMANAGER->addScene("mapTool", new mapTool);
+	SCENEMANAGER->addScene("gameScene", new gameScene);
 
-	SCENEMANAGER->changeScene("mapTool");
+	SCENEMANAGER->changeScene("mainMenu");
 
 
 	//============== A D D R E S S   L I N K ===================

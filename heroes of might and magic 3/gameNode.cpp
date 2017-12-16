@@ -20,6 +20,13 @@ HRESULT gameNode::init(void)
 	return S_OK;
 }
 
+HRESULT gameNode::init(string fileName)
+{
+
+
+	return S_OK;
+}
+
 HRESULT gameNode::init(bool managerInit)
 {
 	_hdc = GetDC(_hWnd);

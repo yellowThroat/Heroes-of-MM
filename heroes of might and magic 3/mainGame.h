@@ -2,6 +2,7 @@
 #include "gameNode.h"
 #include "mainMenu.h"
 #include "mapTool.h"
+#include "gameScene.h"
 
 class mainGame : public gameNode
 {

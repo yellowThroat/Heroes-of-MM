@@ -80,6 +80,20 @@ HRESULT mapTool::init(void)
 
 		_saveFile[i].number = i;
 	}
+	
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		for (int j = 0; j < MAXTILE; j++)
+		{
+			ZeroMemory(&_mapSaveInfo, sizeof(tagSaveInfo));
+			ZeroMemory(&_roadSaveInfo, sizeof(tagSaveInfo));
+			ZeroMemory(&_buildSaveInfo, sizeof(tagSaveInfo));
+			ZeroMemory(&_vBuildSaveInfo, sizeof(tagSaveInfo));
+			ZeroMemory(&_vLootSaveInfo, sizeof(tagSaveInfo));
+
+
+		}
+	}
 
 	loadFileList();
 	
@@ -88,7 +102,7 @@ HRESULT mapTool::init(void)
 	_remember.mine = MINE_NULL;
 	_remember.ev = EV_NULL;
 
-	
+	_currentConfirm = CON_ANY;
 	_selectMenu = MENU_NULL;
 	_categoryLarge = CATE_NULL;
 	_categorySmall = SMC_NULL;
@@ -312,19 +326,86 @@ void mapTool::saveMap(string fileName)
 			_mapSaveInfo[i][j].sourX = _mapArr[i][j].sourX;
 			_mapSaveInfo[i][j].sourY = _mapArr[i][j].sourY;
 			_mapSaveInfo[i][j].type = _mapArr[i][j].tile;
+			_mapSaveInfo[i][j].miniX = _mapArr[i][j].miniX;
+			_mapSaveInfo[i][j].miniY = _mapArr[i][j].miniY;
 			//====================== 길 저장 ====================
 			if (_roadArr[i][j].road != ROAD_END)
 			{
 				 _roadSaveInfo[i][j].sourX = _roadArr[i][j].sourX;
 				 _roadSaveInfo[i][j].sourY = _roadArr[i][j].sourY;
-				 _roadSaveInfo[i][j].type = _roadArr[i][j].road;
+				 _roadSaveInfo[i][j].type = _roadArr[i][j].road +1;
 			}
 			//====================== closed & enter ==============
 			_buildSaveInfo[i][j].closed = _buildArr[i][j].isClosed;
 			_buildSaveInfo[i][j].enter = _buildArr[i][j].enter;
 
+			//================== vBuild _vLoot 초기화 ==========================
+			
+			ZeroMemory(&_vBuildSaveInfo[i][j], sizeof(tagSaveInfo));
+			ZeroMemory(&_vLootSaveInfo[i][j], sizeof(tagSaveInfo));
+
 		}
 	}
+
+
+
+
+	for (int i = 0; i < _vBuild.size(); i++)
+	{
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].sourX = _vBuild[i].sourX;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].sourY = _vBuild[i].sourY;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].miniX = _vBuild[i].miniX;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].imgX = _vBuild[i].imgX;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].imgY = _vBuild[i].imgY;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].sizeX = _vBuild[i].sizeX;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].sizeY = _vBuild[i].sizeY;
+		
+		//================ Building ===================
+		if (_vBuild[i].camp != CAMP_NULL)
+		{
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 1000;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type +=(int)_vBuild[i].camp;
+		}
+		else if (_vBuild[i].mine != MINE_NULL)
+		{
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 100;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += (int)_vBuild[i].mine;
+		}
+		else if (_vBuild[i].ev != EV_NULL)
+		{
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 10;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += (int)_vBuild[i].ev;
+		}
+		else
+		{
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 2000;
+			switch (_vBuild[i].img->getFrameWidth()/TILESIZE)
+			{
+			case 1: _vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += 1;
+				break;
+			case 2: _vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += 2;
+				break;
+			case 4: _vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += 3;
+				break;
+			case 6: _vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += 4;
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < _vLoot.size(); i++)
+	{
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].type = _vLoot[i].elements;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sourX = _vLoot[i].sourX;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sourY = _vLoot[i].sourY;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].miniX = _vLoot[i].miniX;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].miniY = _vLoot[i].miniX;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].imgX = _vLoot[i].imgX;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].imgY = _vLoot[i].imgY;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeX = _vLoot[i].sizeX;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeY = _vLoot[i].sizeY;
+	}
+
 
 	HANDLE file;
 	DWORD write;
@@ -349,12 +430,19 @@ void mapTool::saveMap(string fileName)
 	WriteFile(file, _mapSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
 	WriteFile(file, _roadSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
 	WriteFile(file, _buildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _vBuildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
+	WriteFile(file, _vLootSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &write, NULL);
 
 
 	saveFileList();
 
 
 	CloseHandle(file);
+
+	_saveAndLoad = false;
+	_confirm = true;
+	_currentConfirm = CON_SAVE;
+	
 
 
 }
@@ -402,6 +490,8 @@ void mapTool::loadMap(string fileName)
 	ReadFile(file, _mapSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
 	ReadFile(file, _roadSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
 	ReadFile(file, _buildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _vBuildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _vLootSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -413,22 +503,21 @@ void mapTool::loadMap(string fileName)
 			case TILE_GREEN:
 				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_green");
 				_mapArr[i][j].tile = TILE_GREEN;
-				_mapArr[i][j].miniX = 0;
 
 			break;
 			
 			case TILE_WATER:
 				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_water");
 				_mapArr[i][j].tile = TILE_WATER;
-				_mapArr[i][j].miniX = 1;
 				break;
 			
 			case TILE_VOLCANO:
 				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_volcano");
 				_mapArr[i][j].tile = TILE_VOLCANO;
-				_mapArr[i][j].miniX = 2;
 				break;
 			}
+			_mapArr[i][j].miniX = _mapSaveInfo[i][j].miniX;
+			_mapArr[i][j].miniY = _mapSaveInfo[i][j].miniY;
 			_mapArr[i][j].sourX = _mapSaveInfo[i][j].sourX;
 			_mapArr[i][j].sourY = _mapSaveInfo[i][j].sourY;
 
@@ -436,16 +525,16 @@ void mapTool::loadMap(string fileName)
 			//====================== load road ========================
 			switch (_roadSaveInfo[i][j].type)
 			{
-			case ROAD_NORMAL:
+			case 1:
 				_roadArr[i][j].img = IMAGEMANAGER->findImage("road_normal");
 				_roadArr[i][j].road = ROAD_NORMAL;
 			break;
-			case ROAD_ROCK:
+			case 2:
 				_roadArr[i][j].img = IMAGEMANAGER->findImage("road_rock");
 				_roadArr[i][j].road = ROAD_ROCK;
 
 			break;
-			case ROAD_RIVER:
+			case 3:
 				_roadArr[i][j].img = IMAGEMANAGER->findImage("road_river");
 				_roadArr[i][j].road = ROAD_RIVER;
 
@@ -458,6 +547,240 @@ void mapTool::loadMap(string fileName)
 			_buildArr[i][j].isClosed = _buildSaveInfo[i][j].closed;
 			_buildArr[i][j].enter = _buildSaveInfo[i][j].enter;
 
+
+
+			//====================== load vBuild =======================
+			if (_vBuildSaveInfo[i][j].type >= 2000)
+			{
+				building build;
+				ZeroMemory(&build, sizeof(building));
+				build.camp = CAMP_NULL;
+				build.mine = MINE_NULL;
+				build.ev = EV_NULL;
+				build.destX = i;
+				build.destY = j;
+				build.sourX = _vBuildSaveInfo[i][j].sourX;
+				build.sourY = _vBuildSaveInfo[i][j].sourY;
+				build.sizeX = _vBuildSaveInfo[i][j].sizeX;
+				build.sizeY = _vBuildSaveInfo[i][j].sizeY;
+				build.miniX = _vBuildSaveInfo[i][j].miniX;
+				build.imgX = _vBuildSaveInfo[i][j].imgX;
+				build.imgY = _vBuildSaveInfo[i][j].imgY;
+
+				switch (_vBuildSaveInfo[i][j].type %10)
+				{
+				case 1:
+					build.img = IMAGEMANAGER->findImage("obstacle_1x1");
+					build.imgShadow = IMAGEMANAGER->findImage("ostacle_1x1_shadow");
+				break;
+				
+				case 2:
+					build.img = IMAGEMANAGER->findImage("obstacle_2x2");
+					build.imgShadow = IMAGEMANAGER->findImage("ostacle_2x2_shadow");
+					break;
+				
+				case 3:
+					build.img = IMAGEMANAGER->findImage("obstacle_4x4");
+					build.imgShadow = IMAGEMANAGER->findImage("ostacle_4x4_shadow");
+					break;
+				
+				case 4:
+					build.img = IMAGEMANAGER->findImage("obstacle_6x4");
+					build.imgShadow = IMAGEMANAGER->findImage("ostacle_6x4_shadow");
+					break;
+
+				}
+				_vBuild.push_back(build);
+			}
+			else if (_vBuildSaveInfo[i][j].type > 0 && _vBuildSaveInfo[i][j].type < 2000)
+			{
+				building build;
+				ZeroMemory(&build,sizeof(building));
+				build.camp = CAMP_NULL;
+				build.mine = MINE_NULL;
+				build.ev = EV_NULL;
+				build.destX = i;
+				build.destY = j;
+				build.sourX = _vBuildSaveInfo[i][j].sourX;
+				build.sourY = _vBuildSaveInfo[i][j].sourY;
+				build.sizeX = _vBuildSaveInfo[i][j].sizeX;
+				build.sizeY = _vBuildSaveInfo[i][j].sizeY;
+				build.imgX = _vBuildSaveInfo[i][j].imgX;
+				build.imgY = _vBuildSaveInfo[i][j].imgY;
+				build.miniX = _vBuildSaveInfo[i][j].miniX;
+
+
+				if (_vBuildSaveInfo[i][j].type >= 1000)
+				{
+					switch (_vBuildSaveInfo[i][j].type%10)
+					{
+					case 0:
+						build.img = IMAGEMANAGER->findImage("building_castle");
+						build.imgShadow = IMAGEMANAGER->findImage("building_castle_shadow");
+					break;
+					case 1:
+						build.img = IMAGEMANAGER->findImage("building_dungeon");
+						build.imgShadow = IMAGEMANAGER->findImage("building_dungeon_shadow");
+						break;
+					}
+					build.camp = (CAMP)(_vBuildSaveInfo[i][j].type % 10);
+
+				}
+				else if (_vBuildSaveInfo[i][j].type >= 100 && _vBuildSaveInfo[i][j].type < 1000)
+				{
+					build.mine = (MINE)(_vBuildSaveInfo[i][j].type % 10);
+					switch (_vBuildSaveInfo[i][j].type %10)
+					{
+					case 0:
+						build.img = IMAGEMANAGER->findImage("mine_gold");
+						build.imgShadow = IMAGEMANAGER->findImage("mine_gold_shadow");
+						break;
+					case 1:
+						build.img = IMAGEMANAGER->findImage("mine_crystal");
+						build.imgShadow = IMAGEMANAGER->findImage("mine_crystal_shadow");
+						break;
+					case 2:
+						build.img = IMAGEMANAGER->findImage("mine_wood");
+						build.imgShadow = IMAGEMANAGER->findImage("mine_wood_shadow");
+						break;
+					case 3:
+						build.img = IMAGEMANAGER->findImage("mine_iron");
+						build.imgShadow = NULL;
+						break;
+					case 4:
+						build.img = IMAGEMANAGER->findImage("mine_sulfur");
+						build.imgShadow = IMAGEMANAGER->findImage("mine_sulfur_shadow");
+						break;
+					case 5:
+						build.img = IMAGEMANAGER->findImage("mine_mercury");
+						build.imgShadow = IMAGEMANAGER->findImage("mine_mercury_shadow");
+						break;
+					case 6:
+						build.img = IMAGEMANAGER->findImage("mine_gem");
+						build.imgShadow = IMAGEMANAGER->findImage("mine_gem_shadow");
+						break;
+
+					}
+
+				}
+				else if (_vBuildSaveInfo[i][j].type > 10 && _vBuildSaveInfo[i][j].type < 100)
+				{
+					build.ev = (EVENT)(_vBuildSaveInfo[i][j].type % 10);
+					switch (_vBuildSaveInfo[i][j].type%10)
+					{
+					case 0:
+						build.img = IMAGEMANAGER->findImage("ev_lvlup");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_lvlup_shadow");
+						break;
+					case 1:
+						build.img = IMAGEMANAGER->findImage("ev_physical");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_physical_shadow");
+						break;
+					case 2:
+						build.img = IMAGEMANAGER->findImage("ev_magical");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_magical_shadow");
+						break;
+					case 3:
+						build.img = IMAGEMANAGER->findImage("ev_skill");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_skill_shadow");
+						break;
+					case 4:
+						build.img = IMAGEMANAGER->findImage("ev_magic");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_magic_shadow");
+						break;
+					case 5:
+						build.img = IMAGEMANAGER->findImage("ev_luck");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_luck_shadow");
+						break;
+					case 6:
+						build.img = IMAGEMANAGER->findImage("ev_morale");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_morale_shadow");
+						break;
+					case 7:
+						build.img = IMAGEMANAGER->findImage("ev_explore");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_explore_shadow");
+						break;
+					case 8:
+						build.img = IMAGEMANAGER->findImage("ev_movement");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_movement_shadow");
+						break;
+					case 9:
+						build.img = IMAGEMANAGER->findImage("ev_resource");
+						build.imgShadow = IMAGEMANAGER->findImage("ev_resource_shadow");
+						break;
+					}
+
+				}
+				
+				_vBuild.push_back(build);
+
+			}
+
+			//====================== load vLoot ========================
+			if (_vLootSaveInfo[i][j].type > 0)
+			{
+				building build;
+				ZeroMemory(&build, sizeof(building));
+				build.camp = CAMP_NULL;
+				build.mine = MINE_NULL;
+				build.ev = EV_NULL;
+
+				build.sourX = _vLootSaveInfo[i][j].sourX;
+				build.sourY = _vLootSaveInfo[i][j].sourY;
+				build.destX = i;
+				build.destY = j;
+				build.miniX = _vLootSaveInfo[i][j].miniX;
+				build.imgX = _vLootSaveInfo[i][j].imgX;
+				build.imgY = _vLootSaveInfo[i][j].imgY;
+				build.sizeX = _vLootSaveInfo[i][j].sizeX;
+				build.sizeY = _vLootSaveInfo[i][j].sizeY;
+				
+				if (_vLootSaveInfo[i][j].type >= 1000)
+				{
+					build.img = IMAGEMANAGER->findImage("resources");
+					build.imgShadow = IMAGEMANAGER->findImage("resources_shadow");
+				}
+				else if (_vLootSaveInfo[i][j].type >= 100 && _vLootSaveInfo[i][j].type < 1000)
+				{
+					if (_vLootSaveInfo[i][j].type >= 200)
+					{
+						build.img = IMAGEMANAGER->findImage("unit_dungeon");
+						build.imgShadow = IMAGEMANAGER->findImage("unit_dungeon_shadow");
+					}
+					else
+					{
+						build.img = IMAGEMANAGER->findImage("unit_castle");
+						build.imgShadow = IMAGEMANAGER->findImage("unit_castle_shadow");
+					}
+				}
+				else if (_vLootSaveInfo[i][j].type > 0 && _vLootSaveInfo[i][j].type <100)
+				{
+					switch (_vLootSaveInfo[i][j].type/10)
+					{
+					case 1:
+						build.img = IMAGEMANAGER->findImage("artifact_weapon");
+					break;
+
+					case 2:
+						build.img = IMAGEMANAGER->findImage("artifact_armor");
+					break;
+
+					case 3:
+						build.img = IMAGEMANAGER->findImage("artifact_helmet");
+					break;
+
+					case 4:
+						build.img = IMAGEMANAGER->findImage("artifact_shield");
+					break;
+
+					case 5:
+						build.img = IMAGEMANAGER->findImage("artifact_acc");
+					break;
+					}
+				}
+				_vLoot.push_back(build);
+
+			}
 		}
 	}
 
@@ -471,7 +794,7 @@ void mapTool::saveFileList(void)
 	HANDLE file;
 	DWORD write;
 
-	file = CreateFile("map/save.map", GENERIC_WRITE, 0, NULL,
+	file = CreateFile("map/saveFileList.map", GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	
 	WriteFile(file, _saveFile, sizeof(SAVE)*MAXSAVE, &write, NULL);
@@ -484,7 +807,7 @@ void mapTool::loadFileList(void)
 	HANDLE file;
 	DWORD read;
 
-	file = CreateFile("map/save.map",GENERIC_READ,0,NULL,
+	file = CreateFile("map/saveFileList.map",GENERIC_READ,0,NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _saveFile, sizeof(SAVE)*MAXSAVE, &read, NULL);
@@ -2214,9 +2537,30 @@ void mapTool::buttonDraw(void)
 
 void mapTool::windowDraw(void)
 {
-	if(_confirm)
-	IMAGEMANAGER->findImage("window_confirm")->render(getMemDC(),
+	if (_confirm )
+	{
+		switch (_currentConfirm)
+		{
+		case CON_ANY:
+		IMAGEMANAGER->findImage("window_confirm")->render(getMemDC(),
 		_confirmBox.left, _confirmBox.top);
+		break;
+
+		case CON_SAVE:
+		IMAGEMANAGER->findImage("save_confirm")->render(getMemDC(),
+		_confirmBox.left, _confirmBox.top);
+
+		SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+		TextOut(getMemDC(), _confirmBox.left + 150 - _saveFile[_saveNum].fileName.length()*9 ,
+			_confirmBox.top + 58,
+			_saveFile[_saveNum].fileName.c_str(),
+			_saveFile[_saveNum].fileName.length());
+
+		SetTextColor(getMemDC(), RGB(0, 0, 0));
+		break;
+		}		
+	}
 	
 	IMAGEMANAGER->findImage("window_save")->render(getMemDC(),
 		_saveWindow.left, _saveWindow.top);
@@ -2224,11 +2568,16 @@ void mapTool::windowDraw(void)
 	IMAGEMANAGER->findImage("save_selectbox")->render(getMemDC(),
 		_saveWindow.left + 23, _saveWindow.top + 116 + 25*_saveNum);
 
+
+	if(_changeName)
+	IMAGEMANAGER->findImage("changeName")->alphaRender(getMemDC(),
+		_saveWindow.left + 23, _saveWindow.top + 116 + 25 * _saveNum, 240);
+
 	SetTextColor(getMemDC(), RGB(255, 255, 255));
 
 	for (int i = 0; i < MAXSAVE; i++)
 	{
-		if(!(_changeName && _saveNum == i))
+		if(!(_changeName && _saveNum == i) && _saveFile[i].fileName.size())
 		TextOut(getMemDC(), _saveWindow.left + 70, _saveWindow.top + 118 + 25 * _saveFile[i].number,
 			_saveFile[i].fileName.c_str(), _saveFile[i].fileName.length());
 	}
@@ -3666,6 +4015,7 @@ void mapTool::addLooting(int arrX, int arrY)
 		build.sizeY = 1;
 		build.sourX = _saveIndex.x;
 		build.sourY = _saveIndex.y;
+		build.elements = 1000 + _saveIndex.x + 3 * _saveIndex.y;
 		break;
 
 	case SMC_ONE:
@@ -3673,26 +4023,26 @@ void mapTool::addLooting(int arrX, int arrY)
 		{
 		case 0:
 			build.img = IMAGEMANAGER->findImage("artifact_weapon");
-			build.elements = 0;
+			build.elements = 10;
 		break;
 		case 1:
 			build.img = IMAGEMANAGER->findImage("artifact_armor");
-			build.elements = 10;
+			build.elements = 20;
 
 		break;
 		case 2:
 			build.img = IMAGEMANAGER->findImage("artifact_helmet");
-			build.elements = 20;
+			build.elements = 30;
 
 		break;
 		case 3:
 			build.img = IMAGEMANAGER->findImage("artifact_shield");
-			build.elements = 30;
+			build.elements = 40;
 
 		break;
 		case 4:
 			build.img = IMAGEMANAGER->findImage("artifact_acc");
-			build.elements = 40;
+			build.elements = 50;
 
 		break;
 		}
@@ -3790,18 +4140,21 @@ void mapTool::addUnit(int arrX, int arrY)
 			build.img = IMAGEMANAGER->findImage("unit_dungeon");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_dungeon_shadow");
 			build.sourY = _saveIndex.y + (_page - 2) * 2;
+			build.elements = DUNGEON;
 		}
 		else if(_page == 0 && _foldMini)
 		{
 			build.img = IMAGEMANAGER->findImage("unit_castle");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_castle_shadow");
 			build.sourY = _saveIndex.y;
+			build.elements = CASTLE;
 		}
 		else if (_page == 1 && _foldMini)
 		{
 			build.img = IMAGEMANAGER->findImage("unit_dungeon");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_dungeon_shadow");
 			build.sourY = _saveIndex.y;
+			build.elements = DUNGEON;
 		}
 
 		if(build.sourX == 0 || build.sourX ==2) build.elements += TIERONE;
@@ -4424,6 +4777,7 @@ void mapTool::inputWindow(void)
 			{
 				if (_changeName)
 				{
+
 					_saveFile[_saveNum].fileName.clear();
 				
 					for (int i = 0; i < _tmp.size(); i++)
@@ -4433,8 +4787,13 @@ void mapTool::inputWindow(void)
 
 					_tmp.clear();
 					saveFileList();
+					saveMap(_saveFile[_saveNum].fileName);
+					
 					_changeName = false;
 				}
+
+
+
 
 			}
 		}
@@ -4442,7 +4801,15 @@ void mapTool::inputWindow(void)
 
 	if(KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
-		if (_confirm)
+		if (_confirm && _currentConfirm == CON_SAVE)
+		{
+			if (PtInRect(&RectMake(_confirmBox.left + 180, _confirmBox.top + 124, 58, 26), _ptMouse))
+			{
+				_confirm = false;
+			}
+
+		}
+		if (_confirm && _currentConfirm == CON_ANY)
 		{
 			//==================== Y E S =====================
 			if (PtInRect(&RectMake(_confirmBox.left + 144, _confirmBox.top + 125, 58, 26), _ptMouse))
@@ -4481,6 +4848,8 @@ void mapTool::inputWindow(void)
 		{
 			if (_changeName)
 			{
+
+
 				_saveFile[_saveNum].fileName.clear();
 
 				for (int i = 0; i < _tmp.size(); i++)
@@ -4490,6 +4859,7 @@ void mapTool::inputWindow(void)
 
 				_tmp.clear();
 				saveFileList();
+
 
 				_changeName = false;
 			}
@@ -4542,7 +4912,7 @@ void mapTool::inputCommon(void)
 		_saveIndex.y = 0;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_BACK))
+	if (KEYMANAGER->isOnceKeyDown('B'))
 	{
 		switch (_buildAttribute)
 		{
@@ -5142,6 +5512,7 @@ void mapTool::inputCommon(void)
 			if (PtInRect(&RectMake(_miniMap.left - 20 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_confirm = true;
+				_currentConfirm = CON_ANY;
 				_selectMenu = MENU_MAIN;
 			}
 		}
@@ -5152,6 +5523,7 @@ void mapTool::inputCommon(void)
 			if (PtInRect(&RectMake(_miniMap.left + 22 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_confirm = true;
+				_currentConfirm = CON_ANY;
 				_selectMenu = MENU_RESTART;
 			}
 		}
@@ -5170,6 +5542,7 @@ void mapTool::inputCommon(void)
 			if (PtInRect(&RectMake(_miniMap.right - 12 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_confirm = true;
+				_currentConfirm = CON_ANY;
 				_selectMenu = MENU_LOAD;
 			}
 		}
@@ -6306,254 +6679,4 @@ void mapTool::inputOnUI(void)
 
 void mapTool::loadImg(void)
 {
-	//================ T E R R A I N ==========================
-	IMAGEMANAGER->addFrameImage("terrain", "image/mapTool/terrain_idle.bmp", 32, 32,1,1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("terrain_green", "image/mapTool/terrain_green.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("terrain_water", "image/mapTool/terrain_test.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("terrain_volcano", "image/mapTool/terrain_volcano.bmp", 256, 288, 8, 9, true, RGB(255, 0, 255));
-
-	//================ R O A D =================================
-	IMAGEMANAGER->addFrameImage("road_normal", "image/mapTool/road_normal.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("road_rock", "image/mapTool/road_rock.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("road_river", "image/mapTool/road_river.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-
-	//================ B U I L D I N G =========================
-	//============ C A M P 
-	IMAGEMANAGER->addFrameImage("building_castle", "image/mapTool/camp_castle.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("building_castle_shadow", "image/mapTool/camp_castle_shadow.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("building_dungeon", "image/mapTool/camp_dungeon.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("building_dungeon_shadow", "image/mapTool/camp_dungeon_shadow.bmp", 576, 192, 3, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("building_castle_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("building_dungeon_shadow")->AlphaInit();
-	IMAGEMANAGER->addImage("point_castle", "image/mapTool/point_castle.bmp", 192, 192, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("point_dungeon", "image/mapTool/point_dungeon.bmp", 192, 192, true, RGB(255, 0, 255));
-
-	//============ MINE
-	IMAGEMANAGER->addFrameImage("mine_gold", "image/mapTool/mine/mine_gold.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_crystal", "image/mapTool/mine/mine_crystal.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_wood", "image/mapTool/mine/mine_wood.bmp", 160, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_iron", "image/mapTool/mine/mine_iron.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_sulfur", "image/mapTool/mine/mine_sulfur.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_mercury", "image/mapTool/mine/mine_mercury.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_gem", "image/mapTool/mine/mine_gem.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_gold_shadow", "image/mapTool/mine/mine_gold_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_crystal_shadow", "image/mapTool/mine/mine_crystal_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_wood_shadow", "image/mapTool/mine/mine_wood_shadow.bmp", 160, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_sulfur_shadow", "image/mapTool/mine/mine_sulfur_shadow.bmp", 96, 64, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_mercury_shadow", "image/mapTool/mine/mine_mercury_shadow.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("mine_gem_shadow", "image/mapTool/mine/mine_gem_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("mine_gold_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("mine_crystal_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("mine_wood_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("mine_sulfur_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("mine_mercury_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("mine_gem_shadow")->AlphaInit();
-	IMAGEMANAGER->addImage("point_mine", "image/mapTool/point_mine.bmp", 96, 64, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("point_wood", "image/mapTool/point_wood.bmp", 160, 96, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("point_mercury", "image/mapTool/point_mercury.bmp", 96, 96, true, RGB(255, 0, 255));
-
-	//============= E V E N T 
-	IMAGEMANAGER->addFrameImage("ev_lvlup", "image/mapTool/ev/ev_lvlup.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_physical", "image/mapTool/ev/ev_physical.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_magical", "image/mapTool/ev/ev_magical.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_skill", "image/mapTool/ev/ev_skill.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_magic", "image/mapTool/ev/ev_magic.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_luck", "image/mapTool/ev/ev_luck.bmp", 768, 32, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_morale", "image/mapTool/ev/ev_morale.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_explore", "image/mapTool/ev/ev_explore.bmp", 64, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_movement", "image/mapTool/ev/ev_movement.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_resource", "image/mapTool/ev/ev_resource.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
-
-	IMAGEMANAGER->addFrameImage("ev_lvlup_shadow", "image/mapTool/ev/ev_lvlup_shadow.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_physical_shadow", "image/mapTool/ev/ev_physical_shadow.bmp", 96, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_magical_shadow", "image/mapTool/ev/ev_magical_shadow.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_skill_shadow", "image/mapTool/ev/ev_skill_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_magic_shadow", "image/mapTool/ev/ev_magic_shadow.bmp", 512, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_luck_shadow", "image/mapTool/ev/ev_luck_shadow.bmp", 768, 32, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_morale_shadow", "image/mapTool/ev/ev_morale_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_explore_shadow", "image/mapTool/ev/ev_explore_shadow.bmp", 64, 96, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_movement_shadow", "image/mapTool/ev/ev_movement_shadow.bmp", 768, 64, 8, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("ev_resource_shadow", "image/mapTool/ev/ev_resource_shadow.bmp", 768, 96, 8, 1, true, RGB(255, 0, 255));
-
-	IMAGEMANAGER->findImage("ev_lvlup_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_physical_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_magical_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_skill_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_magic_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_luck_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_morale_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_explore_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_movement_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("ev_resource_shadow")->AlphaInit();
-
-	//================ O B S T A C L E =====================
-	IMAGEMANAGER->addFrameImage("obstacle_1x1", "image/mapTool/1x1/1x1_obstacle.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_2x2", "image/mapTool/1x1/2x2_obstacle.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_4x4", "image/mapTool/1x1/4x4_obstacle.bmp", 256, 512, 2, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_6x4", "image/mapTool/1x1/6x4_obstacle.bmp", 192, 256, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_1x1_shadow", "image/mapTool/1x1/1x1_obstacle_shadow.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_2x2_shadow", "image/mapTool/1x1/2x2_obstacle_shadow.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_4x4_shadow", "image/mapTool/1x1/4x4_obstacle_shadow.bmp", 256, 512, 2, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("obstacle_6x4_shadow", "image/mapTool/1x1/6x4_obstacle_shadow.bmp", 192, 256, 1, 2, true, RGB(255, 0, 255));
-
-	IMAGEMANAGER->findImage("obstacle_1x1_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("obstacle_2x2_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("obstacle_4x4_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("obstacle_6x4_shadow")->AlphaInit();
-
-	//==================== L O O T I N G ====================
-	IMAGEMANAGER->addFrameImage("resources", "image/mapTool/resource/resource.bmp", 192, 96, 3, 3, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("resources_shadow", "image/mapTool/resource/resource_shadow.bmp", 192, 96, 3, 3, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("resources_shadow")->AlphaInit();
-	IMAGEMANAGER->addFrameImage("artifact_weapon", "image/mapTool/resource/artifact_weapon.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("artifact_shield", "image/mapTool/resource/artifact_shield.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("artifact_armor", "image/mapTool/resource/artifact_armor.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("artifact_helmet", "image/mapTool/resource/artifact_helmet.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("artifact_acc", "image/mapTool/resource/artifact_acc.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
-
-	//===================== U N I T ===========================
-	IMAGEMANAGER->addFrameImage("unit_castle", "image/mapTool/unit/unit_castle.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("unit_dungeon", "image/mapTool/unit/unit_dungeon.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("unit_castle_shadow", "image/mapTool/unit/unit_castle_shadow.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("unit_dungeon_shadow", "image/mapTool/unit/unit_dungeon_shadow.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("unit_castle_shadow")->AlphaInit();
-	IMAGEMANAGER->findImage("unit_dungeon_shadow")->AlphaInit();
-
-	//================ M I N I   M A P =====================
-	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72.bmp", 72, 54, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("miniView36", "image/mapTool/miniView36.bmp", 144, 108, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("minimap", "image/mapTool/miniRECT.bmp", 220, 220, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("miniTerrain72", "image/mapTool/miniTerrain72.bmp", 15, 15, 5, 5, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("miniTerrain36", "image/mapTool/miniTerrain36.bmp", 30, 30, 5, 5, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("miniBuilding72", "image/mapTool/miniBuilding72.bmp", 54, 18, 3, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("miniBuilding36", "image/mapTool/miniBuilding36.bmp", 108, 36, 3, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("miniObstacle72", "image/mapTool/1x1/miniObstacle72.bmp", 60, 15, 4, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("miniObstacle36", "image/mapTool/1x1/miniObstacle36.bmp", 120, 30, 4, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("miniObstacle72")->AlphaInit();
-	IMAGEMANAGER->findImage("miniObstacle36")->AlphaInit();
-
-	//================ U S E R   I N T E R F A C E =================
-	IMAGEMANAGER->addImage("mapToolUI", "image/ui/mapToolUI.bmp", 312, WINSIZEY, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("mapToolUI")->setX(788);
-	IMAGEMANAGER->addImage("mapToolMark", "image/ui/mapToolMark.bmp", 300, 96, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("mapToolMark")->setX(796);
-	IMAGEMANAGER->findImage("mapToolMark")->setY(2);
-
-	//=============== C U R S O R =========================
-	IMAGEMANAGER->addImage("select", "image/mapTool/selectRect.bmp", 32, 32, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("select2", "image/mapTool/selectRect2.bmp", 64, 64, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("width", "image/mapTool/line_width.bmp", 768, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("height", "image/mapTool/line_height.bmp", 2, 576, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("closed", "image/mapTool/closedArea.bmp", 32, 32, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("closed")->AlphaInit();
-	IMAGEMANAGER->findImage("closed")->setAlphaSource(50);
-	IMAGEMANAGER->addImage("enter", "image/mapTool/enter.bmp", 32, 32, true, RGB(255, 0, 255));
-	IMAGEMANAGER->findImage("enter")->AlphaInit();
-
-	//=============== B U T T O N =========================
-	IMAGEMANAGER->addFrameImage("button_ma", "image/mapTool/button_ma.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_menu", "image/mapTool/button_menu.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_re", "image/mapTool/button_re.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_save", "image/mapTool/button_save.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_load", "image/mapTool/button_load.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-
-	//==================================== T I L E 
-	IMAGEMANAGER->addFrameImage("tileButton", "image/mapTool/tileButton.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("roadButton", "image/mapTool/roadButton.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_green", "image/mapTool/button_green.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_water", "image/mapTool/button_water.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_volcano", "image/mapTool/button_volcano.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_terrain_green", "image/mapTool/button_terrain_green.bmp", 256, 384, 1, 3, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_terrain_water", "image/mapTool/button_terrain_water.bmp", 256, 384, 1, 3, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_terrain_volcano", "image/mapTool/button_terrain_volcano.bmp", 256, 384, 1, 3, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_terrain_green_large", "image/mapTool/button_terrain_green_L.bmp", 256, 288, true, RGB(255, 0, 255 ));
-	IMAGEMANAGER->addImage("button_terrain_water_large", "image/mapTool/button_terrain_water_large.bmp", 256, 288, true, RGB(255, 0, 255 ));
-	IMAGEMANAGER->addImage("button_terrain_volcano_large", "image/mapTool/button_terrain_volcano_large.bmp", 256, 288, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("push", "image/mapTool/button_push.bmp", 32, 32, true, RGB(255, 0, 255));
-	
-	//==================================== R O A D 
-	IMAGEMANAGER->addFrameImage("button_road_normal", "image/mapTool/button_road_normal.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_normal", "image/mapTool/button_normal.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_road_rock", "image/mapTool/button_road_rock.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_rock", "image/mapTool/button_rock.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_road_river", "image/mapTool/button_road_river.bmp", 256, 128, 8, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_river", "image/mapTool/button_river.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-
-	//==================================== C A M P 
-	IMAGEMANAGER->addFrameImage("button_castle", "image/mapTool/button_castle.bmp", 256, 128, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_dungeon", "image/mapTool/button_dungeon.bmp", 256, 128, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("buildingButton", "image/mapTool/buildingButton.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_camp", "image/mapTool/button_camp.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-
-	//==================================== M I N E
-	IMAGEMANAGER->addFrameImage("button_mine", "image/mapTool/button_mine.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_gold","image/mapTool/button_gold.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_crystal","image/mapTool/button_crystal.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_wood","image/mapTool/button_wood.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_iron","image/mapTool/button_iron.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_sulfur","image/mapTool/button_sulfur.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_mercury","image/mapTool/button_mercury.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_gem","image/mapTool/button_gem.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	
-	//==================================== E V E N T 
-	IMAGEMANAGER->addFrameImage("button_ev", "image/mapTool/button_ev.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_lvlup", "image/mapTool/button_lvlup.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_physical", "image/mapTool/button_physical.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_magical", "image/mapTool/button_magical.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_skill", "image/mapTool/button_skill.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_magic", "image/mapTool/button_magic.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_luck", "image/mapTool/button_luck.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_morale", "image/mapTool/button_morale.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_explore", "image/mapTool/button_explore.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_movement", "image/mapTool/button_movement.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_resource", "image/mapTool/button_resource.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
-	
-	//==================================== O B S T A C L E
-	IMAGEMANAGER->addFrameImage("button_obstacle", "image/mapTool/1x1/button_obstacle.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_1x1", "image/mapTool/1x1/button_1x1.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_2x2", "image/mapTool/1x1/button_2x2.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_4x4", "image/mapTool/1x1/button_4x4.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_A", "image/mapTool/1x1/button_A.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_obstacle_1x1", "image/mapTool/1x1/1x1_obstacle.bmp", 256, 128, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_obstacle_2x2", "image/mapTool/1x1/2x2_obstacle.bmp", 256, 256, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_obstacle_4x4", "image/mapTool/1x1/4x4_obstacle.bmp", 256, 512, 1, 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_obstacle_6x4", "image/mapTool/1x1/6x4_obstacle.bmp", 192, 256, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_obstacle_2x2_large", "image/mapTool/1x1/2x2_obstacle.bmp", 256, 256, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_obstacle_4x4_large", "image/mapTool/1x1/4x4_obstacle.bmp", 256, 512, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_obstacle_6x4_large", "image/mapTool/1x1/6x4_obstacle.bmp", 192, 256, true, RGB(255, 0, 255));
-
-	//==================================== R E S O U R C E 
-	IMAGEMANAGER->addFrameImage("button_looting", "image/mapTool/resource/button_looting.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_resources", "image/mapTool/resource/button_resource.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_artifact", "image/mapTool/resource/button_artifact.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_looting_artifact", "image/mapTool/resource/button_looting_artifact.bmp", 256, 384, 1, 3, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_looting_artifact_large", "image/mapTool/resource/button_looting_artifact.bmp", 256, 384, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_looting_resources", "image/mapTool/resource/button_looting_resources.bmp", 192, 96, true, RGB(255, 0, 255));
-
-	//==================================== U N I T 
-	IMAGEMANAGER->addFrameImage("button_unit", "image/mapTool/unit/button_unit.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_hero", "image/mapTool/unit/button_hero.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_creature", "image/mapTool/unit/button_creature.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_unit_castle", "image/mapTool/unit/unit_castle.bmp", 256, 256, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("button_unit_dungeon", "image/mapTool/unit/unit_dungeon.bmp", 256, 256, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_unit_castle_large", "image/mapTool/unit/unit_castle.bmp", 256, 256, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_unit_dungeon_large", "image/mapTool/unit/unit_dungeon.bmp", 256, 256, true, RGB(255, 0, 255));
-	//====================================== U I 
-	IMAGEMANAGER->addFrameImage("empty", "image/mapTool/empty.bmp", 32, 32, 1, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("emptyS", "image/mapTool/empty.bmp", 32, 32, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("up", "image/mapTool/arrow_up.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("down", "image/mapTool/arrow_down.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("left", "image/mapTool/arrow_left.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("right", "image/mapTool/arrow_right.bmp", 42, 21, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("size1", "image/mapTool/size_1.bmp", 32, 16, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("size2", "image/mapTool/size_2.bmp", 32, 16, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("sizeF", "image/mapTool/size_flexible.bmp", 32, 16, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("erase", "image/mapTool/erase.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("button_brush_size", "image/mapTool/buttonBrushSize.bmp", 96, 32, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("move", "image/mapTool/moveIcon.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
-
-	//====================================== W I N D O W ==============
-	IMAGEMANAGER->addImage("window_confirm", "image/mapTool/button_confirm.bmp", 420, 180, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("window_save", "image/mapTool/window_save.bmp", 450, 580, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("save_selectbox", "image/mapTool/save_selectbox.bmp", 360, 26, true, RGB(255, 0, 255));
 }

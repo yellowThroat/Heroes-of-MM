@@ -1,31 +1,26 @@
 #include "stdafx.h"
 #include "gameScene.h"
 
+gameScene::gameScene() {}
+gameScene::~gameScene(){}
 
-gameScene::gameScene()
+HRESULT gameScene::init(void)
 {
-}
 
-
-gameScene::~gameScene()
-{
-}
-
-HRESULT gameScene::init()  
-{
-	SOUNDMANAGER->play("¹è°æ", 1.0f);
 	return S_OK;
 }
-void gameScene::release()  
+
+void gameScene::release(void)
 {
 
 }
-void gameScene::update()   
+
+void gameScene::update(void)
 {
 
 }
-void gameScene::render()   
-{
-	IMAGEMANAGER->findImage("·ÑÇù°î0")->render(getMemDC());
-}
 
+void gameScene::render(void)
+{
+
+}

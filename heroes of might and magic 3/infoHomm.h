@@ -127,6 +127,23 @@ enum SELECTMENU
 	MENU_END
 };
 
+enum CONFIRM
+{
+	CON_ANY,
+	CON_SAVE,
+	CON_END
+};
+
+typedef enum MAINMENUBUTTON
+{
+	MMB_NEW,
+	MMB_LOAD,
+	MMB_MAP,
+	MMB_CREDIT,
+	MMB_QUIT,
+	MMB_END
+}MMB;
+
 struct tagTileInfo
 {
 	TILE tile;
@@ -217,8 +234,12 @@ struct tagSaveInfo
 	int sourY;
 	int destX;
 	int destY;
-	int buildSize;
-	int lootSize;
+	int miniX;
+	int miniY;
+	int imgX;
+	int imgY;
+	int sizeX;
+	int sizeY;
 	bool closed;
 	bool enter;
 

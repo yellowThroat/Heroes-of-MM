@@ -14,6 +14,7 @@ public:
 
 	virtual HRESULT init(void);	//초기화
 	virtual HRESULT init(bool managerInit);
+	virtual HRESULT init(string fileName);
 	virtual void release(void);	//메모리 해제
 	virtual void update(void);	//연산관련(타이머)
 	virtual void render(void);	//그려주는 함수

@@ -20,10 +20,12 @@ private:
 	tagTileInfo _mapArr[MAXTILE][MAXTILE];
 	tagRoadInfo _roadArr[MAXTILE][MAXTILE];
 	tagBuildingInfo _buildArr[MAXTILE][MAXTILE];
+
 	tagSaveInfo _mapSaveInfo[MAXTILE][MAXTILE];
 	tagSaveInfo _roadSaveInfo[MAXTILE][MAXTILE];
 	tagSaveInfo _buildSaveInfo[MAXTILE][MAXTILE];
-	
+	tagSaveInfo _vBuildSaveInfo[MAXTILE][MAXTILE];
+	tagSaveInfo _vLootSaveInfo[MAXTILE][MAXTILE];
 
 	SAVE _saveFile[MAXSAVE];
 
@@ -31,6 +33,7 @@ private:
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
 	SELECTMENU _selectMenu;
+	CONFIRM _currentConfirm;
 
 	string _tmp;
 	POINT _mouseArr;
