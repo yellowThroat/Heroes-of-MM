@@ -359,7 +359,9 @@ void mapTool::saveMap(string fileName)
 		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].imgY = _vBuild[i].imgY;
 		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].sizeX = _vBuild[i].sizeX;
 		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].sizeY = _vBuild[i].sizeY;
-		
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].campInfo = _vBuild[i].campInfo;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].enterX = _vBuild[i].enterX;
+		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].enterY = _vBuild[i].enterY;
 		//================ Building ===================
 		if (_vBuild[i].camp != CAMP_NULL)
 		{
@@ -404,8 +406,9 @@ void mapTool::saveMap(string fileName)
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].imgY = _vLoot[i].imgY;
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeX = _vLoot[i].sizeX;
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeY = _vLoot[i].sizeY;
-	}
 
+	}
+	
 
 	HANDLE file;
 	DWORD write;
@@ -608,7 +611,7 @@ void mapTool::loadMap(string fileName)
 				build.imgX = _vBuildSaveInfo[i][j].imgX;
 				build.imgY = _vBuildSaveInfo[i][j].imgY;
 				build.miniX = _vBuildSaveInfo[i][j].miniX;
-
+				build.campInfo = _vBuildSaveInfo[i][j].campInfo;
 
 				if (_vBuildSaveInfo[i][j].type >= 1000)
 				{
@@ -663,7 +666,7 @@ void mapTool::loadMap(string fileName)
 					}
 
 				}
-				else if (_vBuildSaveInfo[i][j].type > 10 && _vBuildSaveInfo[i][j].type < 100)
+				else if (_vBuildSaveInfo[i][j].type >= 10 && _vBuildSaveInfo[i][j].type < 100)
 				{
 					build.ev = (EVENT)(_vBuildSaveInfo[i][j].type % 10);
 					switch (_vBuildSaveInfo[i][j].type%10)

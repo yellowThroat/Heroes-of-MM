@@ -7,10 +7,14 @@ gameScene::~gameScene(){}
 HRESULT gameScene::init(void)
 {
 	//============= A L L O C A T I O N ===================
-	_pm = new playMap;
-	_ui = new ui;
+	_pm = new playMap;						// 플레이 하는 맵
+	_ui = new ui;							// 플레이시 ui
+	_ob = new mapObject;					// 플레이시 나올 맵 오브젝트
 
-
+	//============= L O A D   I N F O ================
+	loadMap();
+	loadCamp();
+	
 
 
 
@@ -28,6 +32,12 @@ HRESULT gameScene::init(void)
 	//============= C L A S S   I N I T ==================
 	_pm->init();
 	_ui->init();
+	_ob->init();
+
+	//=============== T E S T ==================
+
+
+
 
 	return S_OK;
 }
@@ -52,9 +62,15 @@ void gameScene::update(void)
 
 
 	//========= C L A S S   U P D A T E=================
+	
+	for (int i = 0; i < _vCamp.size(); i++)
+	{
+		_vCamp[i]->update();
+	}
+
 	_pm->update();
 	_ui->update();
-
+	_ob->update();
 	
 	
 }
@@ -63,10 +79,100 @@ void gameScene::render(void)
 {
 	//============= C L A S S   R E N D E R ===============
 	_pm->render();
+	_ob->render();
 	_ui->render();
+
+
+	for (int i = 0; i < _vCamp.size(); i++)
+	{
+		_vCamp[i]->render();
+	}
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
+}
+
+void gameScene::loadMap(void)
+{
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile(DATABASE->getSaveName().c_str(), GENERIC_READ, 0, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file, _mapSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _roadSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _buildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _vBuildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	ReadFile(file, _vLootSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+
+	CloseHandle(file);
+}
+
+void gameScene::loadCamp(void)
+{
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		for (int j = 0; j < MAXTILE; j++)
+		{
+			if (_vBuildSaveInfo[i][j].type >= 1000 && _vBuildSaveInfo[i][j].type < 2000)
+			{
+				building build;
+				ZeroMemory(&build, sizeof(building));
+				build.camp = (CAMP)(_vBuildSaveInfo[i][j].type % 10);
+				build.mine = MINE_NULL;
+				build.ev = EV_NULL;
+				build.destX = i;
+				build.destY = j;
+				build.sourX = _vBuildSaveInfo[i][j].sourX;
+				build.sourY = _vBuildSaveInfo[i][j].sourY;
+				build.sizeX = _vBuildSaveInfo[i][j].sizeX;
+				build.sizeY = _vBuildSaveInfo[i][j].sizeY;
+				build.imgX = _vBuildSaveInfo[i][j].imgX;
+				build.imgY = _vBuildSaveInfo[i][j].imgY;
+				build.miniX = _vBuildSaveInfo[i][j].miniX;
+				build.campInfo = _vBuildSaveInfo[i][j].campInfo;
+
+				switch (_vBuildSaveInfo[i][j].type % 10)
+				{
+				case 0:
+					build.img = IMAGEMANAGER->findImage("building_castle");
+					build.imgShadow = IMAGEMANAGER->findImage("building_castle_shadow");
+					break;
+				case 1:
+					build.img = IMAGEMANAGER->findImage("building_dungeon");
+					build.imgShadow = IMAGEMANAGER->findImage("building_dungeon_shadow");
+					break;
+				}
+
+				if(build.camp != CAMP_NULL) addCamp(build);
+			}
+		}
+	}
+
+
+
+}
+
+void gameScene::addCamp(tagBuildingInfo info)
+{
+	camp* camp;
+
+
+	switch (info.camp)
+	{
+	case CAMP_CASTLE:
+		camp = new castle;
+		break;
+	case CAMP_DUNGEON:
+		camp = new dungeon;
+
+		break;
+	}
+
+	camp->init(info);
+
+	_vCamp.push_back(camp);
+
 }
 
 void gameScene::inputCommon(void)

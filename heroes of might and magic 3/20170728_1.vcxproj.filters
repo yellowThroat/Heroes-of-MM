@@ -73,6 +73,18 @@
     <Filter Include="MainGame\gameScene\ui">
       <UniqueIdentifier>{be3aae6b-2455-42df-8117-254169659463}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\gameScene\camp">
+      <UniqueIdentifier>{d95b1864-4a3e-48a3-9b07-ccb5380e58cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\gameScene\hero">
+      <UniqueIdentifier>{e7939478-cf77-4fcb-b6d3-cb97435e1d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\gameScene\player">
+      <UniqueIdentifier>{4dd00b5b-c00c-4cb6-aa56-25918d5fd345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\gameScene\mapObject">
+      <UniqueIdentifier>{9f42ecdf-06c6-4015-9b78-8055bdc43010}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -180,6 +192,24 @@
     <ClInclude Include="ui.h">
       <Filter>MainGame\gameScene\ui</Filter>
     </ClInclude>
+    <ClInclude Include="camp.h">
+      <Filter>MainGame\gameScene\camp</Filter>
+    </ClInclude>
+    <ClInclude Include="castle.h">
+      <Filter>MainGame\gameScene\camp</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeon.h">
+      <Filter>MainGame\gameScene\camp</Filter>
+    </ClInclude>
+    <ClInclude Include="hero.h">
+      <Filter>MainGame\gameScene\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>MainGame\gameScene\player</Filter>
+    </ClInclude>
+    <ClInclude Include="mapObject.h">
+      <Filter>MainGame\gameScene\mapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -268,6 +298,24 @@
     </ClCompile>
     <ClCompile Include="ui.cpp">
       <Filter>MainGame\gameScene\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="camp.cpp">
+      <Filter>MainGame\gameScene\camp</Filter>
+    </ClCompile>
+    <ClCompile Include="castle.cpp">
+      <Filter>MainGame\gameScene\camp</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeon.cpp">
+      <Filter>MainGame\gameScene\camp</Filter>
+    </ClCompile>
+    <ClCompile Include="hero.cpp">
+      <Filter>MainGame\gameScene\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>MainGame\gameScene\player</Filter>
+    </ClCompile>
+    <ClCompile Include="mapObject.cpp">
+      <Filter>MainGame\gameScene\mapObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

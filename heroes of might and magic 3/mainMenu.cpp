@@ -186,6 +186,7 @@ void mainMenu::sceneChange(void)
 			{
 			case MMB_NEW:
 				DATABASE->setSaveNum(_saveNum);
+				DATABASE->setSaveName(_saveFile[_saveNum].fileName);
 				SCENEMANAGER->changeScene("gameScene");
 				break;
 			case MMB_LOAD:
@@ -321,6 +322,13 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("edge_right", "image/gameScene/ui/edge_right.bmp", 32, 2368, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("edge_top", "image/gameScene/ui/edge_top.bmp", 2368, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("edge_bottom", "image/gameScene/ui/edge_bottom.bmp", 2368, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("game_mine", "image/mapObject/mine.bmp", 1280, 672, 8, 7, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("game_mine_shadow", "image/mapObject/mine_shadow.bmp", 1280, 672, 8, 7, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("game_mine_shadow")->AlphaInit();
+	IMAGEMANAGER->addFrameImage("game_ev", "image/mapObject/ev.bmp", 768, 960, 8, 10, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("game_ev_shadow", "image/mapObject/ev_shadow.bmp", 768, 960, 8, 10, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("game_ev_shadow")->AlphaInit();
+
 
 	//================ T E R R A I N ==========================
 	IMAGEMANAGER->addFrameImage("terrain", "image/mapTool/terrain_idle.bmp", 32, 32, 1, 1, true, RGB(255, 0, 255));

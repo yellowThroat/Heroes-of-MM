@@ -6,7 +6,7 @@
 
 #define MINISIZE (216 / MAXTILE)
 
-#define SHADOWALPHA 200
+#define SHADOWALPHA 150
 
 #define MINCAMERA -6
 #define MAXCAMERAX 30
@@ -168,6 +168,38 @@ struct tagRoadInfo
 	int destX, destY;
 
 };
+struct tagCampInfo
+{
+	int player;
+	int hall;
+	int fort;
+	int pub;
+	int guild;
+	int market;
+	int forge;
+	int level[7];
+	int special[5];
+	char name[256];
+
+	tagCampInfo()
+	{
+		player = 0;
+		hall = 1;
+		fort = 0;
+		pub = 0;
+		guild = 0;
+		market = 0;
+		forge = 0;
+		for (int i = 0; i < 7; i++)
+		{
+			level[i] = 0;
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			special[i] = 0;
+		}
+	}
+};
 
 typedef struct tagBuildingInfo
 {
@@ -176,6 +208,7 @@ typedef struct tagBuildingInfo
 	MINE mine;
 	image* img;
 	image* imgShadow;
+	struct tagCampInfo campInfo;
 	int elements;
 	int imgX, imgY;
 	int sizeX, sizeY;
@@ -232,20 +265,20 @@ typedef struct tagSaveFile
 struct tagSaveInfo
 {
 	int type;
-	int sourX;
-	int sourY;
-	int destX;
-	int destY;
-	int miniX;
-	int miniY;
-	int imgX;
-	int imgY;
-	int sizeX;
-	int sizeY;
+	int sourX,  sourY;
+	int destX,  destY;
+	int miniX,  miniY;
+	int imgX,  imgY;
+	int sizeX,  sizeY;
+	int enterX, enterY;
 	bool closed;
 	bool enter;
+	struct tagCampInfo campInfo;
 
 };
+
+
+
 
 //========= 주변 타일 검출==========
 #define LEFTTOP				0x00001

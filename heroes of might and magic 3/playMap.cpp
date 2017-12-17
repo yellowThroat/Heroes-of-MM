@@ -132,14 +132,14 @@ void playMap::obstacleDraw(void)
 			_viBuild->destY - _cameraArr.y > MINCAMERA && _viBuild->destY - _cameraArr.y < MAXCAMERAY)
 		{
 			_viBuild->img->frameRender(getMemDC(),
-				20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE - _camera.x,
-				20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE - _camera.y,
+				(_viBuild->destX - _viBuild->imgX) * TILESIZE - _camera.x,
+				(_viBuild->destY - _viBuild->imgY) * TILESIZE - _camera.y,
 				_viBuild->sourX, _viBuild->sourY);
 
 			if (_viBuild->imgShadow != NULL)
 				_viBuild->imgShadow->alphaFrameRender(getMemDC(),
-					20 + (_viBuild->destX - _viBuild->imgX) * TILESIZE - _camera.x,
-					20 + (_viBuild->destY - _viBuild->imgY) * TILESIZE - _camera.y,
+					(_viBuild->destX - _viBuild->imgX) * TILESIZE - _camera.x,
+					(_viBuild->destY - _viBuild->imgY) * TILESIZE - _camera.y,
 					_viBuild->sourX, _viBuild->sourY, SHADOWALPHA);
 
 		}
@@ -160,10 +160,10 @@ void playMap::attributeDraw(void)
 				{
 					if (_map[i][j].isClosed)
 						IMAGEMANAGER->findImage("closed")->render(getMemDC(),
-							20 + i*TILESIZE - _camera.x, 20 + j*TILESIZE - _camera.y);
+							i*TILESIZE - _camera.x, j*TILESIZE - _camera.y);
 					if (_map[i][j].entrance)
 						IMAGEMANAGER->findImage("enter")->render(getMemDC(),
-							20 + i*TILESIZE - _camera.x, 20 + j*TILESIZE - _camera.y);
+							i*TILESIZE - _camera.x, j*TILESIZE - _camera.y);
 
 				}
 
@@ -188,6 +188,8 @@ void playMap::cameraMove(void)
 {
 	_cameraArr.x = _camera.x / TILESIZE;
 	_cameraArr.y = _camera.y / TILESIZE;
+
+	DATABASE->setPlayCamera(_camera);
 
 
 }
@@ -243,7 +245,7 @@ void playMap::loadMap(int saveNum)
 	HANDLE file;
 	DWORD read;
 
-	
+	/*
 	string tmp = TEXT("map/");
 	string tmp1 = _saveFile[saveNum].fileName;
 
@@ -257,9 +259,9 @@ void playMap::loadMap(int saveNum)
 	tmp.push_back('m');
 	tmp.push_back('a');
 	tmp.push_back('p');
-	
+	*/
 
-	file = CreateFile(tmp.c_str(), GENERIC_READ, 0, NULL,
+	file = CreateFile(DATABASE->getSaveName().c_str(), GENERIC_READ, 0, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _mapSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
@@ -342,22 +344,22 @@ void playMap::loadMap(int saveNum)
 				{
 				case 1:
 					build.img = IMAGEMANAGER->findImage("obstacle_1x1");
-					build.imgShadow = IMAGEMANAGER->findImage("ostacle_1x1_shadow");
+					build.imgShadow = IMAGEMANAGER->findImage("obstacle_1x1_shadow");
 					break;
 
 				case 2:
 					build.img = IMAGEMANAGER->findImage("obstacle_2x2");
-					build.imgShadow = IMAGEMANAGER->findImage("ostacle_2x2_shadow");
+					build.imgShadow = IMAGEMANAGER->findImage("obstacle_2x2_shadow");
 					break;
 
 				case 3:
 					build.img = IMAGEMANAGER->findImage("obstacle_4x4");
-					build.imgShadow = IMAGEMANAGER->findImage("ostacle_4x4_shadow");
+					build.imgShadow = IMAGEMANAGER->findImage("obstacle_4x4_shadow");
 					break;
 
 				case 4:
 					build.img = IMAGEMANAGER->findImage("obstacle_6x4");
-					build.imgShadow = IMAGEMANAGER->findImage("ostacle_6x4_shadow");
+					build.imgShadow = IMAGEMANAGER->findImage("obstacle_6x4_shadow");
 					break;
 
 				}
