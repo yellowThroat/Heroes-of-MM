@@ -9,6 +9,7 @@ private:
 	POINT _playCamera;
 	tagSaveInfo _vBuildSaveInfo[MAXTILE][MAXTILE];
 	SAVE _saveFile[MAXSAVE];
+	image* _miniMap;
 
 public:
 

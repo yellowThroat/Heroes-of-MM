@@ -106,6 +106,7 @@ HRESULT mapTool::init(void)
 	_selectMenu = MENU_NULL;
 	_categoryLarge = CATE_NULL;
 	_categorySmall = SMC_NULL;
+	_idleTerrain = TILE_WATER;
 	_mapX = _mapY = 0;
 	_inputDelayX = _inputDelayY = 0;
 	_mouseArr.x = ((_ptMouse.x - 20) / TILESIZE) + (int)_mapX / TILESIZE;
@@ -127,7 +128,7 @@ HRESULT mapTool::init(void)
 	_vLoot.clear();
 
 	//============== R E C T   M A K E =====================
-	_miniMap = RectMake(836, WINSIZEY - 226, 216, 216);
+	_miniMap = RectMake(872, WINSIZEY - 226, 144, 144);
 	_miniView = RectMake(_miniMap.left, _miniMap.top, 72, 54);
 	_largeCategory = RectMake(808, 108, 242, 32);
 	_smallCategory = RectMake(808, 150, 242, 32);
@@ -221,6 +222,7 @@ void mapTool::render(void)
 	//====================== C O N F I R M =====================
 	windowDraw();
 
+
 }
 
 void mapTool::goMain(void)
@@ -245,6 +247,8 @@ void mapTool::newMap(void)
 	_changeName = false;
 	_saveAndLoad = false;
 	_confirm = false;
+
+
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -318,6 +322,10 @@ void mapTool::saveMap(void)
 
 void mapTool::saveMap(string fileName)
 {
+	string tmp2;
+	tmp2 = fileName;
+	screenShot(fileName.c_str());
+
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		for (int j = 0; j < MAXTILE; j++)
@@ -365,22 +373,22 @@ void mapTool::saveMap(string fileName)
 		//================ Building ===================
 		if (_vBuild[i].camp != CAMP_NULL)
 		{
-			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 1000;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = ELEMENTCAMP;
 			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type +=(int)_vBuild[i].camp;
 		}
 		else if (_vBuild[i].mine != MINE_NULL)
 		{
-			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 100;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = ELEMENTMINE;
 			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += (int)_vBuild[i].mine;
 		}
 		else if (_vBuild[i].ev != EV_NULL)
 		{
-			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 10;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = ELEMENTEVENT;
 			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += (int)_vBuild[i].ev;
 		}
 		else
 		{
-			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = 2000;
+			_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type = ELEMENTOBS;
 			switch (_vBuild[i].img->getFrameWidth()/TILESIZE)
 			{
 			case 1: _vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].type += 1;
@@ -553,7 +561,7 @@ void mapTool::loadMap(string fileName)
 
 
 			//====================== load vBuild =======================
-			if (_vBuildSaveInfo[i][j].type >= 2000)
+			if ((_vBuildSaveInfo[i][j].type & ELEMENTOBS) == ELEMENTOBS)
 			{
 				building build;
 				ZeroMemory(&build, sizeof(building));
@@ -570,7 +578,7 @@ void mapTool::loadMap(string fileName)
 				build.imgX = _vBuildSaveInfo[i][j].imgX;
 				build.imgY = _vBuildSaveInfo[i][j].imgY;
 
-				switch (_vBuildSaveInfo[i][j].type %10)
+				switch ((_vBuildSaveInfo[i][j].type^ELEMENTOBS) %10)
 				{
 				case 1:
 					build.img = IMAGEMANAGER->findImage("obstacle_1x1");
@@ -595,7 +603,7 @@ void mapTool::loadMap(string fileName)
 				}
 				_vBuild.push_back(build);
 			}
-			else if (_vBuildSaveInfo[i][j].type > 0 && _vBuildSaveInfo[i][j].type < 2000)
+			else if (_vBuildSaveInfo[i][j].type != 0)
 			{
 				building build;
 				ZeroMemory(&build,sizeof(building));
@@ -613,9 +621,10 @@ void mapTool::loadMap(string fileName)
 				build.miniX = _vBuildSaveInfo[i][j].miniX;
 				build.campInfo = _vBuildSaveInfo[i][j].campInfo;
 
-				if (_vBuildSaveInfo[i][j].type >= 1000)
+
+				if ((_vBuildSaveInfo[i][j].type & ELEMENTCAMP ) == ELEMENTCAMP)
 				{
-					switch (_vBuildSaveInfo[i][j].type%10)
+					switch ((_vBuildSaveInfo[i][j].type ^ ELEMENTCAMP) %10)
 					{
 					case 0:
 						build.img = IMAGEMANAGER->findImage("building_castle");
@@ -626,13 +635,13 @@ void mapTool::loadMap(string fileName)
 						build.imgShadow = IMAGEMANAGER->findImage("building_dungeon_shadow");
 						break;
 					}
-					build.camp = (CAMP)(_vBuildSaveInfo[i][j].type % 10);
+					build.camp = (CAMP)((_vBuildSaveInfo[i][j].type^ELEMENTCAMP) % 10);
 
 				}
-				else if (_vBuildSaveInfo[i][j].type >= 100 && _vBuildSaveInfo[i][j].type < 1000)
+				else if ((_vBuildSaveInfo[i][j].type & ELEMENTMINE) == ELEMENTMINE)
 				{
-					build.mine = (MINE)(_vBuildSaveInfo[i][j].type % 10);
-					switch (_vBuildSaveInfo[i][j].type %10)
+					build.mine = (MINE)((_vBuildSaveInfo[i][j].type ^ ELEMENTMINE) % 10);
+					switch ((_vBuildSaveInfo[i][j].type^ELEMENTMINE) %10)
 					{
 					case 0:
 						build.img = IMAGEMANAGER->findImage("mine_gold");
@@ -666,10 +675,10 @@ void mapTool::loadMap(string fileName)
 					}
 
 				}
-				else if (_vBuildSaveInfo[i][j].type >= 10 && _vBuildSaveInfo[i][j].type < 100)
+				else if ((_vBuildSaveInfo[i][j].type & ELEMENTEVENT) == ELEMENTEVENT)
 				{
-					build.ev = (EVENT)(_vBuildSaveInfo[i][j].type % 10);
-					switch (_vBuildSaveInfo[i][j].type%10)
+					build.ev = (EVENT)((_vBuildSaveInfo[i][j].type ^ ELEMENTEVENT) % 10);
+					switch ((_vBuildSaveInfo[i][j].type^ELEMENTEVENT)%10)
 					{
 					case 0:
 						build.img = IMAGEMANAGER->findImage("ev_lvlup");
@@ -737,28 +746,27 @@ void mapTool::loadMap(string fileName)
 				build.imgY = _vLootSaveInfo[i][j].imgY;
 				build.sizeX = _vLootSaveInfo[i][j].sizeX;
 				build.sizeY = _vLootSaveInfo[i][j].sizeY;
+				build.elements = _vLootSaveInfo[i][j].type;
 				
-				if (_vLootSaveInfo[i][j].type >= 1000)
+				if ((_vLootSaveInfo[i][j].type & ELEMENTRESOURCE) == ELEMENTRESOURCE)
 				{
 					build.img = IMAGEMANAGER->findImage("resources");
 					build.imgShadow = IMAGEMANAGER->findImage("resources_shadow");
 				}
-				else if (_vLootSaveInfo[i][j].type >= 100 && _vLootSaveInfo[i][j].type < 1000)
+				else if ((_vLootSaveInfo[i][j].type & ELEMENTDUNGEON) == ELEMENTDUNGEON)
 				{
-					if (_vLootSaveInfo[i][j].type >= 200)
-					{
 						build.img = IMAGEMANAGER->findImage("unit_dungeon");
 						build.imgShadow = IMAGEMANAGER->findImage("unit_dungeon_shadow");
-					}
-					else
-					{
+				}
+				else if ((_vLootSaveInfo[i][j].type & ELEMENTCASTLE) == ELEMENTCASTLE)
+				{
 						build.img = IMAGEMANAGER->findImage("unit_castle");
 						build.imgShadow = IMAGEMANAGER->findImage("unit_castle_shadow");
-					}
+
 				}
-				else if (_vLootSaveInfo[i][j].type > 0 && _vLootSaveInfo[i][j].type <100)
+				else if ((_vLootSaveInfo[i][j].type & ELEMENTARTIFACT) == ELEMENTARTIFACT)
 				{
-					switch (_vLootSaveInfo[i][j].type/10)
+					switch ((_vLootSaveInfo[i][j].type^ELEMENTARTIFACT) / 10)
 					{
 					case 1:
 						build.img = IMAGEMANAGER->findImage("artifact_weapon");
@@ -817,6 +825,103 @@ void mapTool::loadFileList(void)
 
 	CloseHandle(file);
 
+
+}
+
+void mapTool::screenShot(string fileName)
+{
+	string tmp;
+	string tmp1 = fileName;
+
+	tmp = TEXT("map/");
+
+	for (int i = 0; i < tmp1.length(); i++)
+	{
+		tmp.push_back(tmp1.at(i));
+	}
+	tmp.push_back('.');
+	tmp.push_back('b');
+	tmp.push_back('m');
+	tmp.push_back('p');
+
+	/*
+	ShowWindow(SW_HIDE); 만약 프로그램말고 다른거 찍을경우
+
+
+	*/
+
+	//========== 스샷 찍을 DC ===========
+	HDC screenDC = getMemDC(); // GetDC(NULL)을 하게되면 CWindowDC형식으로 DC를 얻게 됨
+
+
+
+							   //========= 크기
+	int width = 144;	//::GetDeviceCaps(h_screen_dc,HORZRES); 현재 화면의 해상도를 얻는것
+	int height = 144;	//::GetDeviceCaps(h_screen_dc,VERTRES);
+
+						//============= DIB형식 정의( 비트맵 정보) ==========
+	BITMAPINFO ss;
+	ss.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	ss.bmiHeader.biWidth = width;
+	ss.bmiHeader.biHeight = height;
+	ss.bmiHeader.biPlanes = 1;
+	ss.bmiHeader.biBitCount = 24;
+	ss.bmiHeader.biCompression = BI_RGB;
+	ss.bmiHeader.biSizeImage = (((width * 24 + 31)&~31) >> 3)*height;
+	ss.bmiHeader.biXPelsPerMeter = 0;
+	ss.bmiHeader.biYPelsPerMeter = 0;
+	ss.bmiHeader.biClrImportant = 0;
+	ss.bmiHeader.biClrUsed = 0;
+
+
+	//======== DIB 내부 이미지 비트 패턴 참조할 포인터 변수래... 몰라 머야..
+	BYTE *p_image_data = NULL;
+
+
+	//======= dib 형식 정의한것으로 dib 생성
+	HBITMAP h_bitmap = ::CreateDIBSection(screenDC, &ss, DIB_RGB_COLORS, (void**)&p_image_data, 0, 0);
+
+	//======== 가상 DC를 생성 (셔플할때 temp 이용한것 처럼?)
+	HDC h_memory_dc = ::CreateCompatibleDC(screenDC);
+
+	//========= 가상 DC에 이미지를 추출할 비트캡 연결 (올드 알지?)
+	HBITMAP h_old_bitmap = (HBITMAP)::SelectObject(h_memory_dc, h_bitmap);
+
+	//======== 현재 화면 캡처
+	//======  가상DC   시작x y// 길이   높이    찍을 DC   몰라   카피한다 
+	::BitBlt(h_memory_dc, 0, 0, width, height, screenDC, 872, WINSIZEY - 226, SRCCOPY);
+
+	//======다시 올드 DC 복구
+	::SelectObject(h_memory_dc, h_old_bitmap);
+
+	//======= 가상 DC 삭제
+	DeleteDC(h_memory_dc);
+
+
+	//====== dib파일의 헤더 내용을 구성?
+	BITMAPFILEHEADER dib_format_layout;
+	ZeroMemory(&dib_format_layout, sizeof(BITMAPFILEHEADER));
+	dib_format_layout.bfType = *(WORD*)"BM";
+	dib_format_layout.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + ss.bmiHeader.biSizeImage;
+	dib_format_layout.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+
+	// DIB 파일을 생성한다.
+	FILE *p_file = fopen(tmp.c_str(), "wb");
+	if (p_file != NULL) {
+		fwrite(&dib_format_layout, 1, sizeof(BITMAPFILEHEADER), p_file);
+		fwrite(&ss, 1, sizeof(BITMAPINFOHEADER), p_file);
+		fwrite(p_image_data, 1, ss.bmiHeader.biSizeImage, p_file);
+		fclose(p_file);
+	}
+
+	// 사용했던 비트맵과 DC 를 해제한다.
+	if (NULL != h_bitmap) DeleteObject(h_bitmap);
+	if (NULL != screenDC) ::ReleaseDC(NULL, screenDC);
+
+	/*
+	ShowWindow(SW_SHOW) 화면 감춰둔거 다시 보여주기
+	*/
 
 }
 
@@ -1911,11 +2016,24 @@ void mapTool::selectDraw(void)
 
 void mapTool::miniDraw(void)
 {
-	IMAGEMANAGER->findImage("minimap")->render(getMemDC(), _miniMap.left-2, _miniMap.top-2);
+	switch (_idleTerrain)
+	{
+	case TILE_GREEN:
+		IMAGEMANAGER->findImage("minimap_green")->render(getMemDC(), _miniMap.left - 2, _miniMap.top - 2);
+		break;
+	case TILE_WATER:
+		IMAGEMANAGER->findImage("minimap")->render(getMemDC(), _miniMap.left - 2, _miniMap.top - 2);
+		break;
+	case TILE_VOLCANO:
+		IMAGEMANAGER->findImage("minimap_volcano")->render(getMemDC(), _miniMap.left - 2, _miniMap.top - 2);
+		break;
+	case TILE_SNOW:
+		break;
+	}
 
 	if (!_foldMini)
 	{
-		IMAGEMANAGER->findImage("down")->frameRender(getMemDC(), _miniMap.left - 30, WINSIZEY - 40);
+		IMAGEMANAGER->findImage("down")->frameRender(getMemDC(), _miniMap.left - 50, WINSIZEY - 40);
 		if (_miniMap.top == WINSIZEY - 226 && _categoryLarge != CATE_NULL && _categorySmall != SMC_NULL)
 		{
 			IMAGEMANAGER->findImage("left")->frameRender(getMemDC(), 903, 335);
@@ -1925,7 +2043,7 @@ void mapTool::miniDraw(void)
 	}
 	else
 	{
-		IMAGEMANAGER->findImage("up")->frameRender(getMemDC(), _miniMap.left - 30, WINSIZEY - 40);
+		IMAGEMANAGER->findImage("up")->frameRender(getMemDC(), _miniMap.left - 50, WINSIZEY - 40);
 		if (((_categoryLarge == CATE_OBS && _categorySmall == SMC_TWO)||
 			(_categoryLarge == CATE_UNIT && _categorySmall == SMC_ONE))
 			&& _miniMap.top > WINSIZEY-50)
@@ -2000,10 +2118,13 @@ void mapTool::miniDraw(void)
 		}
 
 	}
+	if (!_saveAndLoad)
+	{
+		if(MAXTILE == 72) IMAGEMANAGER->findImage("miniView72")->render(getMemDC(), _miniView.left, _miniView.top);
+		else
+		IMAGEMANAGER->findImage("miniView36")->render(getMemDC(), _miniView.left, _miniView.top);
 
-	if(MAXTILE == 72) IMAGEMANAGER->findImage("miniView72")->render(getMemDC(), _miniView.left, _miniView.top);
-	else
-	IMAGEMANAGER->findImage("miniView36")->render(getMemDC(), _miniView.left, _miniView.top);
+	}
 
 
 
@@ -2111,10 +2232,10 @@ void mapTool::buttonDraw(void)
 	IMAGEMANAGER->findImage("button_looting")->frameRender(getMemDC(), _largeCategory.left + 168, _largeCategory.top);
 	IMAGEMANAGER->findImage("button_unit")->frameRender(getMemDC(), _largeCategory.left + 210, _largeCategory.top);
 
-	IMAGEMANAGER->findImage("button_ma")->frameRender(getMemDC(), _miniMap.left - 20 + _menuLength, _miniMap.top - 42);
-	IMAGEMANAGER->findImage("button_re")->frameRender(getMemDC(), _miniMap.left +22 + _menuLength, _miniMap.top - 42);
-	IMAGEMANAGER->findImage("button_save")->frameRender(getMemDC(), _miniMap.right-54 - _menuLength, _miniMap.top - 42);
-	IMAGEMANAGER->findImage("button_load")->frameRender(getMemDC(), _miniMap.right -12 - _menuLength, _miniMap.top - 42);
+	IMAGEMANAGER->findImage("button_ma")->frameRender(getMemDC(), _miniMap.left - 60 + _menuLength, _miniMap.top - 42);
+	IMAGEMANAGER->findImage("button_re")->frameRender(getMemDC(), _miniMap.left -18 + _menuLength, _miniMap.top - 42);
+	IMAGEMANAGER->findImage("button_save")->frameRender(getMemDC(), _miniMap.right-14 - _menuLength, _miniMap.top - 42);
+	IMAGEMANAGER->findImage("button_load")->frameRender(getMemDC(), _miniMap.right +28 - _menuLength, _miniMap.top - 42);
 
 	switch (_categoryLarge)
 	{
@@ -3456,7 +3577,7 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 		break;
 	case MINE_IRON:
 		build.img = IMAGEMANAGER->findImage("mine_iron");
-		build.imgShadow = IMAGEMANAGER->findImage("empty");
+		build.imgShadow = NULL;
 		build.sizeX = 3;
 		build.sizeY = 2;
 		build.destX = arrX - 1;
@@ -4028,34 +4149,35 @@ void mapTool::addLooting(int arrX, int arrY)
 		build.sizeY = 1;
 		build.sourX = _saveIndex.x;
 		build.sourY = _saveIndex.y;
-		build.elements = 1000 + _saveIndex.x + 3 * _saveIndex.y;
+		build.elements = ELEMENTRESOURCE + _saveIndex.x + 3 * _saveIndex.y;
 		break;
 
 	case SMC_ONE:
+		build.elements = ELEMENTARTIFACT;
 		switch (_saveIndex.y + _page*2)
 		{
 		case 0:
 			build.img = IMAGEMANAGER->findImage("artifact_weapon");
-			build.elements = 10;
+			build.elements += 10;
 		break;
 		case 1:
 			build.img = IMAGEMANAGER->findImage("artifact_armor");
-			build.elements = 20;
+			build.elements += 20;
 
 		break;
 		case 2:
 			build.img = IMAGEMANAGER->findImage("artifact_helmet");
-			build.elements = 30;
+			build.elements += 30;
 
 		break;
 		case 3:
 			build.img = IMAGEMANAGER->findImage("artifact_shield");
-			build.elements = 40;
+			build.elements += 40;
 
 		break;
 		case 4:
 			build.img = IMAGEMANAGER->findImage("artifact_acc");
-			build.elements = 50;
+			build.elements += 50;
 
 		break;
 		}
@@ -4146,28 +4268,28 @@ void mapTool::addUnit(int arrX, int arrY)
 			build.img = IMAGEMANAGER->findImage("unit_castle");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_castle_shadow");
 			build.sourY = _saveIndex.y + _page * 2;
-			build.elements = CASTLE;
+			build.elements = ELEMENTCASTLE;
 		}
 		else if (_page >= 2 && !_foldMini)
 		{
 			build.img = IMAGEMANAGER->findImage("unit_dungeon");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_dungeon_shadow");
 			build.sourY = _saveIndex.y + (_page - 2) * 2;
-			build.elements = DUNGEON;
+			build.elements = ELEMENTDUNGEON;
 		}
 		else if(_page == 0 && _foldMini)
 		{
 			build.img = IMAGEMANAGER->findImage("unit_castle");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_castle_shadow");
 			build.sourY = _saveIndex.y;
-			build.elements = CASTLE;
+			build.elements = ELEMENTCASTLE;
 		}
 		else if (_page == 1 && _foldMini)
 		{
 			build.img = IMAGEMANAGER->findImage("unit_dungeon");
 			build.imgShadow = IMAGEMANAGER->findImage("unit_dungeon_shadow");
 			build.sourY = _saveIndex.y;
-			build.elements = DUNGEON;
+			build.elements = ELEMENTDUNGEON;
 		}
 
 		if(build.sourX == 0 || build.sourX ==2) build.elements += TIERONE;
@@ -5331,7 +5453,7 @@ void mapTool::inputCommon(void)
 			if (IMAGEMANAGER->findImage("down")->getFrameX() == 1)
 			{
 				IMAGEMANAGER->findImage("down")->setFrameX(0);
-				if (PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+				if (PtInRect(&RectMake(_miniMap.left - 50, WINSIZEY - 40, 21, 21), _ptMouse))
 				{
 					_page = 0;
 					_foldMini = true;
@@ -5344,7 +5466,7 @@ void mapTool::inputCommon(void)
 			if (IMAGEMANAGER->findImage("up")->getFrameX() == 1)
 			{
 				IMAGEMANAGER->findImage("up")->setFrameX(0);
-				if (PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+				if (PtInRect(&RectMake(_miniMap.left - 50, WINSIZEY - 40, 21, 21), _ptMouse))
 				{
 					_page = 0;
 					_foldMini = false;
@@ -5522,7 +5644,7 @@ void mapTool::inputCommon(void)
 		if (IMAGEMANAGER->findImage("button_ma")->getFrameX() == 1)
 		{
 			IMAGEMANAGER->findImage("button_ma")->setFrameX(0);
-			if (PtInRect(&RectMake(_miniMap.left - 20 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+			if (PtInRect(&RectMake(_miniMap.left - 60 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_confirm = true;
 				_currentConfirm = CON_ANY;
@@ -5533,7 +5655,7 @@ void mapTool::inputCommon(void)
 		if (IMAGEMANAGER->findImage("button_re")->getFrameX() == 1)
 		{
 			IMAGEMANAGER->findImage("button_re")->setFrameX(0);
-			if (PtInRect(&RectMake(_miniMap.left + 22 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+			if (PtInRect(&RectMake(_miniMap.left - 28 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_confirm = true;
 				_currentConfirm = CON_ANY;
@@ -5543,7 +5665,7 @@ void mapTool::inputCommon(void)
 		if (IMAGEMANAGER->findImage("button_save")->getFrameX() == 1)
 		{
 			IMAGEMANAGER->findImage("button_save")->setFrameX(0);
-			if (PtInRect(&RectMake(_miniMap.right - 54 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+			if (PtInRect(&RectMake(_miniMap.right - 14 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_selectMenu = MENU_SAVE;
 				_saveAndLoad = true;
@@ -5552,7 +5674,7 @@ void mapTool::inputCommon(void)
 		if (IMAGEMANAGER->findImage("button_load")->getFrameX() == 1)
 		{
 			IMAGEMANAGER->findImage("button_load")->setFrameX(0);
-			if (PtInRect(&RectMake(_miniMap.right - 12 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+			if (PtInRect(&RectMake(_miniMap.right + 28 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 			{
 				_confirm = true;
 				_currentConfirm = CON_ANY;
@@ -6253,19 +6375,19 @@ void mapTool::inputOnUI(void)
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		//================= P U S H  M E N U ======================
-		if (PtInRect(&RectMake(_miniMap.left - 20 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+		if (PtInRect(&RectMake(_miniMap.left - 60 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("button_ma")->setFrameX(1);
 		}
-		if (PtInRect(&RectMake(_miniMap.left + 22 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+		if (PtInRect(&RectMake(_miniMap.left -28 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("button_re")->setFrameX(1);
 		}
-		if (PtInRect(&RectMake(_miniMap.right - 54 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+		if (PtInRect(&RectMake(_miniMap.right -14 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("button_save")->setFrameX(1);
 		}
-		if (PtInRect(&RectMake(_miniMap.right -12 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+		if (PtInRect(&RectMake(_miniMap.right + 28 - _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("button_load")->setFrameX(1);
 		}
@@ -6392,11 +6514,11 @@ void mapTool::inputOnUI(void)
 
 		//================= P U S H   A R R O W ===================
 
-		if (!_foldMini && PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+		if (!_foldMini && PtInRect(&RectMake(_miniMap.left - 50, WINSIZEY - 40, 21, 21), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("down")->setFrameX(1);
 		}
-		if (_foldMini && PtInRect(&RectMake(_miniMap.left - 30, WINSIZEY - 40, 21, 21), _ptMouse))
+		if (_foldMini && PtInRect(&RectMake(_miniMap.left - 50, WINSIZEY - 40, 21, 21), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("up")->setFrameX(1);
 		}

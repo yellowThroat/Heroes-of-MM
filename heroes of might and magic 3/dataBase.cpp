@@ -6,7 +6,7 @@ dataBase::~dataBase() {}
 
 HRESULT	dataBase::init()
 {
-
+	_miniMap = new image;
 	_saveNum = 0;
 	_playCamera.x = _playCamera.y = 0;
 	loadFileList();
@@ -34,6 +34,25 @@ void dataBase::setSaveName(string saveName)
 	tmp.push_back('p');
 
 	_saveFileName = tmp;
+	
+	tmp.clear();
+
+	tmp = TEXT("map/");
+	for (int i = 0; i < saveName.length(); i++)
+	{
+		tmp.push_back(saveName.at(i));
+	}
+
+	tmp.push_back('.');
+	tmp.push_back('b');
+	tmp.push_back('m');
+	tmp.push_back('p');
+	
+
+
+	
+
+	IMAGEMANAGER->addImage("play_miniMap", tmp.c_str(), 144, 144,true,RGB(255,0,255));
 }
 
 

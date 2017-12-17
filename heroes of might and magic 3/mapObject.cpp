@@ -25,7 +25,9 @@ void mapObject::update(void)
 	for ( _viObject = _vObject.begin(); _viObject != _vObject.end(); ++_viObject)
 	{
 
-		if (_count %10 == 0)
+		if (_count %10 == 0 && 
+			((_viObject->type & ELEMENTMINE)== ELEMENTMINE||
+			(_viObject->type & ELEMENTEVENT)== ELEMENTEVENT))
 		{
 			
 			_viObject->indexX++;
@@ -85,18 +87,18 @@ void mapObject::loadObject(void)
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
-			if (_vBuildSaveInfo[i][j].type >= 100 && _vBuildSaveInfo[i][j].type < 1000)
+			if ((_vBuildSaveInfo[i][j].type&ELEMENTMINE) == ELEMENTMINE )
 			{
 				tagMapObject object;
 				ZeroMemory(&object, sizeof(tagMapObject));
 
 				object.img = IMAGEMANAGER->findImage("game_mine");
 				object.shadowImg = IMAGEMANAGER->findImage("game_mine_shadow");
-				object.mine = (MINE)(_vBuildSaveInfo[i][j].type % 10);
+				object.mine = (MINE)((_vBuildSaveInfo[i][j].type^ELEMENTMINE) % 10);
 				object.point.x =i;
 				object.point.y = j;
 				object.indexX = 0;
-				object.indexY = _vBuildSaveInfo[i][j].type % 10;
+				object.indexY = (_vBuildSaveInfo[i][j].type^ELEMENTMINE) % 10;
 				object.visit = false;
 				object.enterX = _vBuildSaveInfo[i][j].enterX;
 				object.enterY = _vBuildSaveInfo[i][j].enterY;
@@ -106,18 +108,18 @@ void mapObject::loadObject(void)
 
 				_vObject.push_back(object);
 			}
-			else if (_vBuildSaveInfo[i][j].type >= 10 && _vBuildSaveInfo[i][j].type < 100)
+			else if ((_vBuildSaveInfo[i][j].type & ELEMENTEVENT) == ELEMENTEVENT)
 			{
 				tagMapObject object;
 				ZeroMemory(&object, sizeof(tagMapObject));
 
 				object.img = IMAGEMANAGER->findImage("game_ev");
 				object.shadowImg = IMAGEMANAGER->findImage("game_ev_shadow");
-				object.ev = (EVENT)(_vBuildSaveInfo[i][j].type % 10);
+				object.ev = (EVENT)((_vBuildSaveInfo[i][j].type^ELEMENTEVENT) % 10);
 				object.point.x = i;
 				object.point.y = j;
 				object.indexX = 0;
-				object.indexY = _vBuildSaveInfo[i][j].type % 10;
+				object.indexY = (_vBuildSaveInfo[i][j].type^ELEMENTEVENT) % 10;
 				object.visit = false;
 				object.enterX = _vBuildSaveInfo[i][j].enterX;
 				object.enterY = _vBuildSaveInfo[i][j].enterY;
@@ -129,7 +131,7 @@ void mapObject::loadObject(void)
 
 			}
 
-			if (_vLootSaveInfo[i][j].type >= 1000)
+			if ((_vLootSaveInfo[i][j].type & ELEMENTRESOURCE) == ELEMENTRESOURCE)
 			{
 				tagMapObject object;
 				ZeroMemory(&object, sizeof(tagMapObject));
@@ -149,7 +151,7 @@ void mapObject::loadObject(void)
 				_vObject.push_back(object);
 
 			}
-			else if (_vLootSaveInfo[i][j].type < 100 && _vLootSaveInfo[i][j].type >= 10)
+			else if ((_vLootSaveInfo[i][j].type & ELEMENTARTIFACT) == ELEMENTARTIFACT )
 			{
 				tagMapObject object;
 				ZeroMemory(&object, sizeof(tagMapObject));
@@ -164,7 +166,7 @@ void mapObject::loadObject(void)
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
-				switch (_vLootSaveInfo[i][j].type /10)
+				switch ((_vLootSaveInfo[i][j].type ^ ELEMENTARTIFACT) /10)
 				{
 				case 1:
 					object.img = IMAGEMANAGER->findImage("artifact_weapon");
@@ -194,7 +196,7 @@ void mapObject::loadObject(void)
 				_vObject.push_back(object);
 
 			}
-			else if (_vLootSaveInfo[i][j].type < 1000 && _vLootSaveInfo[i][j].type >= 100)
+			else if ((_vLootSaveInfo[i][j].type & ELEMENTCASTLE) == ELEMENTCASTLE )
 			{
 				tagMapObject object;
 				ZeroMemory(&object, sizeof(tagMapObject));
@@ -209,21 +211,36 @@ void mapObject::loadObject(void)
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
-				switch (_vLootSaveInfo[i][j].type / 100)
-				{
-				case 1:
-					object.img = IMAGEMANAGER->findImage("unit_castle");
-					object.shadowImg = IMAGEMANAGER->findImage("unit_castle_shadow");
-					break;
-				case 2:
-					object.img = IMAGEMANAGER->findImage("unit_dungeon");
-					object.shadowImg = IMAGEMANAGER->findImage("unit_dungeon_shadow");
-					break;
-				}
+				object.img = IMAGEMANAGER->findImage("unit_castle");
+				object.shadowImg = IMAGEMANAGER->findImage("unit_castle_shadow");
 
 
 
 				_vObject.push_back(object);
+
+			}
+			else if((_vLootSaveInfo[i][j].type & ELEMENTDUNGEON) == ELEMENTDUNGEON)
+			{
+				tagMapObject object;
+				ZeroMemory(&object, sizeof(tagMapObject));
+
+				object.point.x = i;
+				object.point.y = j;
+				object.indexX = _vLootSaveInfo[i][j].sourX;
+				object.indexY = _vLootSaveInfo[i][j].sourY;
+				object.visit = false;
+				object.enterX = i;
+				object.enterY = j;
+				object.imgX = _vLootSaveInfo[i][j].imgX;
+				object.imgY = _vLootSaveInfo[i][j].imgY;
+				object.type = _vLootSaveInfo[i][j].type;
+				object.img = IMAGEMANAGER->findImage("unit_dungeon");
+				object.shadowImg = IMAGEMANAGER->findImage("unit_dungeon_shadow");
+
+
+
+				_vObject.push_back(object);
+
 
 			}
 

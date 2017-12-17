@@ -4,7 +4,7 @@
 
 #define MAXTILE 72
 
-#define MINISIZE (216 / MAXTILE)
+#define MINISIZE (144 / MAXTILE)
 
 #define SHADOWALPHA 150
 
@@ -311,9 +311,16 @@ struct tagSaveInfo
 //========= 길 정 리 ==============
 #define ALL			LEFTMIDDLE		+ MIDDLETOP		+ RIGHTMIDDLE	+ MIDDLEBOTTOM
 
-//========= ELEMENTS===============
-#define CASTLE				100
-#define DUNGEON				200
+//========= ELEMENTS ===============
+#define ELEMENTCASTLE			0x00040 //크리쳐에 씀
+#define ELEMENTDUNGEON			0x00080 //크리쳐에 씀
 
-#define TIERONE				010
-#define TIERTWO				020
+#define TIERONE					010		//이제 쓰자
+#define TIERTWO					020
+
+#define ELEMENTRESOURCE			0x00020 //자원에 씀
+#define ELEMENTMINE				0x00100 //마인에 씀
+#define ELEMENTEVENT			0x00200 //이벤에 씀
+#define ELEMENTARTIFACT			0x00400 //아템에 씀
+#define ELEMENTCAMP				0x00800 //캠프에 씀
+#define ELEMENTOBS				0x01000 //옵스에 쓰자

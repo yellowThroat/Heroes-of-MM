@@ -56,7 +56,7 @@ void gameScene::update(void)
 
 	//=========== F U N C T I O N =================
 	
-	if (_ptMouse.x >= 788) _ui->input();
+	if (_ptMouse.x >= 788 || _ui->getConfig()) _ui->input();
 	else inputPlay();
 	inputCommon();
 
@@ -80,13 +80,15 @@ void gameScene::render(void)
 	//============= C L A S S   R E N D E R ===============
 	_pm->render();
 	_ob->render();
-	_ui->render();
 
-
+	_pm->attributeDraw();
 	for (int i = 0; i < _vCamp.size(); i++)
 	{
 		_vCamp[i]->render();
 	}
+
+	_ui->render();
+
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
@@ -114,11 +116,11 @@ void gameScene::loadCamp(void)
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
-			if (_vBuildSaveInfo[i][j].type >= 1000 && _vBuildSaveInfo[i][j].type < 2000)
+			if ((_vBuildSaveInfo[i][j].type & ELEMENTCAMP) == ELEMENTCAMP)
 			{
 				building build;
 				ZeroMemory(&build, sizeof(building));
-				build.camp = (CAMP)(_vBuildSaveInfo[i][j].type % 10);
+				build.camp = (CAMP)((_vBuildSaveInfo[i][j].type^ELEMENTCAMP) % 10);
 				build.mine = MINE_NULL;
 				build.ev = EV_NULL;
 				build.destX = i;
@@ -132,7 +134,7 @@ void gameScene::loadCamp(void)
 				build.miniX = _vBuildSaveInfo[i][j].miniX;
 				build.campInfo = _vBuildSaveInfo[i][j].campInfo;
 
-				switch (_vBuildSaveInfo[i][j].type % 10)
+				switch ((_vBuildSaveInfo[i][j].type^ELEMENTCAMP) % 10)
 				{
 				case 0:
 					build.img = IMAGEMANAGER->findImage("building_castle");

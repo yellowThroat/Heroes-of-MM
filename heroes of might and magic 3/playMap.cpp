@@ -70,7 +70,6 @@ void playMap::render(void)
 
 	obstacleDraw();
 
-	attributeDraw();
 
 }
 
@@ -245,22 +244,6 @@ void playMap::loadMap(int saveNum)
 	HANDLE file;
 	DWORD read;
 
-	/*
-	string tmp = TEXT("map/");
-	string tmp1 = _saveFile[saveNum].fileName;
-
-	
-	for (int i = 0; i < tmp1.size(); i++)
-	{
-		tmp.push_back(tmp1.at(i));
-	}
-
-	tmp.push_back('.');
-	tmp.push_back('m');
-	tmp.push_back('a');
-	tmp.push_back('p');
-	*/
-
 	file = CreateFile(DATABASE->getSaveName().c_str(), GENERIC_READ, 0, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -323,7 +306,7 @@ void playMap::loadMap(int saveNum)
 			_map[i][j].isClosed = _buildSaveInfo[i][j].closed;
 			_map[i][j].entrance = _buildSaveInfo[i][j].enter;
 
-			if (_vBuildSaveInfo[i][j].type >= 2000)
+			if ((_vBuildSaveInfo[i][j].type & ELEMENTOBS) ==  ELEMENTOBS)
 			{
 				building build;
 				ZeroMemory(&build, sizeof(building));
@@ -340,7 +323,7 @@ void playMap::loadMap(int saveNum)
 				build.imgX = _vBuildSaveInfo[i][j].imgX;
 				build.imgY = _vBuildSaveInfo[i][j].imgY;
 
-				switch (_vBuildSaveInfo[i][j].type % 10)
+				switch ((_vBuildSaveInfo[i][j].type^ELEMENTOBS) % 10)
 				{
 				case 1:
 					build.img = IMAGEMANAGER->findImage("obstacle_1x1");

@@ -39,6 +39,7 @@ private:
 	POINT _mouseArr;
 	POINT _cameraArr;
 	POINT _saveIndex;
+	TILE _idleTerrain;
 	RECT _corX[MAXTILE], _corY[MAXTILE];
 	RECT _miniMap;
 	RECT _miniView;
@@ -62,6 +63,7 @@ private:
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];
 	char _temp[256];
+	char _test[256];
 	
 	int _boxLength;
 	int _menuLength;
@@ -116,7 +118,7 @@ public:
 	void loadMap(string fileName);
 	void saveFileList(void);
 	void loadFileList(void);		// load Save File
-
+	void screenShot(string fileName);
 
 	//=============== C O N T E N T S =========================
 	void setTile(int arrX, int arrY, TILE tile);		// DRAW TILE

@@ -329,6 +329,23 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("game_ev_shadow", "image/mapObject/ev_shadow.bmp", 768, 960, 8, 10, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("game_ev_shadow")->AlphaInit();
 
+	//==============================  U  I =============================
+	IMAGEMANAGER->addImage("gamebutton_spell", "image/gameScene/ui/button_spell.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_hero", "image/gameScene/ui/button_nexthero.bmp", 64, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_turn", "image/gameScene/ui/button_turn.bmp", 64, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_summary", "image/gameScene/ui/button_camp_summary.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_config", "image/gameScene/ui/button_configuration.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_goon", "image/gameScene/ui/button_goon.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_config", "image/gameScene/ui/window_config.bmp", 480, 486, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_save", "image/gameScene/ui/select_save.bmp", 100, 48, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_load", "image/gameScene/ui/select_load.bmp", 100, 48, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_re", "image/gameScene/ui/select_re.bmp", 100, 48, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_main", "image/gameScene/ui/select_main.bmp", 100, 48, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_quit", "image/gameScene/ui/select_quit.bmp", 100, 48, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("gamebutton_return", "image/gameScene/ui/select_return.bmp", 100, 48, true, RGB(255, 0, 255));
+
+
+
 
 	//================ T E R R A I N ==========================
 	IMAGEMANAGER->addFrameImage("terrain", "image/mapTool/terrain_idle.bmp", 32, 32, 1, 1, true, RGB(255, 0, 255));
@@ -444,9 +461,11 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->findImage("unit_dungeon_shadow")->AlphaInit();
 
 	//================ M I N I   M A P =====================
-	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72.bmp", 72, 54, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72_.bmp", 48, 36, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("miniView36", "image/mapTool/miniView36.bmp", 144, 108, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("minimap", "image/mapTool/miniRECT.bmp", 220, 220, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("minimap", "image/mapTool/minimap_idle.bmp", 148, 148, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("minimap_green", "image/mapTool/minimap_green.bmp", 148, 148, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("minimap_volcano", "image/mapTool/minimap_volcano.bmp", 148, 148, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("miniTerrain72", "image/mapTool/miniTerrain72.bmp", 15, 15, 5, 5, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("miniTerrain36", "image/mapTool/miniTerrain36.bmp", 30, 30, 5, 5, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("miniBuilding72", "image/mapTool/miniBuilding72.bmp", 54, 18, 3, 1, true, RGB(255, 0, 255));
