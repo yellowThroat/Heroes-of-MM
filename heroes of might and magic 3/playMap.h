@@ -1,15 +1,15 @@
 #pragma once
 #include "gameNode.h"
 
-struct tagAStar
+struct tagPathFind
 {
 	int f;
 	int g;
 	int h;
-	int x, y;
-	int px, py;
-	bool operator<(const tagAStar &v) const {
-		return (f > v.f);
+	int nodeX, nodeY;
+	int parentX, parentY;
+	bool operator<(const tagPathFind &v) const {
+		return (f < v.f);
 	}
 };
 
@@ -19,8 +19,8 @@ private:
 	vector<building> _vBuild;
 	vector<building>::iterator _viBuild;
 
-	vector<tagAStar> _openlist;
-	vector<tagAStar> _closelist;
+	vector<tagPathFind> _openlist;
+	vector<tagPathFind> _closelist;
 
 private:
 	tagTileInfo _map[MAXTILE][MAXTILE];
@@ -60,23 +60,12 @@ public:
 	//============ L O A D ==============
 	void loadMap(int saveNum);
 	void loadFileList(void);
+	//============ A S T A R ==================
+	vector<POINT> getPath(int x, int y, int destX, int destY);	// 최단 경로 포인트
+	bool isClosed(int x, int y);								// 클로즈에 있는지 확인
+	bool alreadyOpend(int x, int y);
+	int openlistNum(int x, int y);
 
-	//============ A S T A R =============
-	vector<tagTileInfo> aStar(POINT currentpoint, POINT goalPoint); //a* 실행함수
-	void add_openlist(tagAStar v);									// openlist에 추가
-	tagAStar pop_openlist();										// openlist에서 pop
-	tagAStar pop_openlist(int x, int y);							// openlist에서 pop
-	tagAStar search_openlist(int x, int y);							// openlist에서 탐색
-	bool search_openlist_exsist(int x, int y);						// closelist에 있는지 여부 확인
-	void add_closelist(tagAStar v);									// cliselist에 추가
-	tagAStar pop_closelist(int x, int y);							// closelist에서 pop
-	bool search_closelist_exsist(int x, int y);						// closelist에 있는지 여부 확인
-
-	tagAStar calc_vertex(tagAStar v, tagAStar p, POINT goalPoint);	// FGH값 계산
-	void add_eightway(tagAStar v, POINT goalPoint);					// 8방향 탐색 후 추가 
-	bool check_goal();												// 목적지 탐색
-
-	
 	//============ G E T T E R ================
 	POINT getCamera() { return _camera; }
 	POINT getCameraArr() { return _cameraArr; }
