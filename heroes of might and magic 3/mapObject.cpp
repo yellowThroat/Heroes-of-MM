@@ -24,8 +24,8 @@ void mapObject::update(void)
 
 	for ( _viObject = _vObject.begin(); _viObject != _vObject.end(); ++_viObject)
 	{
-
-		if (_count %10 == 0 && 
+		
+		if ((int)(TIMEMANAGER->getWorldTime()/TIMEMANAGER->getElapsedTime())%8 ==0 && 
 			((_viObject->type & ELEMENTMINE)== ELEMENTMINE||
 			(_viObject->type & ELEMENTEVENT)== ELEMENTEVENT))
 		{
@@ -36,6 +36,7 @@ void mapObject::update(void)
 				_viObject->indexX = 0;
 			}
 		}
+
 	}
 }
 

@@ -226,7 +226,14 @@ void playMap::inputCommon(void)
 	{
 		if (_cameraArr.y > -9) _camera.y -= TILESIZE;
 	}
-	if (KEYMANAGER->isOnceKeyDown(VK_F9))
+	POINT tmp;
+	tmp.x = _camera.x;
+	tmp.y = _camera.y;
+
+	DATABASE->setPlayCamera(tmp);
+
+
+	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD1))
 	{
 		switch (_buildAttribute)
 		{
@@ -241,6 +248,7 @@ void playMap::inputCommon(void)
 
 void playMap::loadMap(int saveNum)
 {
+	
 	HANDLE file;
 	DWORD read;
 
@@ -262,7 +270,6 @@ void playMap::loadMap(int saveNum)
 			case TILE_GREEN:
 				_map[i][j].img = IMAGEMANAGER->findImage("terrain_green");
 				_map[i][j].tile = TILE_GREEN;
-
 				break;
 
 			case TILE_WATER:
@@ -275,6 +282,7 @@ void playMap::loadMap(int saveNum)
 				_map[i][j].tile = TILE_VOLCANO;
 				break;
 			}
+
 			_map[i][j].miniX = _mapSaveInfo[i][j].miniX;
 			_map[i][j].miniY = _mapSaveInfo[i][j].miniY;
 			_map[i][j].sourX = _mapSaveInfo[i][j].sourX;
@@ -351,7 +359,6 @@ void playMap::loadMap(int saveNum)
 
 		}
 	}
-
 
 
 	CloseHandle(file);

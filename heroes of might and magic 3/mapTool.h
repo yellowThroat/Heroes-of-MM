@@ -33,7 +33,7 @@ private:
 	FIRST _categoryLarge;
 	SECOND _categorySmall;
 	SELECTMENU _selectMenu;
-	CONFIRM _currentConfirm;
+	CONFIRM _currentConfirm;	
 
 	string _tmp;
 	POINT _mouseArr;
@@ -59,6 +59,7 @@ private:
 	bool _confirm;
 	bool _saveAndLoad;
 	bool _changeName;
+	bool _newMap;
 
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];
@@ -111,7 +112,7 @@ public:
 
 	//=============== M E N U ================
 	void goMain(void);				// Main Menu
-	void newMap(void);				// New Map
+	void newMap(TILE idleTerrain);				// New Map
 	void saveMap(void);				// save Map
 	void loadMap(void);				// load Map
 	void saveMap(string fileName);

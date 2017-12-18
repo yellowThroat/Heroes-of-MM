@@ -72,5 +72,29 @@ void dataBase::loadFileList(void)
 	ReadFile(file, _saveFile, sizeof(SAVE)*MAXSAVE, &read, NULL);
 
 	CloseHandle(file);
+	
+	for (int i = 0; i < MAXSAVE; i++)
+	{
+		string tmp;
+		tmp = TEXT("map/");
+
+		for (int j = 0; j < _saveFile[i].fileName.size(); j++)
+		{
+			tmp.push_back(_saveFile[i].fileName.at(j));
+		}
+
+		tmp.push_back('.');
+		tmp.push_back('b');
+		tmp.push_back('m');
+		tmp.push_back('p');
+
+	
+
+
+		
+		char tmp1[10];
+		IMAGEMANAGER->addImage(itoa(i, tmp1, 10), tmp.c_str(), 144, 144, true, RGB(255, 0, 255));
+		int a = 0;
+	}
 
 }

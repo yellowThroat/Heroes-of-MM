@@ -83,6 +83,7 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="camp.h" />
     <ClInclude Include="castle.h" />
+    <ClInclude Include="cleric.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="commonMacroFunction.h" />
     <ClInclude Include="dataBase.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="iniDataManager.h" />
     <ClInclude Include="keyAniManager.h" />
     <ClInclude Include="keyManager.h" />
+    <ClInclude Include="knight.h" />
     <ClInclude Include="loading.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mainMenu.h" />
@@ -125,11 +127,13 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camp.cpp" />
     <ClCompile Include="castle.cpp" />
+    <ClCompile Include="cleric.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="dataBase.cpp" />
     <ClCompile Include="dungeon.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
+    <ClCompile Include="fieldAstar.cpp" />
     <ClCompile Include="gameNode.cpp" />
     <ClCompile Include="gameScene.cpp" />
     <ClCompile Include="hero.cpp" />
@@ -138,6 +142,7 @@
     <ClCompile Include="iniDataManager.cpp" />
     <ClCompile Include="keyAniManager.cpp" />
     <ClCompile Include="keyManager.cpp" />
+    <ClCompile Include="knight.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mainMenu.cpp" />

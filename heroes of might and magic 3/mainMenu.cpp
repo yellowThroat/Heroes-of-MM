@@ -314,6 +314,8 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("fade", "image/ui/fade.bmp", 1100, 600, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("fade")->AlphaInit();
 	
+	//===================== U I ===============================
+	
 	//===================== G A M E S C E N E ============================
 	IMAGEMANAGER->addImage("gameUI", "image/gameScene/ui/gameUI.bmp", 1100, 600, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("gameMiniview", "image/gameScene/ui/miniView72.bmp", 48, 36, true, RGB(255, 0, 255));
@@ -328,7 +330,16 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("game_ev", "image/mapObject/ev.bmp", 768, 960, 8, 10, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("game_ev_shadow", "image/mapObject/ev_shadow.bmp", 768, 960, 8, 10, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("game_ev_shadow")->AlphaInit();
+	
 
+	//===================== H E R O =================
+	IMAGEMANAGER->addFrameImage("hero_castle", "image/gameScene/hero/hero_castle.bmp", 864, 512, 9, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("hero_castle_shadow", "image/gameScene/hero/hero_castle_shadow.bmp", 864, 512, 9, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("hero_dungeon", "image/gameScene/hero/hero_dungeon.bmp", 864, 512, 9, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("hero_dungeon_shadow", "image/gameScene/hero/hero_dungeon_shadow.bmp", 864, 512, 9, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("hero_flag", "image/gameScene/hero/hero_flag.bmp", 192, 512, 2, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("hero_castle_shadow")->AlphaInit();
+	IMAGEMANAGER->findImage("hero_dungeon_shadow")->AlphaInit();
 	//==============================  U  I =============================
 	IMAGEMANAGER->addImage("gamebutton_spell", "image/gameScene/ui/button_spell.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("gamebutton_hero", "image/gameScene/ui/button_nexthero.bmp", 64, 32, true, RGB(255, 0, 255));
@@ -602,6 +613,6 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("changeName", "image/mapTool/changeName.bmp", 360, 26, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("changeName")->AlphaInit();
 	IMAGEMANAGER->addImage("save_confirm", "image/mapTool/savebox.bmp", 419, 180, true, RGB(255, 0, 255));
-
+	IMAGEMANAGER->addFrameImage("tile_select", "image/mapTool/tileSelect.bmp", 256, 512, 1, 4, true, RGB(255, 0, 255));
 
 }

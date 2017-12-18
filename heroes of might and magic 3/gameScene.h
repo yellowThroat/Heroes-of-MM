@@ -5,13 +5,15 @@
 #include "castle.h"
 #include "dungeon.h"
 #include "mapObject.h"
+#include "player.h"
 
 class gameScene : public gameNode
 {
 private:
-	playMap* _pm;
-	ui* _ui;
-	mapObject* _ob;
+	mapObject*		_ob;
+	playMap*		_pm;
+	player*			_player;
+	ui*				_ui;
 
 
 private:
@@ -45,6 +47,7 @@ public:
 	//=========== L O A D   M A P ==========
 	void loadMap();
 	void loadCamp();
+	//void clearCamp();
 
 	//=========== O B J E C T ==============
 	void addCamp(tagBuildingInfo info);

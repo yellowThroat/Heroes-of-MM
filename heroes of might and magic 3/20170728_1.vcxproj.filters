@@ -171,9 +171,6 @@
     <ClInclude Include="loading.h">
       <Filter>2DGameFramework\loading</Filter>
     </ClInclude>
-    <ClInclude Include="infoHomm.h">
-      <Filter>MainGame</Filter>
-    </ClInclude>
     <ClInclude Include="mapTool.h">
       <Filter>MainGame\mapToolScene</Filter>
     </ClInclude>
@@ -209,6 +206,15 @@
     </ClInclude>
     <ClInclude Include="mapObject.h">
       <Filter>MainGame\gameScene\mapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="knight.h">
+      <Filter>MainGame\gameScene\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="cleric.h">
+      <Filter>MainGame\gameScene\hero</Filter>
+    </ClInclude>
+    <ClInclude Include="infoHomm.h">
+      <Filter>MainGame\dataBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +322,15 @@
     </ClCompile>
     <ClCompile Include="mapObject.cpp">
       <Filter>MainGame\gameScene\mapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="knight.cpp">
+      <Filter>MainGame\gameScene\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="cleric.cpp">
+      <Filter>MainGame\gameScene\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="fieldAstar.cpp">
+      <Filter>MainGame\gameScene\map</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

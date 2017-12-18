@@ -49,7 +49,8 @@ void ui::render(void)
 
 void ui::draw(void)
 {
-	IMAGEMANAGER->findImage("play_miniMap")->render(getMemDC(),	817,24);
+	char tmp[10];
+	IMAGEMANAGER->findImage(itoa(DATABASE->getSaveNum(),tmp,10))->render(getMemDC(),817,24);
 
 	IMAGEMANAGER->findImage("gameMiniview")->render(getMemDC(),
 		_miniMapRect.left + _pm->getCameraArr().x * 2,

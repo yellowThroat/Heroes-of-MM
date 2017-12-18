@@ -163,4 +163,20 @@ namespace IOTA_UTIL
 
 	*/
 
+	void frameCycle(image* img, int delay)
+	{
+		if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % delay == 0)
+		{
+			img->setFrameX(img->getFrameX() + 1);
+
+			if (img->getFrameX() >= img->getMaxFrameX())
+			{
+				img->setFrameX(0);
+			}
+		}
+	}
+
+
+
 }
+

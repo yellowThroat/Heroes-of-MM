@@ -23,10 +23,11 @@ HRESULT mainGame::init(void)
 	SCENEMANAGER->addScene("gameScene", new gameScene);
 
 	SCENEMANAGER->changeScene("mainMenu");
-
+	ShowCursor(false);
 
 	//============== A D D R E S S   L I N K ===================
-	
+	IMAGEMANAGER->addImage("mouse_idle", "image/ui/mouse/mouse_idle.bmp", 10, 18, true, RGB(255, 0, 255));
+
 	
 
 	return S_OK;
@@ -42,7 +43,7 @@ void mainGame::update(void)
 {
 	gameNode::update();
 	TIMEMANAGER->getElapsedTime();
-	if (KEYMANAGER->isOnceKeyDown(VK_F10)) {
+	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD0)) {
 		switch (_option)
 		{
 		case true:
@@ -69,7 +70,7 @@ void mainGame::render(void)
 	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, BLACKNESS);
 	//==============================================================
 	SCENEMANAGER->render();
-
+	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 	//========================================================================
 	if(_option)TIMEMANAGER->render(getMemDC());

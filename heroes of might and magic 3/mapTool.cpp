@@ -12,7 +12,6 @@ HRESULT mapTool::init(void)
 
 
 	//======================  F U N C T I O N =================
-	loadImg();
 
 	//============================================================
 	for (int i = 0; i < MAXTILE; i++)
@@ -124,6 +123,7 @@ HRESULT mapTool::init(void)
 	_confirm = false;
 	_saveAndLoad = false;
 	_changeName = false;
+	_newMap = false;
 	_vBuild.clear();
 	_vLoot.clear();
 
@@ -162,7 +162,7 @@ void mapTool::update(void)
 
 
 	//================= F U N C T I O N ==========================
-	if (!_confirm && !_saveAndLoad)
+	if (!_confirm && !_saveAndLoad && !_newMap)
 	{
 		setCor();
 		cameraMove();
@@ -230,11 +230,12 @@ void mapTool::goMain(void)
 	SCENEMANAGER->changeScene("mainMenu");
 }
 
-void mapTool::newMap(void)
+void mapTool::newMap(TILE idleTerrain)
 {
 	_vBuild.clear();
 	_vLoot.clear();
-
+	
+	_idleTerrain = idleTerrain;
 	_categoryLarge = CATE_NULL;
 	_categorySmall = SMC_NULL;
 	_saveIndex.x = 0;
@@ -254,17 +255,41 @@ void mapTool::newMap(void)
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
+			int ran = RND->getInt(20);
 			ZeroMemory(&_mapArr[i][j], sizeof(tagTileInfo));
-			_mapArr[i][j].tile = TILE_WATER;
-			_mapArr[i][j].miniX = 1;
-			_mapArr[i][j].miniY = 0;
 			_mapArr[i][j].destX = i;
 			_mapArr[i][j].destY = j;
-			_mapArr[i][j].sourX = 0;
-			_mapArr[i][j].sourY = 0;
-			_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_water");
 			_mapArr[i][j].miniImg = IMAGEMANAGER->findImage("miniTerrain72");
 			_mapArr[i][j].isChanged = false;
+			_mapArr[i][j].miniY = 0;
+			_mapArr[i][j].sourY = 0;
+
+			switch (_idleTerrain)
+			{
+			case TILE_GREEN:
+				_mapArr[i][j].tile = TILE_GREEN;
+				_mapArr[i][j].miniX = 0;
+				if(ran) _mapArr[i][j].sourX = RND->getInt(4);
+				else _mapArr[i][j].sourX = 4+ RND->getInt(4);
+				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_green");
+
+
+				break;
+			case TILE_WATER:
+			_mapArr[i][j].tile = TILE_WATER;
+			_mapArr[i][j].miniX = 1;
+			_mapArr[i][j].sourX = 0;
+			_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_water");
+
+				break;
+			case TILE_VOLCANO:
+				_mapArr[i][j].tile = TILE_VOLCANO;
+				_mapArr[i][j].miniX = 2;
+				if (ran) _mapArr[i][j].sourX = RND->getInt(4);
+				else _mapArr[i][j].sourX = 4 + RND->getInt(4);
+				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_volcano");
+				break;
+			}
 		}
 	}
 
@@ -475,6 +500,9 @@ void mapTool::loadMap(void)
 
 void mapTool::loadMap(string fileName)
 {
+	int green, water, volcano;
+	green = water = volcano = 0;
+
 
 	this->init();
 
@@ -514,17 +542,20 @@ void mapTool::loadMap(string fileName)
 			case TILE_GREEN:
 				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_green");
 				_mapArr[i][j].tile = TILE_GREEN;
+				green++;
 
 			break;
 			
 			case TILE_WATER:
 				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_water");
 				_mapArr[i][j].tile = TILE_WATER;
+				water++;
 				break;
 			
 			case TILE_VOLCANO:
 				_mapArr[i][j].img = IMAGEMANAGER->findImage("terrain_volcano");
 				_mapArr[i][j].tile = TILE_VOLCANO;
+				volcano++;
 				break;
 			}
 			_mapArr[i][j].miniX = _mapSaveInfo[i][j].miniX;
@@ -795,6 +826,10 @@ void mapTool::loadMap(string fileName)
 		}
 	}
 
+	if (green > water && green > volcano) _idleTerrain = TILE_GREEN;
+	else if (water > green && water > volcano) _idleTerrain = TILE_WATER;
+	else if (volcano > green && volcano > water) _idleTerrain = TILE_VOLCANO;
+
 
 
 	CloseHandle(file);
@@ -922,6 +957,8 @@ void mapTool::screenShot(string fileName)
 	/*
 	ShowWindow(SW_SHOW) 화면 감춰둔거 다시 보여주기
 	*/
+
+	DATABASE->loadFileList();
 
 }
 
@@ -2059,7 +2096,28 @@ void mapTool::miniDraw(void)
 	{
 		for (int j = 0; j < MAXTILE; j++)
 		{
+			switch (_idleTerrain)
+			{
+			case TILE_GREEN:
+				if (MAXTILE == 72)
+				{
+					if (_mapArr[i][j].tile != TILE_GREEN)
+						IMAGEMANAGER->findImage("miniTerrain72")->frameRender(getMemDC(),
+							_miniMap.left + i * MINISIZE, _miniMap.top + j * MINISIZE,
+							_mapArr[i][j].miniX, _mapArr[i][j].miniY);
 
+				}
+				else
+				{
+					if (_mapArr[i][j].tile != TILE_GREEN)
+						IMAGEMANAGER->findImage("miniTerrain36")->frameRender(getMemDC(),
+							_miniMap.left + i * MINISIZE, _miniMap.top + j * MINISIZE,
+							_mapArr[i][j].miniX, _mapArr[i][j].miniY);
+
+				}
+
+				break;
+			case TILE_WATER:
 			if (MAXTILE == 72)
 			{
 				if(_mapArr[i][j].tile != TILE_WATER)
@@ -2075,6 +2133,28 @@ void mapTool::miniDraw(void)
 						_miniMap.left + i * MINISIZE, _miniMap.top + j * MINISIZE,
 						_mapArr[i][j].miniX, _mapArr[i][j].miniY);
 
+			}
+
+				break;
+			case TILE_VOLCANO:
+				if (MAXTILE == 72)
+				{
+					if (_mapArr[i][j].tile != TILE_VOLCANO)
+						IMAGEMANAGER->findImage("miniTerrain72")->frameRender(getMemDC(),
+							_miniMap.left + i * MINISIZE, _miniMap.top + j * MINISIZE,
+							_mapArr[i][j].miniX, _mapArr[i][j].miniY);
+
+				}
+				else
+				{
+					if (_mapArr[i][j].tile != TILE_VOLCANO)
+						IMAGEMANAGER->findImage("miniTerrain36")->frameRender(getMemDC(),
+							_miniMap.left + i * MINISIZE, _miniMap.top + j * MINISIZE,
+							_mapArr[i][j].miniX, _mapArr[i][j].miniY);
+
+				}
+
+				break;
 			}
 		}
 	}
@@ -2694,6 +2774,11 @@ void mapTool::windowDraw(void)
 		SetTextColor(getMemDC(), RGB(0, 0, 0));
 		break;
 		}		
+	}
+
+	if (_newMap)
+	{
+		IMAGEMANAGER->findImage("tile_select")->frameRender(getMemDC(), 266, 236);
 	}
 	
 	IMAGEMANAGER->findImage("window_save")->render(getMemDC(),
@@ -4831,6 +4916,29 @@ void mapTool::setCor(void)
 
 void mapTool::inputWindow(void)
 {
+	//====================== W I N D O W ================
+
+	if (_newMap)
+	{
+		if (PtInRect(&RectMake(281, 289, 64, 64), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("tile_select")->setFrameY(1);
+		}
+		else if (PtInRect(&RectMake(362, 289, 64, 64), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("tile_select")->setFrameY(2);
+		}
+		else if (PtInRect(&RectMake(447, 289, 64, 64), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("tile_select")->setFrameY(3);
+		}
+		else
+		{
+			IMAGEMANAGER->findImage("tile_select")->setFrameY(0);
+		}
+	}
+
+
 	if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 	{
 		_saveNum++;
@@ -4936,6 +5044,25 @@ void mapTool::inputWindow(void)
 
 	if(KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
+		if (_newMap)
+		{
+			if (PtInRect(&RectMake(281, 289, 64, 64), _ptMouse))
+			{
+				newMap(TILE_WATER);
+			}
+			else if (PtInRect(&RectMake(362, 289, 64, 64), _ptMouse))
+			{
+				newMap(TILE_GREEN);
+			}
+			else if (PtInRect(&RectMake(447, 289, 64, 64), _ptMouse))
+			{
+				newMap(TILE_VOLCANO);
+			}
+
+			_newMap = false;
+		}
+
+
 		if (_confirm && _currentConfirm == CON_SAVE)
 		{
 			if (PtInRect(&RectMake(_confirmBox.left + 180, _confirmBox.top + 124, 58, 26), _ptMouse))
@@ -4956,7 +5083,8 @@ void mapTool::inputWindow(void)
 					SCENEMANAGER->changeScene("mainMenu");
 					break;
 				case MENU_RESTART:
-					newMap();
+					_newMap = true;
+					//newMap();
 					break;
 				case MENU_SAVE:
 					break;
@@ -5007,10 +5135,6 @@ void mapTool::inputWindow(void)
 
 		}
 
-
-
-
-
 		if (_saveAndLoad && _ptMouse.x >= 450)
 		{
 			_saveAndLoad = false;
@@ -5034,6 +5158,7 @@ void mapTool::inputWindow(void)
 			}
 		}
 
+
 	}
 }
 
@@ -5047,7 +5172,7 @@ void mapTool::inputCommon(void)
 		_saveIndex.y = 0;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_F9))
+	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD1))
 	{
 		switch (_buildAttribute)
 		{

@@ -6,16 +6,18 @@ gameScene::~gameScene(){}
 
 HRESULT gameScene::init(void)
 {
+	_vCamp.clear();
 	//============= A L L O C A T I O N ===================
 	_pm = new playMap;						// 플레이 하는 맵
 	_ui = new ui;							// 플레이시 ui
 	_ob = new mapObject;					// 플레이시 나올 맵 오브젝트
+	_player = new player;
 
 	//============= L O A D   I N F O ================
 	loadMap();
 	loadCamp();
 	
-
+	
 
 
 	//============= I N I T I A L I Z E ============
@@ -24,15 +26,15 @@ HRESULT gameScene::init(void)
 
 
 
-
 	//============= ADDRESS LINK====================
 	_ui->setPlayMapAddressLink(_pm);
-
+	_ui->setgameSceneAddressLink(this);
 
 	//============= C L A S S   I N I T ==================
 	_pm->init();
 	_ui->init();
 	_ob->init();
+	_player->init(0);
 
 	//=============== T E S T ==================
 
@@ -71,7 +73,7 @@ void gameScene::update(void)
 	_pm->update();
 	_ui->update();
 	_ob->update();
-	
+	_player->update();
 	
 }
 
@@ -80,12 +82,14 @@ void gameScene::render(void)
 	//============= C L A S S   R E N D E R ===============
 	_pm->render();
 	_ob->render();
-
+	
 	_pm->attributeDraw();
 	for (int i = 0; i < _vCamp.size(); i++)
 	{
 		_vCamp[i]->render();
 	}
+
+	_player->render();
 
 	_ui->render();
 

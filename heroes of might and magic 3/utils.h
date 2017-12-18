@@ -28,8 +28,10 @@ namespace IOTA_UTIL
 	//숫자 적는 함수
 	void NumberMacro(HDC hdc, int num, int x, int y, int su);	
 
-	//이미지 회전 프레임
+	//이미지 회전 프레임     이미지		몇분할	 어떤각		  X 축으로 돔?	시계방향임?
 	void frameRotation(image* img, int division, float angle, bool frameX, bool clockwise);
+
+	void frameCycle(image* img, int delay);
 
 	//올림
 	int getRise(int x, int division);
