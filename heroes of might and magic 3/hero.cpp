@@ -73,13 +73,14 @@ void hero::pathDraw(void)
 	
 	
 	//============== Áß°£Á¡
-	for (int i = 0; i < _vPath.size(); i++)
+	for (int i = 0; i < _vDraw.size(); i++)
 	{
-		if (_vPath.size() > 1 && i != _vPath.size() - 1 && i !=0)
-		IMAGEMANAGER->findImage("path_middle")->frameRender(getMemDC(),
-			_vPath[i].x *TILESIZE - DATABASE->getPlayCamera().x,
-			_vPath[i].y *TILESIZE - DATABASE->getPlayCamera().y,
-			(int)(atan2f(_vPath[i+1].y - _vPath[i-1].y, _vPath[i + 1].x - _vPath[i - 1].x)*24/2/PI), 0);
+
+		if (_vDraw.size() > 1 && i != _vDraw.size() - 1 && i != 0)
+			IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
+				(_vDraw[i].point.x )*TILESIZE - DATABASE->getPlayCamera().x,
+				(_vDraw[i].point.y )*TILESIZE - DATABASE->getPlayCamera().y,
+				_vDraw[i].indexX, _vDraw[i].indexY);
 	}
 
 	
@@ -170,3 +171,174 @@ void hero::setAngle(void)
 	frameRotation(_myHero.field, 8, _myHero.angle, false, true);
 }
 
+void hero::setPath(vPath path)
+{
+	 _vPath = path; 
+	 _vPath.erase(_vPath.begin()); 
+	 _vDraw.clear();
+
+	 for (int i = 0; i < _vPath.size()-2; i++)
+	 {
+		 if (i == 0) continue;
+		 
+		 tagPathDraw p;
+		 ZeroMemory(&p, sizeof(tagPathDraw));
+		 p.point.x  = _vPath[i].x;
+		 p.point.y = _vPath[i].y;
+
+		 int previous = 0;
+		 int next =0;
+		
+		 int tmp0, tmp1;
+		 tmp0 = _vPath[i].x - _vPath[i-1].x;
+		 tmp1 = _vPath[i].y - _vPath[i-1].y;
+
+		 switch (tmp0)
+		 {
+		 case -1:
+			 switch (tmp1)
+			 {
+			 case -1: previous = 1;
+				 break;
+			 case 0: previous = 2;
+				 break;
+			 case 1: previous = 3;
+				 break;
+			 }
+			 break;
+		 case 0:
+			 switch (tmp1)
+			 {
+			 case -1: previous = 4;
+				 break;
+			 case 0:
+				 break;
+			 case 1:previous = 5;
+				 break;
+			 }
+			 break;
+		 case 1:
+			 switch (tmp1)
+			 {
+			 case -1:previous = 6;
+				 break;
+			 case 0:previous = 7;
+				 break;
+			 case 1:previous = 8;
+				 break;
+			 }
+			 break;
+		 }
+	
+		 tmp0 = _vPath[i+1].x - _vPath[i].x;
+		 tmp1 = _vPath[i+1].y - _vPath[i].y;
+
+		 switch (tmp0)
+		 {
+		 case -1:
+			 switch (tmp1)
+			 {
+			 case -1: previous = 1;
+				 break;
+			 case 0: previous = 2;
+				 break;
+			 case 1: previous = 3;
+				 break;
+			 }
+			 break;
+		 case 0:
+			 switch (tmp1)
+			 {
+			 case -1: previous = 4;
+				 break;
+			 case 0:
+				 break;
+			 case 1:previous = 5;
+				 break;
+			 }
+			 break;
+		 case 1:
+			 switch (tmp1)
+			 {
+			 case -1:previous = 6;
+				 break;
+			 case 0:previous = 7;
+				 break;
+			 case 1:previous = 8;
+				 break;
+			 }
+			 break;
+		 }
+
+
+		 if (previous == 1)
+		 {
+			 p.indexY = 7;
+			 if (next == 8) p.indexX = 0;
+			 if (next == 5) p.indexX = 1;
+			 if (next == 7) p.indexX = 2;
+		 }
+		 if (previous == 2)
+		 {
+			 p.indexY = 1;
+			 if (next == 7) p.indexX = 0;
+			 if (next == 6) p.indexX = 1;
+			 if (next == 8) p.indexX = 2;
+		 }
+		 if (previous == 3)
+		 {
+			 p.indexY = 5;
+			 if (next == 6) p.indexX = 0;
+			 if (next == 4) p.indexX = 1;
+			 if (next == 7) p.indexX = 2;
+		 }
+		 if (previous == 4)
+		 {
+			 p.indexY = 4;
+			 if (next == 5) p.indexX = 0;
+			 if (next == 8) p.indexX = 1;
+			 if (next == 3) p.indexX = 2;
+		 }
+		 if (previous == 5)
+		 {
+			 p.indexY = 3;
+			 if (next == 4) p.indexX = 0;
+			 if (next == 6) p.indexX = 1;
+			 if (next == 1) p.indexX = 2;
+		 }
+		 if (previous == 6)
+		 {
+			 p.indexY = 8;
+			 if (next == 3) p.indexX =0 ;
+			 if (next == 5) p.indexX =1 ;
+			 if (next == 2) p.indexX =2 ;
+		 }
+		 if (previous == 7)
+		 {
+			 p.indexY = 2;
+			 if (next == 2) p.indexX =0 ;
+			 if (next == 1) p.indexX =1 ;
+			 if (next == 3) p.indexX = 2;
+
+		 }
+		 if (previous == 8)
+		 {
+			 p.indexY = 6;
+			 if (next == 1) p.indexX =0 ;
+			 if (next == 4) p.indexX =1 ;
+			 if (next == 2) p.indexX =2 ;
+
+		 }
+
+		 _vDraw.insert(_vDraw.begin(), p);
+
+
+
+
+
+	 }
+
+	 
+
+
+}

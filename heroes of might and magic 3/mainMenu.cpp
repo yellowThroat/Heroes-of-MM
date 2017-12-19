@@ -343,7 +343,6 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("path", "image/gameScene/hero/path.bmp", 192, 288, 6, 9, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("path_middle", "image/gameScene/hero/middlePath.bmp", 768, 32, 24, 1, true, RGB(255, 0, 255));
 
-
 	//==============================  U  I =============================
 	IMAGEMANAGER->addImage("gamebutton_spell", "image/gameScene/ui/button_spell.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("gamebutton_hero", "image/gameScene/ui/button_nexthero.bmp", 64, 32, true, RGB(255, 0, 255));

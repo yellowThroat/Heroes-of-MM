@@ -3,14 +3,19 @@
 
 struct tagPathDraw
 {
-	//POINT 
+	POINT point;
+	int indexX;
+	int indexY;
 };
 
 class hero : public gameNode
 {
 private:
 	typedef vector<POINT> vPath;
+	typedef vector<tagPathDraw> vDraw;
 
+
+	vDraw _vDraw;
 	vPath _vPath;
 
 private:
@@ -50,7 +55,7 @@ public:
 
 	//============= S E T T E R =============
 	void setHeroInfo(tagHero heroInfo) { _myHero = heroInfo; }
-	void setPath(vPath path) { _vPath = path; _vPath.erase(_vPath.begin()); }
+	void setPath(vPath path);
 	void setMynum(int num) { _myNum = num; }
 	void setGoOn(bool go) { _goOn = go; }
 	hero();
