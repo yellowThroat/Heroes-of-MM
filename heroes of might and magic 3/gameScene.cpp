@@ -29,6 +29,7 @@ HRESULT gameScene::init(void)
 	//============= ADDRESS LINK====================
 	_ui->setPlayMapAddressLink(_pm);
 	_ui->setgameSceneAddressLink(this);
+	_player->setPlayMapAddressLink(_pm);
 
 	//============= C L A S S   I N I T ==================
 	_pm->init();
@@ -61,7 +62,7 @@ void gameScene::update(void)
 	if (_ptMouse.x >= 788 || _ui->getConfig()) _ui->input();
 	else inputPlay();
 	inputCommon();
-
+	_player->inputGame();
 
 	//========= C L A S S   U P D A T E=================
 	
@@ -211,5 +212,6 @@ void gameScene::inputPlay(void)
 		}
 
 	}
+
 	
 }

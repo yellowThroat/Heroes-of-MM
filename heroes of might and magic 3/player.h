@@ -48,23 +48,36 @@ typedef struct tagMyBuilding
 }myBuilding;
 
 
+class playMap;
 
 class player : public gameNode
 {
 private:
+	playMap* _pm;
+
+private:
 	typedef vector<hero*> vHero;
 	typedef vector<hero*>::iterator vHeroIter;
+
+	typedef vector<POINT> vPath;
 
 	vHero _vHero;
 	vHeroIter _viHero;
 
+	vPath _vPath;
+
 private:
 	myProperty _myProperty;
 	myBuilding _myBuilding;
-	
+	POINT _mouseArr;
+	POINT _destination;
+
 private:
+	bool _readyMove;
 	bool _myTurn;
 	int _myNum;
+	int _currentHero;
+
 
 public:
 
@@ -72,6 +85,9 @@ public:
 	void release(void);
 	void update(void);
 	void render(void);
+	
+	void inputGame(void);
+	void camera(void);
 
 
 
@@ -83,6 +99,13 @@ public:
 	//=========== G E T T E R ===============
 	bool getTurn() { return _myTurn; }
 	int getNum() { return _myNum; }
+	vPath getPath() { return _vPath; }
+
+	//=========== ADDRESS LINK===============
+	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
+
+
+
 	player();
 	~player();
 };

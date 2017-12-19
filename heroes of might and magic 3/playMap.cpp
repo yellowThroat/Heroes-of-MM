@@ -69,9 +69,8 @@ void playMap::render(void)
 	roadDraw();
 
 	obstacleDraw();
-
-
 }
+
 
 void playMap::tileDraw(void)
 {

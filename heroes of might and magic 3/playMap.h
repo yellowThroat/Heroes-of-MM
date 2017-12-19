@@ -13,14 +13,20 @@ struct tagPathFind
 	}
 };
 
+class playMap;
+
 class playMap : public gameNode
 {
+private:
+	playMap* _pm;
+
 private:
 	vector<building> _vBuild;
 	vector<building>::iterator _viBuild;
 
 	vector<tagPathFind> _openlist;
 	vector<tagPathFind> _closelist;
+
 
 private:
 	tagTileInfo _map[MAXTILE][MAXTILE];
@@ -64,8 +70,7 @@ public:
 	vector<POINT> getPath(int x, int y, int destX, int destY);	// 최단 경로 포인트
 	bool isClosed(int x, int y);								// 클로즈에 있는지 확인
 	bool alreadyOpend(int x, int y);
-	int openlistNum(int x, int y);
-
+	bool alreadyClosed(int x, int y);
 	//============ G E T T E R ================
 	POINT getCamera() { return _camera; }
 	POINT getCameraArr() { return _cameraArr; }
@@ -75,6 +80,7 @@ public:
 
 
 	//============ ADDRESS LINK ===============
+
 
 	playMap();
 	~playMap();

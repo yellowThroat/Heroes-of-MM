@@ -10,6 +10,7 @@ HRESULT	dataBase::init()
 	_saveNum = 0;
 	_playCamera.x = _playCamera.y = 0;
 	loadFileList();
+	_moveSpeed = 4;
 	return S_OK;
 }
 
