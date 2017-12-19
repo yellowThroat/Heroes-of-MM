@@ -74,9 +74,7 @@ void hero::pathDraw(void)
 	
 	//============== Áß°£Á¡
 	for (int i = 0; i < _vDraw.size(); i++)
-	{
-
-		if (_vDraw.size() > 1 && i != _vDraw.size() - 1 && i != 0)
+	{	
 			IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
 				(_vDraw[i].point.x )*TILESIZE - DATABASE->getPlayCamera().x,
 				(_vDraw[i].point.y )*TILESIZE - DATABASE->getPlayCamera().y,
@@ -131,7 +129,9 @@ void hero::heroMove(void)
 		frameRotation(_myHero.field, 8, _myHero.angle, false, true);
 		frameRotation(_myHero.fieldShadow, 8, _myHero.angle, false, true);
 		frameRotation(_myHero.flag, 8, _myHero.angle, false, true);
-	
+		
+
+		
 
 		_myHero.angle = atan2f(_vPath[0].y*TILESIZE +16 - (_y+16),
 			_vPath[0].x*TILESIZE + 16 - (_x+16));
@@ -144,6 +144,7 @@ void hero::heroMove(void)
 			_x = _vPath[0].x * TILESIZE;
 			_y = _vPath[0].y * TILESIZE;
 			_vPath.erase(_vPath.begin());
+			if(_vDraw.size()) _vDraw.erase(_vDraw.end()-1);
 			if (!_vPath.size()) _goOn = false;
 
 		}
@@ -171,105 +172,51 @@ void hero::setAngle(void)
 	frameRotation(_myHero.field, 8, _myHero.angle, false, true);
 }
 
-void hero::setPath(vPath path)
-{
+void hero::setPath(vPath path){
+	
+	if (path.size() == 0) return;
+
 	 _vPath = path; 
 	 _vPath.erase(_vPath.begin()); 
 	 _vDraw.clear();
 
-	 for (int i = 0; i < _vPath.size()-2; i++)
+	 for (int i = 0; i <= _vPath.size()-2; i++)
 	 {
-		 if (i == 0) continue;
-		 
 		 tagPathDraw p;
 		 ZeroMemory(&p, sizeof(tagPathDraw));
-		 p.point.x  = _vPath[i].x;
+		 p.point.x = _vPath[i].x;
 		 p.point.y = _vPath[i].y;
 
 		 int previous = 0;
-		 int next =0;
-		
+		 int next = 0;
 		 int tmp0, tmp1;
-		 tmp0 = _vPath[i].x - _vPath[i-1].x;
-		 tmp1 = _vPath[i].y - _vPath[i-1].y;
 
-		 switch (tmp0)
+		 if (i == 0)
 		 {
-		 case -1:
-			 switch (tmp1)
-			 {
-			 case -1: previous = 1;
-				 break;
-			 case 0: previous = 2;
-				 break;
-			 case 1: previous = 3;
-				 break;
-			 }
-			 break;
-		 case 0:
-			 switch (tmp1)
-			 {
-			 case -1: previous = 4;
-				 break;
-			 case 0:
-				 break;
-			 case 1:previous = 5;
-				 break;
-			 }
-			 break;
-		 case 1:
-			 switch (tmp1)
-			 {
-			 case -1:previous = 6;
-				 break;
-			 case 0:previous = 7;
-				 break;
-			 case 1:previous = 8;
-				 break;
-			 }
-			 break;
-		 }
-	
-		 tmp0 = _vPath[i+1].x - _vPath[i].x;
-		 tmp1 = _vPath[i+1].y - _vPath[i].y;
+			 tmp0 = _pointArr.x - _vPath[0].x;
+			 tmp1 = _pointArr.y - _vPath[0].y;
 
-		 switch (tmp0)
+			 previous = getDirection(tmp0, tmp1);
+			 
+			 tmp0 = _vPath[1].x - _vPath[0].x;
+			 tmp1 = _vPath[1].y - _vPath[0].y;
+			 
+			 next = getDirection(tmp0, tmp1);
+
+		 }
+		 else if (i!=0 )
 		 {
-		 case -1:
-			 switch (tmp1)
-			 {
-			 case -1: previous = 1;
-				 break;
-			 case 0: previous = 2;
-				 break;
-			 case 1: previous = 3;
-				 break;
-			 }
-			 break;
-		 case 0:
-			 switch (tmp1)
-			 {
-			 case -1: previous = 4;
-				 break;
-			 case 0:
-				 break;
-			 case 1:previous = 5;
-				 break;
-			 }
-			 break;
-		 case 1:
-			 switch (tmp1)
-			 {
-			 case -1:previous = 6;
-				 break;
-			 case 0:previous = 7;
-				 break;
-			 case 1:previous = 8;
-				 break;
-			 }
-			 break;
-		 }
+			 tmp0 = _vPath[i-1].x - _vPath[i].x;
+			 tmp1 = _vPath[i-1].y - _vPath[i].y;
 
+			 previous = getDirection(tmp0, tmp1);
+
+			 tmp0 = _vPath[i + 1].x - _vPath[i].x;
+			 tmp1 = _vPath[i + 1].y - _vPath[i].y;
+
+			 next = getDirection(tmp0, tmp1);
+
+		 }
 
 		 if (previous == 1)
 		 {
@@ -330,15 +277,57 @@ void hero::setPath(vPath path)
 
 		 }
 
+
+
+
 		 _vDraw.insert(_vDraw.begin(), p);
-
-
-
-
-
 	 }
+}
 
-	 
+int hero::getDirection(int x, int y)
+{
+	int retunNum =0;
 
+	
+
+
+	switch (x)
+	{
+	case -1:
+		switch (y)
+		{
+		case -1: retunNum = 1;
+			break;
+		case 0: retunNum = 2;
+			break;
+		case 1: retunNum = 3;
+			break;
+		}
+		break;
+	case 0:
+		switch (y)
+		{
+		case -1: retunNum = 4;
+			break;
+		case 0:
+			break;
+		case 1:retunNum = 5;
+			break;
+		}
+		break;
+	case 1:
+		switch (y)
+		{
+		case -1:retunNum = 6;
+			break;
+		case 0:retunNum = 7;
+			break;
+		case 1:retunNum = 8;
+			break;
+		}
+		break;
+	}
+
+	return retunNum;
 
 }

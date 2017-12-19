@@ -3599,6 +3599,7 @@ void mapTool::addBuilding(int arrX, int arrY, CAMP camp)
 	}
 	//================= 입구 설정
 	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].isClosed = false;
 
 
 
@@ -3739,6 +3740,7 @@ void mapTool::addBuilding(int arrX, int arrY, MINE mine)
 
 	//================ 입구 설정
 	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].isClosed = false;
 
 	_vBuild.push_back(build);
 }
@@ -3910,6 +3912,7 @@ void mapTool::addBuilding(int arrX, int arrY, EVENT ev)
 
 	//================ 입구 설정
 	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].isClosed = false;
 
 	_vBuild.push_back(build);
 

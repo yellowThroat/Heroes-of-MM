@@ -55,6 +55,18 @@ void player::camera(void)
 {
 	_mouseArr.x = (_ptMouse.x + DATABASE->getPlayCamera().x) / TILESIZE;
 	_mouseArr.y = (_ptMouse.y + DATABASE->getPlayCamera().y) / TILESIZE;
+
+	for ( _viHero = _vHero.begin(); _viHero != _vHero.end(); ++_viHero)
+	{
+		if ((*_viHero)->getGoOn())
+		{
+			POINT point;
+			point.y = ((*_viHero)->getHeroPoint().y - 9)*TILESIZE;
+
+			_pm->setCamera(point);
+		}
+
+	}
 }
 
 void player::addHero(POINT point,tagHero heroInfo)
@@ -90,10 +102,11 @@ void player::inputGame(void)
 			}
 
 			else  if (_mouseArr.x == _destination.x &&
-				_mouseArr.y == _destination.y && !_vHero[i]->getGoOn())
+				_mouseArr.y == _destination.y && !_vHero[i]->getGoOn() &&
+				_vHero[i]->getPath().size())
 			{
 				_vHero[i]->setGoOn(true);
-				//_readyMove = false;
+				
 			}
 
 		}		

@@ -47,9 +47,11 @@ public:
 	void setAngle(void);
 	void setCordinate(void);
 	void heroMove(void);
+	int getDirection(int x, int y);
 	//============= G E T T E R  ============
 	tagHero getHeroInfo() { return _myHero; }
 	POINT getHeroPoint() { return _pointArr; }
+	vPath getPath() { return _vPath; }
 	int getMyNum() { return _myNum; }
 	bool getGoOn() { return _goOn; }
 
