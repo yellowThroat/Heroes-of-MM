@@ -34,8 +34,9 @@ HRESULT playMap::init()
 	loadFileList();
 	loadMap(DATABASE->getSaveNum());
 
-	_camera.x = 0;
-	_camera.y = 0;
+	_cameraX = 0;
+	_cameraY = 0;
+
 
 	_cameraArr.x = 0;
 	_cameraArr.y = 0;
@@ -75,15 +76,15 @@ void playMap::render(void)
 void playMap::tileDraw(void)
 {
 	IMAGEMANAGER->findImage("game_background")->loopRender(getMemDC(),
-		&RectMake(0, 0, 788, 600), _camera.x, _camera.y);
+		&RectMake(0, 0, 788, 600), _cameraX , _cameraY);
 	IMAGEMANAGER->findImage("edge_left")->render(getMemDC(),
-		-32 - _camera.x, -32 - _camera.y);
+		-32 - _cameraX, -32 - _cameraY);
 	IMAGEMANAGER->findImage("edge_right")->render(getMemDC(),
-		2304 - _camera.x, -32 - _camera.y);
+		2304 - _cameraX, -32 - _cameraY);
 	IMAGEMANAGER->findImage("edge_top")->render(getMemDC(),
-		-32 - _camera.x, -32 - _camera.y);
+		-32 - _cameraX, -32 - _cameraY);
 	IMAGEMANAGER->findImage("edge_bottom")->render(getMemDC(),
-		-32 - _camera.x, 2304 - _camera.y);
+		-32 - _cameraX, 2304 - _cameraY);
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -92,8 +93,8 @@ void playMap::tileDraw(void)
 			if(i - _cameraArr.x >= MINCAMERA && i - _cameraArr.x < MAXCAMERAX &&
 				j - _cameraArr.y >=MINCAMERA && j - _cameraArr.y < MAXCAMERAY)
 			_map[i][j].img->frameRender(getMemDC(),
-				(_map[i][j].destX - _cameraArr.x) * TILESIZE,
-				(_map[i][j].destY- _cameraArr.y) * TILESIZE,
+				_map[i][j].destX* TILESIZE - _cameraX ,
+				_map[i][j].destY* TILESIZE - _cameraY ,
 				_map[i][j].sourX, _map[i][j].sourY);
 		}
 	}
@@ -112,8 +113,8 @@ void playMap::roadDraw(void)
 			{
 				if(_road[i][j].img != NULL)
 				_road[i][j].img->frameRender(getMemDC(),
-					(_road[i][j].destX - _cameraArr.x) * TILESIZE,
-					(_road[i][j].destY - _cameraArr.y) * TILESIZE,
+					_road[i][j].destX* TILESIZE - _cameraX ,
+					_road[i][j].destY* TILESIZE - _cameraY ,
 					_road[i][j].sourX, _road[i][j].sourY);
 
 			}
@@ -130,14 +131,14 @@ void playMap::obstacleDraw(void)
 			_viBuild->destY - _cameraArr.y > MINCAMERA && _viBuild->destY - _cameraArr.y < MAXCAMERAY)
 		{
 			_viBuild->img->frameRender(getMemDC(),
-				(_viBuild->destX - _viBuild->imgX) * TILESIZE - _camera.x,
-				(_viBuild->destY - _viBuild->imgY) * TILESIZE - _camera.y,
+				(_viBuild->destX - _viBuild->imgX) * TILESIZE - _cameraX,
+				(_viBuild->destY - _viBuild->imgY) * TILESIZE - _cameraY,
 				_viBuild->sourX, _viBuild->sourY);
 
 			if (_viBuild->imgShadow != NULL)
 				_viBuild->imgShadow->alphaFrameRender(getMemDC(),
-					(_viBuild->destX - _viBuild->imgX) * TILESIZE - _camera.x,
-					(_viBuild->destY - _viBuild->imgY) * TILESIZE - _camera.y,
+					(_viBuild->destX - _viBuild->imgX) * TILESIZE - _cameraX,
+					(_viBuild->destY - _viBuild->imgY) * TILESIZE - _cameraY,
 					_viBuild->sourX, _viBuild->sourY, SHADOWALPHA);
 
 		}
@@ -158,10 +159,10 @@ void playMap::attributeDraw(void)
 				{
 					if (_map[i][j].isClosed)
 						IMAGEMANAGER->findImage("closed")->render(getMemDC(),
-							i*TILESIZE - _camera.x, j*TILESIZE - _camera.y);
+							i*TILESIZE - _cameraX, j*TILESIZE - _cameraY);
 					if (_map[i][j].entrance)
 						IMAGEMANAGER->findImage("enter")->render(getMemDC(),
-							i*TILESIZE - _camera.x, j*TILESIZE - _camera.y);
+							i*TILESIZE - _cameraX, j*TILESIZE - _cameraY);
 
 				}
 
@@ -184,10 +185,11 @@ void playMap::attributeDraw(void)
 
 void playMap::cameraMove(void)
 {
-	_cameraArr.x = _camera.x / TILESIZE;
-	_cameraArr.y = _camera.y / TILESIZE;
+	_cameraArr.x = _cameraX / TILESIZE;
+	_cameraArr.y = _cameraY / TILESIZE;
 
-	DATABASE->setPlayCamera(_camera);
+	DATABASE->setPlayCameraX(_cameraX);
+	DATABASE->setPlayCameraY(_cameraY);
 
 
 }
@@ -211,25 +213,23 @@ void playMap::inputCommon(void)
 {
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
 	{
-		if (_cameraArr.x > -12) _camera.x -= TILESIZE;		
+		if (_cameraArr.x > -12) _cameraX -= TILESIZE;		
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
-		if (_cameraArr.x < 59) _camera.x += TILESIZE;
+		if (_cameraArr.x < 59) _cameraX += TILESIZE;
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
 	{
-		if (_cameraArr.y < 62) _camera.y += TILESIZE;
+		if (_cameraArr.y < 62) _cameraY += TILESIZE;
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_UP))
 	{
-		if (_cameraArr.y > -9) _camera.y -= TILESIZE;
+		if (_cameraArr.y > -9) _cameraY -= TILESIZE;
 	}
-	POINT tmp;
-	tmp.x = _camera.x;
-	tmp.y = _camera.y;
 
-	DATABASE->setPlayCamera(tmp);
+	DATABASE->setPlayCameraX(_cameraX);
+	DATABASE->setPlayCameraY(_cameraY);
 
 
 	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD1))

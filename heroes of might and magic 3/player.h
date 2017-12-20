@@ -75,8 +75,10 @@ private:
 private:
 	bool _readyMove;
 	bool _myTurn;
+	bool _cityScene;
 	int _myNum;
 	int _currentHero;
+	int _currentCamp;
 
 
 public:
@@ -86,8 +88,22 @@ public:
 	void update(void);
 	void render(void);
 	
+
+	//=============== U P D A T E ============
+	void fieldUpdate(void);
+	void cityUpdate(void);
+
+
+
+	//================ D R A W ===========
+	void cityScene(void);
+	void fieldScene(void);
+
 	void inputGame(void);
 	void camera(void);
+
+	//================ E N T E R ===========
+	void enterCity(void);
 
 
 
@@ -99,8 +115,14 @@ public:
 	//=========== G E T T E R ===============
 	bool getTurn() { return _myTurn; }
 	int getNum() { return _myNum; }
+	int getCurrentCamp() { return _currentCamp; }
 	vPath getPath() { return _vPath; }
+	bool getScene() { return _cityScene; }
+	vHero getHero() { return _vHero; }
 
+	//=========== S E T T E R ===============
+	void setScene(bool scene) { _cityScene = scene; }
+	void setCurrentCamp(int camp) { _currentCamp = camp; }
 	//=========== ADDRESS LINK===============
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
 

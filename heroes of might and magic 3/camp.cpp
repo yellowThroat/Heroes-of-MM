@@ -17,6 +17,10 @@ HRESULT camp::init(building info)
 	_buildingInfo = info;
 	buildingInit();
 
+	_fieldPoint.x = _buildingInfo.destX + _buildingInfo.enterX;
+	_fieldPoint.y = _buildingInfo.destY + _buildingInfo.enterY;
+
+
 	return S_OK;
 }
 
@@ -39,7 +43,11 @@ void camp::render(void)
 
 void camp::fieldDraw(void)
 {
-	
+	IMAGEMANAGER->findImage("enter")->render(getMemDC(),
+		_fieldPoint.x * TILESIZE - DATABASE->getPlayCameraX(),
+		_fieldPoint.y * TILESIZE - DATABASE->getPlayCameraY());
+
+
 	if (_buildingInfo.destX - _buildingInfo.imgX - _cameraArr.x >= -8 &&
 		_buildingInfo.destX + _buildingInfo.sizeX / 2 - _cameraArr.x <= 32 &&
 		_buildingInfo.destY - _buildingInfo.imgY - _cameraArr.y >= -6 &&
@@ -48,13 +56,13 @@ void camp::fieldDraw(void)
 		if (_fort <= 2)
 		{
 			_fieldImg->frameRender(getMemDC(),
-				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCamera().x,
-				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCamera().y,
+				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCameraX(),
+				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCameraY(),
 				_fort, 0);
 
 			_fieldShadowImg->alphaFrameRender(getMemDC(),
-				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCamera().x,
-				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCamera().y,
+				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCameraX(),
+				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCameraY(),
 				_fort, 0,190);
 
 		}
@@ -62,12 +70,12 @@ void camp::fieldDraw(void)
 		else
 		{
 			_fieldImg->frameRender(getMemDC(),
-				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCamera().x,
-				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCamera().y,
+				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCameraX(),
+				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCameraY(),
 				2, 0);
 			_fieldShadowImg->alphaFrameRender(getMemDC(),
-				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCamera().x,
-				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCamera().y,
+				(_buildingInfo.destX - _buildingInfo.imgX)*TILESIZE - DATABASE->getPlayCameraX(),
+				(_buildingInfo.destY - _buildingInfo.imgY)*TILESIZE - DATABASE->getPlayCameraY(),
 				2, 0,190);
 
 		}
@@ -79,7 +87,7 @@ void camp::fieldDraw(void)
 
 void camp::castleDraw(void)
 {
-
+	IMAGEMANAGER->findImage("castle_back")->render(getMemDC());
 }
 
 void camp::dungeonDraw(void)
@@ -156,10 +164,10 @@ void camp::buildingCondition(void)
 
 void camp::cameraSetting(void)
 {
-	_camera.x = DATABASE->getPlayCamera().x;
-	_camera.y = DATABASE->getPlayCamera().y;
+	_cameraX = DATABASE->getPlayCameraX();
+	_cameraY = DATABASE->getPlayCameraY();
 
-	_cameraArr.x = _camera.x / TILESIZE;
-	_cameraArr.y = _camera.y / TILESIZE;
+	_cameraArr.x = _cameraX / TILESIZE;
+	_cameraArr.y = _cameraY / TILESIZE;
 
 }

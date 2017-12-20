@@ -4149,7 +4149,7 @@ void mapTool::addObstacle(int arrX, int arrY)
 			}
 			else 
 			{
-				ranNum0 = RND->getInt(20);
+				ranNum0 = RND->getInt(40);
 				if (_buildArr[build.destX][build.destY].isClosed && ranNum0 >0) return;
 			
 				build.img = IMAGEMANAGER->findImage("obstacle_4x4");

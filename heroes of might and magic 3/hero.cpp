@@ -14,6 +14,8 @@ HRESULT hero::init(POINT point, tagHero hero)
 	_y = _pointArr.y * TILESIZE;
 	_myTurn = false;
 	_goOn = false;
+	_moveEnd = false;
+	_isInCamp = false;
 
 	return S_OK;
 }
@@ -61,61 +63,58 @@ void hero::render(void)
 
 void hero::pathDraw(void)
 {
-	
+	/*
 	for (int i = 0; i < _vPath.size(); i++)
 	{
 		Rectangle(getMemDC(),
-			_vPath[i].x * TILESIZE - DATABASE->getPlayCamera().x + 8,
-			_vPath[i].y * TILESIZE - DATABASE->getPlayCamera().y + 8,
-			_vPath[i].x * TILESIZE - DATABASE->getPlayCamera().x + 24,
-			_vPath[i].y * TILESIZE - DATABASE->getPlayCamera().y + 24);
+			_vPath[i].x * TILESIZE - DATABASE->getPlayCameraX() + 8,
+			_vPath[i].y * TILESIZE - DATABASE->getPlayCameraY() + 8,
+			_vPath[i].x * TILESIZE - DATABASE->getPlayCameraX() + 24,
+			_vPath[i].y * TILESIZE - DATABASE->getPlayCameraY() + 24);
 	}
-	
+	*/
 	
 	//============== 중간점
 	for (int i = 0; i < _vDraw.size(); i++)
 	{	
 			IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
-				(_vDraw[i].point.x )*TILESIZE - DATABASE->getPlayCamera().x,
-				(_vDraw[i].point.y )*TILESIZE - DATABASE->getPlayCamera().y,
+				(_vDraw[i].point.x )*TILESIZE - DATABASE->getPlayCameraX(),
+				(_vDraw[i].point.y )*TILESIZE - DATABASE->getPlayCameraY(),
 				_vDraw[i].indexX, _vDraw[i].indexY);
 	}
 
 	
 	//============== 도착점
 	if (_vPath.size() >= 1) IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
-		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCamera().x, 
-		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCamera().y,0,0);
+		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(), 
+		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY(),0,0);
 
 
 }
 
 void hero::fieldDraw(void)
 {
+	//============= T E S T 
+	IMAGEMANAGER->findImage("closed")->render(getMemDC(),
+		_pointArr.x*TILESIZE - DATABASE->getPlayCameraX(),
+		_pointArr.y*TILESIZE - DATABASE->getPlayCameraY());
+
 	//============= 필드 위 모습
 	_myHero.field->frameRender(getMemDC(),
-		(_x - 32)  - DATABASE->getPlayCamera().x,
-		(_y - 32)  - DATABASE->getPlayCamera().y);
+		(_x - 32)  - DATABASE->getPlayCameraX(),
+		(_y - 32)  - DATABASE->getPlayCameraY());
 		
 
 	//============= 필드 위 그림자
 	_myHero.fieldShadow->alphaFrameRender(getMemDC(),
-		(_x - 32)  - DATABASE->getPlayCamera().x,
-		(_y - 32)  - DATABASE->getPlayCamera().y,SHADOWALPHA);
+		(_x - 32)  - DATABASE->getPlayCameraX(),
+		(_y - 32)  - DATABASE->getPlayCameraY(),SHADOWALPHA);
 
 	//============= 필드 위 플래그
 	_myHero.flag->frameRender(getMemDC(),
-		(_x - 32)  - DATABASE->getPlayCamera().x,
-		(_y - 32)  - DATABASE->getPlayCamera().y,
+		(_x - 32)  - DATABASE->getPlayCameraX(),
+		(_y - 32)  - DATABASE->getPlayCameraY(),
 		_myHero.myNum, _myHero.field->getFrameY());
-
-	/*
-	//============= 필드 위 모습
-	_myHero.field->frameRender(getMemDC(),
-		_x - DATABASE->getPlayCamera().x,
-		_y - DATABASE->getPlayCamera().y,
-		_myHero.indexX, _myHero.field->getFrameY());
-	*/
 
 	
 }
@@ -145,7 +144,15 @@ void hero::heroMove(void)
 			_y = _vPath[0].y * TILESIZE;
 			_vPath.erase(_vPath.begin());
 			if(_vDraw.size()) _vDraw.erase(_vDraw.end()-1);
-			if (!_vPath.size()) _goOn = false;
+			if (!_vPath.size())
+			{
+				_pointArr.x = _x / TILESIZE;
+				_pointArr.y = _y / TILESIZE;
+
+
+				_goOn = false;
+				_moveEnd = true;
+			}
 
 		}
 		else
@@ -174,11 +181,11 @@ void hero::setAngle(void)
 
 void hero::setPath(vPath path){
 	
-	if (path.size() == 0) return;
 
 	 _vPath = path; 
-	 _vPath.erase(_vPath.begin()); 
+	if(_vPath.size()) _vPath.erase(_vPath.begin()); 
 	 _vDraw.clear();
+	if (path.size() <= 2) return;
 
 	 for (int i = 0; i <= _vPath.size()-2; i++)
 	 {

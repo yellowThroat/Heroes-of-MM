@@ -59,6 +59,8 @@ void gameScene::update(void)
 
 	//=========== F U N C T I O N =================
 	
+	enterCity();
+
 	if (_ptMouse.x >= 788 || _ui->getConfig()) _ui->input();
 	else inputPlay();
 	inputCommon();
@@ -81,22 +83,78 @@ void gameScene::update(void)
 void gameScene::render(void)
 {
 	//============= C L A S S   R E N D E R ===============
-	_pm->render();
-	_ob->render();
-	
-	_pm->attributeDraw();
-	for (int i = 0; i < _vCamp.size(); i++)
+	if (!_player->getScene())
 	{
-		_vCamp[i]->render();
+		_pm->render();
+		_ob->render();
+	
+
+		for (int i = 0; i < _vCamp.size(); i++)
+		{
+			_vCamp[i]->render();
+		}
+
+		_pm->attributeDraw();
+		_player->render();
+
+		_ui->render();
+
 	}
 
-	_player->render();
+	else
+	{
+		for (int i = 0; i < _vCamp.size(); i++)
+		{
+			if (_player->getCurrentCamp() == _vCamp[i]->getNum())
+			{
+				if (_vCamp[i]->getCityInfo().camp == CAMP_CASTLE)
+				{
+					_vCamp[i]->castleDraw();
 
-	_ui->render();
+				}
+				else if (_vCamp[i]->getCityInfo().camp == CAMP_DUNGEON)
+				{
+					_vCamp[i]->dungeonDraw();
+
+				}
+
+			}
+		}
+
+		_player->render();
+
+	}
+	
+	
 
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
+}
+
+void gameScene::enterCity(void)
+{
+	for (int i = 0; i < _vCamp.size(); i++)
+	{
+		for (int j = 0; j < _player->getHero().size(); j++)
+		{
+			//========== 영웅이 캠프의 입구에 왔는지
+			if (_player->getHero()[j]->getHeroPoint().x == _vCamp[i]->getFieldPoint().x &&
+				_player->getHero()[j]->getHeroPoint().y == _vCamp[i]->getFieldPoint().y)
+			{
+				//=========== 영웅이 성에 있던 상태가 아닌지
+				if (!_player->getHero()[j]->getInCamp())
+				{
+					//============ 그렇다면 이제 플레이어의 씬을 바꿔라
+					//============ 그 성의 번호로 커런트 번호를 바꿔줘라
+					//============ 영웅도 성안에 들어왔다고 해줘라
+					_player->setScene(true);
+					_player->setCurrentCamp(_vCamp[i]->getNum());
+					_player->getHero()[j]->setInCamp(true);
+				}
+			}
+		}
+	}
 }
 
 void gameScene::loadMap(void)
@@ -134,6 +192,8 @@ void gameScene::loadCamp(void)
 				build.sourY = _vBuildSaveInfo[i][j].sourY;
 				build.sizeX = _vBuildSaveInfo[i][j].sizeX;
 				build.sizeY = _vBuildSaveInfo[i][j].sizeY;
+				build.enterX = _vBuildSaveInfo[i][j].enterX;
+				build.enterY = _vBuildSaveInfo[i][j].enterY;
 				build.imgX = _vBuildSaveInfo[i][j].imgX;
 				build.imgY = _vBuildSaveInfo[i][j].imgY;
 				build.miniX = _vBuildSaveInfo[i][j].miniX;
@@ -197,19 +257,32 @@ void gameScene::inputPlay(void)
 {
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
-		if (PtInRect(&(_ui->getMiniMapRect()), _ptMouse) || _ui->getMiniMapMove())
+		//============= F I E L D   S C E N E ===============
+		if (!_player->getScene())
 		{
-			POINT camera;
-			camera.x = (_ptMouse.x - 12 * 2 - _ui->getMiniMapRect().left) / 2 * TILESIZE;
-			camera.y = (_ptMouse.y - 9 * 2 - _ui->getMiniMapRect().top) / 2 * TILESIZE;
+			if (PtInRect(&(_ui->getMiniMapRect()), _ptMouse) || _ui->getMiniMapMove())
+			{
+				POINT camera;
+				camera.x = (_ptMouse.x - 12 * 2 - _ui->getMiniMapRect().left) / 2 * TILESIZE;
+				camera.y = (_ptMouse.y - 9 * 2 - _ui->getMiniMapRect().top) / 2 * TILESIZE;
 
-			if (camera.x <= -8 * TILESIZE) camera.x = -8 * TILESIZE;
-			if (camera.y <= -6 * TILESIZE) camera.y = -6 * TILESIZE;
-			if (camera.x >= 56 * TILESIZE) camera.x = 56 * TILESIZE;
-			if (camera.y >= 60 * TILESIZE) camera.y = 60 * TILESIZE;
+				if (camera.x <= -8 * TILESIZE) camera.x = -8 * TILESIZE;
+				if (camera.y <= -6 * TILESIZE) camera.y = -6 * TILESIZE;
+				if (camera.x >= 56 * TILESIZE) camera.x = 56 * TILESIZE;
+				if (camera.y >= 60 * TILESIZE) camera.y = 60 * TILESIZE;
 
-			_pm->setCamera(camera);
+				_pm->setCameraX(camera.x);
+				_pm->setCameraX(camera.y);
+
+			}
+
 		}
+
+
+	}
+	else
+	{
+		//=================  C I T Y   S C E N E ===============
 
 	}
 

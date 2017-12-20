@@ -44,6 +44,9 @@ public:
 	void update(void);
 	void render(void);
 
+	//=========== E N T E R   C I T Y ==========
+	void enterCity(void);
+
 	//=========== L O A D   M A P ==========
 	void loadMap();
 	void loadCamp();

@@ -29,6 +29,8 @@ private:
 	float _y;
 	bool _myTurn;
 	bool _goOn;
+	bool _moveEnd;
+	bool _isInCamp;
 	int _myNum;
 	
 	
@@ -48,18 +50,24 @@ public:
 	void setCordinate(void);
 	void heroMove(void);
 	int getDirection(int x, int y);
+
 	//============= G E T T E R  ============
+	vPath getPath() { return _vPath; }
 	tagHero getHeroInfo() { return _myHero; }
 	POINT getHeroPoint() { return _pointArr; }
-	vPath getPath() { return _vPath; }
+	float getHeroX() { return _x; }
+	float getHeroY() { return _y; }
 	int getMyNum() { return _myNum; }
 	bool getGoOn() { return _goOn; }
-
+	bool setMoveEnd() { return _moveEnd; }
+	bool getInCamp() { return _isInCamp; }
 	//============= S E T T E R =============
 	void setHeroInfo(tagHero heroInfo) { _myHero = heroInfo; }
 	void setPath(vPath path);
 	void setMynum(int num) { _myNum = num; }
 	void setGoOn(bool go) { _goOn = go; }
+	void setMoveEnd(bool end) { _moveEnd = end; }
+	void setInCamp(bool camp) { _isInCamp = camp; }
 	hero();
 	~hero();
 };

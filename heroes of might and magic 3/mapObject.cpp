@@ -45,14 +45,14 @@ void mapObject::render(void)
 	for ( _viObject = _vObject.begin(); _viObject != _vObject.end(); ++_viObject)
 	{
 		_viObject->img->frameRender(getMemDC(),
-			(_viObject->point.x - _viObject->imgX)*TILESIZE - DATABASE->getPlayCamera().x,
-			(_viObject->point.y - _viObject->imgY)*TILESIZE - DATABASE->getPlayCamera().y,
+			(_viObject->point.x - _viObject->imgX)*TILESIZE - DATABASE->getPlayCameraX(),
+			(_viObject->point.y - _viObject->imgY)*TILESIZE - DATABASE->getPlayCameraY(),
 			_viObject->indexX, _viObject->indexY);
 		
 		if(_viObject->shadowImg != NULL)
 		_viObject->shadowImg->alphaFrameRender(getMemDC(),
-			(_viObject->point.x - _viObject->imgX)*TILESIZE - DATABASE->getPlayCamera().x,
-			(_viObject->point.y - _viObject->imgY)*TILESIZE - DATABASE->getPlayCamera().y,
+			(_viObject->point.x - _viObject->imgX)*TILESIZE - DATABASE->getPlayCameraX(),
+			(_viObject->point.y - _viObject->imgY)*TILESIZE - DATABASE->getPlayCameraY(),
 			_viObject->indexX, _viObject->indexY, SHADOWALPHA);
 			
 

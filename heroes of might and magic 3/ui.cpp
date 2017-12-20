@@ -213,7 +213,8 @@ void ui::input(void)
 				if (camera.x >= 56 * TILESIZE) camera.x = 56 * TILESIZE;
 				if (camera.y >= 60 * TILESIZE) camera.y = 60 * TILESIZE;
 
-				_pm->setCamera(camera);
+				_pm->setCameraX(camera.x);
+				_pm->setCameraY(camera.y);
 
 			}
 		}

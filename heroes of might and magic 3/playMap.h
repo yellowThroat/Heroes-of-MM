@@ -40,7 +40,8 @@ private:
 	SAVE _saveFile[MAXSAVE];
 
 private:
-	POINT _camera;
+	float _cameraX;
+	float _cameraY;
 	POINT _cameraArr;
 
 private:
@@ -72,11 +73,13 @@ public:
 	bool alreadyOpend(int x, int y);
 	bool alreadyClosed(int x, int y);
 	//============ G E T T E R ================
-	POINT getCamera() { return _camera; }
+	float getCameraX() { return _cameraX; }
+	float getCameraY() { return _cameraY; }
 	POINT getCameraArr() { return _cameraArr; }
 
 	//============ S E T T E R ================
-	void setCamera(POINT camera) { _camera = camera; }
+	void setCameraX(float x) { _cameraX = x; }
+	void setCameraY(float y) { _cameraY = y; }
 
 
 	//============ ADDRESS LINK ===============
