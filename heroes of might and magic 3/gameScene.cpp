@@ -16,7 +16,8 @@ HRESULT gameScene::init(void)
 	//============= L O A D   I N F O ================
 	loadMap();
 	loadCamp();
-	
+	_vCamp[0]->setNum(0);
+	_vCamp[1]->setNum(1);
 	
 
 
@@ -85,6 +86,7 @@ void gameScene::render(void)
 	//============= C L A S S   R E N D E R ===============
 	if (!_player->getScene())
 	{
+		//=============== 필드 밖 렌더
 		_pm->render();
 		_ob->render();
 	
@@ -103,6 +105,7 @@ void gameScene::render(void)
 
 	else
 	{
+		//================ 마을 안 렌더
 		for (int i = 0; i < _vCamp.size(); i++)
 		{
 			if (_player->getCurrentCamp() == _vCamp[i]->getNum())
@@ -142,8 +145,8 @@ void gameScene::enterCity(void)
 			if (_player->getHero()[j]->getHeroPoint().x == _vCamp[i]->getFieldPoint().x &&
 				_player->getHero()[j]->getHeroPoint().y == _vCamp[i]->getFieldPoint().y)
 			{
-				//=========== 영웅이 성에 있던 상태가 아닌지
-				if (!_player->getHero()[j]->getInCamp())
+				//=========== 영웅이 성에 있던 상태가 아닌지 이동 중인건 아닌지
+				if (!_player->getHero()[j]->getInCamp() && !_player->getHero()[j]->getGoOn())
 				{
 					//============ 그렇다면 이제 플레이어의 씬을 바꿔라
 					//============ 그 성의 번호로 커런트 번호를 바꿔줘라

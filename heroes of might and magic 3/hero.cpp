@@ -128,7 +128,6 @@ void hero::heroMove(void)
 		frameRotation(_myHero.field, 8, _myHero.angle, false, true);
 		frameRotation(_myHero.fieldShadow, 8, _myHero.angle, false, true);
 		frameRotation(_myHero.flag, 8, _myHero.angle, false, true);
-		
 
 		
 

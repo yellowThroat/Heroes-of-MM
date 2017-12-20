@@ -167,13 +167,76 @@ namespace IOTA_UTIL
 	{
 		if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % delay == 0)
 		{
-			img->setFrameX(img->getFrameX() + 1);
-
 			if (img->getFrameX() >= img->getMaxFrameX())
 			{
-				img->setFrameX(0);
+				img->setFrameX(-1);
 			}
+			img->setFrameX(img->getFrameX() + 1);
+
 		}
+	}
+
+	void frameCycle(string keyName, int delay)
+	{
+		if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % delay == 0)
+		{
+			if (IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() >= IMAGEMANAGER->findImage(keyName.c_str())->getMaxFrameX())
+			{
+				IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(-1);
+			}
+			IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() + 1);
+
+		}
+
+	}
+
+	void frameCycle(string keyName, int delay, bool reverse)
+	{
+		if (reverse)
+		{
+			static bool tmp = false;
+
+			if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % delay == 0)
+			{
+				if (!tmp)
+				{
+						if (IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() >= IMAGEMANAGER->findImage(keyName.c_str())->getMaxFrameX())
+						{
+							IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(IMAGEMANAGER->findImage(keyName.c_str())->getMaxFrameX()-2);
+							tmp = true;
+						}
+						IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() + 1);
+
+				}
+				else
+				{
+						if (IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() <=0)
+						{
+							IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(2);
+
+							tmp = false;
+						}
+						IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() - 1);
+
+				}
+
+			}
+
+		}
+		else
+		{
+			if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % delay == 0)
+			{
+				IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() + 1);
+
+				if (IMAGEMANAGER->findImage(keyName.c_str())->getFrameX() >= IMAGEMANAGER->findImage(keyName.c_str())->getMaxFrameX())
+				{
+					IMAGEMANAGER->findImage(keyName.c_str())->setFrameX(0);
+				}
+			}
+
+		}
+
 	}
 
 

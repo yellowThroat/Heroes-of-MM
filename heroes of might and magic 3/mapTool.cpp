@@ -608,6 +608,8 @@ void mapTool::loadMap(string fileName)
 				build.miniX = _vBuildSaveInfo[i][j].miniX;
 				build.imgX = _vBuildSaveInfo[i][j].imgX;
 				build.imgY = _vBuildSaveInfo[i][j].imgY;
+				build.enterX = _vBuildSaveInfo[i][j].enterX;
+				build.enterY = _vBuildSaveInfo[i][j].enterY;
 
 				switch ((_vBuildSaveInfo[i][j].type^ELEMENTOBS) %10)
 				{

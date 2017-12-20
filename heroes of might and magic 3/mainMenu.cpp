@@ -347,7 +347,17 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("castle_back", "image/gameScene/camp/castle/castle_back.bmp", 800, 374, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("dungeon_back", "image/gameScene/camp/dungeon/dungeon_back.bmp", 800, 374, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("city_UI", "image/gameScene/camp/cityUI.bmp", 800, 226, true, RGB(255, 0, 255));
-
+	IMAGEMANAGER->addFrameImage("castle_hall", "image/gameScene/camp/castle/hall.bmp", 864, 193, 4, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_hall_ani", "image/gameScene/camp/castle/hall_ani.bmp", 1944, 772, 9, 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_fort", "image/gameScene/camp/castle/fort.bmp", 966, 210, 3, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_barrack", "image/gameScene/camp/castle/barrack.bmp", 128, 111, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_archer", "image/gameScene/camp/castle/archer_barrack.bmp", 226, 71, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_tower", "image/gameScene/camp/castle/tower.bmp", 200, 286, 2, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_sword", "image/gameScene/camp/castle/sword.bmp", 286, 80, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_abbey", "image/gameScene/camp/castle/abbey.bmp", 276, 87, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_ground", "image/gameScene/camp/castle/ground.bmp", 602, 108, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_ground_ani", "image/gameScene/camp/castle/ground_ani.bmp", 2709, 216, 9, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("castle_door", "image/gameScene/camp/castle/door.bmp", 572, 116, 2, 1, true, RGB(255, 0, 255));
 
 	//==============================  U  I =============================
 	IMAGEMANAGER->addImage("gamebutton_spell", "image/gameScene/ui/button_spell.bmp", 32, 32, true, RGB(255, 0, 255));

@@ -65,11 +65,13 @@ void player::render(void)
 {
 	if (_cityScene)
 	{
+		//================= 마을 안 신
 		cityScene();
 	}
 
 	else
 	{
+		//================= 필드 밖 신
 		fieldScene();
 	}
 
@@ -170,6 +172,7 @@ void player::inputGame(void)
 					_vHero[i]->getPath().size())
 				{
 					_vHero[i]->setGoOn(true);
+					_vHero[i]->setInCamp(false);
 				
 				}
 
@@ -179,6 +182,13 @@ void player::inputGame(void)
 		else
 		{
 			//==================== C I T Y   S C E N E ======================
+			if (PtInRect(&RectMake(744, 544, 48, 30), _ptMouse))
+			{
+				_cityScene = false;
+			}
+
+
+
 
 		}
 

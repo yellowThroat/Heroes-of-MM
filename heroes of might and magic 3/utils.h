@@ -33,6 +33,11 @@ namespace IOTA_UTIL
 
 	void frameCycle(image* img, int delay);
 
+	void frameCycle(string keyName, int delay);
+
+	void frameCycle(string keyName, int delay, bool reverse);
+
+
 	//¿Ã¸²
 	int getRise(int x, int division);
 

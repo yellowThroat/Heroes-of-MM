@@ -1,12 +1,11 @@
 #pragma once
 #include "gameNode.h"
 
-class playMap;
 
 class camp : public gameNode
 {
 private:
-	playMap* _pm;
+
 
 private:
 	image* _fieldImg;
@@ -56,7 +55,7 @@ public:
 	void cameraSetting(void);
 	void setCityScene(bool scene) { _cityScene = scene; }
 	void setBuildingInfo(building info) { _buildingInfo = info; }
-
+	void setFrameCycle(void);
 
 	//========== G E T T E R =============
 	bool getCityScene() { return _cityScene; }
@@ -70,7 +69,6 @@ public:
 	void setPlayer(int num) { _player = num; }
 
 	//========== ADDRESS LINK ============
-	void setAddressLinkFromPlayMap(playMap* pm) { _pm = pm; }
 
 	camp();
 	~camp();

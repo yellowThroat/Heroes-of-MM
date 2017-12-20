@@ -34,6 +34,8 @@ void camp::update(void)
 	//=================== F U N C T I O N ===================
 	buildingCondition();			// * 필요없나?
 	cameraSetting();				// 플레이 카메라 정보 실시간 받기
+	setFrameCycle();
+	
 }
 
 void camp::render(void)
@@ -87,12 +89,51 @@ void camp::fieldDraw(void)
 
 void camp::castleDraw(void)
 {
+	//============ 특수 건물 번호 ==============
+	// 0 : 그리핀 성채
+	// 1 : 조선소
+	// 2 : 마구간
+	// 3 : 등대
+	// 4 : 검사협회
+
+
 	IMAGEMANAGER->findImage("castle_back")->render(getMemDC());
+	IMAGEMANAGER->findImage("castle_fort")->frameRender(getMemDC(),
+		478, 37,_fort,0);
+	IMAGEMANAGER->findImage("castle_barrack")->frameRender(getMemDC(),
+		304, 65, _level[0], 0);
+	IMAGEMANAGER->findImage("castle_archer")->frameRender(getMemDC(),
+		360, 115, _level[1], 0);
+	IMAGEMANAGER->findImage("castle_tower")->frameRender(getMemDC(),
+		81, 44, _level[2], _special[0]);
+	IMAGEMANAGER->findImage("castle_sword")->frameRender(getMemDC(),
+		176, 85, _level[3], 0);
+	IMAGEMANAGER->findImage("castle_abbey")->frameRender(getMemDC(),
+		563, 173, _level[4], 0);
+	IMAGEMANAGER->findImage("castle_ground")->frameRender(getMemDC(),
+		160, 190, _level[5], 0);
+	IMAGEMANAGER->findImage("castle_ground_ani")->frameRender(getMemDC(),
+		160, 190,IMAGEMANAGER->findImage("castle_ground_ani")->getFrameX(), _level[5]);
+	IMAGEMANAGER->findImage("castle_hall")->frameRender(getMemDC(),
+		0, 154, _hall, 0);
+	IMAGEMANAGER->findImage("castle_hall_ani")->frameRender(getMemDC(),
+		0, 154, IMAGEMANAGER->findImage("castle_hall_ani")->getFrameX(), _hall);
+	IMAGEMANAGER->findImage("castle_door")->frameRender(getMemDC(),
+		302, 1, _level[6], 0);
+
+
 }
 
 void camp::dungeonDraw(void)
 {
+	IMAGEMANAGER->findImage("dungeon_back")->render(getMemDC());
 
+}
+
+void camp::setFrameCycle(void)
+{
+	frameCycle("castle_hall_ani", 12,true);
+	frameCycle("castle_ground_ani", 12,true);
 }
 
 void camp::buildingInit()
