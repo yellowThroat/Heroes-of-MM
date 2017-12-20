@@ -158,8 +158,7 @@ void player::inputGame(void)
 				if (_vHero[i]->getMyNum() == _currentHero && !_vHero[i]->getGoOn()&&
 					(_mouseArr.x != _destination.x || _mouseArr.y != _destination.y)&& !_readyMove)
 				{
-					_vHero[i]->setPath(_pm->getPath(
-						_vHero[i]->getHeroPoint().x,
+					_vHero[i]->setPath(_pm->getPath(_vHero[i]->getHeroPoint().x,
 						_vHero[i]->getHeroPoint().y,
 						_mouseArr.x, _mouseArr.y));
 					_destination.x = _mouseArr.x;

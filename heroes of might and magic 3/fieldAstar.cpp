@@ -239,6 +239,12 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 			}
 		}
 
+		//============= 길찾는걸 포기할때
+		if (_openlist.size() == 0 ||  _openlist.size() >300)
+		{
+			end = true;
+		}
+
 		//================ 길을 찾은거임
 		for (int i = 0; i < _openlist.size(); i++)
 		{
@@ -259,11 +265,6 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 		}
 
 
-		//============= 길찾는걸 포기할때
-		if (_openlist.size() == 0)
-		{
-			end = true;
-		}
 
 
 

@@ -99,7 +99,7 @@ void camp::castleDraw(void)
 
 	IMAGEMANAGER->findImage("castle_back")->render(getMemDC());
 	IMAGEMANAGER->findImage("castle_fort")->frameRender(getMemDC(),
-		478, 37,_fort,0);
+		478, 37, _fort, 0);
 	IMAGEMANAGER->findImage("castle_barrack")->frameRender(getMemDC(),
 		304, 65, _level[0], 0);
 	IMAGEMANAGER->findImage("castle_archer")->frameRender(getMemDC(),
@@ -113,7 +113,7 @@ void camp::castleDraw(void)
 	IMAGEMANAGER->findImage("castle_ground")->frameRender(getMemDC(),
 		160, 190, _level[5], 0);
 	IMAGEMANAGER->findImage("castle_ground_ani")->frameRender(getMemDC(),
-		160, 190,IMAGEMANAGER->findImage("castle_ground_ani")->getFrameX(), _level[5]);
+		160, 190, IMAGEMANAGER->findImage("castle_ground_ani")->getFrameX(), _level[5]);
 	IMAGEMANAGER->findImage("castle_hall")->frameRender(getMemDC(),
 		0, 154, _hall, 0);
 	IMAGEMANAGER->findImage("castle_hall_ani")->frameRender(getMemDC(),
@@ -134,6 +134,13 @@ void camp::setFrameCycle(void)
 {
 	frameCycle("castle_hall_ani", 12,true);
 	frameCycle("castle_ground_ani", 12,true);
+}
+
+void selectBox(void)
+{
+
+
+
 }
 
 void camp::buildingInit()

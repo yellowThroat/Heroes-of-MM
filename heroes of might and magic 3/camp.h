@@ -56,6 +56,8 @@ public:
 	void setCityScene(bool scene) { _cityScene = scene; }
 	void setBuildingInfo(building info) { _buildingInfo = info; }
 	void setFrameCycle(void);
+	void selectBox(void);
+
 
 	//========== G E T T E R =============
 	bool getCityScene() { return _cityScene; }
