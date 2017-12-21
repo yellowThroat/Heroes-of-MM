@@ -37,6 +37,10 @@ namespace IOTA_UTIL
 
 	void frameCycle(string keyName, int delay, bool reverse);
 
+	//======= 픽셀 값 가져오기
+	bool getPixelC(int x);
+
+	bool getPixelD(int x);
 
 	//올림
 	int getRise(int x, int division);

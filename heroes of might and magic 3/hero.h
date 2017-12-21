@@ -59,7 +59,7 @@ public:
 	float getHeroY() { return _y; }
 	int getMyNum() { return _myNum; }
 	bool getGoOn() { return _goOn; }
-	bool setMoveEnd() { return _moveEnd; }
+	bool getMoveEnd() { return _moveEnd; }
 	bool getInCamp() { return _isInCamp; }
 	//============= S E T T E R =============
 	void setHeroInfo(tagHero heroInfo) { _myHero = heroInfo; }

@@ -7,7 +7,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 	bool findPath = false;
 	vector<POINT> shortestPath;
 	POINT point;
-	tagPathFind currentNode;
+	tagPathFindSecond currentNode;
 	tagPathFind findNode;
 
 	ZeroMemory(&currentNode, sizeof(tagPathFind));
@@ -67,6 +67,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 			currentNode.parentX = _openlist[0].parentX;
 			currentNode.parentY = _openlist[0].parentY;
 			_openlist.erase(_openlist.begin());
+
+
 			_closelist.push_back(currentNode);
 
 		}
@@ -240,7 +242,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 		}
 
 		//============= 길찾는걸 포기할때
-		if (_openlist.size() == 0 ||  _openlist.size() >300)
+		if (_openlist.size() == 0 ||  _closelist.size() >1000)
 		{
 			end = true;
 		}
@@ -252,7 +254,18 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 			{
 				end = true;
 				findPath = true;
-				_closelist.push_back(_openlist[i]);
+
+				tagPathFindSecond tmp;
+				tmp.f = _openlist[i].f;
+				tmp.g = _openlist[i].g;
+				tmp.h = _openlist[i].h;
+				tmp.nodeX = _openlist[i].nodeX;
+				tmp.nodeY = _openlist[i].nodeY;
+				tmp.parentX = _openlist[i].parentX;
+				tmp.parentY = _openlist[i].parentY;
+
+
+				_closelist.push_back(tmp);
 				
 				point.x = _openlist[i].nodeX;
 				point.y = _openlist[i].nodeY;
@@ -307,8 +320,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 	else
 	{
 		sort(_closelist.begin(), _closelist.end());
-		point.x = _closelist[10].nodeX;
-		point.y = _closelist[10].nodeY;
+		point.x = _closelist[0].nodeX;
+		point.y = _closelist[0].nodeY;
 		shortestPath.push_back(point);
 		while (true)
 		{

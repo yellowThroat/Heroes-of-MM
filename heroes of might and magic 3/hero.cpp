@@ -94,11 +94,12 @@ void hero::pathDraw(void)
 
 void hero::fieldDraw(void)
 {
+	/*
 	//============= T E S T 
 	IMAGEMANAGER->findImage("closed")->render(getMemDC(),
 		_pointArr.x*TILESIZE - DATABASE->getPlayCameraX(),
 		_pointArr.y*TILESIZE - DATABASE->getPlayCameraY());
-
+		*/
 	//============= 필드 위 모습
 	_myHero.field->frameRender(getMemDC(),
 		(_x - 32)  - DATABASE->getPlayCameraX(),

@@ -232,7 +232,7 @@ void playMap::inputCommon(void)
 	DATABASE->setPlayCameraY(_cameraY);
 
 
-	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD1))
+	if (KEYMANAGER->isOnceKeyDown(VK_HOME))
 	{
 		switch (_buildAttribute)
 		{

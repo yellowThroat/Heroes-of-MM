@@ -3,6 +3,7 @@
 
 class playMap;
 class gameScene;
+class player;
 
 enum GAMEBUTTON
 {
@@ -31,6 +32,7 @@ class ui : public gameNode
 private:
 	playMap* _pm;
 	gameScene* _gs;
+	player* _player;
 
 private:
 	RECT _miniMapRect;
@@ -78,6 +80,7 @@ public:
 	//=============== ADRESS LINK===========
 	void setPlayMapAddressLink(playMap* mp) { _pm = mp; }
 	void setgameSceneAddressLink(gameScene* gs) { _gs = gs; }
+	void setPlayerAddressLink(player* player) { _player= player; }
 
 
 

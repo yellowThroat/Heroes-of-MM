@@ -59,6 +59,10 @@ public:
 	void inputCommon(void);
 	void inputPlay(void);
 
+	//=========== G E T T E R ===============
+	vCamp getvCamp() { return _vCamp; }
+
+
 	gameScene();
 	~gameScene();
 

@@ -439,6 +439,8 @@ void mapTool::saveMap(string fileName)
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].imgY = _vLoot[i].imgY;
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeX = _vLoot[i].sizeX;
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeY = _vLoot[i].sizeY;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].enterX = _vLoot[i].enterX;
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].enterY = _vLoot[i].enterY;
 
 	}
 	
@@ -531,6 +533,8 @@ void mapTool::loadMap(string fileName)
 	ReadFile(file, _buildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
 	ReadFile(file, _vBuildSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
 	ReadFile(file, _vLootSaveInfo, sizeof(tagSaveInfo)*MAXTILE*MAXTILE, &read, NULL);
+	
+	CloseHandle(file);
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -653,6 +657,8 @@ void mapTool::loadMap(string fileName)
 				build.imgY = _vBuildSaveInfo[i][j].imgY;
 				build.miniX = _vBuildSaveInfo[i][j].miniX;
 				build.campInfo = _vBuildSaveInfo[i][j].campInfo;
+				build.enterX = _vBuildSaveInfo[i][j].enterX;
+				build.enterY = _vBuildSaveInfo[i][j].enterY;
 
 
 				if ((_vBuildSaveInfo[i][j].type & ELEMENTCAMP ) == ELEMENTCAMP)
@@ -780,6 +786,8 @@ void mapTool::loadMap(string fileName)
 				build.sizeX = _vLootSaveInfo[i][j].sizeX;
 				build.sizeY = _vLootSaveInfo[i][j].sizeY;
 				build.elements = _vLootSaveInfo[i][j].type;
+				build.enterX = _vLootSaveInfo[i][j].enterX;
+				build.enterY = _vLootSaveInfo[i][j].enterY;
 				
 				if ((_vLootSaveInfo[i][j].type & ELEMENTRESOURCE) == ELEMENTRESOURCE)
 				{
@@ -834,7 +842,6 @@ void mapTool::loadMap(string fileName)
 
 
 
-	CloseHandle(file);
 }
 
 void mapTool::saveFileList(void)

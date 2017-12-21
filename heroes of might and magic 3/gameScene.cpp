@@ -30,7 +30,9 @@ HRESULT gameScene::init(void)
 	//============= ADDRESS LINK====================
 	_ui->setPlayMapAddressLink(_pm);
 	_ui->setgameSceneAddressLink(this);
+	_ui->setPlayerAddressLink(_player);
 	_player->setPlayMapAddressLink(_pm);
+	_player->setGameSceneAddressLink(this);
 
 	//============= C L A S S   I N I T ==================
 	_pm->init();
@@ -62,10 +64,25 @@ void gameScene::update(void)
 	
 	enterCity();
 
-	if (_ptMouse.x >= 788 || _ui->getConfig()) _ui->input();
-	else inputPlay();
-	inputCommon();
-	_player->inputGame();
+
+	//================== INPUT KEY ==================
+
+	//============= FIELD
+	if (!_player->getScene())
+	{
+		if (_ptMouse.x >= 788 || _ui->getConfig()) _ui->input();// 필드 : UI		키
+		else inputPlay();										// 필드 : 겜화면	STAY
+		inputCommon();											// 필드 : 겜화면	KEY UP
+		_player->inputField();									// 필드 : 겜화면 KEY DOWN
+
+	}
+	//============= CITY SCENE
+	if (_player->getScene())
+	{
+		_player->inputCity();									// 마을 : KEY DOWN
+
+	}
+	//============= BATTLE SCENE
 
 	//========= C L A S S   U P D A T E=================
 	
@@ -103,7 +120,7 @@ void gameScene::render(void)
 
 	}
 
-	else
+	if (_player->getScene())
 	{
 		//================ 마을 안 렌더
 		for (int i = 0; i < _vCamp.size(); i++)
@@ -118,8 +135,8 @@ void gameScene::render(void)
 				else if (_vCamp[i]->getCityInfo().camp == CAMP_DUNGEON)
 				{
 					_vCamp[i]->dungeonDraw();
-
 				}
+				_vCamp[i]->selectBox();
 
 			}
 		}
@@ -263,6 +280,7 @@ void gameScene::inputPlay(void)
 		//============= F I E L D   S C E N E ===============
 		if (!_player->getScene())
 		{
+			
 			if (PtInRect(&(_ui->getMiniMapRect()), _ptMouse) || _ui->getMiniMapMove())
 			{
 				POINT camera;
@@ -275,19 +293,12 @@ void gameScene::inputPlay(void)
 				if (camera.y >= 60 * TILESIZE) camera.y = 60 * TILESIZE;
 
 				_pm->setCameraX(camera.x);
-				_pm->setCameraX(camera.y);
+				_pm->setCameraY(camera.y);
 
 			}
-
+			
 		}
 
 
-	}
-	else
-	{
-		//=================  C I T Y   S C E N E ===============
-
-	}
-
-	
+	}	
 }

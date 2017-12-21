@@ -31,7 +31,9 @@ private:
 	int _level[7];				// 티어 건물
 	int _special[5];			// 특수 건물
 	int _campNum;				// 성 넘버
+	int _windowNum;				// 멀 눌렀니?
 	bool _cityScene;			// 건물 안으로 들어왔는가
+	bool _showWindow;			// 무언갈 눌렀을때
 	float _cameraX;				// 카메라 X
 	float _cameraY;				// 카메라 Y
 
@@ -60,15 +62,20 @@ public:
 
 
 	//========== G E T T E R =============
-	bool getCityScene() { return _cityScene; }
 	building getCityInfo() { return _buildingInfo; }
+	POINT getFieldPoint() { return _fieldPoint; }
+	bool getCityScene() { return _cityScene; }
+	bool getWindow() { return _showWindow; }
 	int getNum() { return _campNum; }
 	int getPlayerNum() { return _player; }
-	POINT getFieldPoint() { return _fieldPoint; }
+	int getWindowNum() { return _windowNum; }
 
 	//========== S E T T E R =============
 	void setNum(int num) { _campNum = num; }
 	void setPlayer(int num) { _player = num; }
+	void setWindow(bool show) { _showWindow = show; }
+	void setWindowNum(int num) { _windowNum = num; }
+
 
 	//========== ADDRESS LINK ============
 

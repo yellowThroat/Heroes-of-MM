@@ -70,6 +70,37 @@ namespace IOTA_UTIL
 		if (su == 1) IMAGEMANAGER->findImage(itoa(d, tmp, 10))->render(hdc, x, y);
 	}
 
+
+	//======= 픽셀 값 가져오기 
+	bool getPixelC(int x)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("castle_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
+
+		int a = GetRValue(color);
+		int b = GetGValue(color);
+		int c = GetBValue(color);
+
+		if (a == x&& b == 100 &&  c == 100) return true;
+
+
+		return false;
+	}
+
+	bool getPixelD(int x)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("dungeon_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
+
+		int a = GetRValue(color);
+		int b = GetGValue(color);
+		int c = GetBValue(color);
+
+		if (a == x && b == 100 && c == 100) return true;
+
+
+		return false;
+	}
+
+
 	void frameRotation(image* img, int division, float angle, bool frameX, bool clockwise)
 	{
 		float _divisionAngle;

@@ -1,6 +1,6 @@
 #pragma once
 
-#define INPUTDELAY 8
+#define INPUTDELAY 2
 
 #include "gameNode.h"
 

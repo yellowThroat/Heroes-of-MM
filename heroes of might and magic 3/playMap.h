@@ -13,6 +13,19 @@ struct tagPathFind
 	}
 };
 
+struct tagPathFindSecond
+{
+	int f;
+	int g;
+	int h;
+	int nodeX, nodeY;
+	int parentX, parentY;
+	bool operator<(const tagPathFindSecond &v) const {
+		return (h < v.h);
+	}
+};
+
+
 class playMap;
 
 class playMap : public gameNode
@@ -25,7 +38,7 @@ private:
 	vector<building>::iterator _viBuild;
 
 	vector<tagPathFind> _openlist;
-	vector<tagPathFind> _closelist;
+	vector<tagPathFindSecond> _closelist;
 
 
 private:

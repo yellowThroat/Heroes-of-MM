@@ -9,7 +9,7 @@ HRESULT	dataBase::init()
 	_miniMap = new image;
 	_saveNum = 0;
 	_playCameraX = _playCameraY = 0;
-	loadFileList();
+	//loadFileList();
 	_moveSpeed = 4;
 	return S_OK;
 }

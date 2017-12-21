@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "ui.h"
 #include "playMap.h"
-
+#include "player.h"
+#include "gameScene.h"
 
 ui::ui(){}
 ui::~ui(){}
@@ -58,6 +59,7 @@ void ui::draw(void)
 
 	IMAGEMANAGER->findImage("gameUI")->render(getMemDC());
 
+	
 
 	if (_mainButton)
 	{
@@ -199,75 +201,100 @@ void ui::input(void)
 {
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
-		if (PtInRect(&_miniMapRect, _ptMouse) || _miniMapMove)
+		
+		//===================== F I E L D   S C E N E ==============
+		if (!_player->getScene())
 		{
-			if (!_config)
+			if (PtInRect(&_miniMapRect, _ptMouse) || _miniMapMove)
 			{
-				_miniMapMove = true;
-				POINT camera;
-				camera.x = (_ptMouse.x - 12 * 2 - _miniMapRect.left) / 2 * TILESIZE;
-				camera.y = (_ptMouse.y - 9 * 2 - _miniMapRect.top) / 2 * TILESIZE;
+				if (!_config)
+				{
+					_miniMapMove = true;
+					POINT camera;
+					camera.x = (_ptMouse.x - 12 * 2 - _miniMapRect.left) / 2 * TILESIZE;
+					camera.y = (_ptMouse.y - 9 * 2 - _miniMapRect.top) / 2 * TILESIZE;
 
-				if (camera.x <= -8 * TILESIZE) camera.x = -8 * TILESIZE;
-				if (camera.y <= -6 * TILESIZE) camera.y = -6 * TILESIZE;
-				if (camera.x >= 56 * TILESIZE) camera.x = 56 * TILESIZE;
-				if (camera.y >= 60 * TILESIZE) camera.y = 60 * TILESIZE;
+					if (camera.x <= -8 * TILESIZE) camera.x = -8 * TILESIZE;
+					if (camera.y <= -6 * TILESIZE) camera.y = -6 * TILESIZE;
+					if (camera.x >= 56 * TILESIZE) camera.x = 56 * TILESIZE;
+					if (camera.y >= 60 * TILESIZE) camera.y = 60 * TILESIZE;
 
-				_pm->setCameraX(camera.x);
-				_pm->setCameraY(camera.y);
+					_pm->setCameraX(camera.x);
+					_pm->setCameraY(camera.y);
 
+					_player->setAutoCamera(false);
+
+				}
 			}
+
+
+
+
+
 		}
+
 
 
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
-		if (_config && PtInRect(&_windowConfig, _ptMouse))
+		if (!_player->getScene())
 		{
-			for (int i = 0; i < 6; i++)
+			//=============== F I E L D   S C E N E
+			if (_config && PtInRect(&_windowConfig, _ptMouse))
 			{
-				if (PtInRect(&_conRect[i], _ptMouse))
+				for (int i = 0; i < 6; i++)
 				{
-					_cb = (CONBUTTON)i;
-					_conButton = true;
+					if (PtInRect(&_conRect[i], _ptMouse))
+					{
+						_cb = (CONBUTTON)i;
+						_conButton = true;
+					}
 				}
 			}
-		}
 
-		if (!_config)
-		{
-			if (PtInRect(&_summaryRect, _ptMouse))
+			if (!_config)
 			{
-				_gb = GB_SUMMARY;
-				_mainButton = true;
+				if (PtInRect(&_summaryRect, _ptMouse))
+				{
+					_gb = GB_SUMMARY;
+					_mainButton = true;
+				}
+				if (PtInRect(&_spellRect, _ptMouse))
+				{
+					_gb = GB_SPELL;
+					_mainButton = true;
+				}
+				if (PtInRect(&_configRect, _ptMouse))
+				{
+					_gb = GB_CONFIG;
+					_mainButton = true;
+				}
+				if (PtInRect(&_heroRect, _ptMouse))
+				{
+					_gb = GB_HERO;
+					_mainButton = true;
+				}
+				if (PtInRect(&_turnRect, _ptMouse))
+				{
+					_gb = GB_TURN;
+					_mainButton = true;
+				}
+				if (PtInRect(&_goOnRect, _ptMouse))
+				{
+					_gb = GB_GOON;
+					_mainButton = true;
+				}
 			}
-			if (PtInRect(&_spellRect, _ptMouse))
-			{
-				_gb = GB_SPELL;
-				_mainButton = true;
-			}
-			if (PtInRect(&_configRect, _ptMouse))
-			{
-				_gb = GB_CONFIG;
-				_mainButton = true;
-			}
-			if (PtInRect(&_heroRect, _ptMouse))
-			{
-				_gb = GB_HERO;
-				_mainButton = true;
-			}
-			if (PtInRect(&_turnRect, _ptMouse))
-			{
-				_gb = GB_TURN;
-				_mainButton = true;
-			}
-			if (PtInRect(&_goOnRect, _ptMouse))
-			{
-				_gb = GB_GOON;
-				_mainButton = true;
-			}
+
 		}
+		else
+		{
+			//================== C I T Y   S C E N E ================
+
+
+		}
+		
 
 	}
 

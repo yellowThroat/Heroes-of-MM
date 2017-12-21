@@ -49,11 +49,14 @@ typedef struct tagMyBuilding
 
 
 class playMap;
+class gameScene;
+
 
 class player : public gameNode
 {
 private:
 	playMap* _pm;
+	gameScene* _gs;
 
 private:
 	typedef vector<hero*> vHero;
@@ -76,6 +79,7 @@ private:
 	bool _readyMove;
 	bool _myTurn;
 	bool _cityScene;
+	bool _autoCamera;
 	int _myNum;
 	int _currentHero;
 	int _currentCamp;
@@ -99,7 +103,10 @@ public:
 	void cityScene(void);
 	void fieldScene(void);
 
-	void inputGame(void);
+	
+	//================ S E T T I N G =========
+	void inputCity(void);
+	void inputField(void);
 	void camera(void);
 
 	//================ E N T E R ===========
@@ -119,12 +126,15 @@ public:
 	vPath getPath() { return _vPath; }
 	bool getScene() { return _cityScene; }
 	vHero getHero() { return _vHero; }
+	bool getAutoCamera() { return _autoCamera; }
 
 	//=========== S E T T E R ===============
 	void setScene(bool scene) { _cityScene = scene; }
 	void setCurrentCamp(int camp) { _currentCamp = camp; }
+	void setAutoCamera(bool autocamera) { _autoCamera = autocamera; }
 	//=========== ADDRESS LINK===============
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
+	void setGameSceneAddressLink(gameScene* gs) { _gs = gs; }
 
 
 
