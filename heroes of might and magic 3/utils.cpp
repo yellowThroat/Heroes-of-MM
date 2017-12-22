@@ -86,6 +86,36 @@ namespace IOTA_UTIL
 		return false;
 	}
 
+	bool getMenuC()
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("castle_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
+
+		int a = GetRValue(color);
+		int b = GetGValue(color);
+		int c = GetBValue(color);
+
+		if (b == 100 && c == 100) return true;
+
+
+		return false;
+
+	}
+
+	int getPixelC(void)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("castle_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
+
+		int a = GetRValue(color);
+		
+
+
+		return a;
+	}
+
+
+
+
+
 	bool getPixelD(int x)
 	{
 		COLORREF color = GetPixel(IMAGEMANAGER->findImage("dungeon_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
@@ -99,6 +129,33 @@ namespace IOTA_UTIL
 
 		return false;
 	}
+
+	bool getMenuD()
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("dungeon_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
+
+		int a = GetRValue(color);
+		int b = GetGValue(color);
+		int c = GetBValue(color);
+
+		if (b == 100 && c == 100) return true;
+
+
+		return false;
+
+	}
+
+	int getPixelD(void)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("dungeon_RGB")->getMemDC(), _ptMouse.x, _ptMouse.y);
+
+		int a = GetRValue(color);
+
+
+
+		return a;
+	}
+
 
 
 	void frameRotation(image* img, int division, float angle, bool frameX, bool clockwise)

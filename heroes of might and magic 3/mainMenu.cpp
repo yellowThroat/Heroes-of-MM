@@ -368,6 +368,10 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("castle_pub", "image/gameScene/camp/castle/pub.bmp", 210, 352, 2, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("castle_forge", "image/gameScene/camp/castle/forge.bmp", 127, 238, 1, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("castle_RGB", "image/gameScene/camp/castle/castle_RGB.bmp", 800, 374, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_castle_fort", "image/gameScene/camp/window/window_castle_fort.bmp", 800, 600, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("castle_fort_back", "image/gameScene/camp/window/castle_fort_back.bmp", 102, 122, true, RGB(255, 0, 255));
+
+
 
 	IMAGEMANAGER->addFrameImage("dungeon_academy", "image/gameScene/camp/dungeon/academy.bmp", 134, 152, 1, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("dungeon_cloud", "image/gameScene/camp/dungeon/cloud_test.bmp", 1440, 136, 10, 4, true, RGB(255, 0, 255));
@@ -390,6 +394,7 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("dungeon_artifact", "image/gameScene/camp/dungeon/artifact.bmp", 54, 160, 1, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("dungeon_RGB", "image/gameScene/camp/dungeon/dungeon_RGB.bmp", 800, 374, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window_dungeon_fort", "image/gameScene/camp/window/window_dungeon_fort.bmp", 800, 600, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("dungeon_fort_back", "image/gameScene/camp/window/dungeon_fort_back.bmp", 102, 122, true, RGB(255, 0, 255));
 
 
 

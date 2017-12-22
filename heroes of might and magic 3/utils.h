@@ -39,8 +39,12 @@ namespace IOTA_UTIL
 
 	//======= 픽셀 값 가져오기
 	bool getPixelC(int x);
+	bool getMenuC();
+	int getPixelC();
 
 	bool getPixelD(int x);
+	bool getMenuD();
+	int getPixelD();
 
 	//올림
 	int getRise(int x, int division);

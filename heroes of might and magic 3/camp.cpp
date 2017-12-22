@@ -159,6 +159,34 @@ void camp::castleDraw(void)
 	IMAGEMANAGER->findImage("castle_door")->frameRender(getMemDC(),
 		302, 1, _level[6], IMAGEMANAGER->findImage("castle_door")->getFrameY());
 
+	if (_showWindow)
+	{
+		switch (_windowNum)
+		{
+			//============== È¦
+		case 0:
+			break;
+			//============== ¼ºÃ¤
+		case 1:
+
+
+			break;
+		case 8:
+			for (int i = 0; i < 6; i++)
+			{
+				IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
+					168 + 394 * (i % 2), 25 + 133 * (i / 2));
+			}
+			IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
+				364, 424);
+			IMAGEMANAGER->findImage("window_castle_fort")->render(getMemDC());
+
+
+			break;
+
+
+		}
+	}
 
 }
 
@@ -244,8 +272,15 @@ void camp::dungeonDraw(void)
 			break;
 			//============== ¼ºÃ¤
 		case 1:
+			for (int i = 0; i < 6; i++)
+			{
+				IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(),
+					168 + 394*(i%2), 25 + 133*(i/2));
+			}
+			IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(),
+				364, 424);
 			IMAGEMANAGER->findImage("window_dungeon_fort")->render(getMemDC());
-
+			
 
 			break;
 

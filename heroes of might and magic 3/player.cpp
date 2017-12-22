@@ -168,13 +168,33 @@ void player::inputCity(void)
 				if (!_gs->getvCamp()[i]->getWindow())
 				{
 
-					//==========ÀÚ ¾îµô ´­·¶´Ï?
-					if (getPixelD(1))
+					switch (_gs->getvCamp()[i]->getCityInfo().camp)
 					{
-						//========== Ã¢Àº ¿­·È°í ³»°¡ ¿¬Ã¢Àº ÀÌ°Å¾ß!
-						_gs->getvCamp()[i]->setWindow(true);
-						_gs->getvCamp()[i]->setWindowNum(1);
+					case CAMP_CASTLE:
+						if (getMenuC())
+						{
+							//========== Ã¢Àº ¿­·È°í ³»°¡ ¿¬Ã¢Àº ÀÌ°Å¾ß!
+							_gs->getvCamp()[i]->setWindow(true);
+							_gs->getvCamp()[i]->setWindowNum(getPixelC());
+
+
+
+						}
+
+						break;
+					case CAMP_DUNGEON:
+						if (getMenuD())
+						{
+							//========== Ã¢Àº ¿­·È°í ³»°¡ ¿¬Ã¢Àº ÀÌ°Å¾ß!
+							_gs->getvCamp()[i]->setWindow(true);
+							_gs->getvCamp()[i]->setWindowNum(getPixelD());
+
+
+						}
+
+						break;
 					}
+					//==========ÀÚ ¾îµô ´­·¶´Ï?
 
 					//============= ¼º¿¡¼­ ³ª°¡ÀÚ ===========
 					if (PtInRect(&RectMake(744, 544, 48, 30), _ptMouse))
@@ -186,26 +206,59 @@ void player::inputCity(void)
 				//=============Ã¢ÀÌ ¿­·Á ÀÖ¾î?
 				else
 				{
-					switch (_gs->getvCamp()[i]->getWindowNum())
+					switch (_gs->getvCamp()[i]->getCityInfo().camp)
 					{
-						//=========== È¦À» ´­·¶À»¶§
-					case 0:
-						break;
-
-						//=========== ¼ºÃ¤¸¦ ´­·¶À»¶§ 
-					case 1:
-
-
-
-
-						//=========== Ã¢ ´ÝÀÚ
-						if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+					case CAMP_CASTLE:
+						switch (_gs->getvCamp()[i]->getWindowNum())
 						{
-							_gs->getvCamp()[i]->setWindow(false);
+							//=========== È¦À» ´­·¶À»¶§
+						case 0:
+							break;
+
+							//=========== ¼ºÃ¤¸¦ ´­·¶À»¶§ 
+						case 8:
+
+
+
+
+							//=========== Ã¢ ´ÝÀÚ
+							if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+							{
+								_gs->getvCamp()[i]->setWindow(false);
+							}
+
+							break;
+
 						}
 
-						break;
 
+						break;
+					case CAMP_DUNGEON:
+						switch (_gs->getvCamp()[i]->getWindowNum())
+						{
+							//=========== È¦À» ´­·¶À»¶§
+						case 0:
+							break;
+
+							//=========== ¼ºÃ¤¸¦ ´­·¶À»¶§ 
+						case 1:
+
+
+
+
+							//=========== Ã¢ ´ÝÀÚ
+							if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+							{
+								_gs->getvCamp()[i]->setWindow(false);
+							}
+
+							break;
+
+						}
+
+
+
+						break;
 					}
 				}
 
