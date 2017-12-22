@@ -1,6 +1,23 @@
 #pragma once
 #include "gameNode.h"
 
+struct tagStructure
+{
+	// 구조물 정보
+	char name[256];
+	int num;
+	int level;
+	image* img;
+
+	//필요 자원
+	int gold;
+	int wood;
+	int iron;
+	int crystal;
+	int mercury;
+	int sulfur;
+	int gem;
+};
 
 class camp : public gameNode
 {
@@ -12,7 +29,8 @@ private:
 	image* _fieldShadowImg;
 	image* _cityBackground;
 
-	building _buildingInfo;		// 건물 정보
+	tagStructure _structure[18];// 구조체 정보
+	building _buildingInfo;		// 캠프 정보
 	POINT _cameraArr;			// 카메라 배열
 	POINT _fieldPoint;			// 필드 좌표
 	RECT _fieldRect;			// 필드 렉트
@@ -52,6 +70,7 @@ public:
 	void dungeonDraw(void);
 
 	//========== S E T T I N G ===========
+	void structureInit();
 	void buildingInit();
 	void buildingCondition(void);
 	void cameraSetting(void);

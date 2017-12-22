@@ -17,6 +17,7 @@ HRESULT camp::init(building info)
 
 	_buildingInfo = info;
 	buildingInit();
+	structureInit();
 
 	_fieldPoint.x = _buildingInfo.destX + _buildingInfo.enterX;
 	_fieldPoint.y = _buildingInfo.destY + _buildingInfo.enterY;
@@ -165,12 +166,14 @@ void camp::castleDraw(void)
 		{
 			//============== È¦
 		case 0:
+			IMAGEMANAGER->findImage("window_castle_hall")->render(getMemDC());
 			break;
-			//============== ¼ºÃ¤
+			
 		case 1:
 
 
 			break;
+			//============== ¼ºÃ¤
 		case 8:
 			for (int i = 0; i < 6; i++)
 			{
@@ -269,6 +272,7 @@ void camp::dungeonDraw(void)
 		{
 			//============== È¦
 		case 0:
+			IMAGEMANAGER->findImage("window_dungeon_hall")->render(getMemDC());
 			break;
 			//============== ¼ºÃ¤
 		case 1:
@@ -486,6 +490,25 @@ void camp::buildingCondition(void)
 		if (_guild > 5) _guild = 5;
 		break;
 	}
+}
+
+void camp::structureInit(void)
+{
+	switch (_camp)
+	{
+	case CAMP_CASTLE:
+		sprintf(_structure[0].name, "½Ã¹ÎÈ¸°ü ")
+
+		break;
+	case CAMP_DUNGEON:
+		break;
+	}
+
+
+
+
+
+
 }
 
 void camp::cameraSetting(void)

@@ -213,6 +213,10 @@ void player::inputCity(void)
 						{
 							//=========== È¦À» ´­·¶À»¶§
 						case 0:
+							if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+							{
+								_gs->getvCamp()[i]->setWindow(false);
+							}
 							break;
 
 							//=========== ¼ºÃ¤¸¦ ´­·¶À»¶§ 
@@ -229,6 +233,11 @@ void player::inputCity(void)
 
 							break;
 
+						default:
+							_gs->getvCamp()[i]->setWindow(false);
+
+							break;
+
 						}
 
 
@@ -238,6 +247,10 @@ void player::inputCity(void)
 						{
 							//=========== È¦À» ´­·¶À»¶§
 						case 0:
+							if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+							{
+								_gs->getvCamp()[i]->setWindow(false);
+							}
 							break;
 
 							//=========== ¼ºÃ¤¸¦ ´­·¶À»¶§ 
@@ -255,7 +268,10 @@ void player::inputCity(void)
 							break;
 
 						}
+					default:
+						_gs->getvCamp()[i]->setWindow(false);
 
+						break;
 
 
 						break;
