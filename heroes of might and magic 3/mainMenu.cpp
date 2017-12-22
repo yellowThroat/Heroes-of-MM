@@ -419,6 +419,27 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("gamebutton_return", "image/gameScene/ui/select_return.bmp", 100, 48, true, RGB(255, 0, 255));
 
 
+	//============================== U N I T =============================
+	//==========black dragon
+	IMAGEMANAGER->addFrameImage("black_attack_down", "image/Dungeon Creature/72_blackdragon/black_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_attack_down_shadow", "image/Dungeon Creature/72_blackdragon/black_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_attack_front", "image/Dungeon Creature/72_blackdragon/black_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_attack_front_shadow", "image/Dungeon Creature/72_blackdragon/black_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_attack_up", "image/Dungeon Creature/72_blackdragon/black_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_attack_up_shadow", "image/Dungeon Creature/72_blackdragon/black_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_damaged", "image/Dungeon Creature/72_blackdragon/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_damaged_shadow", "image/Dungeon Creature/72_blackdragon/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_dead", "image/Dungeon Creature/72_blackdragon/black_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_dead_shadow", "image/Dungeon Creature/72_blackdragon/black_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_idle", "image/Dungeon Creature/72_blackdragon/black_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_idle_shadow", "image/Dungeon Creature/72_blackdragon/black_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_move", "image/Dungeon Creature/72_blackdragon/black_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_move_shadow", "image/Dungeon Creature/72_blackdragon/black_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_select", "image/Dungeon Creature/72_blackdragon/black_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_select_shadow", "image/Dungeon Creature/72_blackdragon/black_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_switch", "image/Dungeon Creature/72_blackdragon/black_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("black_switch_shadow", "image/Dungeon Creature/72_blackdragon/black_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+
 
 
 	//================ T E R R A I N ==========================

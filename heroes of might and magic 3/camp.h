@@ -19,6 +19,16 @@ struct tagStructure
 	int gem;
 };
 
+struct tagUnitSample
+{
+	CREATURESTATE state;
+	image* img[STATE_END];
+	image* shadowImg[STATE_END];
+	int x;
+	int y;
+	
+};
+
 class camp : public gameNode
 {
 private:
@@ -29,7 +39,8 @@ private:
 	image* _fieldShadowImg;
 	image* _cityBackground;
 
-	tagStructure _structure[18];// 구조체 정보
+	tagUnitSample _unitSample[14];
+	tagStructure _structure;	// 구조체 정보
 	building _buildingInfo;		// 캠프 정보
 	POINT _cameraArr;			// 카메라 배열
 	POINT _fieldPoint;			// 필드 좌표
@@ -71,6 +82,7 @@ public:
 
 	//========== S E T T I N G ===========
 	void structureInit();
+	void unitSampleInit();
 	void buildingInit();
 	void buildingCondition(void);
 	void cameraSetting(void);
@@ -78,6 +90,7 @@ public:
 	void setBuildingInfo(building info) { _buildingInfo = info; }
 	void setFrameCycle(void);
 	void selectBox(void);
+	void changeState(image* img, int delay);
 
 
 	//========== G E T T E R =============

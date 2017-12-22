@@ -18,6 +18,7 @@ HRESULT camp::init(building info)
 	_buildingInfo = info;
 	buildingInit();
 	structureInit();
+	unitSampleInit();
 
 	_fieldPoint.x = _buildingInfo.destX + _buildingInfo.enterX;
 	_fieldPoint.y = _buildingInfo.destY + _buildingInfo.enterY;
@@ -167,6 +168,19 @@ void camp::castleDraw(void)
 			//============== È¦
 		case 0:
 			IMAGEMANAGER->findImage("window_castle_hall")->render(getMemDC());
+
+
+
+
+
+
+
+
+
+
+
+
+
 			break;
 			
 		case 1:
@@ -283,6 +297,24 @@ void camp::dungeonDraw(void)
 			}
 			IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(),
 				364, 424);
+
+
+
+			
+			for (int i = 0; i < 14; i++)
+			{
+				if (_unitSample[i].img[_unitSample[i].state] != NULL)
+				{
+					_unitSample[i].img[_unitSample[i].state]->frameRender(getMemDC(),
+						_unitSample[i].x, _unitSample[i].y);
+
+
+				}
+
+			}
+
+
+
 			IMAGEMANAGER->findImage("window_dungeon_fort")->render(getMemDC());
 			
 
@@ -309,6 +341,53 @@ void camp::setFrameCycle(void)
 	frameCycle("dungeon_pillar", 8);
 	frameCycle("dungeon_draCave_ani", 8);
 	frameCycle("dungeon_portal", 8);
+
+
+
+
+
+	//================ unit sample
+	
+	if (_showWindow && _windowNum == 1)
+	{
+		
+		for (int i = 0; i < 14; i++)
+		{
+			if (_unitSample[i].img[_unitSample[i].state] != NULL)
+			{
+
+				//changeState(_unitSample[i].img[j], 8);
+
+				if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % 8 == 0)
+				{
+				
+					if (_unitSample[i].img[_unitSample[i].state]->getFrameX() >=
+						_unitSample[i].img[_unitSample[i].state]->getMaxFrameX())
+					{
+						_unitSample[i].img[_unitSample[i].state]->setFrameX(-1);
+						_unitSample[i].state = (CREATURESTATE)(_unitSample[i].state + 1);
+				
+						if (_unitSample[i].state == STATE_SWITCH) _unitSample[i].state = STATE_DOWN;
+					}
+				
+				
+				
+				
+				
+					_unitSample[i].img[_unitSample[i].state]->setFrameX(_unitSample[i].img[_unitSample[i].state]->getFrameX() + 1);
+				
+				}
+
+
+			}
+			
+		}
+		
+
+
+	}
+	
+
 
 }
 
@@ -494,16 +573,6 @@ void camp::buildingCondition(void)
 
 void camp::structureInit(void)
 {
-	switch (_camp)
-	{
-	case CAMP_CASTLE:
-		sprintf(_structure[0].name, "½Ã¹ÎÈ¸°ü ")
-
-		break;
-	case CAMP_DUNGEON:
-		break;
-	}
-
 
 
 
@@ -518,5 +587,79 @@ void camp::cameraSetting(void)
 
 	_cameraArr.x = _cameraX / TILESIZE;
 	_cameraArr.y = _cameraY / TILESIZE;
+
+}
+
+void camp::changeState(image* img, int delay)
+{
+
+	if (_showWindow && _windowNum == 1)
+	{
+		if ((int)(TIMEMANAGER->getWorldTime() / TIMEMANAGER->getElapsedTime()) % delay == 0)
+		{
+
+			if (img->getFrameX() >= img->getMaxFrameX())
+			{
+				_unitSample[13].state = (CREATURESTATE)(_unitSample[13].state + 1);
+				img->setFrameX(-1);
+
+				if (_unitSample[13].state == STATE_SWITCH) _unitSample[13].state = STATE_DOWN;
+			}
+
+
+
+
+
+			img->setFrameX(img->getFrameX() + 1);
+
+		}
+
+
+
+
+	}
+}
+
+void camp::unitSampleInit(void)
+{
+	for (int i = 0; i < 14; i++)
+	{
+		for (int j = 0; j <= STATE_END; j++)
+		{
+			_unitSample[i].img[j] = NULL;
+			_unitSample[i].state = STATE_MOVE;
+			_unitSample[i].x = 100;
+			_unitSample[i].y = 100;
+		}
+	}
+
+
+
+	switch (_camp)
+	{
+	case CAMP_CASTLE:
+		break;
+	case CAMP_DUNGEON:
+
+
+
+		_unitSample[13].state = STATE_MOVE;
+		_unitSample[13].x = 264;
+		_unitSample[13].y = 384;
+		_unitSample[13].img[STATE_DOWN] = IMAGEMANAGER->findImage("black_attack_down");
+		_unitSample[13].img[STATE_UP] = IMAGEMANAGER->findImage("black_attack_up");
+		_unitSample[13].img[STATE_FRONT] = IMAGEMANAGER->findImage("black_attack_front");
+		_unitSample[13].img[STATE_IDLE] = IMAGEMANAGER->findImage("black_idle");
+		_unitSample[13].img[STATE_SELECT] = IMAGEMANAGER->findImage("black_select");
+		_unitSample[13].img[STATE_SWITCH] = IMAGEMANAGER->findImage("black_switch");
+		_unitSample[13].img[STATE_MOVE] = IMAGEMANAGER->findImage("black_move");
+		_unitSample[13].img[STATE_DEAD] = IMAGEMANAGER->findImage("black_dead");
+		_unitSample[13].img[STATE_DAMAGED] = IMAGEMANAGER->findImage("black_damaged");
+
+
+		break;
+	}
+
+
 
 }
