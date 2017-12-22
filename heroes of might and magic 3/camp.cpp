@@ -373,7 +373,7 @@ void camp::setFrameCycle(void)
 				
 				
 				
-				
+					
 					_unitSample[i].img[_unitSample[i].state]->setFrameX(_unitSample[i].img[_unitSample[i].state]->getFrameX() + 1);
 				
 				}
