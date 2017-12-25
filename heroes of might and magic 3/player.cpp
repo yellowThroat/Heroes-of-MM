@@ -27,6 +27,21 @@ HRESULT player::init(int myNum)
 	tmp.angle = 0;
 	addHero(PointMake(5,5),tmp);
 
+	ZeroMemory(&_myProperty, sizeof(myProperty));
+	ZeroMemory(&_myBuilding, sizeof(myBuilding));
+
+
+	_myProperty.gold = 123456;
+	_myProperty.gem = 1;
+	_myProperty.wood = 25;
+	_myProperty.iron = 36;
+	_myProperty.crystal = 5;
+	_myProperty.mercury = 123;
+	_myProperty.sulfur = 1234;
+	
+
+
+
 
 	return S_OK;
 }
@@ -200,6 +215,7 @@ void player::inputCity(void)
 					if (PtInRect(&RectMake(744, 544, 48, 30), _ptMouse))
 					{
 						_cityScene = false;
+						setProperty(_gs->getvCamp()[i]->getProperty());
 					}
 
 				}
@@ -213,23 +229,60 @@ void player::inputCity(void)
 						{
 							//=========== È¦À» ´­·¶À»¶§
 						case 0:
-							if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+							if (!_gs->getvCamp()[i]->getContents())
 							{
-								_gs->getvCamp()[i]->setWindow(false);
+								if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+								{
+									_gs->getvCamp()[i]->setWindow(false);
+								}
+
+								for (int j = 0; j < 16; j++)
+								{
+									if (PtInRect(&RectMake(
+										_gs->getvCamp()[i]->getStructure(j).x,
+										_gs->getvCamp()[i]->getStructure(j).y,
+										150, 70), _ptMouse))
+									{
+										_gs->getvCamp()[i]->setSaveStructure(j);
+										_gs->getvCamp()[i]->setContents(true);
+									}
+
+								}
+
+
+
+							}
+							else
+							{
+								if (PtInRect(&RectMake(492, 486, 64, 30), _ptMouse))
+								{
+									_gs->getvCamp()[i]->setContents(false);
+								}
+
+
+
+
 							}
 							break;
 
 							//=========== ¼ºÃ¤¸¦ ´­·¶À»¶§ 
-						case 8:
-
-
-
+						case 1:
 
 							//=========== Ã¢ ´ÝÀÚ
 							if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
 							{
 								_gs->getvCamp()[i]->setWindow(false);
 							}
+
+
+
+
+							break;
+						
+						
+						case 8:
+
+
 
 							break;
 

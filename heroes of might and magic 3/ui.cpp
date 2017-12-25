@@ -58,7 +58,14 @@ void ui::draw(void)
 		_miniMapRect.top + _pm->getCameraArr().y * 2);
 
 	IMAGEMANAGER->findImage("gameUI")->render(getMemDC());
-
+	
+	numberDraw(getMemDC(), _player->getProperty().wood, 45, 582);
+	numberDraw(getMemDC(), _player->getProperty().mercury, 156, 582);
+	numberDraw(getMemDC(), _player->getProperty().iron, 265, 582);
+	numberDraw(getMemDC(), _player->getProperty().sulfur, 376, 582);
+	numberDraw(getMemDC(), _player->getProperty().crystal, 487, 582);
+	numberDraw(getMemDC(), _player->getProperty().gem, 600, 582);
+	numberDraw(getMemDC(), _player->getProperty().gold, 716, 582);
 	
 
 	if (_mainButton)
@@ -140,6 +147,12 @@ void ui::draw(void)
 
 		}
 	}
+
+
+
+
+
+
 
 }
 

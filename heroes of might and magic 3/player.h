@@ -2,50 +2,6 @@
 #include "gameNode.h"
 #include "hero.h"
 
-typedef struct tagProperty
-{
-	int gold;
-	int crystal;
-	int wood;
-	int iron;
-	int sulfur;
-	int mercury;
-	int gem;	
-	tagProperty()
-	{
-		gold			= 0;
-		crystal			= 0;
-		wood			= 0;
-		iron			= 0;
-		sulfur			= 0;
-		mercury			= 0;
-		gem				= 0;
-	}
-
-}myProperty;
-
-typedef struct tagMyBuilding
-{
-	int camp;
-	int gold;
-	int crystal;
-	int wood;
-	int iron;
-	int sulfur;
-	int mercury;
-	int gem;
-	tagMyBuilding()
-	{
-		camp			= 1;
-		gold			= 0;
-		crystal			= 0;
-		wood			= 0;
-		iron			= 0;
-		sulfur			= 0;
-		mercury			= 0;
-		gem				= 0;
-	}
-}myBuilding;
 
 
 class playMap;
@@ -70,8 +26,8 @@ private:
 	vPath _vPath;
 
 private:
-	myProperty _myProperty;
-	myBuilding _myBuilding;
+	myProperty _myProperty;			// 플레이어가 가진 재산
+	myBuilding _myBuilding;			// 플레이어가 가진 건물수
 	POINT _mouseArr;
 	POINT _destination;
 
@@ -127,11 +83,15 @@ public:
 	bool getScene() { return _cityScene; }
 	vHero getHero() { return _vHero; }
 	bool getAutoCamera() { return _autoCamera; }
+	myProperty getProperty() { return _myProperty; }
+	myBuilding getBuilding() { return _myBuilding; }
 
 	//=========== S E T T E R ===============
 	void setScene(bool scene) { _cityScene = scene; }
 	void setCurrentCamp(int camp) { _currentCamp = camp; }
 	void setAutoCamera(bool autocamera) { _autoCamera = autocamera; }
+	void setProperty(myProperty pro) { _myProperty = pro; }
+	void setBuilding(myBuilding build) { _myBuilding = build; }
 	//=========== ADDRESS LINK===============
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
 	void setGameSceneAddressLink(gameScene* gs) { _gs = gs; }

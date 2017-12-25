@@ -70,6 +70,23 @@ namespace IOTA_UTIL
 		if (su == 1) IMAGEMANAGER->findImage(itoa(d, tmp, 10))->render(hdc, x, y);
 	}
 
+	void numberDraw(HDC hdc, int num, int x, int y)
+	{
+		for (int i = 6; i >= 0; )
+		{
+			if ((int)(num / pow(10, i)) != 0)
+			{
+				int a = i;
+				for (;i >= 0 ;i--)
+				{
+					IMAGEMANAGER->findImage("number")->frameRender(hdc, x + (a - i) * 7, y, (num % (int)pow(10,i+1)) / pow(10, i), 0);
+				}
+
+				break;
+			}
+			else i--;
+		}
+	}
 
 	//======= 픽셀 값 가져오기 
 	bool getPixelC(int x)

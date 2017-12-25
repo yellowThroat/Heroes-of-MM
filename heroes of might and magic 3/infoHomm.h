@@ -40,6 +40,7 @@ enum CREATURESTATE
 	STATE_MOVE,
 	STATE_SELECT,
 	STATE_SWITCH,
+	STATE_RANGE,
 	STATE_IDLE,
 	STATE_DAMAGED,
 	STATE_DEAD,
@@ -311,6 +312,50 @@ struct tagSaveInfo
 
 };
 
+typedef struct tagProperty
+{
+	int gold;
+	int crystal;
+	int wood;
+	int iron;
+	int sulfur;
+	int mercury;
+	int gem;
+	tagProperty()
+	{
+		gold = 0;
+		crystal = 0;
+		wood = 0;
+		iron = 0;
+		sulfur = 0;
+		mercury = 0;
+		gem = 0;
+	}
+
+}myProperty;
+
+typedef struct tagMyBuilding
+{
+	int camp;
+	int gold;
+	int crystal;
+	int wood;
+	int iron;
+	int sulfur;
+	int mercury;
+	int gem;
+	tagMyBuilding()
+	{
+		camp = 1;
+		gold = 0;
+		crystal = 0;
+		wood = 0;
+		iron = 0;
+		sulfur = 0;
+		mercury = 0;
+		gem = 0;
+	}
+}myBuilding;
 
 
 

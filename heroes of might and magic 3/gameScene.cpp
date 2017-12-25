@@ -145,7 +145,6 @@ void gameScene::render(void)
 
 	}
 	
-	
 
 
 	if(_fadeAlpha >0)
@@ -171,6 +170,7 @@ void gameScene::enterCity(void)
 					_player->setScene(true);
 					_player->setCurrentCamp(_vCamp[i]->getNum());
 					_player->getHero()[j]->setInCamp(true);
+					_vCamp[i]->setProperty(_player->getProperty());
 				}
 			}
 		}
@@ -257,6 +257,8 @@ void gameScene::addCamp(tagBuildingInfo info)
 	}
 
 	camp->init(info);
+
+	camp->setPlayerAddressLink(_player);
 
 	_vCamp.push_back(camp);
 
