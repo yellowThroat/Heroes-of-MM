@@ -79,7 +79,16 @@ void gameScene::update(void)
 	//============= CITY SCENE
 	if (_player->getScene())
 	{
-		_player->inputCity();									// 마을 : KEY DOWN
+		for (int i = 0; i < _vCamp.size(); i++)
+		{
+			if (_vCamp[i]->getNum() == _player->getCurrentCamp())
+			{
+				_vCamp[i]->inputCity();
+			}
+		}
+
+
+		//_player->inputCity();									// 마을 : KEY DOWN
 
 	}
 	//============= BATTLE SCENE

@@ -424,6 +424,46 @@ void camp::dungeonDraw(void)
 				SetTextColor(getMemDC(), RGB(0, 0, 0));
 
 			}
+			if (_contents)
+			{
+				IMAGEMANAGER->findImage("window_build")->render(getMemDC(), 202, 40);
+				IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 40);
+
+				_saveStructure.img->render(getMemDC(), 325, 88);
+
+				SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+				if (strlen(_saveStructure.explantion)<41)
+					TextOut(getMemDC(), 240, 201, _saveStructure.explantion, strlen(_saveStructure.explantion));
+
+				else
+				{
+					TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 41);
+					TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 41, strlen(_saveStructure.explantion) - 41);
+				}
+
+				SetTextColor(getMemDC(), RGB(0, 0, 0));
+				for (int i = 0; i < 4; i++)
+				{
+					IMAGEMANAGER->findImage("icon_resources")->frameRender(getMemDC(),
+						264 + i * 80, 344, i, 0);
+				}
+
+				for (int i = 0; i < 3; i++)
+				{
+					IMAGEMANAGER->findImage("icon_resources")->frameRender(getMemDC(),
+						304 + 80 * i, 417, 4 + i, 0);
+				}
+
+				numberDraw(getMemDC(), _saveStructure.wood, 277, 384);
+				numberDraw(getMemDC(), _saveStructure.mercury, 357, 384);
+				numberDraw(getMemDC(), _saveStructure.iron, 437, 384);
+				numberDraw(getMemDC(), _saveStructure.sulfur, 517, 384);
+				numberDraw(getMemDC(), _saveStructure.crystal, 317, 457);
+				numberDraw(getMemDC(), _saveStructure.gem, 397, 457);
+				numberDraw(getMemDC(), _saveStructure.gold, 470, 457);
+
+			}
 
 
 
@@ -724,6 +764,149 @@ void camp::buildingInit()
 
 void camp::inputCity(void)
 {
+	//지금 성을 보고 있는지?
+		//다른 열려 있는 창 없나?
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		if (!_showWindow)
+		{
+			switch (_camp)
+			{
+			case CAMP_CASTLE:
+				if (getMenuC())
+				{
+					_showWindow = true;
+					_windowNum = getPixelC();
+				}
+
+				break;
+			case CAMP_DUNGEON:
+				if (getMenuD())
+				{
+					_showWindow = true;
+					_windowNum = getPixelD();
+				}
+
+				break;
+			}
+			//===========성에서 나가는 버튼
+			if (PtInRect(&RectMake(744, 544, 48, 30), _ptMouse))
+			{
+				_play->setScene(false);
+				_play->setProperty(_property);
+			}
+		}
+		//=========창이 열려 있어?
+		else
+		{
+			switch (_camp)
+			{
+			case CAMP_CASTLE:
+				switch (_windowNum)
+				{
+					//===========홀을 눌렀을때
+				case 0:
+				{
+					if (!_contents)
+					{
+						if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+						{
+							_showWindow = false;
+						}
+						for (int i = 0; i < 16; i++)
+						{
+							if (PtInRect(&RectMake(
+								_structure[i].x, _structure[i].y, 150, 70), _ptMouse))
+							{
+								_contents = true;
+								_saveStructure = _structure[i];
+							}
+						}
+
+
+					}
+					else
+					{
+						if (PtInRect(&RectMake(492, 486, 64, 30), _ptMouse))
+						{
+							_contents = false;
+						}
+					}
+
+
+				}
+					break;
+
+					//=========성채를 눌렀을때
+				case 1:
+				{
+					if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+					{
+						_showWindow = false;
+					}
+				}
+					break;
+
+				default:
+					_showWindow = false;
+					break;
+				}
+			break;
+
+
+			case CAMP_DUNGEON:
+				switch (_windowNum)
+				{
+				case 0:
+					if (!_contents)
+					{
+						if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+						{
+							_showWindow = false;
+						}
+						for (int i = 0; i < 18; i++)
+						{
+							if (PtInRect(&RectMake(
+								_structure[i].x, _structure[i].y, 150, 70), _ptMouse))
+							{
+								_contents = true;
+								_saveStructure = _structure[i];
+							}
+						}
+
+
+					}
+					else
+					{
+						if (PtInRect(&RectMake(492, 486, 64, 30), _ptMouse))
+						{
+							_contents = false;
+						}
+					}
+
+				break;
+
+				case 1:
+					if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+					{
+						_showWindow = false;
+					}
+				break;
+
+				default:
+
+					_showWindow = false;
+
+				break;
+
+				}
+				break;
+			}
+		}
+
+	}
+	
+
 
 
 }
