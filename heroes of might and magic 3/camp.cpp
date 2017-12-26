@@ -170,25 +170,26 @@ void camp::castleDraw(void)
 		{
 			//============== 홀
 		case 0:
+		{
 			IMAGEMANAGER->findImage("window_3x2_hall")->render(getMemDC());
 			for (int i = 0; i < 16; i++)
-			{
-				SetTextColor(getMemDC(), RGB(255, 255, 255));
+				{
+					SetTextColor(getMemDC(), RGB(255, 255, 255));
 				
-				_structure[i].img->render(getMemDC(), _structure[i].x, _structure[i].y);
+					_structure[i].img->render(getMemDC(), _structure[i].x, _structure[i].y);
 				
-				_structure[i].checkImg->frameRender(getMemDC(),
-					_structure[i].x - 1,
-					_structure[i].y + 70, 0,
-					_structure[i].index);
+					_structure[i].checkImg->frameRender(getMemDC(),
+						_structure[i].x - 1,
+						_structure[i].y + 70, 0,
+						_structure[i].index);
 				
-				TextOut(getMemDC(),
-					_structure[i].x + 75 - _tcslen(_structure[i].name) / 2 * 8,
-					_structure[i].y + 72, _structure[i].name,
-					_tcslen(_structure[i].name));
-				SetTextColor(getMemDC(), RGB(0, 0, 0));
+					TextOut(getMemDC(),
+						_structure[i].x + 75 - _tcslen(_structure[i].name) / 2 * 8,
+						_structure[i].y + 72, _structure[i].name,
+						_tcslen(_structure[i].name));
+					SetTextColor(getMemDC(), RGB(0, 0, 0));
 
-			}
+				}
 			if (_contents)
 			{
 				IMAGEMANAGER->findImage("window_build")->render(getMemDC(), 202, 40);
@@ -198,15 +199,38 @@ void camp::castleDraw(void)
 
 				SetTextColor(getMemDC(), RGB(255, 255, 255));
 
-				//if(_tcslen(_saveStructure.explantion)<=16)
-				TextOutW(getMemDC(), 240, 201, (LPCWSTR)_saveStructure.explantion, 12);
-				//TextOutW(getMemDC(), 240, 201, L"_saveStructure.name",10);
-				
-				//else
-				//{
-				//	TextOutW(getMemDC(), 240, 191, _saveStructure.explantion, 18);
-				//	TextOutW(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
-				//}
+				if (_tcslen(_saveStructure.explantion) <= 42)
+				{
+					TextOut(getMemDC(), 240, 201, _saveStructure.explantion, _tcslen(_saveStructure.explantion));
+				}
+				else
+				{
+					char *separator = " ";
+					char *token;
+
+					token = strtok(_saveStructure.explantion, " ");
+
+					if ((_saveStructure.explantion + 42) == " ")
+					{
+						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 41);
+						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 41, _tcslen(_saveStructure.explantion) - 41);
+
+					}
+					else if ((_saveStructure.explantion + 43) == " ")
+					{
+						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
+						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
+
+					}
+					else if ((_saveStructure.explantion + 44) == " ")
+					{
+						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 43);
+						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 43, _tcslen(_saveStructure.explantion) - 43);
+
+					}
+
+					
+				}
 
 				//============ 건설 가능 여부 알림
 				if (_saveStructure.needBuilding)
@@ -264,83 +288,69 @@ void camp::castleDraw(void)
 			}
 
 
-
-
-
-
-
-
-
-
-
-
-
-			break;
+		}
+		break;
 			
 		case 1:
+		if(_fort > 0)
+		{
+			if (_fort < 1) _showWindow = false;
 			//============== 성채
 			for (int i = 0; i < 6; i++)
-			{
-				IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
-					168 + 394 * (i % 2), 25 + 133 * (i / 2));
-			}
+				{
+					IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
+						168 + 394 * (i % 2), 25 + 133 * (i / 2));
+				}
 			IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
 				364, 424);
 
 			for (int i = 0; i < 6; i++)
-			{
-				IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
-					168 + 394 * (i % 2), 25 + 133 * (i / 2));
-			}
+				{
+					IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
+						168 + 394 * (i % 2), 25 + 133 * (i / 2));
+				}
 			IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(),
 				364, 424);
 
 			for (int i = 0; i < 14; i++)
-			{
-				if (_unitSample[i].img[_unitSample[i].state] != NULL)
 				{
-					if (_level[0] < 2 && i == 1) continue;
-					else if (_level[0] >= 2 && i == 0) continue;
+					if (_unitSample[i].img[_unitSample[i].state] != NULL)
+					{
+						if (_level[0] < 2 && i == 1) continue;
+						else if (_level[0] >= 2 && i == 0) continue;
 
-					if (_level[1] < 2 && i == 3) continue;
-					else if (_level[1] >= 2 && i == 2) continue;
+						if (_level[1] < 2 && i == 3) continue;
+						else if (_level[1] >= 2 && i == 2) continue;
 
-					if (_level[2] < 2 && i == 5) continue;
-					else if (_level[2] >= 2 && i == 4) continue;
+						if (_level[2] < 2 && i == 5) continue;
+						else if (_level[2] >= 2 && i == 4) continue;
 
-					if (_level[3] < 2 && i == 7) continue;
-					else if (_level[3] >= 2 && i == 6) continue;
+						if (_level[3] < 2 && i == 7) continue;
+						else if (_level[3] >= 2 && i == 6) continue;
 
-					if (_level[4] < 2 && i == 9) continue;
-					else if (_level[4] >= 2 && i == 8) continue;
+						if (_level[4] < 2 && i == 9) continue;
+						else if (_level[4] >= 2 && i == 8) continue;
 
-					if (_level[5] < 2 && i == 11) continue;
-					else if (_level[5] >= 2 && i == 10) continue;
+						if (_level[5] < 2 && i == 11) continue;
+						else if (_level[5] >= 2 && i == 10) continue;
 
-					if (_level[6] < 2 && i == 13) continue;
-					else if (_level[6] >= 2 && i == 12) continue;
+						if (_level[6] < 2 && i == 13) continue;
+						else if (_level[6] >= 2 && i == 12) continue;
 
-					_unitSample[i].img[_unitSample[i].state]->frameRender(getMemDC(),
-						_unitSample[i].x, _unitSample[i].y);
-					_unitSample[i].shadowImg[_unitSample[i].state]->alphaFrameRender(getMemDC(),
-						_unitSample[i].x, _unitSample[i].y, SHADOWALPHA);
+						_unitSample[i].img[_unitSample[i].state]->frameRender(getMemDC(),
+							_unitSample[i].x, _unitSample[i].y);
+						_unitSample[i].shadowImg[_unitSample[i].state]->alphaFrameRender(getMemDC(),
+							_unitSample[i].x, _unitSample[i].y, SHADOWALPHA);
+
+					}
 
 				}
 
-			}
-
-
-
-
-
-
-
-
-
 			IMAGEMANAGER->findImage("window_castle_fort")->render(getMemDC());
 
+		}
 
-			break;
+		break;
 		}
 	}
 
@@ -437,162 +447,157 @@ void camp::dungeonDraw(void)
 		{
 			//============== 홀
 		case 0:
-			IMAGEMANAGER->findImage("window_4x3_hall")->render(getMemDC());
+		{
 			
-			for (int i = 0; i < 18; i++)
-			{
-				SetTextColor(getMemDC(), RGB(255, 255, 255));
+				IMAGEMANAGER->findImage("window_4x3_hall")->render(getMemDC());
+			
+				for (int i = 0; i < 18; i++)
+				{
+					SetTextColor(getMemDC(), RGB(255, 255, 255));
 
-				_structure[i].img->render(getMemDC(), _structure[i].x, _structure[i].y);
+					_structure[i].img->render(getMemDC(), _structure[i].x, _structure[i].y);
 				
-				_structure[i].checkImg->frameRender(getMemDC(),
-					_structure[i].x - 1,
-					_structure[i].y + 70, 0,
-					_structure[i].index);
+					_structure[i].checkImg->frameRender(getMemDC(),
+						_structure[i].x - 1,
+						_structure[i].y + 70, 0,
+						_structure[i].index);
 
-				TextOut(getMemDC(),
-					_structure[i].x + 75 - _tcslen(_structure[i].name) / 2 * 8,
-					_structure[i].y + 72, _structure[i].name,
-					_tcslen(_structure[i].name));
-				SetTextColor(getMemDC(), RGB(0, 0, 0));
-
-			}
-			if (_contents)
-			{
-				IMAGEMANAGER->findImage("window_build")->render(getMemDC(), 202, 40);
-				IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 40);
-
-				_saveStructure.img->render(getMemDC(), 325, 88);
-
-				SetTextColor(getMemDC(), RGB(255, 255, 255));
-
-				if (_tcslen(_saveStructure.explantion)<=42)
-					TextOut(getMemDC(), 240, 201, _saveStructure.explantion, _tcslen(_saveStructure.explantion));
-
-				else
-				{
-					TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
-					TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
-				}
-
-
-				//============ 건설 가능 여부 알림
-				if (_saveStructure.needBuilding)
-				{
-
-					TextOut(getMemDC(), 385, 274, "요구 :", 6);
 					TextOut(getMemDC(),
-						399 - _tcslen(_saveStructure.needBuild) / 2 * 8,
-						290, _saveStructure.needBuild, _tcslen(_saveStructure.needBuild));
+						_structure[i].x + 75 - _tcslen(_structure[i].name) / 2 * 8,
+						_structure[i].y + 72, _structure[i].name,
+						_tcslen(_structure[i].name));
+					SetTextColor(getMemDC(), RGB(0, 0, 0));
+
 				}
-				else
+				if (_contents)
 				{
-					if (_saveStructure.index != 3)
-						TextOut(getMemDC(), 235, 282, "건물을 짓기 위한 조건을 모두 충족하였습니다.", 44);
+					IMAGEMANAGER->findImage("window_build")->render(getMemDC(), 202, 40);
+					IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 40);
+
+					_saveStructure.img->render(getMemDC(), 325, 88);
+
+					SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+					if (_tcslen(_saveStructure.explantion)<=42)
+						TextOut(getMemDC(), 240, 201, _saveStructure.explantion, _tcslen(_saveStructure.explantion));
+
+					else
+					{
+						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
+						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
+					}
+
+
+					//============ 건설 가능 여부 알림
+					if (_saveStructure.needBuilding)
+					{
+
+						TextOut(getMemDC(), 385, 274, "요구 :", 6);
+						TextOut(getMemDC(),
+							399 - _tcslen(_saveStructure.needBuild) / 2 * 8,
+							290, _saveStructure.needBuild, _tcslen(_saveStructure.needBuild));
+					}
+					else
+					{
+						if (_saveStructure.index != 3)
+							TextOut(getMemDC(), 235, 282, "건물을 짓기 위한 조건을 모두 충족하였습니다.", 44);
+
+					}
+
+
+					if (_saveStructure.index == 0)
+					{
+
+					}
+					else
+					{
+						IMAGEMANAGER->findImage("build_impossible")->render(getMemDC(), 247, 486);
+					}
+					if (_saveStructure.index == 3)
+					{
+						TextOut(getMemDC(), 251, 282, "이 마을엔 이 건물을 건설할 수 없습니다.", 39);
+
+					}
+
+					SetTextColor(getMemDC(), RGB(0, 0, 0));
+
+					for (int i = 0; i < 4; i++)
+					{
+						IMAGEMANAGER->findImage("icon_resources")->frameRender(getMemDC(),
+							264 + i * 80, 344, i, 0);
+					}
+
+					for (int i = 0; i < 3; i++)
+					{
+						IMAGEMANAGER->findImage("icon_resources")->frameRender(getMemDC(),
+							304 + 80 * i, 417, 4 + i, 0);
+					}
+
+					numberDraw(getMemDC(), _saveStructure.wood, 277, 384);
+					numberDraw(getMemDC(), _saveStructure.mercury, 357, 384);
+					numberDraw(getMemDC(), _saveStructure.iron, 437, 384);
+					numberDraw(getMemDC(), _saveStructure.sulfur, 517, 384);
+					numberDraw(getMemDC(), _saveStructure.crystal, 317, 457);
+					numberDraw(getMemDC(), _saveStructure.gem, 397, 457);
+					numberDraw(getMemDC(), _saveStructure.gold, 470, 457);
 
 				}
 
+		}
+		break;
 
-				if (_saveStructure.index == 0)
-				{
-
-				}
-				else
-				{
-					IMAGEMANAGER->findImage("build_impossible")->render(getMemDC(), 247, 486);
-				}
-				if (_saveStructure.index == 3)
-				{
-					TextOut(getMemDC(), 251, 282, "이 마을엔 이 건물을 건설할 수 없습니다.", 39);
-
-				}
-
-				SetTextColor(getMemDC(), RGB(0, 0, 0));
-
-				for (int i = 0; i < 4; i++)
-				{
-					IMAGEMANAGER->findImage("icon_resources")->frameRender(getMemDC(),
-						264 + i * 80, 344, i, 0);
-				}
-
-				for (int i = 0; i < 3; i++)
-				{
-					IMAGEMANAGER->findImage("icon_resources")->frameRender(getMemDC(),
-						304 + 80 * i, 417, 4 + i, 0);
-				}
-
-				numberDraw(getMemDC(), _saveStructure.wood, 277, 384);
-				numberDraw(getMemDC(), _saveStructure.mercury, 357, 384);
-				numberDraw(getMemDC(), _saveStructure.iron, 437, 384);
-				numberDraw(getMemDC(), _saveStructure.sulfur, 517, 384);
-				numberDraw(getMemDC(), _saveStructure.crystal, 317, 457);
-				numberDraw(getMemDC(), _saveStructure.gem, 397, 457);
-				numberDraw(getMemDC(), _saveStructure.gold, 470, 457);
-
-			}
-
-
-
-
-
-
-
-
-
-			break;
 			//============== 성채
 		case 1:
+		{
+			if (_fort < 1) _showWindow = false;
+			
 			for (int i = 0; i < 6; i++)
-			{
-				IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(),
-					168 + 394*(i%2), 25 + 133*(i/2));
-			}
+				{
+					IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(),
+						168 + 394*(i%2), 25 + 133*(i/2));
+				}
+		
 			IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(),
 				364, 424);
-
-
-
 			
 			for (int i = 0; i < 14; i++)
-			{
-				if (_unitSample[i].img[_unitSample[i].state] != NULL)
 				{
-					if (_level[0] < 2 && i == 1) continue;
-					else if (_level[0] >= 2 && i == 0) continue;
+					if (_unitSample[i].img[_unitSample[i].state] != NULL)
+					{
+						if (_level[0] < 2 && i == 1) continue;
+						else if (_level[0] >= 2 && i == 0) continue;
 
-					if (_level[1] < 2 && i == 3) continue;
-					else if (_level[1] >= 2 && i == 2) continue;
+						if (_level[1] < 2 && i == 3) continue;
+						else if (_level[1] >= 2 && i == 2) continue;
 
-					if (_level[2] < 2 && i == 5) continue;
-					else if (_level[2] >= 2 && i == 4) continue;
+						if (_level[2] < 2 && i == 5) continue;
+						else if (_level[2] >= 2 && i == 4) continue;
 
-					if (_level[3] < 2 && i == 7) continue;
-					else if (_level[3] >= 2 && i == 6) continue;
+						if (_level[3] < 2 && i == 7) continue;
+						else if (_level[3] >= 2 && i == 6) continue;
 
-					if (_level[4] < 2 && i == 9) continue;
-					else if (_level[4] >= 2 && i == 8) continue;
+						if (_level[4] < 2 && i == 9) continue;
+						else if (_level[4] >= 2 && i == 8) continue;
 
-					if (_level[5] < 2 && i == 11) continue;
-					else if (_level[5] >= 2 && i == 10) continue;
+						if (_level[5] < 2 && i == 11) continue;
+						else if (_level[5] >= 2 && i == 10) continue;
 
-					if (_level[6] < 2 && i == 13) continue;
-					else if (_level[6] >= 2 && i == 12) continue;
+						if (_level[6] < 2 && i == 13) continue;
+						else if (_level[6] >= 2 && i == 12) continue;
 
-					_unitSample[i].img[_unitSample[i].state]->frameRender(getMemDC(),
-						_unitSample[i].x, _unitSample[i].y);
-					_unitSample[i].shadowImg[_unitSample[i].state]->alphaFrameRender(getMemDC(),
-						_unitSample[i].x, _unitSample[i].y,SHADOWALPHA);
+						_unitSample[i].img[_unitSample[i].state]->frameRender(getMemDC(),
+							_unitSample[i].x, _unitSample[i].y);
+						_unitSample[i].shadowImg[_unitSample[i].state]->alphaFrameRender(getMemDC(),
+							_unitSample[i].x, _unitSample[i].y,SHADOWALPHA);
+
+					}
 
 				}
 
-			}
-
-
-
 			IMAGEMANAGER->findImage("window_dungeon_fort")->render(getMemDC());
-			
 
-			break;
+		}
+		break;
 
 		}
 	}
