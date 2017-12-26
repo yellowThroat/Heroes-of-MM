@@ -371,6 +371,7 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("hall_color", "image/gameScene/camp/window/hall_color.bmp", 152, 72, 1, 4, true, RGB(255, 0, 255));
 
 	//==== window
+	IMAGEMANAGER->addImage("build_impossible", "image/gameScene/camp/window/build_impossible.bmp", 64, 30, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window_build", "image/gameScene/camp/window/window_build.bmp", 403, 528, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window_build_shadow", "image/gameScene/camp/window/window_build_shadow.bmp", 403, 528, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("window_build_shadow")->AlphaInit();
@@ -390,7 +391,7 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("Dhall_farm3", "image/gameScene/camp/dungeon/hall_farm3.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Dhall_forge", "image/gameScene/camp/dungeon/hall_forge.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Dhall_fort1", "image/gameScene/camp/dungeon/hall_fort1.bmp", 150, 70, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("Dhall_frot2", "image/gameScene/camp/dungeon/hall_fort2.bmp", 150, 70, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("Dhall_fort2", "image/gameScene/camp/dungeon/hall_fort2.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Dhall_fort3", "image/gameScene/camp/dungeon/hall_fort3.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Dhall_guild1", "image/gameScene/camp/dungeon/hall_guild1.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Dhall_guild2", "image/gameScene/camp/dungeon/hall_guild2.bmp", 150, 70, true, RGB(255, 0, 255));
@@ -435,6 +436,7 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("Chall_hall1", "image/gameScene/camp/castle/hall_hall1.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_hall2", "image/gameScene/camp/castle/hall_hall2.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_hall3", "image/gameScene/camp/castle/hall_hall3.bmp", 150, 70, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("Chall_hall4", "image/gameScene/camp/castle/hall_hall4.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_market1", "image/gameScene/camp/castle/hall_market1.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_market2", "image/gameScene/camp/castle/hall_market2.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_pike1", "image/gameScene/camp/castle/hall_pike1.bmp", 150, 70, true, RGB(255, 0, 255));
@@ -447,7 +449,7 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("Chall_tower3", "image/gameScene/camp/castle/hall_tower3.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_tower4", "image/gameScene/camp/castle/hall_tower4.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_fort1", "image/gameScene/camp/castle/hall_fort1.bmp", 150, 70, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("Chall_frot2", "image/gameScene/camp/castle/hall_fort2.bmp", 150, 70, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("Chall_fort2", "image/gameScene/camp/castle/hall_fort2.bmp", 150, 70, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("Chall_fort3", "image/gameScene/camp/castle/hall_fort3.bmp", 150, 70, true, RGB(255, 0, 255));
 
 	

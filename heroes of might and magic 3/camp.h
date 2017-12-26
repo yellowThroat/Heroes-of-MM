@@ -4,14 +4,17 @@
 struct tagStructure
 {
 	// 구조물 정보
-	char name[256];				// 이름
-	char explantion[256];		// 건물 설명
-	int num;					// 머지 이건
+	TCHAR name[256];				// 이름
+	TCHAR explantion[256];		// 건물 설명
+	TCHAR needBuild[256];		// 선행 건물
+	int num;					// 몇번째 칸에 있는것이다.
 	int level;					// 이건 또 머야	
 	image* img;					// 건물 사진
 	image* checkImg;
 	int x, y;					// 그릴 위치
 	int index;					// 건설 가능 여부
+	bool needResources;			// 자원 부족
+	bool needBuilding;			// 테크트리 필요
 	//필요 자원
 	int gold;
 	int wood;

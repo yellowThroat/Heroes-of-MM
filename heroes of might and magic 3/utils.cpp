@@ -86,6 +86,10 @@ namespace IOTA_UTIL
 			}
 			else i--;
 		}
+		if (num == 0)
+		{
+			IMAGEMANAGER->findImage("number")->frameRender(hdc, x, y, 0, 0);
+		}
 	}
 
 	//======= 픽셀 값 가져오기 
