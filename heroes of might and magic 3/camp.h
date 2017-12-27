@@ -35,6 +35,25 @@ struct tagUnitSample
 	
 };
 
+struct tagRecruit
+{	
+	char unit[256];				// 유닛 이름
+	char building[256];			// 건물 이름
+	int output;					// 주 생산량
+	int remain;					// 뽑을 수 있는 병력수
+	int x, y;					// 홀 렌더시에 좌표
+	int num;					// 몇번째 칸인지
+	
+	int gold;					// 필요한 자원들
+	int wood;
+	int iron;
+	int sulfur;
+	int mercury;
+	int crystal;
+	int gem;
+	
+};
+
 class player;
 
 class camp : public gameNode
@@ -47,8 +66,9 @@ private:
 	image* _fieldShadowImg;
 	image* _cityBackground;
 
-	tagUnitSample _unitSample[14];
+	tagUnitSample _unitSample[14];	// 유닛 샘플
 	tagStructure _structure[18];	// 구조체 정보
+	tagRecruit _recruit[7];		// 유닛 생산 정보
 	building _buildingInfo;		// 캠프 정보
 	POINT _cameraArr;			// 카메라 배열
 	POINT _fieldPoint;			// 필드 좌표
@@ -77,7 +97,9 @@ private:
 	float _cameraX;				// 카메라 X
 	float _cameraY;				// 카메라 Y
 	myProperty _property;		// 플레이어 자원
-	tagStructure _saveStructure;// 찍은 건물
+	tagStructure _saveStructure;// 찍은 건물 ( 홀에서 )
+	tagRecruit _saveRecruit;	// 찍은 유닛 ( 성채에서 )
+	
 
 
 public:
@@ -97,6 +119,7 @@ public:
 	void structureInit();
 	void unitSampleInit();
 	void buildingInit();
+	void recruitInit();
 	void buildingCondition(void);
 	void cameraSetting(void);
 	void setCityScene(bool scene) { _cityScene = scene; }
