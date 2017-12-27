@@ -375,6 +375,9 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("window_build", "image/gameScene/camp/window/window_build.bmp", 403, 528, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window_build_shadow", "image/gameScene/camp/window/window_build_shadow.bmp", 403, 528, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("window_build_shadow")->AlphaInit();
+	IMAGEMANAGER->addImage("window_recruit", "image/gameScene/camp/window/window_recruit.bmp", 493, 404, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_recruit_shadow", "image/gameScene/camp/window/window_recruit_shadow.bmp", 493, 404, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("window_recruit_shadow")->AlphaInit();
 	IMAGEMANAGER->addImage("window_3x2_hall", "image/gameScene/camp/window/window_3x2_hall.bmp", 800, 600, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window_4x3_hall", "image/gameScene/camp/window/window_4x3_hall.bmp", 800, 600, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("icon_resources", "image/gameScene/camp/window/resources.bmp", 224, 32, 7, 1, true, RGB(255, 0, 255));

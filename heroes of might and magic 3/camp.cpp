@@ -21,6 +21,7 @@ HRESULT camp::init(building info)
 	buildingInit();
 	structureInit();
 	unitSampleInit();
+	recruitInit();
 
 	_fieldPoint.x = _buildingInfo.destX + _buildingInfo.enterX;
 	_fieldPoint.y = _buildingInfo.destY + _buildingInfo.enterY;
@@ -193,7 +194,7 @@ void camp::castleDraw(void)
 			if (_contents)
 			{
 				IMAGEMANAGER->findImage("window_build")->render(getMemDC(), 202, 40);
-				IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 40);
+				IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 100);
 
 				_saveStructure.img->render(getMemDC(), 325, 88);
 
@@ -205,30 +206,6 @@ void camp::castleDraw(void)
 				}
 				else
 				{
-					char *separator = " ";
-					char *token;
-
-					token = strtok(_saveStructure.explantion, " ");
-
-					if ((_saveStructure.explantion + 42) == " ")
-					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 41);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 41, _tcslen(_saveStructure.explantion) - 41);
-
-					}
-					else if ((_saveStructure.explantion + 43) == " ")
-					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
-
-					}
-					else if ((_saveStructure.explantion + 44) == " ")
-					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 43);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 43, _tcslen(_saveStructure.explantion) - 43);
-
-					}
-
 					
 				}
 
@@ -347,6 +324,18 @@ void camp::castleDraw(void)
 				}
 
 			IMAGEMANAGER->findImage("window_castle_fort")->render(getMemDC());
+
+
+
+			//================== 리크루트 창 염
+			if (_contents)
+			{
+
+			}
+
+
+
+
 
 		}
 
@@ -472,7 +461,7 @@ void camp::dungeonDraw(void)
 				if (_contents)
 				{
 					IMAGEMANAGER->findImage("window_build")->render(getMemDC(), 202, 40);
-					IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 40);
+					IMAGEMANAGER->findImage("window_build_shadow")->alphaRender(getMemDC(), 202, 40, 100);
 
 					_saveStructure.img->render(getMemDC(), 325, 88);
 
@@ -483,8 +472,6 @@ void camp::dungeonDraw(void)
 
 					else
 					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
 					}
 
 
@@ -967,10 +954,48 @@ void camp::inputCity(void)
 					//=========성채를 눌렀을때
 				case 1:
 				{
-					if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+					if (!_contents)
 					{
-						_showWindow = false;
+						//============== recruit window를 띄우자
+						for (int i = 0; i < 7; i++)
+						{
+							if (PtInRect(&RectMake(_recruit[i].x, _recruit[i].y, 386, 126), _ptMouse))
+							{
+								_saveRecruit = _recruit[i];
+								_contents = true;
+
+
+
+
+							}
+						}
+
+
+
+
+
+
+
+						//============== 창 닫는거
+						if (PtInRect(&RectMake(748, 556, 48, 40), _ptMouse))
+						{
+							_showWindow = false;
+						}
+
 					}
+					else
+					{
+						//================ recruit window가 떠잇음
+
+						//============== 창 닫는거
+						if (PtInRect(&RectMake(433, 329, 64, 32), _ptMouse))
+						{
+							_contents = false;
+						}
+
+
+					}
+
 				}
 					break;
 
@@ -1355,6 +1380,214 @@ void camp::buildingCondition(void)
 
 
 
+
+}
+
+void camp::recruitInit(void)
+{
+	for (int i = 0; i < 7; i++)
+	{
+		ZeroMemory(&_recruit[i], sizeof(tagRecruit));
+		_recruit[i].num = i;
+		if (i != 6)
+		{
+			_recruit[i].x = 10 + (i % 2) * 394;
+			_recruit[i].y = 22 + (i / 2) * 133;
+		}
+		else
+		{
+			_recruit[i].x = 206;
+			_recruit[i].y = 421;
+
+			// 사이즈는 386 * 126
+		}
+	}
+	switch (_camp)
+	{
+	case CAMP_CASTLE:
+		if (_level[0] == 1)
+		{
+			sprintf(_recruit[0].unit, "창병");
+			sprintf(_recruit[0].building, "경비숙소");
+			
+			
+
+		}
+		else if (_level[0] == 2)
+		{
+			sprintf(_recruit[0].unit, "도끼 창병");
+			sprintf(_recruit[0].building, "향상된 경비숙소");
+
+		}
+
+		if (_level[1] == 1)
+		{
+			sprintf(_recruit[1].unit, "궁수");
+			sprintf(_recruit[1].building, "궁수초소");
+
+		}
+		else if (_level[1] == 2)
+		{
+			sprintf(_recruit[1].unit, "저격수");
+			sprintf(_recruit[1].building, "향상된 궁수초소");
+
+		}
+		if (_level[2] == 1)
+		{
+			sprintf(_recruit[2].unit, "그리핀");
+			sprintf(_recruit[2].building, "그리핀 타워");
+
+		}
+		else if (_level[2] == 2)
+		{
+			sprintf(_recruit[2].unit, "로열 그리핀");
+			sprintf(_recruit[2].building, "향상된 그리핀 타워");
+
+		}
+		if (_level[3] == 1)
+		{
+			sprintf(_recruit[3].unit, "검사");
+			sprintf(_recruit[3].building, "병영");
+
+		}
+		else if (_level[3] == 2)
+		{
+			sprintf(_recruit[3].unit, "크루세이더");
+			sprintf(_recruit[3].building, "향상된 병영");
+							 
+		}
+		if (_level[4] == 1)
+		{
+			sprintf(_recruit[4].unit, "수도사");
+			sprintf(_recruit[4].building, "수도원");
+
+		}
+		else if (_level[4] == 2)
+		{
+			sprintf(_recruit[4].unit, "열성 수도사");
+			sprintf(_recruit[4].building, "향상된 수도원");
+
+
+		}
+		if (_level[5] == 1)
+		{
+			sprintf(_recruit[5].unit, "기사단");
+			sprintf(_recruit[5].building, "연병장");
+
+		}
+		else if (_level[5] == 2)
+		{
+			sprintf(_recruit[5].unit, "챔피언");
+			sprintf(_recruit[5].building, "향상된 연병장");
+
+		}
+		if (_level[6] == 1)
+		{
+			sprintf(_recruit[6].unit, "천사");
+			sprintf(_recruit[6].building, "천상의 문");
+
+		}
+		else if (_level[6] == 2)
+		{
+			sprintf(_recruit[6].unit, "대천사");
+			sprintf(_recruit[6].building, "향상된 천상의 문");
+
+		}
+
+		break;
+	case CAMP_DUNGEON:
+
+		if (_level[0] == 1)
+		{
+			sprintf(_recruit[0].unit, "동굴인");
+			sprintf(_recruit[0].building, "사육장");
+
+
+
+		}
+		else if (_level[0] == 2)
+		{
+			sprintf(_recruit[0].unit, "지옥의 동굴인");
+			sprintf(_recruit[0].building, "향상된 사육장");
+
+		}
+
+		if (_level[1] == 1)
+		{
+			sprintf(_recruit[1].unit, "하피");
+			sprintf(_recruit[1].building, "하피 둥지");
+
+		}
+		else if (_level[1] == 2)
+		{
+			sprintf(_recruit[1].unit, "하피마녀");
+			sprintf(_recruit[1].building, "향상된 하피 둥지");
+
+		}
+		if (_level[2] == 1)
+		{
+			sprintf(_recruit[2].unit, "주시자");
+			sprintf(_recruit[2].building, "주시의 기둥");
+
+		}
+		else if (_level[2] == 2)
+		{
+			sprintf(_recruit[2].unit, "악마의 눈");
+			sprintf(_recruit[2].building, "향상된 주시의 기둥");
+
+		}
+		if (_level[3] == 1)
+		{
+			sprintf(_recruit[3].unit, "메두사");
+			sprintf(_recruit[3].building, "침묵의 회당");
+
+		}
+		else if (_level[3] == 2)
+		{
+			sprintf(_recruit[3].unit, "메두사 퀸");
+			sprintf(_recruit[3].building, "향상된 침묵의 회당");
+
+		}
+		if (_level[4] == 1)
+		{
+			sprintf(_recruit[4].unit, "미노타우르스");
+			sprintf(_recruit[4].building, "미궁");
+
+		}
+		else if (_level[4] == 2)
+		{
+			sprintf(_recruit[4].unit, "미노타우르스 킹");
+			sprintf(_recruit[4].building, "향상된 미궁");
+
+
+		}
+		if (_level[5] == 1)
+		{
+			sprintf(_recruit[5].unit, "만티코어");
+			sprintf(_recruit[5].building, "만티코어 동굴");
+
+		}
+		else if (_level[5] == 2)
+		{
+			sprintf(_recruit[5].unit, "스코피코어");
+			sprintf(_recruit[5].building, "향상된 만티코어 동굴");
+
+		}
+		if (_level[6] == 1)
+		{
+			sprintf(_recruit[6].unit, "레드 드래곤");
+			sprintf(_recruit[6].building, "드래곤 동굴");
+
+		}
+		else if (_level[6] == 2)
+		{
+			sprintf(_recruit[6].unit, "블랙 드래곤");
+			sprintf(_recruit[6].building, "향상된 드래곤 동굴");
+
+		}
+
+		break;
+	}
 
 }
 
