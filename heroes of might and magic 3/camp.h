@@ -4,9 +4,9 @@
 struct tagStructure
 {
 	// 구조물 정보
-	TCHAR name[256];				// 이름
-	TCHAR explantion[256];		// 건물 설명
-	TCHAR needBuild[256];		// 선행 건물
+	char name[256];				// 이름
+	char explantion[256];		// 건물 설명
+	char needBuild[256];		// 선행 건물
 	int num;					// 몇번째 칸에 있는것이다.
 	int level;					// 이건 또 머야	
 	image* img;					// 건물 사진

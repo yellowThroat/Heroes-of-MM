@@ -184,9 +184,9 @@ void camp::castleDraw(void)
 						_structure[i].index);
 				
 					TextOut(getMemDC(),
-						_structure[i].x + 75 - _tcslen(_structure[i].name) / 2 * 8,
+						_structure[i].x + 75 - strlen(_structure[i].name) / 2 * 8,
 						_structure[i].y + 72, _structure[i].name,
-						_tcslen(_structure[i].name));
+						strlen(_structure[i].name));
 					SetTextColor(getMemDC(), RGB(0, 0, 0));
 
 				}
@@ -199,37 +199,49 @@ void camp::castleDraw(void)
 
 				SetTextColor(getMemDC(), RGB(255, 255, 255));
 
-				if (_tcslen(_saveStructure.explantion) <= 42)
+				if (strlen(_saveStructure.explantion) <= 42)
 				{
-					TextOut(getMemDC(), 240, 201, _saveStructure.explantion, _tcslen(_saveStructure.explantion));
+					TextOut(getMemDC(), 240, 201, _saveStructure.explantion, strlen(_saveStructure.explantion));
+				}
+				else if (strlen(_saveStructure.explantion) > 42 && strlen(_saveStructure.explantion) <= 86)
+				{
+					int len = 0;
+					for (int i = 36; i < 44; i++)
+					{
+						if (*(_saveStructure.explantion + i) == ' ' )
+						{
+							len = i;
+							break;
+						}
+					}
+					TextOut(getMemDC(), 240, 193, _saveStructure.explantion, len);
+					TextOut(getMemDC(), 240, 209, _saveStructure.explantion + len + 1, strlen(_saveStructure.explantion) - len - 1);
 				}
 				else
 				{
-					char *separator = " ";
-					char *token;
-
-					token = strtok(_saveStructure.explantion, " ");
-
-					if ((_saveStructure.explantion + 42) == " ")
+					int len = 0;
+					int lenS = 0;
+					for (int i = 36; i < 44; i++)
 					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 41);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 41, _tcslen(_saveStructure.explantion) - 41);
-
+						if (*(_saveStructure.explantion + i) == ' ')
+						{
+							len = i;
+							break;
+						}
 					}
-					else if ((_saveStructure.explantion + 43) == " ")
+					for (int i = 76; i < 86; i++)
 					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
-
+						if (*(_saveStructure.explantion + i) == ' ')
+						{
+							lenS = i;
+							break;
+						}
 					}
-					else if ((_saveStructure.explantion + 44) == " ")
-					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 43);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 43, _tcslen(_saveStructure.explantion) - 43);
+					TextOut(getMemDC(), 240, 185, _saveStructure.explantion, len);
+					TextOut(getMemDC(), 240, 201, _saveStructure.explantion + len + 1, lenS - len);
+					TextOut(getMemDC(), 240, 217, _saveStructure.explantion + lenS + 1, strlen(_saveStructure.explantion) - lenS - 1);
 
-					}
 
-					
 				}
 
 				//============ 건설 가능 여부 알림
@@ -238,8 +250,8 @@ void camp::castleDraw(void)
 					SetTextColor(getMemDC(), RGB(255, 255, 255));
 					TextOut(getMemDC(), 385, 274, "요구 :", 6);
 					TextOut(getMemDC(),
-						399 - _tcslen(_saveStructure.needBuild) / 2 * 8,
-						290, _saveStructure.needBuild, _tcslen(_saveStructure.needBuild));
+						399 - strlen(_saveStructure.needBuild) / 2 * 8,
+						290, _saveStructure.needBuild, strlen(_saveStructure.needBuild));
 				}
 				else
 				{
@@ -293,8 +305,7 @@ void camp::castleDraw(void)
 			
 		case 1:
 		if(_fort > 0)
-		{
-			if (_fort < 1) _showWindow = false;
+		{			
 			//============== 성채
 			for (int i = 0; i < 6; i++)
 				{
@@ -349,6 +360,7 @@ void camp::castleDraw(void)
 			IMAGEMANAGER->findImage("window_castle_fort")->render(getMemDC());
 
 		}
+		else _showWindow = false;
 
 		break;
 		}
@@ -463,9 +475,9 @@ void camp::dungeonDraw(void)
 						_structure[i].index);
 
 					TextOut(getMemDC(),
-						_structure[i].x + 75 - _tcslen(_structure[i].name) / 2 * 8,
+						_structure[i].x + 75 - strlen(_structure[i].name) / 2 * 8,
 						_structure[i].y + 72, _structure[i].name,
-						_tcslen(_structure[i].name));
+						strlen(_structure[i].name));
 					SetTextColor(getMemDC(), RGB(0, 0, 0));
 
 				}
@@ -478,13 +490,49 @@ void camp::dungeonDraw(void)
 
 					SetTextColor(getMemDC(), RGB(255, 255, 255));
 
-					if (_tcslen(_saveStructure.explantion)<=42)
-						TextOut(getMemDC(), 240, 201, _saveStructure.explantion, _tcslen(_saveStructure.explantion));
-
+					if (strlen(_saveStructure.explantion) <= 42)
+					{
+						TextOut(getMemDC(), 240, 201, _saveStructure.explantion, strlen(_saveStructure.explantion));
+					}
+					else if (strlen(_saveStructure.explantion) > 42 && strlen(_saveStructure.explantion) <= 86)
+					{
+						int len = 0;
+						for (int i = 36; i < 44; i++)
+						{
+							if (*(_saveStructure.explantion + i) == ' ')
+							{
+								len = i;
+								break;
+							}
+						}
+						TextOut(getMemDC(), 240, 193, _saveStructure.explantion, len);
+						TextOut(getMemDC(), 240, 209, _saveStructure.explantion + len + 1, strlen(_saveStructure.explantion) - len - 1);
+					}
 					else
 					{
-						TextOut(getMemDC(), 240, 191, _saveStructure.explantion, 42);
-						TextOut(getMemDC(), 240, 211, _saveStructure.explantion + 42, _tcslen(_saveStructure.explantion) - 42);
+						int len = 0;
+						int lenS = 0;
+						for (int i = 36; i < 44; i++)
+						{
+							if (*(_saveStructure.explantion + i) == ' ')
+							{
+								len = i;
+								break;
+							}
+						}
+						for (int i = 76; i < 86; i++)
+						{
+							if (*(_saveStructure.explantion + i) == ' ')
+							{
+								lenS = i;
+								break;
+							}
+						}
+						TextOut(getMemDC(), 240, 185, _saveStructure.explantion, len);
+						TextOut(getMemDC(), 240, 201, _saveStructure.explantion + len + 1, lenS - len);
+						TextOut(getMemDC(), 240, 217, _saveStructure.explantion + lenS + 1, strlen(_saveStructure.explantion) - lenS - 1);
+
+
 					}
 
 
@@ -494,8 +542,8 @@ void camp::dungeonDraw(void)
 
 						TextOut(getMemDC(), 385, 274, "요구 :", 6);
 						TextOut(getMemDC(),
-							399 - _tcslen(_saveStructure.needBuild) / 2 * 8,
-							290, _saveStructure.needBuild, _tcslen(_saveStructure.needBuild));
+							399 - strlen(_saveStructure.needBuild) / 2 * 8,
+							290, _saveStructure.needBuild, strlen(_saveStructure.needBuild));
 					}
 					else
 					{
@@ -548,8 +596,9 @@ void camp::dungeonDraw(void)
 
 			//============== 성채
 		case 1:
+		if(_fort >0)
 		{
-			if (_fort < 1) _showWindow = false;
+			
 			
 			for (int i = 0; i < 6; i++)
 				{
@@ -597,6 +646,7 @@ void camp::dungeonDraw(void)
 			IMAGEMANAGER->findImage("window_dungeon_fort")->render(getMemDC());
 
 		}
+		else _showWindow = false;
 		break;
 
 		}
@@ -1403,35 +1453,35 @@ void camp::structureInit(void)
 		switch (_hall)
 		{
 		case 0:
-			_stprintf(_structure[0].name, "마을회관");
-			_stprintf(_structure[0].explantion, "마을회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 500을 생산한다.");
+			sprintf(_structure[0].name, "마을회관");
+			sprintf(_structure[0].explantion, "마을회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 500을 생산한다.");
 			_structure[0].img = IMAGEMANAGER->findImage("Chall_hall1");
 
 			break;
 		case 1:
-			_stprintf(_structure[0].name, "시민회관");
-			_stprintf(_structure[0].explantion, "시민회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 1000을 생산한다.");
-			_stprintf(_structure[0].needBuild, "선술집");
+			sprintf(_structure[0].name, "시민회관");
+			sprintf(_structure[0].explantion, "시민회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 1000을 생산한다.");
+			sprintf(_structure[0].needBuild, "선술집");
 			_structure[0].img = IMAGEMANAGER->findImage("Chall_hall2");
 			_structure[0].gold = 2500;
 			break;
 		case 2:
-			_stprintf(_structure[0].name, "시청");
-			_stprintf(_structure[0].explantion, "시청은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 2000을 생산한다.");
-			_stprintf(_structure[0].needBuild, "시장, 대장간, 마법길드 1레벨");
+			sprintf(_structure[0].name, "시청");
+			sprintf(_structure[0].explantion, "시청은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 2000을 생산한다.");
+			sprintf(_structure[0].needBuild, "시장, 대장간, 마법길드 1레벨");
 			_structure[0].img = IMAGEMANAGER->findImage("Chall_hall3");
 			_structure[0].gold = 5000;
 			break;
 		case 3:
-			_stprintf(_structure[0].name, "의사당");
-			_stprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
-			_stprintf(_structure[0].needBuild, "성");
+			sprintf(_structure[0].name, "의사당");
+			sprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
+			sprintf(_structure[0].needBuild, "성");
 			_structure[0].img = IMAGEMANAGER->findImage("Chall_hall4");
 			_structure[0].gold = 10000;
 			break;
 		default:
-			_stprintf(_structure[0].name, "의사당");
-			_stprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
+			sprintf(_structure[0].name, "의사당");
+			sprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
 			_structure[0].img = IMAGEMANAGER->findImage("Chall_hall4");
 			_structure[0].gold = 10000;
 			break;
@@ -1440,31 +1490,31 @@ void camp::structureInit(void)
 		switch (_fort)
 		{
 		case 0:
-			_stprintf(_structure[1].name, "보루");
-			_stprintf(_structure[1].explantion, "보루를 건설하면 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "보루");
+			sprintf(_structure[1].explantion, "보루를 건설하면 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort1");
 			_structure[1].gold = 5000;
 			_structure[1].wood = 20;
 			_structure[1].iron = 20;
 			break;
 		case 1:
-			_stprintf(_structure[1].name, "성채");
-			_stprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "성채");
+			sprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort2");
 			_structure[1].gold = 2500;
 			_structure[1].iron = 5;
 			break;
 		case 2:
-			_stprintf(_structure[1].name, "성");
-			_stprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "성");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
 			_structure[1].wood = 10;
 			break;
 		default:
-			_stprintf(_structure[1].name, "성");
-			_stprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "성");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
@@ -1475,30 +1525,30 @@ void camp::structureInit(void)
 		switch (_pub)
 		{
 		case 0:
-			_stprintf(_structure[2].name, "선술집");
-			_stprintf(_structure[2].explantion, "선술집은 공성전에서 방어부대의 사기를 높여준다.");
+			sprintf(_structure[2].name, "선술집");
+			sprintf(_structure[2].explantion, "선술집은 공성전에서 방어부대의 사기를 높여준다.");
 			_structure[2].img = IMAGEMANAGER->findImage("Chall_pub1");
 			_structure[2].gold = 500;
 			_structure[2].wood = 5;
 			break;
 		case 1:
-			_stprintf(_structure[2].name, "검사협회");
-			_stprintf(_structure[2].explantion, "공성전에서 수비측 사기 +2");
+			sprintf(_structure[2].name, "검사협회");
+			sprintf(_structure[2].explantion, "공성전에서 수비측 사기 +2");
 			_structure[2].img = IMAGEMANAGER->findImage("Chall_pub2");
 			_structure[2].gold = 500;
 			_structure[2].wood = 5;
 			break;
 		default:
-			_stprintf(_structure[2].name, "검사협회");
-			_stprintf(_structure[2].explantion, "공성전에서 수비측 사기 +2");
+			sprintf(_structure[2].name, "검사협회");
+			sprintf(_structure[2].explantion, "공성전에서 수비측 사기 +2");
 			_structure[2].img = IMAGEMANAGER->findImage("Chall_pub2");
 			_structure[2].gold = 500;
 			_structure[2].wood = 5;
 			break;
 		}
 
-		_stprintf(_structure[3].name, "대장간");
-		_stprintf(_structure[3].explantion, "대장간의 당신의 부대에 쇠뇌를 제공해준다.");
+		sprintf(_structure[3].name, "대장간");
+		sprintf(_structure[3].explantion, "대장간의 당신의 부대에 쇠뇌를 제공해준다.");
 		_structure[3].img = IMAGEMANAGER->findImage("Chall_forge");
 		_structure[3].gold = 1000;
 		_structure[3].wood = 5;
@@ -1506,8 +1556,8 @@ void camp::structureInit(void)
 		switch (_market)
 		{
 		case 0:
-			_stprintf(_structure[4].name, "시장");
-			_stprintf(_structure[4].explantion, "시장은 각종 원자재의 교역을 가능하게 해준다.(시장을 많이 가질수록 거래비용이 절감된다.)");
+			sprintf(_structure[4].name, "시장");
+			sprintf(_structure[4].explantion, "시장은 각종 원자재의 교역을 가능하게 해준다.(시장을 많이 가질수록 거래비용이 절감된다.)");
 			_structure[4].img = IMAGEMANAGER->findImage("Chall_market1");
 			_structure[4].gold = 500;
 			_structure[4].wood = 5;
@@ -1515,8 +1565,8 @@ void camp::structureInit(void)
 		break;
 
 		case 1:
-			_stprintf(_structure[4].name, "자원창고");
-			_stprintf(_structure[4].explantion, "매일 목재와 철광석 +1");
+			sprintf(_structure[4].name, "자원창고");
+			sprintf(_structure[4].explantion, "매일 목재와 철광석 +1");
 			_structure[4].img = IMAGEMANAGER->findImage("Chall_market2");
 			_structure[4].gold = 5000;
 			_structure[4].iron = 5;
@@ -1524,8 +1574,8 @@ void camp::structureInit(void)
 		break;
 
 		default:
-			_stprintf(_structure[4].name, "자원창고");
-			_stprintf(_structure[4].explantion, "매일 목재와 철광석 +1");
+			sprintf(_structure[4].name, "자원창고");
+			sprintf(_structure[4].explantion, "매일 목재와 철광석 +1");
 			_structure[4].img = IMAGEMANAGER->findImage("Chall_market2");
 			_structure[4].gold = 5000;
 			_structure[4].iron = 5;
@@ -1536,8 +1586,8 @@ void camp::structureInit(void)
 		switch (_guild)
 		{
 		case 0:
-			_stprintf(_structure[5].name, "마법길드 1레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 1레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Chall_guild1");
 			_structure[5].gold = 2000;
 			_structure[5].iron = 5;
@@ -1546,8 +1596,8 @@ void camp::structureInit(void)
 			break;
 
 		case 1:
-			_stprintf(_structure[5].name, "마법길드 2레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 2레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Chall_guild2");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1560,8 +1610,8 @@ void camp::structureInit(void)
 			break;
 
 		case 2:
-			_stprintf(_structure[5].name, "마법길드 3레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 3레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Chall_guild3");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1575,8 +1625,8 @@ void camp::structureInit(void)
 			break;
 
 		default:
-			_stprintf(_structure[5].name, "마법길드 4레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 4레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Chall_guild4");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1589,23 +1639,23 @@ void camp::structureInit(void)
 			break;
 		}
 
-		_stprintf(_structure[6].name, "조선소");
-		_stprintf(_structure[6].explantion, "조선소에서는 배를 구입할 수 있다.");
+		sprintf(_structure[6].name, "조선소");
+		sprintf(_structure[6].explantion, "조선소에서는 배를 구입할 수 있다.");
 		_structure[6].img = IMAGEMANAGER->findImage("Chall_dock");
 		_structure[6].gold = 2000;
 		_structure[6].wood = 20;
 
-		_stprintf(_structure[7].name, "마구간");
-		_stprintf(_structure[7].explantion, "조선소에서는 배를 구입할 수 있다.");
-		_stprintf(_structure[7].needBuild, "병영");
+		sprintf(_structure[7].name, "마구간");
+		sprintf(_structure[7].explantion, "조선소에서는 배를 구입할 수 있다.");
+		sprintf(_structure[7].needBuild, "병영");
 		_structure[7].img = IMAGEMANAGER->findImage("Chall_stable");
 		_structure[7].gold = 2000;
 		_structure[7].wood = 10;
 
 
-		_stprintf(_structure[8].name, "그리핀 성채");
-		_stprintf(_structure[8].explantion, "그리핀의 증가율 +3");
-		_stprintf(_structure[8].needBuild, "그리핀 타워");
+		sprintf(_structure[8].name, "그리핀 성채");
+		sprintf(_structure[8].explantion, "그리핀의 증가율 +3");
+		sprintf(_structure[8].needBuild, "그리핀 타워");
 		_structure[8].gold = 2000;
 		_structure[8].wood = 10;
 		if (_level[2] == 0) _structure[8].img = IMAGEMANAGER->findImage("Chall_tower3");
@@ -1613,17 +1663,17 @@ void camp::structureInit(void)
 
 		if (_level[0] == 0)
 		{
-			_stprintf(_structure[9].name, "경비숙소");
-			_stprintf(_structure[9].explantion, "창병 생산");
-			_stprintf(_structure[9].needBuild, "보루");
+			sprintf(_structure[9].name, "경비숙소");
+			sprintf(_structure[9].explantion, "창병 생산");
+			sprintf(_structure[9].needBuild, "보루");
 			_structure[9].gold = 500;
 			_structure[9].iron = 10;
 			_structure[9].img = IMAGEMANAGER->findImage("Chall_pike1");	
 		}
 		else
 		{
-			_stprintf(_structure[9].name, "향상된 경비숙소");
-			_stprintf(_structure[9].explantion, "도끼창병 생산");
+			sprintf(_structure[9].name, "향상된 경비숙소");
+			sprintf(_structure[9].explantion, "도끼창병 생산");
 			_structure[9].gold = 1000;
 			_structure[9].iron = 5;
 			_structure[9].img = IMAGEMANAGER->findImage("Chall_pike2");
@@ -1631,8 +1681,8 @@ void camp::structureInit(void)
 		}
 		if (_level[1] == 0)
 		{
-			_stprintf(_structure[10].name, "궁수초소");
-			_stprintf(_structure[10].explantion, "궁수 생산");
+			sprintf(_structure[10].name, "궁수초소");
+			sprintf(_structure[10].explantion, "궁수 생산");
 			_structure[10].gold = 1000;
 			_structure[10].iron = 5;
 			_structure[10].wood = 5;
@@ -1640,8 +1690,8 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[10].name, "향상된 궁수초소");
-			_stprintf(_structure[10].explantion, "저격수 생산");
+			sprintf(_structure[10].name, "향상된 궁수초소");
+			sprintf(_structure[10].explantion, "저격수 생산");
 			_structure[10].gold = 1000;
 			_structure[10].iron = 5;
 			_structure[10].wood = 5;
@@ -1651,34 +1701,34 @@ void camp::structureInit(void)
 
 		if (_level[2] == 0)
 		{
-			_stprintf(_structure[11].name, "그리핀 타워");
-			_stprintf(_structure[11].explantion, "그리핀 생산");
-			_stprintf(_structure[11].needBuild, "병영");
+			sprintf(_structure[11].name, "그리핀 타워");
+			sprintf(_structure[11].explantion, "그리핀 생산");
+			sprintf(_structure[11].needBuild, "병영");
 			_structure[11].gold = 1000;
 			_structure[11].iron = 5;
 			_structure[11].img = IMAGEMANAGER->findImage("Chall_tower1");
 		}
 		else
 		{
-			_stprintf(_structure[11].name, "향상된 그리핀 타워");
-			_stprintf(_structure[11].explantion, "로열 그리핀 생산");
+			sprintf(_structure[11].name, "향상된 그리핀 타워");
+			sprintf(_structure[11].explantion, "로열 그리핀 생산");
 			_structure[11].gold = 1000;
 			_structure[11].iron = 5;
 			_structure[11].img = IMAGEMANAGER->findImage("Chall_tower2");
 		}
 		if (_level[3] == 0)
 		{
-			_stprintf(_structure[12].name, "병영");
-			_stprintf(_structure[12].explantion, "검사 생산");
-			_stprintf(_structure[12].needBuild, "대장간");
+			sprintf(_structure[12].name, "병영");
+			sprintf(_structure[12].explantion, "검사 생산");
+			sprintf(_structure[12].needBuild, "대장간");
 			_structure[12].gold = 2000;
 			_structure[12].iron = 5;
 			_structure[12].img = IMAGEMANAGER->findImage("Chall_cru1");
 		}
 		else
 		{
-			_stprintf(_structure[12].name, "향상된 병영");
-			_stprintf(_structure[12].explantion, "크루세이더 생산");
+			sprintf(_structure[12].name, "향상된 병영");
+			sprintf(_structure[12].explantion, "크루세이더 생산");
 			_structure[12].gold = 2000;
 			_structure[12].iron = 5;
 			_structure[12].crystal = 5;
@@ -1686,9 +1736,9 @@ void camp::structureInit(void)
 		}
 		if (_level[4] == 0)
 		{
-			_stprintf(_structure[13].name, "수도원");
-			_stprintf(_structure[13].explantion, "수도사 생산");
-			_stprintf(_structure[13].needBuild, "병영, 마법 길드 1레벨");
+			sprintf(_structure[13].name, "수도원");
+			sprintf(_structure[13].explantion, "수도사 생산");
+			sprintf(_structure[13].needBuild, "병영, 마법 길드 1레벨");
 			_structure[13].img = IMAGEMANAGER->findImage("Chall_abbey1");
 			_structure[13].gold = 3000;
 			_structure[13].iron = 5;
@@ -1700,8 +1750,8 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[13].name, "향상된 수도원");
-			_stprintf(_structure[13].explantion, "열성 수도사 생산");
+			sprintf(_structure[13].name, "향상된 수도원");
+			sprintf(_structure[13].explantion, "열성 수도사 생산");
 			_structure[13].img = IMAGEMANAGER->findImage("Chall_abbey2");
 			_structure[13].gold = 1000;
 			_structure[13].iron = 5;
@@ -1713,26 +1763,26 @@ void camp::structureInit(void)
 		}
 		if (_level[5] == 0)
 		{
-			_stprintf(_structure[14].name, "연병장");
-			_stprintf(_structure[14].explantion, "기사단 생산");
-			_stprintf(_structure[14].needBuild, "병영, 마구간");
+			sprintf(_structure[14].name, "연병장");
+			sprintf(_structure[14].explantion, "기사단 생산");
+			sprintf(_structure[14].needBuild, "병영, 마구간");
 			_structure[14].img = IMAGEMANAGER->findImage("Chall_caval1");
 			_structure[14].gold = 5000;
 			_structure[14].wood = 20;
 		}
 		else
 		{
-			_stprintf(_structure[14].name, "향상된 연병장");
-			_stprintf(_structure[14].explantion, "챔피언 생산");
+			sprintf(_structure[14].name, "향상된 연병장");
+			sprintf(_structure[14].explantion, "챔피언 생산");
 			_structure[14].img = IMAGEMANAGER->findImage("Chall_caval2");
 			_structure[14].gold = 3000;
 			_structure[14].wood = 10;
 		}
 		if (_level[6] == 0)
 		{
-			_stprintf(_structure[15].name, "천상의 문");
-			_stprintf(_structure[15].explantion, "천사 생산");
-			_stprintf(_structure[15].needBuild, "병영, 수도원");
+			sprintf(_structure[15].name, "천상의 문");
+			sprintf(_structure[15].explantion, "천사 생산");
+			sprintf(_structure[15].needBuild, "병영, 수도원");
 			_structure[15].img = IMAGEMANAGER->findImage("Chall_door1");
 			_structure[15].gold = 20000;
 			_structure[15].sulfur = 10;
@@ -1742,8 +1792,8 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[15].name, "향상된 천상의 문");
-			_stprintf(_structure[15].explantion, "대천사 생산");
+			sprintf(_structure[15].name, "향상된 천상의 문");
+			sprintf(_structure[15].explantion, "대천사 생산");
 			_structure[15].img = IMAGEMANAGER->findImage("Chall_door2");
 			_structure[15].gold = 20000;
 			_structure[15].sulfur = 10;
@@ -1788,35 +1838,35 @@ void camp::structureInit(void)
 		switch (_hall)
 		{
 		case 0:
-			_stprintf(_structure[0].name, "마을회관");
-			_stprintf(_structure[0].explantion, "마을회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 500을 생산한다.");
+			sprintf(_structure[0].name, "마을회관");
+			sprintf(_structure[0].explantion, "마을회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 500을 생산한다.");
 			_structure[0].img = IMAGEMANAGER->findImage("Dhall_hall1");
 
 			break;
 		case 1:
-			_stprintf(_structure[0].name, "시민회관");
-			_stprintf(_structure[0].explantion, "시민회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 1000을 생산한다.");
-			_stprintf(_structure[0].needBuild, "선술집");
+			sprintf(_structure[0].name, "시민회관");
+			sprintf(_structure[0].explantion, "시민회관은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 1000을 생산한다.");
+			sprintf(_structure[0].needBuild, "선술집");
 			_structure[0].img = IMAGEMANAGER->findImage("Dhall_hall2");
 			_structure[0].gold = 2500;
 			break;
 		case 2:
-			_stprintf(_structure[0].name, "시청");
-			_stprintf(_structure[0].explantion, "시청은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 2000을 생산한다.");
-			_stprintf(_structure[0].needBuild, "시장, 대장간, 마법 길드 1레벨");
+			sprintf(_structure[0].name, "시청");
+			sprintf(_structure[0].explantion, "시청은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 2000을 생산한다.");
+			sprintf(_structure[0].needBuild, "시장, 대장간, 마법 길드 1레벨");
 			_structure[0].img = IMAGEMANAGER->findImage("Dhall_hall3");
 			_structure[0].gold = 5000;
 			break;
 		case 3:
-			_stprintf(_structure[0].name, "의사당");
-			_stprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
-			_stprintf(_structure[0].needBuild, "성");
+			sprintf(_structure[0].name, "의사당");
+			sprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
+			sprintf(_structure[0].needBuild, "성");
 			_structure[0].img = IMAGEMANAGER->findImage("Dhall_hall4");
 			_structure[0].gold = 10000;
 			break;
 		default:
-			_stprintf(_structure[0].name, "의사당");
-			_stprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
+			sprintf(_structure[0].name, "의사당");
+			sprintf(_structure[0].explantion, "의사당은 마을의 다양한 건물들을 건설할 수 있게 해주며, 매일 금 4000을 생산한다.");
 			_structure[0].img = IMAGEMANAGER->findImage("Dhall_hall4");
 			_structure[0].gold = 10000;
 			break;
@@ -1825,31 +1875,31 @@ void camp::structureInit(void)
 		switch (_fort)
 		{
 		case 0:
-			_stprintf(_structure[1].name, "보루");
-			_stprintf(_structure[1].explantion, "보루를 건설하면 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "보루");
+			sprintf(_structure[1].explantion, "보루를 건설하면 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort1");
 			_structure[1].gold = 5000;
 			_structure[1].wood = 20;
 			_structure[1].iron = 20;
 			break;
 		case 1:
-			_stprintf(_structure[1].name, "성채");
-			_stprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "성채");
+			sprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort2");
 			_structure[1].gold = 2500;
 			_structure[1].iron = 5;
 			break;
 		case 2:
-			_stprintf(_structure[1].name, "성");
-			_stprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "성");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
 			_structure[1].wood = 10;
 			break;
 		default:
-			_stprintf(_structure[1].name, "성");
-			_stprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].name, "성");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
@@ -1857,14 +1907,14 @@ void camp::structureInit(void)
 			break;
 		}
 
-		_stprintf(_structure[2].name, "선술집");
-		_stprintf(_structure[2].explantion, "선술집은 공성전에서 방어부대의 사기를 높여준다.");
+		sprintf(_structure[2].name, "선술집");
+		sprintf(_structure[2].explantion, "선술집은 공성전에서 방어부대의 사기를 높여준다.");
 		_structure[2].img = IMAGEMANAGER->findImage("Dhall_pub");
 		_structure[2].gold = 500;
 		_structure[2].wood = 5;
 
-		_stprintf(_structure[3].name, "대장간");
-		_stprintf(_structure[3].explantion, "대장간의 당신의 부대에 쇠뇌를 제공해준다.");
+		sprintf(_structure[3].name, "대장간");
+		sprintf(_structure[3].explantion, "대장간의 당신의 부대에 쇠뇌를 제공해준다.");
 		_structure[3].img = IMAGEMANAGER->findImage("Dhall_forge");
 		_structure[3].gold = 1000;
 		_structure[3].wood = 5;
@@ -1872,8 +1922,8 @@ void camp::structureInit(void)
 		switch (_market)
 		{
 		case 0:
-			_stprintf(_structure[4].name, "시장");
-			_stprintf(_structure[4].explantion, "시장은 각종 원자재의 교역을 가능하게 해준다.(시장을 많이 가질수록 거래비용이 절감된다.)");
+			sprintf(_structure[4].name, "시장");
+			sprintf(_structure[4].explantion, "시장은 각종 원자재의 교역을 가능하게 해준다.(시장을 많이 가질수록 거래비용이 절감된다.)");
 			_structure[4].img = IMAGEMANAGER->findImage("Dhall_market1");
 			_structure[4].gold = 500;
 			_structure[4].wood = 5;
@@ -1881,8 +1931,8 @@ void camp::structureInit(void)
 			break;
 
 		default:
-			_stprintf(_structure[4].name, "자원창고");
-			_stprintf(_structure[4].explantion, "매일 유황 +1");
+			sprintf(_structure[4].name, "자원창고");
+			sprintf(_structure[4].explantion, "매일 유황 +1");
 			_structure[4].img = IMAGEMANAGER->findImage("Dhall_market2");
 			_structure[4].gold = 5000;
 			_structure[4].iron = 5;
@@ -1893,8 +1943,8 @@ void camp::structureInit(void)
 		switch (_guild)
 		{
 		case 0:
-			_stprintf(_structure[5].name, "마법길드 1레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 1레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Dhall_guild1");
 			_structure[5].gold = 2000;
 			_structure[5].iron = 5;
@@ -1903,8 +1953,8 @@ void camp::structureInit(void)
 			break;
 
 		case 1:
-			_stprintf(_structure[5].name, "마법길드 2레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 2레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Dhall_guild2");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1917,8 +1967,8 @@ void camp::structureInit(void)
 			break;
 
 		case 2:
-			_stprintf(_structure[5].name, "마법길드 3레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 3레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Dhall_guild3");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1931,8 +1981,8 @@ void camp::structureInit(void)
 
 			break;
 		case 3:
-			_stprintf(_structure[5].name, "마법길드 4레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 4레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Dhall_guild4");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1945,8 +1995,8 @@ void camp::structureInit(void)
 			break;
 
 		default:
-			_stprintf(_structure[5].name, "마법길드 5레벨");
-			_stprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
+			sprintf(_structure[5].name, "마법길드 5레벨");
+			sprintf(_structure[5].explantion, "마법 길드에 들어간 영웅은 그곳에 수록된 마법을 배우게 된다.");
 			_structure[5].img = IMAGEMANAGER->findImage("Dhall_guild5");
 			_structure[5].gold = 1000;
 			_structure[5].iron = 5;
@@ -1959,21 +2009,21 @@ void camp::structureInit(void)
 			break;
 		}
 
-		_stprintf(_structure[6].name, "마나 소용돌이");
-		_stprintf(_structure[6].explantion, "일시적으로 수비대나 방문하는 영웅의 마법 점수를 2배로 증가");
-		_stprintf(_structure[6].needBuild, "마법 길드 1레벨");
+		sprintf(_structure[6].name, "마나 소용돌이");
+		sprintf(_structure[6].explantion, "일시적으로 수비대나 방문하는 영웅의 마법 점수를 2배로 증가");
+		sprintf(_structure[6].needBuild, "마법 길드 1레벨");
 		_structure[6].img = IMAGEMANAGER->findImage("Dhall_cloud");
 		_structure[6].gold = 1000;
 
-		_stprintf(_structure[7].name, "아티팩트 상인");
-		_stprintf(_structure[7].explantion, "다양한 아티팩트 구입 가능.");
-		_stprintf(_structure[7].needBuild, "시장");
+		sprintf(_structure[7].name, "아티팩트 상인");
+		sprintf(_structure[7].explantion, "다양한 아티팩트 구입 가능.");
+		sprintf(_structure[7].needBuild, "시장");
 		_structure[7].img = IMAGEMANAGER->findImage("Dhall_arti");
 		_structure[7].gold = 10000;
 
 
-		_stprintf(_structure[8].name, "전쟁 아카데미");
-		_stprintf(_structure[8].explantion, "방문하는 영웅의 경험치 +1000(한명당 한번씩만)");
+		sprintf(_structure[8].name, "전쟁 아카데미");
+		sprintf(_structure[8].explantion, "방문하는 영웅의 경험치 +1000(한명당 한번씩만)");
 		_structure[8].gold = 1000;
 		_structure[8].wood = 5;
 		_structure[8].iron = 5;
@@ -1981,17 +2031,17 @@ void camp::structureInit(void)
 
 		if (_level[0] == 0)
 		{
-			_stprintf(_structure[9].name, "사육장");
-			_stprintf(_structure[9].explantion, "동굴인 생산");
-			_stprintf(_structure[9].needBuild, "보루");
+			sprintf(_structure[9].name, "사육장");
+			sprintf(_structure[9].explantion, "동굴인 생산");
+			sprintf(_structure[9].needBuild, "보루");
 			_structure[9].gold = 400;
 			_structure[9].wood = 10;
 			_structure[9].img = IMAGEMANAGER->findImage("Dhall_farm1");
 		}
 		else
 		{
-			_stprintf(_structure[9].name, "향상된 사육장");
-			_stprintf(_structure[9].explantion, "지옥의 동굴인 생산");
+			sprintf(_structure[9].name, "향상된 사육장");
+			sprintf(_structure[9].explantion, "지옥의 동굴인 생산");
 			_structure[9].gold = 1000;
 			_structure[9].wood = 5;
 			_structure[9].img = IMAGEMANAGER->findImage("Dhall_farm2");
@@ -1999,16 +2049,16 @@ void camp::structureInit(void)
 		}
 		if (_level[1] == 0)
 		{
-			_stprintf(_structure[10].name, "하피 둥지");
-			_stprintf(_structure[10].explantion, "하피 생산");
-			_stprintf(_structure[10].needBuild, "사육장");
+			sprintf(_structure[10].name, "하피 둥지");
+			sprintf(_structure[10].explantion, "하피 생산");
+			sprintf(_structure[10].needBuild, "사육장");
 			_structure[10].img = IMAGEMANAGER->findImage("Dhall_nest1");
 			_structure[10].gold = 1000;
 		}
 		else
 		{
-			_stprintf(_structure[10].name, "향상된 하피 둥지");
-			_stprintf(_structure[10].explantion, "하피 마녀 생산");
+			sprintf(_structure[10].name, "향상된 하피 둥지");
+			sprintf(_structure[10].explantion, "하피 마녀 생산");
 			_structure[10].gold = 1000;
 			_structure[10].img = IMAGEMANAGER->findImage("Dhall_nest2");
 			_structure[10].mercury = 2;
@@ -2018,9 +2068,9 @@ void camp::structureInit(void)
 
 		if (_level[2] == 0)
 		{
-			_stprintf(_structure[11].name, "주시의 기둥");
-			_stprintf(_structure[11].explantion, "주시자 생산");
-			_stprintf(_structure[11].needBuild, "사육장");
+			sprintf(_structure[11].name, "주시의 기둥");
+			sprintf(_structure[11].explantion, "주시자 생산");
+			sprintf(_structure[11].needBuild, "사육장");
 			_structure[11].gold = 1000;
 			_structure[11].iron = 1;
 			_structure[11].wood = 1;
@@ -2032,8 +2082,8 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[11].name, "향상된 주시의 기둥");
-			_stprintf(_structure[11].explantion, "악마의 눈 생산");
+			sprintf(_structure[11].name, "향상된 주시의 기둥");
+			sprintf(_structure[11].explantion, "악마의 눈 생산");
 			_structure[11].gold = 1000;
 			_structure[11].iron = 1;
 			_structure[11].wood = 1;
@@ -2045,9 +2095,9 @@ void camp::structureInit(void)
 		}
 		if (_level[3] == 0)
 		{
-			_stprintf(_structure[12].name, "침묵의 회당");
-			_stprintf(_structure[12].explantion, "메두사 생산");
-			_stprintf(_structure[12].needBuild, "하피 둥지 , 주시의 기둥");
+			sprintf(_structure[12].name, "침묵의 회당");
+			sprintf(_structure[12].explantion, "메두사 생산");
+			sprintf(_structure[12].needBuild, "하피 둥지 , 주시의 기둥");
 			_structure[12].gold = 2000;
 			_structure[12].wood = 5;
 			_structure[12].iron = 10;
@@ -2055,17 +2105,17 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[12].name, "향상된 침묵의 회당");
-			_stprintf(_structure[12].explantion, "메두사 여왕 생산");
+			sprintf(_structure[12].name, "향상된 침묵의 회당");
+			sprintf(_structure[12].explantion, "메두사 여왕 생산");
 			_structure[12].gold = 1500;
 			_structure[12].wood = 5;
 			_structure[12].img = IMAGEMANAGER->findImage("Dhall_temple2");
 		}
 		if (_level[4] == 0)
 		{
-			_stprintf(_structure[13].name, "미궁");
-			_stprintf(_structure[13].explantion, "미노타우르스 생산");
-			_stprintf(_structure[13].needBuild, "침묵의 회당");
+			sprintf(_structure[13].name, "미궁");
+			sprintf(_structure[13].explantion, "미노타우르스 생산");
+			sprintf(_structure[13].needBuild, "침묵의 회당");
 			_structure[13].img = IMAGEMANAGER->findImage("Dhall_maze1");
 			_structure[13].gold = 4000;
 			_structure[13].iron = 10;
@@ -2073,8 +2123,8 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[13].name, "향상된 미궁");
-			_stprintf(_structure[13].explantion, "미노타우르스 킹 생산");
+			sprintf(_structure[13].name, "향상된 미궁");
+			sprintf(_structure[13].explantion, "미노타우르스 킹 생산");
 			_structure[13].img = IMAGEMANAGER->findImage("Dhall_maze2");
 			_structure[13].gold = 3000;
 			_structure[13].iron = 5;
@@ -2082,9 +2132,9 @@ void camp::structureInit(void)
 		}
 		if (_level[5] == 0)
 		{
-			_stprintf(_structure[14].name, "만티코어 동굴");
-			_stprintf(_structure[14].explantion, "만티코어 생산");
-			_stprintf(_structure[14].needBuild, "침묵의 회당");
+			sprintf(_structure[14].name, "만티코어 동굴");
+			sprintf(_structure[14].explantion, "만티코어 생산");
+			sprintf(_structure[14].needBuild, "침묵의 회당");
 			_structure[14].img = IMAGEMANAGER->findImage("Dhall_mant1");
 			_structure[14].gold = 5000;
 			_structure[14].wood = 5;
@@ -2094,8 +2144,8 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[14].name, "향상된 만티코어 동굴");
-			_stprintf(_structure[14].explantion, "스콜피온 생산");
+			sprintf(_structure[14].name, "향상된 만티코어 동굴");
+			sprintf(_structure[14].explantion, "스콜피온 생산");
 			_structure[14].img = IMAGEMANAGER->findImage("Dhall_mati2");
 			_structure[14].gold = 3000;
 			_structure[14].wood = 5;
@@ -2105,9 +2155,9 @@ void camp::structureInit(void)
 		}
 		if (_level[6] == 0)
 		{
-			_stprintf(_structure[15].name, "드래곤 동굴");
-			_stprintf(_structure[15].explantion, "레드 드래곤 생산");
-			_stprintf(_structure[15].needBuild, "미궁, 만티코어 동굴, 마법길드 2레벨");
+			sprintf(_structure[15].name, "드래곤 동굴");
+			sprintf(_structure[15].explantion, "레드 드래곤 생산");
+			sprintf(_structure[15].needBuild, "미궁, 만티코어 동굴, 마법길드 2레벨");
 			_structure[15].img = IMAGEMANAGER->findImage("Dhall_drag1");
 			_structure[15].gold = 15000;
 			_structure[15].iron = 15;
@@ -2116,9 +2166,9 @@ void camp::structureInit(void)
 		}
 		else
 		{
-			_stprintf(_structure[15].name, "향상된 드래곤 동굴");
-			_stprintf(_structure[15].explantion, "블랙 드래곤 생산");
-			_stprintf(_structure[15].needBuild, "마법길드 3레벨");
+			sprintf(_structure[15].name, "향상된 드래곤 동굴");
+			sprintf(_structure[15].explantion, "블랙 드래곤 생산");
+			sprintf(_structure[15].needBuild, "마법길드 3레벨");
 			_structure[15].img = IMAGEMANAGER->findImage("Dhall_drag2");
 			_structure[15].gold = 15000;
 			_structure[15].iron = 15;
@@ -2126,15 +2176,15 @@ void camp::structureInit(void)
 			_structure[15].sulfur = 20;
 		}
 
-		_stprintf(_structure[16].name, "소환의 문");
-		_stprintf(_structure[16].explantion, "점령한 외부의 유닛 서식지에서 유닛을 소환할 수 있음");
+		sprintf(_structure[16].name, "소환의 문");
+		sprintf(_structure[16].explantion, "점령한 외부의 유닛 서식지에서 유닛을 소환할 수 있음");
 		_structure[16].img = IMAGEMANAGER->findImage("Dhall_port");
 		_structure[16].gold = 2500;
 		_structure[16].iron = 5;
 
-		_stprintf(_structure[17].name, "버섯 고리");
-		_stprintf(_structure[17].explantion, "동굴인 증가율 +7");
-		_stprintf(_structure[17].needBuild, "사육장");
+		sprintf(_structure[17].name, "버섯 고리");
+		sprintf(_structure[17].explantion, "동굴인 증가율 +7");
+		sprintf(_structure[17].needBuild, "사육장");
 		_structure[17].img = IMAGEMANAGER->findImage("Dhall_farm3");
 		_structure[17].gold = 1000;
 
