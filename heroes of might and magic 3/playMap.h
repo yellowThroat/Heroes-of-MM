@@ -26,12 +26,10 @@ struct tagPathFindSecond
 };
 
 
-class playMap;
 
 class playMap : public gameNode
 {
 private:
-	playMap* _pm;
 
 private:
 	vector<building> _vBuild;
@@ -85,15 +83,16 @@ public:
 	bool isClosed(int x, int y);								// 클로즈에 있는지 확인
 	bool alreadyOpend(int x, int y);
 	bool alreadyClosed(int x, int y);
+	
 	//============ G E T T E R ================
 	float getCameraX() { return _cameraX; }
 	float getCameraY() { return _cameraY; }
 	POINT getCameraArr() { return _cameraArr; }
-
+	bool getClosed(int x, int y) { return _map[x][y].isClosed; }
 	//============ S E T T E R ================
 	void setCameraX(float x) { _cameraX = x; }
 	void setCameraY(float y) { _cameraY = y; }
-
+	void setClosed(int x, int y, bool closed) { _map[x][y].isClosed = closed; }
 
 	//============ ADDRESS LINK ===============
 

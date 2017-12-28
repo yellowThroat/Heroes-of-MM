@@ -15,6 +15,7 @@ HRESULT ui::init(void)
 	_config = false;
 	_conButton = false;
 	_gb = GB_NULL;
+	_firstHero = 0;
 	//================  R E C T   M A K E ===============
 	_miniMapRect = RectMake(817, 24, 140, 144);
 	_summaryRect = RectMake(863, 193, 32, 32);
@@ -67,6 +68,20 @@ void ui::draw(void)
 	numberDraw(getMemDC(), _player->getProperty().gem, 600, 582);
 	numberDraw(getMemDC(), _player->getProperty().gold, 716, 582);
 	
+	for (int i = _firstHero; i < _firstHero + 5; i++)
+	{
+		if (i >= _player->getHero().size()) break;
+
+		_player->getHero()[i]->getHeroInfo().portraitSmall->frameRender(getMemDC(),
+			804, 211 + 32 * i,
+			_player->getHero()[i]->getHeroInfo().indexX,
+			_player->getHero()[i]->getHeroInfo().indexY);
+
+	}
+
+	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
+		803, 210 + (_player->getCurrentHero() - _firstHero) * 32);
+
 
 	if (_mainButton)
 	{
@@ -266,6 +281,7 @@ void ui::input(void)
 				}
 			}
 
+			//======================= 
 			if (!_config)
 			{
 				if (PtInRect(&_summaryRect, _ptMouse))
@@ -299,6 +315,39 @@ void ui::input(void)
 					_mainButton = true;
 				}
 			}
+
+			//================ 영웅 선택할때
+
+			for (int i = 0; i < 5; i++)
+			{
+				if (PtInRect(&RectMake(804, 211 + i*32, 46, 30), _ptMouse))
+				{
+					if (i + _firstHero < _player->getHero().size())
+					{
+						_player->setCurrentHero(i + _firstHero);
+					
+						for (int j = 0; j < _player->getHero().size(); j++)
+						{
+							if (i + _firstHero == _player->getHero()[j]->getMyNum())
+							{
+								POINT point;
+								point.x = _player->getHero()[j]->getHeroPoint().x;
+								point.y = _player->getHero()[j]->getHeroPoint().y;
+
+								_pm->setCameraX((point.x - 12) * TILESIZE);
+								_pm->setCameraY((point.y - 9) * TILESIZE);
+
+								_player->setAutoCamera(false);
+							}
+						}
+
+
+
+
+					}
+				}
+			}
+
 
 		}
 		else

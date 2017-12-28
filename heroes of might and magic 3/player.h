@@ -32,13 +32,12 @@ private:
 	POINT _destination;
 
 private:
-	bool _readyMove;
 	bool _myTurn;
 	bool _cityScene;
 	bool _autoCamera;
-	int _myNum;
-	int _currentHero;
-	int _currentCamp;
+	int _myNum;						// 플레이어 값
+	int _currentHero;				// 현재 조정중인 영웅
+	int _currentCamp;				// 현재 보고있는 마을
 
 
 public:
@@ -75,20 +74,23 @@ public:
 
 
 
+
 	//=========== G E T T E R ===============
-	bool getTurn() { return _myTurn; }
 	int getNum() { return _myNum; }
 	int getCurrentCamp() { return _currentCamp; }
-	vPath getPath() { return _vPath; }
+	int getCurrentHero() { return _currentHero; }
+	bool getTurn() { return _myTurn; }
 	bool getScene() { return _cityScene; }
-	vHero getHero() { return _vHero; }
 	bool getAutoCamera() { return _autoCamera; }
+	vHero getHero() { return _vHero; }
+	vPath getPath() { return _vPath; }
 	myProperty getProperty() { return _myProperty; }
 	myBuilding getBuilding() { return _myBuilding; }
 
 	//=========== S E T T E R ===============
 	void setScene(bool scene) { _cityScene = scene; }
 	void setCurrentCamp(int camp) { _currentCamp = camp; }
+	void setCurrentHero(int hero) { _currentHero = hero; }
 	void setAutoCamera(bool autocamera) { _autoCamera = autocamera; }
 	void setProperty(myProperty pro) { _myProperty = pro; }
 	void setBuilding(myBuilding build) { _myBuilding = build; }

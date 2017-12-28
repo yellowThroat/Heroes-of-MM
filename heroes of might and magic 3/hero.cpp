@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "hero.h"
 #include "player.h"
-
+#include "playMap.h"
 
 hero::hero() {}
 hero::~hero() {}
@@ -10,12 +10,20 @@ HRESULT hero::init(POINT point, tagHero hero)
 {
 	_pointArr = point;
 	_myHero = hero;
-	_myNum = _myHero.myNum;
+	_myNum = _pl->getHero().size();
+	_player = 0;
 	_x = _pointArr.x * TILESIZE;
 	_y = _pointArr.y * TILESIZE;
 	_goOn = false;
 	_moveEnd = false;
 	_isInCamp = false;
+
+
+
+
+
+
+
 
 	return S_OK;
 }
@@ -56,8 +64,8 @@ void hero::update(void)
 
 void hero::render(void)
 {
+	if(_pl->getCurrentHero() == _myNum) pathDraw();
 	fieldDraw();
-	pathDraw();
 
 }
 
@@ -83,13 +91,12 @@ void hero::pathDraw(void)
 				_vDraw[i].indexX, _vDraw[i].indexY);
 	}
 
-	
 	//============== µµÂøÁ¡
 	if (_vPath.size() >= 1) IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
 		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(), 
 		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY(),0,0);
 
-
+	
 }
 
 void hero::fieldDraw(void)
@@ -115,7 +122,7 @@ void hero::fieldDraw(void)
 	_myHero.flag->frameRender(getMemDC(),
 		(_x - 32)  - DATABASE->getPlayCameraX(),
 		(_y - 32)  - DATABASE->getPlayCameraY(),
-		_myHero.kind, _myHero.field->getFrameY());
+		_player, _myHero.field->getFrameY());
 
 	
 }
@@ -152,6 +159,8 @@ void hero::heroMove(void)
 
 				_goOn = false;
 				_moveEnd = true;
+				_pm->setClosed(_pointArr.x, _pointArr.y, true);
+				
 			}
 
 		}
@@ -159,6 +168,9 @@ void hero::heroMove(void)
 		{
 			_x += DATABASE->getMoveSpeed()*cosf(_myHero.angle);
 			_y += DATABASE->getMoveSpeed()*sinf(_myHero.angle);
+
+
+
 		}
 	}
 

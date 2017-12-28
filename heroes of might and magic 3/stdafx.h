@@ -27,9 +27,11 @@
 #include "collision.h"
 #include "infoHomm.h"
 #include "dataBase.h"
+#include "heroInfo.h"
 
 using namespace std;
 using namespace IOTA_UTIL;
+using namespace HOMM_HERO;
 
 //===============================================
 // ## 윈도우 설정 디파인 ## 2017.07. 28 ##

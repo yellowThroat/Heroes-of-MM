@@ -811,54 +811,54 @@ void camp::dungeonDraw(void)
 
 		break;
 
-				case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-				{
-					//================== ¸®Å©·çÆ® Ã¢ ¿°
-					char tmp[256];
-					int num = _saveRecruit.num * 2 + _level[_saveRecruit.num] - 1;
+		case 2: case 3: case 4: case 5: case 6: case 7: case 8:
+		{
+			//================== ¸®Å©·çÆ® Ã¢ ¿°
+			char tmp[256];
+			int num = _saveRecruit.num * 2 + _level[_saveRecruit.num] - 1;
 
-					if (_level[_saveRecruit.num] > 0)
-					{
-						HFONT font1 = CreateFont(24, 0, 0, 0, 50, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("µ¸¿òÃ¼"));
+			if (_level[_saveRecruit.num] > 0)
+			{
+				HFONT font1 = CreateFont(24, 0, 0, 0, 50, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("µ¸¿òÃ¼"));
 
-						HFONT oldfont = (HFONT)SelectObject(getMemDC(), font1);
-						SetTextColor(getMemDC(), RGB(248, 228, 144));
-
-
-						// ÁßÁ¡ 240 110 -> 383 126 /////  189 59  332 75 
-						IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(), 332, 75);
+				HFONT oldfont = (HFONT)SelectObject(getMemDC(), font1);
+				SetTextColor(getMemDC(), RGB(248, 228, 144));
 
 
-						_unitSample[num].img[_unitSample[num].state]->frameRender(getMemDC(),
-							383 - _unitSample[num].img[_unitSample[num].state]->getFrameWidth() / 2,
-							136 - _unitSample[num].img[_unitSample[num].state]->getFrameHeight() / 2);
-
-						_unitSample[num].shadowImg[_unitSample[num].state]->alphaFrameRender(getMemDC(),
-							383 - _unitSample[num].img[_unitSample[num].state]->getFrameWidth() / 2,
-							136 - _unitSample[num].img[_unitSample[num].state]->getFrameHeight() / 2, 140);
-
-						IMAGEMANAGER->findImage("window_recruit")->render(getMemDC(), 143, 16);
-						IMAGEMANAGER->findImage("window_recruit_shadow")->alphaRender(getMemDC(), 143, 16, 100);
+				// ÁßÁ¡ 240 110 -> 383 126 /////  189 59  332 75 
+				IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(), 332, 75);
 
 
-						sprintf(tmp, "°í¿ë %s", _saveRecruit.unit);
-						SelectObject(getMemDC(), font1);
-						TextOut(getMemDC(), 389 - strlen(tmp) / 2 * 16, 36, tmp, strlen(tmp));
+				_unitSample[num].img[_unitSample[num].state]->frameRender(getMemDC(),
+					383 - _unitSample[num].img[_unitSample[num].state]->getFrameWidth() / 2,
+					136 - _unitSample[num].img[_unitSample[num].state]->getFrameHeight() / 2);
 
-						SetTextColor(getMemDC(), RGB(0, 0, 0));
-						DeleteObject(font1);
-						SelectObject(getMemDC(), oldfont);
+				_unitSample[num].shadowImg[_unitSample[num].state]->alphaFrameRender(getMemDC(),
+					383 - _unitSample[num].img[_unitSample[num].state]->getFrameWidth() / 2,
+					136 - _unitSample[num].img[_unitSample[num].state]->getFrameHeight() / 2, 140);
 
-
-					}
-					else _showWindow = false;
-
+				IMAGEMANAGER->findImage("window_recruit")->render(getMemDC(), 143, 16);
+				IMAGEMANAGER->findImage("window_recruit_shadow")->alphaRender(getMemDC(), 143, 16, 100);
 
 
+				sprintf(tmp, "°í¿ë %s", _saveRecruit.unit);
+				SelectObject(getMemDC(), font1);
+				TextOut(getMemDC(), 389 - strlen(tmp) / 2 * 16, 36, tmp, strlen(tmp));
 
-				}
+				SetTextColor(getMemDC(), RGB(0, 0, 0));
+				DeleteObject(font1);
+				SelectObject(getMemDC(), oldfont);
 
-				break;
+
+			}
+			else _showWindow = false;
+
+
+
+
+		}
+
+		break;
 
 
 		default:
