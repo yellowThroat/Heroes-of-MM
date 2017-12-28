@@ -25,6 +25,7 @@ HRESULT player::init(int myNum)
 	tmp.indexY = 0;
 	tmp.myNum = 0;
 	tmp.angle = 0;
+	tmp.kind = 0;
 	addHero(PointMake(5,5),tmp);
 
 	ZeroMemory(&_myProperty, sizeof(myProperty));
@@ -32,10 +33,10 @@ HRESULT player::init(int myNum)
 
 
 	_myProperty.gold = 123456;
-	_myProperty.gem = 1;
-	_myProperty.wood = 25;
-	_myProperty.iron = 36;
-	_myProperty.crystal = 5;
+	_myProperty.gem = 36;
+	_myProperty.wood = 356;
+	_myProperty.iron = 785;
+	_myProperty.crystal = 99;
 	_myProperty.mercury = 123;
 	_myProperty.sulfur = 1234;
 	

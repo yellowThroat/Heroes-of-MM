@@ -15,23 +15,22 @@ private:
 	typedef vector<tagPathDraw> vDraw;
 
 
-	vDraw _vDraw;
-	vPath _vPath;
+	vDraw _vDraw;				// 경로에 방향 그려줄때 쓸 벡터
+	vPath _vPath;				// 실제로 경로를 읽는 벡터
 
 private:
-	tagHero _myHero;
+	tagHero _myHero;			// 영웅의 각종 정보들
 	
-	POINT _pointArr;
-	POINT _destination;
+	POINT _pointArr;			// 영웅 좌표 배열
+	POINT _destination;			// 아직 보류중
 
 private:
-	float _x;
-	float _y;
-	bool _myTurn;
-	bool _goOn;
-	bool _moveEnd;
-	bool _isInCamp;
-	int _myNum;
+	float _x;					// 영웅의 중점 좌표
+	float _y;					// 상동
+	bool _goOn;					// 이동 중인지
+	bool _moveEnd;				// 이동 끝난 타이밍을 알리기 위해
+	bool _isInCamp;				// 캠프 안으로 들어갔는지
+	int _myNum;					// 영웅 넘버
 	
 	
 public:

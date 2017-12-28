@@ -231,9 +231,25 @@ struct tagHero
 	int inte;
 	int indexX, indexY;
 	int myNum;
-	float angle;
+	int kind;
 	bool isSelected;
+	float angle;
 
+};
+
+struct tagCreature
+{
+	char name[256];
+	
+	int atk;
+	int def;
+
+	int maxDmg;
+	int minDmg;
+	int speed;
+
+	int morale;
+	int luck;
 };
 
 typedef struct tagBuildingInfo

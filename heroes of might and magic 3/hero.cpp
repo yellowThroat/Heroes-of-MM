@@ -10,9 +10,9 @@ HRESULT hero::init(POINT point, tagHero hero)
 {
 	_pointArr = point;
 	_myHero = hero;
+	_myNum = _myHero.myNum;
 	_x = _pointArr.x * TILESIZE;
 	_y = _pointArr.y * TILESIZE;
-	_myTurn = false;
 	_goOn = false;
 	_moveEnd = false;
 	_isInCamp = false;
@@ -115,7 +115,7 @@ void hero::fieldDraw(void)
 	_myHero.flag->frameRender(getMemDC(),
 		(_x - 32)  - DATABASE->getPlayCameraX(),
 		(_y - 32)  - DATABASE->getPlayCameraY(),
-		_myHero.myNum, _myHero.field->getFrameY());
+		_myHero.kind, _myHero.field->getFrameY());
 
 	
 }
