@@ -154,7 +154,7 @@ void gameScene::render(void)
 
 	}
 	
-
+	if (_player->getWindow()) _player->heroInfoDraw();
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);

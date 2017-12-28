@@ -14,6 +14,7 @@ HRESULT player::init(int myNum)
 	_myTurn = true;
 	_cityScene = false;
 	_autoCamera = false;
+	_window = false;
 	_currentHero = 0;
 	_destination = { 0,0 };
 	/*
@@ -26,8 +27,8 @@ HRESULT player::init(int myNum)
 	tmp.kind = 0;
 	*/
 	addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
-	addHero(PointMake(8, 8), CommonHero(NAME_TIRIS));
-	addHero(PointMake(10, 10), CommonHero(NAME_DAMACON));
+	addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
+	addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
 	ZeroMemory(&_myProperty, sizeof(myProperty));
 	ZeroMemory(&_myBuilding, sizeof(myBuilding));
 
@@ -106,6 +107,100 @@ void player::fieldScene(void)
 
 }
 
+void player::heroInfoDraw(void)
+{
+	IMAGEMANAGER->findImage("window_heroinfo")->render(getMemDC(), 64, 8);
+	IMAGEMANAGER->findImage("window_heroinfo_shadow")->alphaRender(getMemDC(), 64, 8, 150);
+
+	
+	for (int i = 0; i < _vHero.size(); i++)
+	{
+		//=========== 모든 영웅의 초상화 676 95
+		_vHero[i]->getHeroInfo().portraitSmall->frameRender(getMemDC(),
+			676, 95 + _vHero[i]->getMyNum()*54,
+			_vHero[i]->getHeroInfo().indexX,
+			_vHero[i]->getHeroInfo().indexY);						// 각 영웅의 초상화 그려줌
+
+		IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),		// 현재 선택된 영웅 표시
+			675, 95 + _currentHero * 54);
+
+		
+		if (_vHero[i]->getMyNum() == _currentHero) //현재 선택된 영웅 그리는것
+		{
+			tagHero hero;
+			hero = _vHero[i]->getHeroInfo();
+
+			hero.portraitLarge->frameRender(getMemDC(), 83, 26,
+				hero.indexX, hero.indexY);								//초상화 
+
+			numberDraw(getMemDC(), hero.str, 113, 168);					// 힘민지지
+			numberDraw(getMemDC(), hero.def, 183, 168);
+			numberDraw(getMemDC(), hero.wiz, 253, 168);
+			numberDraw(getMemDC(), hero.inte, 323, 168);
+
+			numberDraw(getMemDC(), _vHero[i]->getExp(), 132, 262);
+			numberDraw(getMemDC(), _vHero[i]->getMana(), 276, 262);
+			numberDraw(getMemDC(), _vHero[i]->getMaxMana(), 314, 262);
+
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
+			TextOut(getMemDC(), 299, 260, "/", 1);
+			SetTextColor(getMemDC(), RGB(0, 0, 0));
+			
+			
+			HFONT font = CreateFont(24, 0, 0, 0, 50, false, false, false,
+				HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+			HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+			SetTextColor(getMemDC(), RGB(248, 228, 144));
+			SelectObject(getMemDC(), font);
+
+			TextOut(getMemDC(), 254 - strlen(hero.name) / 2 * 16, 39, hero.name, strlen(hero.name));
+
+			SetTextColor(getMemDC(), RGB(0, 0, 0));
+			DeleteObject(font);
+			SelectObject(getMemDC(), oldfont);
+			
+			font = CreateFont(15, 0, 0, 0, 50, false, false, false,
+				HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+			oldfont = (HFONT)SelectObject(getMemDC(), font);
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
+			SelectObject(getMemDC(), font);
+			
+			char tmp[256];
+			sprintf(tmp, "%d", hero.level);
+
+			TextOut(getMemDC(), 215, 64, tmp, strlen(tmp));							// 레벨 수치
+
+			TextOut(getMemDC(), 232, 64, "레벨", 4);									// '레벨'
+
+			TextOut(getMemDC(), 266, 64, hero.jobName, strlen(hero.jobName));		// 직업 이름
+
+			SetTextColor(getMemDC(), RGB(0, 0, 0));
+			SelectObject(getMemDC(), oldfont);
+			DeleteObject(font);
+
+
+			//79 - 492  크리쳐 초상화 그려주기 quantity 37 - 53
+
+			for (int j = 0; j < _vHero[i]->getCreature().size(); j++)
+			{
+				_vHero[i]->getCreature()[j].portrait->frameRender(getMemDC(),
+					79 + _vHero[i]->getCreature()[j].position * 66, 492,
+					_vHero[i]->getCreature()[j].tier,
+					_vHero[i]->getCreature()[j].kind *2 +
+					_vHero[i]->getCreature()[j].level);		// 초상화 그리고
+
+				numberDraw(getMemDC(), _vHero[i]->getCreature()[j].quantity,	// 그게 몇마리인지
+					126 + _vHero[i]->getCreature()[j].position * 66, 545);		
+			}
+
+			
+		}
+
+		
+	}
+	
+}
+
 void player::cityScene(void)
 {
 	
@@ -176,6 +271,14 @@ void player::addHero(POINT point,tagHero heroInfo)
 
 void player::inputCity(void)
 {
+
+	//
+	// 아직 남겨뒀지만
+	//
+	// 폐기해야할 코드들.....
+	//
+	// 일단 쓰고있는곳은 다 없앰
+	//
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		//==================== C I T Y   S C E N E =====================
@@ -362,57 +465,76 @@ void player::inputField(void)
 	if(KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		//====================  F I E L D   S C E N E =====================
-		for (int i = 0; i < _vHero.size(); i++)
+		if (!_window)
 		{
-			if (_vHero[i]->getMyNum() == _currentHero && !_vHero[i]->getGoOn()&&
-				(_mouseArr.x != _vHero[i]->getHeroDest().x ||
-					_mouseArr.y != _vHero[i]->getHeroDest().y))
+			for (int i = 0; i < _vHero.size(); i++)
 			{
-				_vHero[i]->setPath(_pm->getPath(_vHero[i]->getHeroPoint().x,
-					_vHero[i]->getHeroPoint().y,
-					_mouseArr.x, _mouseArr.y));
-				if (_vHero[i]->getPath().size())
+				if (_vHero[i]->getMyNum() == _currentHero && !_vHero[i]->getGoOn() &&
+					(_mouseArr.x != _vHero[i]->getHeroDest().x ||
+						_mouseArr.y != _vHero[i]->getHeroDest().y))
 				{
-					POINT tmp;
-					tmp.x = _vHero[i]->getPath()[_vHero[i]->getPath().size() - 1].x;
-					tmp.y = _vHero[i]->getPath()[_vHero[i]->getPath().size() - 1].y;
+					_vHero[i]->setPath(_pm->getPath(_vHero[i]->getHeroPoint().x,
+						_vHero[i]->getHeroPoint().y,
+						_mouseArr.x, _mouseArr.y));
+					if (_vHero[i]->getPath().size())
+					{
+						POINT tmp;
+						tmp.x = _vHero[i]->getPath()[_vHero[i]->getPath().size() - 1].x;
+						tmp.y = _vHero[i]->getPath()[_vHero[i]->getPath().size() - 1].y;
 
-					_vHero[i]->setHeroDest(tmp);
+						_vHero[i]->setHeroDest(tmp);
+
+					}
+					if (_vHero[i]->getPath().size() < 20)
+					{
+						DATABASE->setMoveSpeed(4);
+					}
+					else if (_vHero[i]->getPath().size() >= 20 && _vHero[i]->getPath().size() < 40)
+					{
+						DATABASE->setMoveSpeed(10);
+
+					}
+					else
+					{
+						DATABASE->setMoveSpeed(15);
+
+					}
 
 				}
-				if (_vHero[i]->getPath().size() < 20)
-				{
-					DATABASE->setMoveSpeed(4);
-				}
-				else if(_vHero[i]->getPath().size() >=20 && _vHero[i]->getPath().size() <40)
-				{
-					DATABASE->setMoveSpeed(10);
 
-				}
-				else
+				else  if (_mouseArr.x == _vHero[i]->getHeroDest().x &&
+					_mouseArr.y == _vHero[i]->getHeroDest().y &&
+					!_vHero[i]->getGoOn() && _currentHero == _vHero[i]->getMyNum() &&
+					_vHero[i]->getPath().size() && !_pm->getClosed(_mouseArr.x, _mouseArr.y))
 				{
-					DATABASE->setMoveSpeed(15);
+					_vHero[i]->setGoOn(true);
+					_vHero[i]->setInCamp(false);
+					if (!_autoCamera) _autoCamera = true;
+					_pm->setClosed(_vHero[i]->getHeroPoint().x, _vHero[i]->getHeroPoint().y, false);
+
 
 				}
 
 			}
-
-			else  if (_mouseArr.x == _vHero[i]->getHeroDest().x &&
-				_mouseArr.y == _vHero[i]->getHeroDest().y &&
-				!_vHero[i]->getGoOn() && _currentHero == _vHero[i]->getMyNum() &&
-				_vHero[i]->getPath().size() && !_pm->getClosed(_mouseArr.x,_mouseArr.y))
+		}
+		if(_window)
+		{
+			for (int i = 0; i < 8; i++)
 			{
-				_vHero[i]->setGoOn(true);
-				_vHero[i]->setInCamp(false);
-				if (!_autoCamera) _autoCamera = true;
-				_pm->setClosed(_vHero[i]->getHeroPoint().x, _vHero[i]->getHeroPoint().y, false);
-
-			
+				if (PtInRect(&RectMake(675, 95 + 54 * i, 46, 30),_ptMouse))
+				{
+					if(i < _vHero.size())
+					_currentHero = i;
+				}
 			}
 
-		}		
 
-		
+			if (PtInRect(&RectMake(674, 523, 52, 36), _ptMouse))
+			{
+				_window = false;
+			}
+
+		}
 
 
 	}

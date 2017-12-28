@@ -143,7 +143,7 @@ namespace HOMM_HERO
 			hero.fieldShadow->AlphaInit();
 
 			//hero.field = IMAGEMANAGER->findImage("hero_castle");
-			//hero.fieldShadow = IMAGEMANAGER->findImage("hero_castle_shadow");
+			//hero.fieldShadow = IMAGEMANAGER->findImage("hero_castle_shadow.bmp");
 
 			if (hero.job == 0)
 			{
@@ -173,7 +173,7 @@ namespace HOMM_HERO
 			hero.fieldShadow->init("image/gameScene/hero/hero_dungeon_shadow.bmp", 864, 512, 9, 8, true, RGB(255, 0, 255));
 			hero.fieldShadow->AlphaInit();
 			//hero.field = IMAGEMANAGER->findImage("hero_dungeon");
-			//hero.fieldShadow = IMAGEMANAGER->findImage("hero_dungeon_shadow");
+			//hero.fieldShadow = IMAGEMANAGER->findImage("hero_dungeon_shadow.bmp");
 
 			if (hero.job == 0)
 			{
@@ -217,6 +217,8 @@ namespace HOMM_HERO
 		creature.tier = tier;
 		creature.morale = 0;
 		creature.luck = 0;
+		creature.state = STATE_IDLE;
+		creature.quantity = 1;
 
 		for (int i = 0; i < STATE_END; i++)
 		{
@@ -241,24 +243,24 @@ namespace HOMM_HERO
 				creature.maxDmg = 3;
 				creature.speed = 4;
 
-				creature.img[0]->init("image/Castle Creature/11_pikeman/pikeman_attack_down", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[1]->init("image/Castle Creature/11_pikeman/pikeman_attack_front", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[2]->init("image/Castle Creature/11_pikeman/pikeman_attack_up", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[8]->init("image/Castle Creature/11_pikeman/pikeman_damaged", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[9]->init("image/Castle Creature/11_pikeman/pikeman_dead", 700, 280, 5, 2, true, RGB(255, 0, 255));
-				creature.img[7]->init("image/Castle Creature/11_pikeman/pikeman_idle", 140, 280, 1, 2, true, RGB(255, 0, 255));
-				creature.img[3]->init("image/Castle Creature/11_pikeman/pikeman_move", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[4]->init("image/Castle Creature/11_pikeman/pikeman_select", 560, 280, 4, 2, true, RGB(255, 0, 255));
-				creature.img[5]->init("image/Castle Creature/11_pikeman/pikeman_switch", 280, 280, 2, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[0]->init("image/Castle Creature/11_pikeman/pikeman_attack_down_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[1]->init("image/Castle Creature/11_pikeman/pikeman_attack_front_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[2]->init("image/Castle Creature/11_pikeman/pikeman_attack_up_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[8]->init("image/Castle Creature/11_pikeman/pikeman_attack_damaged_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[9]->init("image/Castle Creature/11_pikeman/pikeman_attack_dead_shadow", 700, 280, 5, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[7]->init("image/Castle Creature/11_pikeman/pikeman_attack_idle_shadow", 140, 280, 1, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[3]->init("image/Castle Creature/11_pikeman/pikeman_attack_move_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[4]->init("image/Castle Creature/11_pikeman/pikeman_attack_select_shadow", 560, 280, 4, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[5]->init("image/Castle Creature/11_pikeman/pikeman_attack_switch_shadow", 280, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.img[0]->init("image/Castle Creature/11_pikeman/pikeman_attack_down.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/11_pikeman/pikeman_attack_front.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/11_pikeman/pikeman_attack_up.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/11_pikeman/pikeman_damaged.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/11_pikeman/pikeman_dead.bmp", 700, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/11_pikeman/pikeman_idle.bmp", 140, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/11_pikeman/pikeman_move.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/11_pikeman/pikeman_select.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/11_pikeman/pikeman_switch.bmp", 280, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/11_pikeman/pikeman_attack_down_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/11_pikeman/pikeman_attack_front_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/11_pikeman/pikeman_attack_up_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/11_pikeman/pikeman_damaged_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/11_pikeman/pikeman_dead_shadow.bmp", 700, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/11_pikeman/pikeman_idle_shadow.bmp", 140, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/11_pikeman/pikeman_move_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/11_pikeman/pikeman_select_shadow.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/11_pikeman/pikeman_switch_shadow.bmp", 280, 280, 2, 2, true, RGB(255, 0, 255));
 				for (int i = 0; i < STATE_END; i++)
 				{
 					if (i == (int)STATE_RANGE) continue;
@@ -277,24 +279,24 @@ namespace HOMM_HERO
 					creature.maxDmg = 3;
 					creature.speed = 5;
 
-					creature.img[0]->init("image/Castle Creature/12_halberdier/halberdier_attack_down", 980, 280, 7, 2, true, RGB(255, 0, 255));
-					creature.img[1]->init("image/Castle Creature/12_halberdier/halberdier_attack_front", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.img[2]->init("image/Castle Creature/12_halberdier/halberdier_attack_up", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.img[8]->init("image/Castle Creature/12_halberdier/halberdier_damaged", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.img[9]->init("image/Castle Creature/12_halberdier/halberdier_dead", 420, 280, 3, 2, true, RGB(255, 0, 255));
-					creature.img[7]->init("image/Castle Creature/12_halberdier/halberdier_idle", 140, 280, 1, 2, true, RGB(255, 0, 255));
-					creature.img[3]->init("image/Castle Creature/12_halberdier/halberdier_move", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.img[4]->init("image/Castle Creature/12_halberdier/halberdier_select", 560, 280, 4, 2, true, RGB(255, 0, 255));
-					creature.img[5]->init("image/Castle Creature/12_halberdier/halberdier_switch", 280, 280, 2, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[0]->init("image/Castle Creature/12_halberdier/halberdier_attack_down_shadow", 980, 280, 7, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[1]->init("image/Castle Creature/12_halberdier/halberdier_attack_front_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[2]->init("image/Castle Creature/12_halberdier/halberdier_attack_up_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[8]->init("image/Castle Creature/12_halberdier/halberdier_attack_damaged_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[9]->init("image/Castle Creature/12_halberdier/halberdier_attack_dead_shadow", 420, 280, 3, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[7]->init("image/Castle Creature/12_halberdier/halberdier_attack_idle_shadow", 140, 280, 1, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[3]->init("image/Castle Creature/12_halberdier/halberdier_attack_move_shadow", 840, 280, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[4]->init("image/Castle Creature/12_halberdier/halberdier_attack_select_shadow", 560, 280, 4, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[5]->init("image/Castle Creature/12_halberdier/halberdier_attack_switch_shadow", 280, 280, 2, 2, true, RGB(255, 0, 255));
+					creature.img[0]->init("image/Castle Creature/12_halberdier/halberdier_attack_down.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/12_halberdier/halberdier_attack_front.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/12_halberdier/halberdier_attack_up.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/12_halberdier/halberdier_damaged.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/12_halberdier/halberdier_dead.bmp", 420, 280, 3, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/12_halberdier/halberdier_idle.bmp", 140, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/12_halberdier/halberdier_move.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/12_halberdier/halberdier_select.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/12_halberdier/halberdier_switch.bmp", 280, 280, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/12_halberdier/halberdier_attack_down_shadow.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/12_halberdier/halberdier_attack_front_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/12_halberdier/halberdier_attack_up_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/12_halberdier/halberdier_damaged_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/12_halberdier/halberdier_dead_shadow.bmp", 420, 280, 3, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/12_halberdier/halberdier_idle_shadow.bmp", 140, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/12_halberdier/halberdier_move_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/12_halberdier/halberdier_select_shadow.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/12_halberdier/halberdier_switch_shadow.bmp", 280, 280, 2, 2, true, RGB(255, 0, 255));
 					for (int i = 0; i < STATE_END; i++)
 					{
 						if (i == (int)STATE_RANGE) continue;
@@ -314,26 +316,26 @@ namespace HOMM_HERO
 				creature.minDmg = 2;
 				creature.maxDmg = 3;
 				creature.speed = 4;
-				creature.img[0]->init("image/Castle Creature/21_archer/archer_attack_melee", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.img[1]->init("image/Castle Creature/21_archer/archer_attack_melee", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.img[2]->init("image/Castle Creature/21_archer/archer_attack_melee", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.img[6]->init("image/Castle Creature/21_archer/archer_attack_range", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.img[8]->init("image/Castle Creature/21_archer/archer_damaged", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.img[9]->init("image/Castle Creature/21_archer/archer_dead", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.img[7]->init("image/Castle Creature/21_archer/archer_idle", 120, 240, 1, 2, true, RGB(255, 0, 255));
-				creature.img[3]->init("image/Castle Creature/21_archer/archer_move", 1440, 240, 12, 2, true, RGB(255, 0, 255));
-				creature.img[4]->init("image/Castle Creature/21_archer/archer_select", 960, 240, 8, 2, true, RGB(255, 0, 255));
-				creature.img[5]->init("image/Castle Creature/21_archer/archer_switch", 240, 240, 2, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[0]->init("image/Castle Creature/21_archer/archer_attack_melee_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[1]->init("image/Castle Creature/21_archer/archer_attack_melee_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[2]->init("image/Castle Creature/21_archer/archer_attack_melee_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[6]->init("image/Castle Creature/21_archer/archer_attack_range_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[8]->init("image/Castle Creature/21_archer/archer_attack_damaged_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[9]->init("image/Castle Creature/21_archer/archer_attack_dead_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[7]->init("image/Castle Creature/21_archer/archer_attack_idle_shadow", 120, 240, 1, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[3]->init("image/Castle Creature/21_archer/archer_attack_move_shadow", 1440, 240, 12, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[4]->init("image/Castle Creature/21_archer/archer_attack_select_shadow", 960, 240, 8, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[5]->init("image/Castle Creature/21_archer/archer_attack_switch_shadow", 240, 240, 2, 2, true, RGB(255, 0, 255));
+				creature.img[0]->init("image/Castle Creature/21_archer/archer_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/21_archer/archer_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/21_archer/archer_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[6]->init("image/Castle Creature/21_archer/archer_attack_range.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/21_archer/archer_damaged.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/21_archer/archer_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/21_archer/archer_idle.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/21_archer/archer_move.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/21_archer/archer_select.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/21_archer/archer_switch.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/21_archer/archer_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/21_archer/archer_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/21_archer/archer_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[6]->init("image/Castle Creature/21_archer/archer_attack_range_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/21_archer/archer_damaged_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/21_archer/archer_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/21_archer/archer_idle_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/21_archer/archer_move_shadow.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/21_archer/archer_select_shadow.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/21_archer/archer_switch_shadow.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
 				for (int i = 0; i < STATE_END; i++)
 				{
 					creature.imgShadow[i]->AlphaInit();
@@ -351,26 +353,26 @@ namespace HOMM_HERO
 					creature.maxDmg = 3;
 					creature.speed = 6;
 
-					creature.img[0]->init("image/Castle Creature/22_mask/mask_attack_melee", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.img[1]->init("image/Castle Creature/22_mask/mask_attack_melee", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.img[2]->init("image/Castle Creature/22_mask/mask_attack_melee", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.img[6]->init("image/Castle Creature/22_mask/mask_attack_range", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.img[8]->init("image/Castle Creature/22_mask/mask_damaged", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.img[9]->init("image/Castle Creature/22_mask/mask_dead", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.img[7]->init("image/Castle Creature/22_mask/mask_idle", 120, 240, 1, 2, true, RGB(255, 0, 255));
-					creature.img[3]->init("image/Castle Creature/22_mask/mask_move", 1440, 240, 12, 2, true, RGB(255, 0, 255));
-					creature.img[4]->init("image/Castle Creature/22_mask/mask_select", 960, 240, 8, 2, true, RGB(255, 0, 255));
-					creature.img[5]->init("image/Castle Creature/22_mask/mask_switch", 240, 240, 2, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[0]->init("image/Castle Creature/22_mask/mask_attack_melee_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[1]->init("image/Castle Creature/22_mask/mask_attack_melee_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[2]->init("image/Castle Creature/22_mask/mask_attack_melee_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[6]->init("image/Castle Creature/22_mask/mask_attack_range_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[8]->init("image/Castle Creature/22_mask/mask_attack_damaged_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[9]->init("image/Castle Creature/22_mask/mask_attack_dead_shadow", 720, 240, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[7]->init("image/Castle Creature/22_mask/mask_attack_idle_shadow", 120, 240, 1, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[3]->init("image/Castle Creature/22_mask/mask_attack_move_shadow", 1440, 240, 12, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[4]->init("image/Castle Creature/22_mask/mask_attack_select_shadow", 960, 240, 8, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[5]->init("image/Castle Creature/22_mask/mask_attack_switch_shadow", 240, 240, 2, 2, true, RGB(255, 0, 255));
+					creature.img[0]->init("image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[6]->init("image/Castle Creature/22_mask/mask_attack_range.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/22_mask/mask_damaged.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/22_mask/mask_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/22_mask/mask_idle.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/22_mask/mask_move.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/22_mask/mask_select.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/22_mask/mask_switch.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/22_mask/mask_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/22_mask/mask_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/22_mask/mask_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[6]->init("image/Castle Creature/22_mask/mask_attack_range_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/22_mask/mask_damaged_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/22_mask/mask_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/22_mask/mask_idle_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/22_mask/mask_move_shadow.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/22_mask/mask_select_shadow.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/22_mask/mask_switch_shadow.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
 					for (int i = 0; i < STATE_END; i++)
 					{
 						creature.imgShadow[i]->AlphaInit();
@@ -389,24 +391,24 @@ namespace HOMM_HERO
 				creature.maxDmg = 6;
 				creature.speed = 6;
 
-				creature.img[0]->init("image/Castle Creature/31_griffin/griffin_attack_down", 1600, 280, 8, 2, true, RGB(255, 0, 255));
-				creature.img[1]->init("image/Castle Creature/31_griffin/griffin_attack_front", 1400, 280, 7, 2, true, RGB(255, 0, 255));
-				creature.img[2]->init("image/Castle Creature/31_griffin/griffin_attack_up", 1200, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[8]->init("image/Castle Creature/31_griffin/griffin_damaged", 1000, 280, 5, 2, true, RGB(255, 0, 255));
-				creature.img[9]->init("image/Castle Creature/31_griffin/griffin_dead", 1600, 280, 8, 2, true, RGB(255, 0, 255));
-				creature.img[7]->init("image/Castle Creature/31_griffin/griffin_idle", 200, 280, 1, 2, true, RGB(255, 0, 255));
-				creature.img[3]->init("image/Castle Creature/31_griffin/griffin_move", 1600, 280, 8, 2, true, RGB(255, 0, 255));
-				creature.img[4]->init("image/Castle Creature/31_griffin/griffin_select", 600, 280, 3, 2, true, RGB(255, 0, 255));
-				creature.img[5]->init("image/Castle Creature/31_griffin/griffin_switch", 400, 280, 2, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[0]->init("image/Castle Creature/31_griffin/griffin_attack_down_shadow", 1600,280, 8, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[1]->init("image/Castle Creature/31_griffin/griffin_attack_front_shadow", 1400, 280, 7, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[2]->init("image/Castle Creature/31_griffin/griffin_attack_up_shadow", 1200, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[8]->init("image/Castle Creature/31_griffin/griffin_attack_damaged_shadow", 1000, 280, 5, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[9]->init("image/Castle Creature/31_griffin/griffin_attack_dead_shadow", 1600, 280, 8, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[7]->init("image/Castle Creature/31_griffin/griffin_attack_idle_shadow", 200, 280, 1, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[3]->init("image/Castle Creature/31_griffin/griffin_attack_move_shadow", 1600, 280, 8, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[4]->init("image/Castle Creature/31_griffin/griffin_attack_select_shadow", 600, 280, 3, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[5]->init("image/Castle Creature/31_griffin/griffin_attack_switch_shadow", 400, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.img[0]->init("image/Castle Creature/31_griffin/griffin_attack_down.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/31_griffin/griffin_attack_front.bmp", 1400, 280, 7, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/31_griffin/griffin_attack_up.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/31_griffin/griffin_damaged.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/31_griffin/griffin_dead.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/31_griffin/griffin_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/31_griffin/griffin_move.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/31_griffin/griffin_select.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/31_griffin/griffin_switch.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/31_griffin/griffin_attack_down_shadow.bmp", 1600,280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/31_griffin/griffin_attack_front_shadow.bmp", 1400, 280, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/31_griffin/griffin_attack_up_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/31_griffin/griffin_damaged_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/31_griffin/griffin_dead_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/31_griffin/griffin_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/31_griffin/griffin_move_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/31_griffin/griffin_select_shadow.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/31_griffin/griffin_switch_shadow.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
 				for (int i = 0; i < STATE_END; i++)
 				{
 					if (i == (int)STATE_RANGE) continue;
@@ -424,24 +426,24 @@ namespace HOMM_HERO
 					creature.maxDmg = 6;
 					creature.speed = 9;
 
-					creature.img[0]->init("image/Castle Creature/32_royal/royal_attack_down", 1760, 320, 8, 2, true, RGB(255, 0, 255));
-					creature.img[1]->init("image/Castle Creature/32_royal/royal_attack_front", 1540, 320, 7, 2, true, RGB(255, 0, 255));
-					creature.img[2]->init("image/Castle Creature/32_royal/royal_attack_up", 1320, 320, 6, 2, true, RGB(255, 0, 255));
-					creature.img[8]->init("image/Castle Creature/32_royal/royal_damaged", 1100, 320, 5, 2, true, RGB(255, 0, 255));
-					creature.img[9]->init("image/Castle Creature/32_royal/royal_dead", 1760, 320, 8, 2, true, RGB(255, 0, 255));
-					creature.img[7]->init("image/Castle Creature/32_royal/royal_idle", 220, 320, 1, 2, true, RGB(255, 0, 255));
-					creature.img[3]->init("image/Castle Creature/32_royal/royal_move", 1760, 320, 8, 2, true, RGB(255, 0, 255));
-					creature.img[4]->init("image/Castle Creature/32_royal/royal_select", 1100, 320, 5, 2, true, RGB(255, 0, 255));
-					creature.img[5]->init("image/Castle Creature/32_royal/royal_switch", 440, 320, 2, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[0]->init("image/Castle Creature/32_royal/royal_attack_down_shadow", 1760, 320, 8, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[1]->init("image/Castle Creature/32_royal/royal_attack_front_shadow", 1540, 320, 7, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[2]->init("image/Castle Creature/32_royal/royal_attack_up_shadow", 1320, 320, 6, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[8]->init("image/Castle Creature/32_royal/royal_attack_damaged_shadow", 1100, 320, 5, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[9]->init("image/Castle Creature/32_royal/royal_attack_dead_shadow", 1760, 320, 8, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[7]->init("image/Castle Creature/32_royal/royal_attack_idle_shadow", 220, 320, 1, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[3]->init("image/Castle Creature/32_royal/royal_attack_move_shadow", 1760, 320, 8, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[4]->init("image/Castle Creature/32_royal/royal_attack_select_shadow", 1100, 320, 5, 2, true, RGB(255, 0, 255));
-					creature.imgShadow[5]->init("image/Castle Creature/32_royal/royal_attack_switch_shadow", 440, 320, 2, 2, true, RGB(255, 0, 255));
+					creature.img[0]->init("image/Castle Creature/32_royal/royal_attack_down.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/32_royal/royal_attack_front.bmp", 1540, 320, 7, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/32_royal/royal_attack_up.bmp", 1320, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/32_royal/royal_damaged.bmp", 1100, 320, 5, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/32_royal/royal_dead.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/32_royal/royal_idle.bmp", 220, 320, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/32_royal/royal_move.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/32_royal/royal_select.bmp", 1100, 320, 5, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/32_royal/royal_switch.bmp", 440, 320, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/32_royal/royal_attack_down_shadow.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/32_royal/royal_attack_front_shadow.bmp", 1540, 320, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/32_royal/royal_attack_up_shadow.bmp", 1320, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/32_royal/royal_damaged_shadow.bmp", 1100, 320, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/32_royal/royal_dead_shadow.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/32_royal/royal_idle_shadow.bmp", 220, 320, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/32_royal/royal_move_shadow.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/32_royal/royal_select_shadow.bmp", 1100, 320, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/32_royal/royal_switch_shadow.bmp", 440, 320, 2, 2, true, RGB(255, 0, 255));
 					for (int i = 0; i < STATE_END; i++)
 					{
 						if (i == (int)STATE_RANGE) continue;
@@ -462,24 +464,24 @@ namespace HOMM_HERO
 				creature.maxDmg = 9;
 				creature.speed = 5;
 
-				creature.img[0]->init("image/Castle Creature/41_sword/sword_attack_down", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[1]->init("image/Castle Creature/41_sword/sword_attack_front", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-				creature.img[2]->init("image/Castle Creature/41_sword/sword_attack_up", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[8]->init("image/Castle Creature/41_sword/sword_damaged", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[9]->init("image/Castle Creature/41_sword/sword_dead", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.img[7]->init("image/Castle Creature/41_sword/sword_idle", 160, 280, 1, 2, true, RGB(255, 0, 255));
-				creature.img[3]->init("image/Castle Creature/41_sword/sword_move", 1920, 280, 12, 2, true, RGB(255, 0, 255));
-				creature.img[4]->init("image/Castle Creature/41_sword/sword_select", 640, 280, 4, 2, true, RGB(255, 0, 255));
-				creature.img[5]->init("image/Castle Creature/41_sword/sword_switch", 320, 280, 2, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[0]->init("image/Castle Creature/41_sword/sword_attack_down_shadow", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[1]->init("image/Castle Creature/41_sword/sword_attack_front_shadow", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[2]->init("image/Castle Creature/41_sword/sword_attack_up_shadow", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[8]->init("image/Castle Creature/41_sword/sword_attack_damaged_shadow", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[9]->init("image/Castle Creature/41_sword/sword_attack_dead_shadow", 960, 280, 6, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[7]->init("image/Castle Creature/41_sword/sword_attack_idle_shadow", 160, 280, 1, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[3]->init("image/Castle Creature/41_sword/sword_attack_move_shadow", 1920, 280, 12, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[4]->init("image/Castle Creature/41_sword/sword_attack_select_shadow", 640, 280, 4, 2, true, RGB(255, 0, 255));
-				creature.imgShadow[5]->init("image/Castle Creature/41_sword/sword_attack_switch_shadow", 320, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.img[0]->init("image/Castle Creature/41_sword/sword_attack_down.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/41_sword/sword_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/41_sword/sword_attack_up.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/41_sword/sword_damaged.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/41_sword/sword_dead.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/41_sword/sword_idle.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/41_sword/sword_move.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/41_sword/sword_select.bmp", 640, 280, 4, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/41_sword/sword_switch.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/41_sword/sword_attack_down_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/41_sword/sword_attack_front_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/41_sword/sword_attack_up_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/41_sword/sword_damaged_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/41_sword/sword_dead_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/41_sword/sword_idle_shadow.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/41_sword/sword_move_shadow.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/41_sword/sword_select_shadow.bmp", 640, 280, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/41_sword/sword_switch_shadow.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
 				for (int i = 0; i < STATE_END; i++)
 				{
 					if (i == (int)STATE_RANGE) continue;
@@ -497,6 +499,31 @@ namespace HOMM_HERO
 					creature.minDmg = 7;
 					creature.maxDmg = 10;
 					creature.speed = 6;
+
+					creature.img[0]->init("image/Castle Creature/42_cru/cru_attack_down.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/42_cru/cru_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/42_cru/cru_attack_up.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/42_cru/cru_damaged.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/42_cru/cru_dead.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/42_cru/cru_idle.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/42_cru/cru_move.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/42_cru/cru_select.bmp", 480, 280, 3, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/42_cru/cru_switch.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/42_cru/cru_attack_down_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/42_cru/cru_attack_front_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/42_cru/cru_attack_up_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/42_cru/cru_damaged_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/42_cru/cru_dead_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/42_cru/cru_idle_shadow.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/42_cru/cru_move_shadow.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/42_cru/cru_select_shadow.bmp", 480, 280, 3, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/42_cru/cru_switch_shadow.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 
@@ -511,6 +538,32 @@ namespace HOMM_HERO
 				creature.maxDmg = 12;
 				creature.speed = 5;
 
+				creature.img[0]->init("image/Castle Creature/51_monk/monk_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/51_monk/monk_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/51_monk/monk_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[6]->init("image/Castle Creature/51_monk/monk_attack_range.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/51_monk/monk_damaged.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/51_monk/monk_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/51_monk/monk_idle.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/51_monk/monk_move.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/51_monk/monk_select.bmp", 360, 240, 3, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/51_monk/monk_switch.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/51_monk/monk_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/51_monk/monk_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/51_monk/monk_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[6]->init("image/Castle Creature/51_monk/monk_attack_range_shadow.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/51_monk/monk_damaged_shadow.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/51_monk/monk_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/51_monk/monk_idle_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/51_monk/monk_move_shadow.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/51_monk/monk_select_shadow.bmp", 360, 240, 3, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/51_monk/monk_switch_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "열성 수도사");
@@ -520,6 +573,32 @@ namespace HOMM_HERO
 					creature.minDmg = 10;
 					creature.maxDmg = 12;
 					creature.speed = 7;
+
+					creature.img[0]->init("image/Castle Creature/52_zealot/zealot_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/52_zealot/zealot_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/52_zealot/zealot_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[6]->init("image/Castle Creature/52_zealot/zealot_attack_range.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/52_zealot/zealot_damaged.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/52_zealot/zealot_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/52_zealot/zealot_idle.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/52_zealot/zealot_move.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/52_zealot/zealot_select.bmp", 360, 240, 3, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/52_zealot/zealot_switch.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/52_zealot/zealot_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/52_zealot/zealot_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/52_zealot/zealot_attack_melee_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[6]->init("image/Castle Creature/52_zealot/zealot_attack_range_shadow.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/52_zealot/zealot_damaged_shadow.bmp", 600, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/52_zealot/zealot_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/52_zealot/zealot_idle_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/52_zealot/zealot_move_shadow.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/52_zealot/zealot_select_shadow.bmp", 360, 240, 3, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/52_zealot/zealot_switch_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 
@@ -534,6 +613,31 @@ namespace HOMM_HERO
 				creature.maxDmg = 25;
 				creature.speed = 7;
 
+				creature.img[0]->init("image/Castle Creature/61_cavalier/cavalier_attack_down.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/61_cavalier/cavalier_attack_front.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/61_cavalier/cavalier_attack_up.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/61_cavalier/cavalier_damaged.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/61_cavalier/cavalier_dead.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/61_cavalier/cavalier_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/61_cavalier/cavalier_move.bmp", 3200, 280, 16, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/61_cavalier/cavalier_select.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/61_cavalier/cavalier_switch.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/61_cavalier/cavalier_attack_down_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/61_cavalier/cavalier_attack_front_shadow.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/61_cavalier/cavalier_attack_up_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/61_cavalier/cavalier_damaged_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/61_cavalier/cavalier_dead_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/61_cavalier/cavalier_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/61_cavalier/cavalier_move_shadow.bmp", 3200, 280, 16, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/61_cavalier/cavalier_select_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/61_cavalier/cavalier_switch_shadow.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "챔피언");
@@ -543,6 +647,31 @@ namespace HOMM_HERO
 					creature.minDmg = 20;
 					creature.maxDmg = 25;
 					creature.speed = 9;
+
+					creature.img[0]->init("image/Castle Creature/62_champion/champion_attack_down.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/62_champion/champion_attack_front.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/62_champion/champion_attack_up.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/62_champion/champion_damaged.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/62_champion/champion_dead.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/62_champion/champion_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/62_champion/champion_move.bmp", 3400, 280, 17, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/62_champion/champion_select.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/62_champion/champion_switch.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/62_champion/champion_attack_down_shadow.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/62_champion/champion_attack_front_shadow.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/62_champion/champion_attack_up_shadow.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/62_champion/champion_damaged_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/62_champion/champion_dead_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/62_champion/champion_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/62_champion/champion_move_shadow.bmp", 3400, 280, 17, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/62_champion/champion_select_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/62_champion/champion_switch_shadow.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 
@@ -557,6 +686,31 @@ namespace HOMM_HERO
 				creature.maxDmg = 50;
 				creature.speed = 12;
 
+				creature.img[0]->init("image/Castle Creature/71_angel/angel_attack_down.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Castle Creature/71_angel/angel_attack_front.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Castle Creature/71_angel/angel_attack_up.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Castle Creature/71_angel/angel_damaged.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Castle Creature/71_angel/angel_dead.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Castle Creature/71_angel/angel_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Castle Creature/71_angel/angel_move.bmp", 2200, 280, 11, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Castle Creature/71_angel/angel_select.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Castle Creature/71_angel/angel_switch.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Castle Creature/71_angel/angel_attack_down_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Castle Creature/71_angel/angel_attack_front_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Castle Creature/71_angel/angel_attack_up_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Castle Creature/71_angel/angel_damaged_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Castle Creature/71_angel/angel_dead_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Castle Creature/71_angel/angel_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Castle Creature/71_angel/angel_move_shadow.bmp", 2200, 280, 11, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Castle Creature/71_angel/angel_select_shadow.bmp", 600, 280, 3, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Castle Creature/71_angel/angel_switch_shadow.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "대천사");
@@ -566,6 +720,32 @@ namespace HOMM_HERO
 					creature.minDmg = 50;
 					creature.maxDmg = 50;
 					creature.speed = 18;
+
+					creature.img[0]->init("image/Castle Creature/72_arc/arc_attack_down.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Castle Creature/72_arc/arc_attack_front.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Castle Creature/72_arc/arc_attack_up.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Castle Creature/72_arc/arc_damaged.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Castle Creature/72_arc/arc_dead.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Castle Creature/72_arc/arc_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Castle Creature/72_arc/arc_move.bmp", 2400, 280, 12, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Castle Creature/72_arc/arc_select.bmp", 800, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Castle Creature/72_arc/arc_switch.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Castle Creature/72_arc/arc_attack_down_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Castle Creature/72_arc/arc_attack_front_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Castle Creature/72_arc/arc_attack_up_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Castle Creature/72_arc/arc_damaged_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Castle Creature/72_arc/arc_dead_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Castle Creature/72_arc/arc_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Castle Creature/72_arc/arc_move_shadow.bmp", 2400, 280, 12, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Castle Creature/72_arc/arc_select_shadow.bmp", 800, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Castle Creature/72_arc/arc_switch_shadow.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
+
 				}
 
 
@@ -590,6 +770,31 @@ namespace HOMM_HERO
 				creature.maxDmg = 3;
 				creature.speed = 4;
 
+				creature.img[0]->init("image/Dungeon Creature/11_troglodyte/troglodyte_down.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/11_troglodyte/troglodyte_front.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/11_troglodyte/troglodyte_up.bmp", 800, 320, 5, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/11_troglodyte/troglodyte_damaged.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/11_troglodyte/troglodyte_dead.bmp", 800, 320, 5, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/11_troglodyte/troglodyte_idle.bmp", 160, 320, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/11_troglodyte/troglodyte_move.bmp", 1120, 320, 7, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/11_troglodyte/troglodyte_select.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/11_troglodyte/troglodyte_switch.bmp", 320, 320, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/11_troglodyte/troglodyte_down_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/11_troglodyte/troglodyte_front_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/11_troglodyte/troglodyte_up_shadow.bmp", 800, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/11_troglodyte/troglodyte_damaged_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/11_troglodyte/troglodyte_dead_shadow.bmp", 800, 320, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/11_troglodyte/troglodyte_idle_shadow.bmp", 160, 320, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/11_troglodyte/troglodyte_move_shadow.bmp", 1120, 320, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/11_troglodyte/troglodyte_select_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/11_troglodyte/troglodyte_switch_shadow.bmp", 320, 320, 2, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "지옥의 동굴인");
@@ -599,6 +804,31 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 3;
 					creature.speed = 5;
+
+					creature.img[0]->init("image/Dungeon Creature/12_infernal/infernal_attack_down.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/12_infernal/infernal_attack_front.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/12_infernal/infernal_attack_up.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/12_infernal/infernal_damaged.bmp", 1120, 320, 7, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/12_infernal/infernal_dead.bmp", 640, 320, 4, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/12_infernal/infernal_idle.bmp", 160, 320, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/12_infernal/infernal_move.bmp", 1120, 320, 7, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/12_infernal/infernal_select.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/12_infernal/infernal_switch.bmp", 320, 320, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/12_infernal/infernal_attack_down_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/12_infernal/infernal_attack_front_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/12_infernal/infernal_attack_up_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/12_infernal/infernal_damaged_shadow.bmp", 1120, 320, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/12_infernal/infernal_dead_shadow.bmp", 640, 320, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/12_infernal/infernal_idle_shadow.bmp", 160, 320, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/12_infernal/infernal_move_shadow.bmp", 1120, 320, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/12_infernal/infernal_select_shadow.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/12_infernal/infernal_switch_shadow.bmp", 320, 320, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 				break;
@@ -612,6 +842,32 @@ namespace HOMM_HERO
 				creature.maxDmg = 4;
 				creature.speed = 6;
 
+				creature.img[0]->init("image/Dungeon Creature/21_harpy/harpy_attack_down.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/21_harpy/harpy_attack_front.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/21_harpy/harpy_attack_up.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/21_harpy/harpy_damaged.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/21_harpy/harpy_dead.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/21_harpy/harpy_idle.bmp", 160, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/21_harpy/harpy_move.bmp", 2080, 240, 13, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/21_harpy/harpy_select.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/21_harpy/harpy_switch.bmp", 480, 240, 3, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/21_harpy/harpy_attack_down_shadow.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/21_harpy/harpy_attack_front_shadow.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/21_harpy/harpy_attack_up_shadow.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/21_harpy/harpy_damaged_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/21_harpy/harpy_dead_shadow.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/21_harpy/harpy_idle_shadow.bmp", 160, 240, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/21_harpy/harpy_move_shadow.bmp", 2080, 240, 13, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/21_harpy/harpy_select_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/21_harpy/harpy_switch_shadow.bmp", 480, 240, 3, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "마녀 하피");
@@ -621,6 +877,31 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 5;
 					creature.speed = 9;
+
+					creature.img[0]->init("image/Dungeon Creature/22_hag/hag_attack_down.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/22_hag/hag_attack_front.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/22_hag/hag_attack_up.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/22_hag/hag_damaged.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/22_hag/hag_dead.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/22_hag/hag_idle.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/22_hag/hag_move.bmp", 2080, 240, 13, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/22_hag/hag_select.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/22_hag/hag_switch.bmp", 480, 240, 3, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/22_hag/hag_attack_down_shadow.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/22_hag/hag_attack_front_shadow.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/22_hag/hag_attack_up_shadow.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/22_hag/hag_damaged_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/22_hag/hag_dead_shadow.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/22_hag/hag_idle_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/22_hag/hag_move_shadow.bmp", 2080, 240, 13, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/22_hag/hag_select_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/22_hag/hag_switch_shadow.bmp", 480, 240, 3, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 				break;
@@ -634,6 +915,32 @@ namespace HOMM_HERO
 				creature.maxDmg = 5;
 				creature.speed = 5;
 
+				creature.img[0]->init("image/Dungeon Creature/31_beholder/beholder_attack_down.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/31_beholder/beholder_attack_front.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/31_beholder/beholder_attack_up.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[6]->init("image/Dungeon Creature/31_beholder/beholder_attack_range.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/31_beholder/beholder_damaged.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/31_beholder/beholder_dead.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/31_beholder/beholder_idle.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/31_beholder/beholder_move.bmp", 2560, 240, 16, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/31_beholder/beholder_select.bmp", 480, 240, 3, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/31_beholder/beholder_idle.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/31_beholder/beholder_attack_down_shadow.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/31_beholder/beholder_attack_front_shadow.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/31_beholder/beholder_attack_up_shadow.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[6]->init("image/Dungeon Creature/31_beholder/beholder_attack_range_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/31_beholder/beholder_damaged_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/31_beholder/beholder_dead_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/31_beholder/beholder_idle_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/31_beholder/beholder_move_shadow.bmp", 2560, 240, 16, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/31_beholder/beholder_select_shadow.bmp", 480, 240, 3, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/31_beholder/beholder_idle_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+
+				for (int i = 0; i < STATE_END; i++)
+				{
+					creature.imgShadow[i]->AlphaInit();
+				}
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "악마의 눈");
@@ -643,6 +950,33 @@ namespace HOMM_HERO
 					creature.minDmg = 3;
 					creature.maxDmg = 5;
 					creature.speed = 7;
+
+					creature.img[0]->init("image/Dungeon Creature/32_evil/evil_attack_down.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/32_evil/evil_attack_front.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/32_evil/evil_attack_up.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[6]->init("image/Dungeon Creature/32_evil/evil_attack_range.bmp", 900, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/32_evil/evil_damaged.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/32_evil/evil_dead.bmp", 900, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/32_evil/evil_idle.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/32_evil/evil_move.bmp", 2520, 240, 14, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/32_evil/evil_select.bmp", 540, 240, 3, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/32_evil/evil_idle.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/32_evil/evil_attack_down_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/32_evil/evil_attack_front_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/32_evil/evil_attack_up_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[6]->init("image/Dungeon Creature/32_evil/evil_attack_range_shadow.bmp", 900, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/32_evil/evil_damaged_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/32_evil/evil_dead_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/32_evil/evil_idle_shadow.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/32_evil/evil_move_shadow.bmp", 2520, 240, 14, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/32_evil/evil_select_shadow.bmp", 540, 240, 3, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/32_evil/evil_idle_shadow.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+
+					for (int i = 0; i < STATE_END; i++)
+					{
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 
@@ -657,6 +991,33 @@ namespace HOMM_HERO
 				creature.maxDmg = 8;
 				creature.speed = 5;
 
+				creature.img[0]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[6]->init("image/Dungeon Creature/41_medusa/medusa_attack_range.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/41_medusa/medusa_damaged.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/41_medusa/medusa_dead.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/41_medusa/medusa_idle.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/41_medusa/medusa_move.bmp", 1920, 240, 12, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/41_medusa/medusa_select.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/41_medusa/medusa_idle.bmp", 320, 240, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[6]->init("image/Dungeon Creature/41_medusa/medusa_attack_range_shadow.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/41_medusa/medusa_damaged_shadow.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/41_medusa/medusa_dead_shadow.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/41_medusa/medusa_idle_shadow.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/41_medusa/medusa_move_shadow.bmp", 1920, 240, 12, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/41_medusa/medusa_select_shadow.bmp", 800, 240, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/41_medusa/medusa_idle_shadow.bmp", 320, 240, 2, 2, true, RGB(255, 0, 255));
+
+				for (int i = 0; i < STATE_END; i++)
+				{
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "메두사 퀸");
@@ -666,6 +1027,33 @@ namespace HOMM_HERO
 					creature.minDmg = 6;
 					creature.maxDmg = 8;
 					creature.speed = 6;
+
+
+					creature.img[0]->init("image/Dungeon Creature/42_queen/queen_attack_melee.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/42_queen/queen_attack_melee.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/42_queen/queen_attack_melee.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[6]->init("image/Dungeon Creature/42_queen/queen_attack_range.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/42_queen/queen_damaged.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/42_queen/queen_dead.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/42_queen/queen_idle.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/42_queen/queen_move.bmp", 2160, 240, 12, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/42_queen/queen_select.bmp", 900, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/42_queen/queen_idle.bmp", 360, 240, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/42_queen/queen_attack_melee_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/42_queen/queen_attack_melee_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/42_queen/queen_attack_melee_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[6]->init("image/Dungeon Creature/42_queen/queen_attack_range_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/42_queen/queen_damaged_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/42_queen/queen_dead_shadow.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/42_queen/queen_idle_shadow.bmp", 720, 240, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/42_queen/queen_move_shadow.bmp", 2160, 240, 12, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/42_queen/queen_select_shadow.bmp", 900, 240, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/42_queen/queen_idle_shadow.bmp", 360, 240, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 
@@ -680,6 +1068,31 @@ namespace HOMM_HERO
 				creature.maxDmg = 20;
 				creature.speed = 6;
 
+				creature.img[0]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_down.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_front.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_up.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/51_minotaur/minotaur_damaged.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/51_minotaur/minotaur_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/51_minotaur/minotaur_idle.bmp", 480, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/51_minotaur/minotaur_move.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/51_minotaur/minotaur_select.bmp", 480, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/51_minotaur/minotaur_switch.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_down_shadow.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_front_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_up_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/51_minotaur/minotaur_damaged_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/51_minotaur/minotaur_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/51_minotaur/minotaur_idle_shadow.bmp", 480, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/51_minotaur/minotaur_move_shadow.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/51_minotaur/minotaur_select_shadow.bmp", 480, 240, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/51_minotaur/minotaur_switch_shadow.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "미노타우르스 킹");
@@ -689,6 +1102,32 @@ namespace HOMM_HERO
 					creature.minDmg = 12;
 					creature.maxDmg = 20;
 					creature.speed = 8;
+
+					creature.img[0]->init("image/Dungeon Creature/52_king/king_attack_down.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/52_king/king_attack_front.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/52_king/king_attack_up.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/52_king/king_damaged.bmp", 810, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/52_king/king_dead.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/52_king/king_idle.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/52_king/king_move.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/52_king/king_select.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/52_king/king_switch.bmp", 280, 280, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/52_king/king_attack_down_shadow.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/52_king/king_attack_front_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/52_king/king_attack_up_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/52_king/king_damaged_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/52_king/king_dead_shadow.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/52_king/king_idle_shadow.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/52_king/king_move_shadow.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/52_king/king_select_shadow.bmp", 560, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/52_king/king_switch_shadow.bmp", 280, 280, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
+
 				}
 
 
@@ -703,6 +1142,31 @@ namespace HOMM_HERO
 				creature.maxDmg = 20;
 				creature.speed = 7;
 
+				creature.img[0]->init("image/Dungeon Creature/61_manticore/manticore_attack_down.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/61_manticore/manticore_attack_front.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/61_manticore/manticore_attack_up.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/61_manticore/manticore_damaged.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/61_manticore/manticore_dead.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/61_manticore/manticore_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/61_manticore/manticore_move.bmp", 2600, 280, 13, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/61_manticore/manticore_select.bmp", 800, 280, 4, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/61_manticore/manticore_switch.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/61_manticore/manticore_attack_down_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/61_manticore/manticore_attack_front_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/61_manticore/manticore_attack_up_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/61_manticore/manticore_damaged_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/61_manticore/manticore_dead_shadow.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/61_manticore/manticore_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/61_manticore/manticore_move_shadow.bmp", 2600, 280, 13, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/61_manticore/manticore_select_shadow.bmp", 800, 280, 4, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/61_manticore/manticore_switch_shadow.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "스코피코어");
@@ -712,6 +1176,33 @@ namespace HOMM_HERO
 					creature.minDmg = 14;
 					creature.maxDmg = 20;
 					creature.speed = 11;
+
+					creature.img[0]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_down.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_front.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_up.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/62_scorpicore/scorpicore_damaged.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/62_scorpicore/scorpicore_dead.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/62_scorpicore/scorpicore_idle.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/62_scorpicore/scorpicore_move.bmp", 2400, 280, 12, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/62_scorpicore/scorpicore_select.bmp", 800, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/62_scorpicore/scorpicore_switch.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_down_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_front_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_up_shadow.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/62_scorpicore/scorpicore_damaged_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/62_scorpicore/scorpicore_dead_shadow.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/62_scorpicore/scorpicore_idle_shadow.bmp", 200, 280, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/62_scorpicore/scorpicore_move_shadow.bmp", 2400, 280, 12, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/62_scorpicore/scorpicore_select_shadow.bmp", 800, 280, 4, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/62_scorpicore/scorpicore_switch_shadow.bmp", 400, 280, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
+
+
 				}
 
 
@@ -726,6 +1217,31 @@ namespace HOMM_HERO
 				creature.maxDmg = 50;
 				creature.speed = 11;
 
+				creature.img[0]->init("image/Dungeon Creature/71_red/red_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.img[1]->init("image/Dungeon Creature/71_red/red_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.img[2]->init("image/Dungeon Creature/71_red/red_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.img[8]->init("image/Dungeon Creature/71_red/red_damaged.bmp", 2100, 440, 7, 2, true, RGB(255, 0, 255));
+				creature.img[9]->init("image/Dungeon Creature/71_red/red_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.img[7]->init("image/Dungeon Creature/71_red/red_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+				creature.img[3]->init("image/Dungeon Creature/71_red/red_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+				creature.img[4]->init("image/Dungeon Creature/71_red/red_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.img[5]->init("image/Dungeon Creature/71_red/red_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[0]->init("image/Dungeon Creature/71_red/red_attack_down_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[1]->init("image/Dungeon Creature/71_red/red_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[2]->init("image/Dungeon Creature/71_red/red_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[8]->init("image/Dungeon Creature/71_red/red_damaged_shadow.bmp", 2100, 440, 7, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[9]->init("image/Dungeon Creature/71_red/red_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[7]->init("image/Dungeon Creature/71_red/red_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[3]->init("image/Dungeon Creature/71_red/red_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[4]->init("image/Dungeon Creature/71_red/red_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+				creature.imgShadow[5]->init("image/Dungeon Creature/71_red/red_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+				for (int i = 0; i < STATE_END; i++)
+				{
+					if (i == (int)STATE_RANGE) continue;
+					creature.imgShadow[i]->AlphaInit();
+				}
+
+
 				if (creature.level)
 				{
 					sprintf(creature.name, "블랙 드래곤");
@@ -735,6 +1251,31 @@ namespace HOMM_HERO
 					creature.minDmg = 40;
 					creature.maxDmg = 50;
 					creature.speed = 15;
+
+					creature.img[0]->init("image/Dungeon Creature/72_black/black_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.img[1]->init("image/Dungeon Creature/72_black/black_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.img[2]->init("image/Dungeon Creature/72_black/black_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.img[8]->init("image/Dungeon Creature/72_black/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
+					creature.img[9]->init("image/Dungeon Creature/72_black/black_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.img[7]->init("image/Dungeon Creature/72_black/black_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+					creature.img[3]->init("image/Dungeon Creature/72_black/black_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+					creature.img[4]->init("image/Dungeon Creature/72_black/black_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.img[5]->init("image/Dungeon Creature/72_black/black_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[0]->init("image/Dungeon Creature/72_black/black_attack_down_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[1]->init("image/Dungeon Creature/72_black/black_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[2]->init("image/Dungeon Creature/72_black/black_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[8]->init("image/Dungeon Creature/72_black/black_damaged_shadow.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[9]->init("image/Dungeon Creature/72_black/black_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[7]->init("image/Dungeon Creature/72_black/black_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[3]->init("image/Dungeon Creature/72_black/black_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[4]->init("image/Dungeon Creature/72_black/black_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+					creature.imgShadow[5]->init("image/Dungeon Creature/72_black/black_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+					for (int i = 0; i < STATE_END; i++)
+					{
+						if (i == (int)STATE_RANGE) continue;
+						creature.imgShadow[i]->AlphaInit();
+					}
+
 				}
 
 

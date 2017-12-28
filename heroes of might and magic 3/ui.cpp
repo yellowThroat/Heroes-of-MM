@@ -266,7 +266,7 @@ void ui::input(void)
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
-		if (!_player->getScene())
+		if (!_player->getScene() && !_player->getWindow())
 		{
 			//=============== F I E L D   S C E N E
 			if (_config && PtInRect(&_windowConfig, _ptMouse))
@@ -324,21 +324,28 @@ void ui::input(void)
 				{
 					if (i + _firstHero < _player->getHero().size())
 					{
-						_player->setCurrentHero(i + _firstHero);
-					
-						for (int j = 0; j < _player->getHero().size(); j++)
+						if (i + _firstHero != _player->getCurrentHero())
 						{
-							if (i + _firstHero == _player->getHero()[j]->getMyNum())
+							_player->setCurrentHero(i + _firstHero);
+					
+							for (int j = 0; j < _player->getHero().size(); j++)
 							{
-								POINT point;
-								point.x = _player->getHero()[j]->getHeroPoint().x;
-								point.y = _player->getHero()[j]->getHeroPoint().y;
+								if (i + _firstHero == _player->getHero()[j]->getMyNum())
+								{
+									POINT point;
+									point.x = _player->getHero()[j]->getHeroPoint().x;
+									point.y = _player->getHero()[j]->getHeroPoint().y;
 
-								_pm->setCameraX((point.x - 12) * TILESIZE);
-								_pm->setCameraY((point.y - 9) * TILESIZE);
+									_pm->setCameraX((point.x - 12) * TILESIZE);
+									_pm->setCameraY((point.y - 9) * TILESIZE);
 
-								_player->setAutoCamera(false);
+									_player->setAutoCamera(false);
+								}
 							}
+						}
+						else
+						{
+							_player->setWindow(true);
 						}
 
 
@@ -347,12 +354,6 @@ void ui::input(void)
 					}
 				}
 			}
-
-
-		}
-		else
-		{
-			//================== C I T Y   S C E N E ================
 
 
 		}

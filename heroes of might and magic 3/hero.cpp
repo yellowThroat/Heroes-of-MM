@@ -19,10 +19,12 @@ HRESULT hero::init(POINT point, tagHero hero)
 	_isInCamp = false;
 
 
+	_maxMana = _myHero.wiz * 10;
+	_currentMana = _maxMana;
 
+	addCreature(_myHero.kind, 0, 0, 1);
 
-
-
+	setActionPoint();
 
 
 	return S_OK;
@@ -127,6 +129,42 @@ void hero::fieldDraw(void)
 	
 }
 
+void hero::setActionPoint(void)
+{
+	switch (_vCreature[0].speed)
+	{
+	case 1: case 2: case 3:	_maxActionPoint = 1500;		
+	break;
+
+	case 4:					_maxActionPoint = 1560;
+	break;
+
+	case 5:					_maxActionPoint = 1630;
+	break;
+
+	case 6:					_maxActionPoint = 1700;
+	break;
+
+	case 7:					_maxActionPoint = 1760;
+	break;
+
+	case 8:					_maxActionPoint = 1830;
+	break;
+
+	case 9:					_maxActionPoint = 1900;
+	break;
+		
+	case 10:				_maxActionPoint = 1960;
+	break;
+
+	default:				_maxActionPoint = 2000;
+	break;
+	}
+
+	_currentActionPoint = _maxActionPoint;
+
+}
+
 void hero::heroMove(void)
 {
 	if (_goOn)
@@ -190,6 +228,68 @@ void hero::setAngle(void)
 
 	frameRotation(_myHero.field, 8, _myHero.angle, false, true);
 }
+
+void hero::addCreature(int kind, int tier, int level, int quantity)
+{
+	bool overlap = false;
+
+	tagCreature creature;
+	creature = CommonCreature(kind, tier, level);
+	creature.quantity = quantity;
+	for (int i = 0; i < _vCreature.size(); i++)
+	{
+		if (creature.kind == _vCreature[i].kind &&
+			creature.tier == _vCreature[i].tier &&
+			creature.level == _vCreature[i].level)
+		{
+			overlap = true; 
+			
+			_vCreature[i].quantity = _vCreature[i].quantity + creature.quantity;
+
+			break;
+		}
+
+	}
+
+	
+
+	if (!overlap && _vCreature.size() < 7)
+	{
+		if (!_vCreature.size()) creature.position = 0;
+		else
+		{
+			bool end = false;
+			int num = 0;
+			while (true)
+			{
+				for (int i = 0; i < _vCreature.size(); i++)
+				{
+
+					if (_vCreature[i].position == num)
+					{
+						end = false;
+						break;
+					}
+
+					end = true;
+				}
+
+				num++;
+
+
+				if (end) break;
+			}
+			creature.position = num;
+		}
+
+
+
+		_vCreature.push_back(creature);
+	}
+
+
+}
+
 
 void hero::setPath(vPath path){
 	

@@ -45,6 +45,7 @@ struct tagCreature
 	int kind;				// 종족값
 	int tier;				// 몇 티어?
 	int level;				// 레벨업 했니?
+	int quantity;			// 몇기?
 
 	int position;			// 위치 0~6
 
@@ -61,7 +62,12 @@ struct tagCreature
 	int morale;				// 사기
 	int luck;				// 행운
 
-	CREATURESTATE state;
+	CREATURESTATE state;	// 크리쳐 상태
+
+	bool operator<(const tagCreature&v) const {
+		return (speed < v.speed);
+	}
+
 };
 
 enum heroName

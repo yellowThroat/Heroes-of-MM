@@ -426,7 +426,6 @@ void camp::castleDraw(void)
 			if (_level[_saveRecruit.num] > 0)
 			{
 				HFONT font1 = CreateFont(24, 0, 0, 0, 50, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("µ¸¿òÃ¼"));
-
 				HFONT oldfont = (HFONT)SelectObject(getMemDC(), font1);
 				SetTextColor(getMemDC(), RGB(248, 228, 144));
 

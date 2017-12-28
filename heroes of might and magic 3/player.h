@@ -32,9 +32,10 @@ private:
 	POINT _destination;
 
 private:
-	bool _myTurn;
-	bool _cityScene;
-	bool _autoCamera;
+	bool _myTurn;					// 플레이어 차례인가
+	bool _cityScene;				// 도시안에 들어갔을때
+	bool _autoCamera;				// 영웅이동중 카메라 쫓아가기
+	bool _window;					// 메뉴창을 열었을때 클릭 방지를 위해 
 	int _myNum;						// 플레이어 값
 	int _currentHero;				// 현재 조정중인 영웅
 	int _currentCamp;				// 현재 보고있는 마을
@@ -57,6 +58,7 @@ public:
 	//================ D R A W ===========
 	void cityScene(void);
 	void fieldScene(void);
+	void heroInfoDraw(void);
 
 	
 	//================ S E T T I N G =========
@@ -82,6 +84,7 @@ public:
 	bool getTurn() { return _myTurn; }
 	bool getScene() { return _cityScene; }
 	bool getAutoCamera() { return _autoCamera; }
+	bool getWindow() { return _window; }
 	vHero getHero() { return _vHero; }
 	vPath getPath() { return _vPath; }
 	myProperty getProperty() { return _myProperty; }
@@ -94,6 +97,8 @@ public:
 	void setAutoCamera(bool autocamera) { _autoCamera = autocamera; }
 	void setProperty(myProperty pro) { _myProperty = pro; }
 	void setBuilding(myBuilding build) { _myBuilding = build; }
+	void setWindow(bool window) { _window = window; }
+
 	//=========== ADDRESS LINK===============
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
 	void setGameSceneAddressLink(gameScene* gs) { _gs = gs; }

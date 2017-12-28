@@ -508,8 +508,9 @@ void mainMenu::imageInit(void)
 
 	//==============================  U  I =============================
 	
-
-
+	IMAGEMANAGER->addImage("window_heroinfo", "image/gameScene/ui/window_heroinfo.bmp", 680, 592, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_heroinfo_shadow", "image/gameScene/ui/window_heroinfo_shadow.bmp", 680, 592, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("window_heroinfo_shadow")->AlphaInit();
 	IMAGEMANAGER->addImage("gamebutton_spell", "image/gameScene/ui/button_spell.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("gamebutton_hero", "image/gameScene/ui/button_nexthero.bmp", 64, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("gamebutton_turn", "image/gameScene/ui/button_turn.bmp", 64, 32, true, RGB(255, 0, 255));
