@@ -40,6 +40,7 @@ struct tagCreature
 {
 	image* portrait;
 	image* img[STATE_END];
+	image* imgShadow[STATE_END];
 
 	int kind;				// 종족값
 	int tier;				// 몇 티어?

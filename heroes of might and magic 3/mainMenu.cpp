@@ -625,24 +625,24 @@ void mainMenu::imageInit(void)
 
 	}
 
-	//========== maskman
+	//========== mask
 	{
-		IMAGEMANAGER->addFrameImage("mask_melee", "image/Castle Creature/22_maskman/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_melee_shadow", "image/Castle Creature/22_maskman/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_range", "image/Castle Creature/22_maskman/mask_attack_range.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_range_shadow", "image/Castle Creature/22_maskman/mask_attack_range.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_damaged", "image/Castle Creature/22_maskman/mask_damaged.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_damaged_shadow", "image/Castle Creature/22_maskman/mask_damaged_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_dead", "image/Castle Creature/22_maskman/mask_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_dead_shadow", "image/Castle Creature/22_maskman/mask_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_idle", "image/Castle Creature/22_maskman/mask_idle.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_idle_shadow", "image/Castle Creature/22_maskman/mask_idle_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_move", "image/Castle Creature/22_maskman/mask_move.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_move_shadow", "image/Castle Creature/22_maskman/mask_move_shadow.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_select", "image/Castle Creature/22_maskman/mask_select.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_select_shadow", "image/Castle Creature/22_maskman/mask_select_shadow.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_switch", "image/Castle Creature/22_maskman/mask_switch.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("mask_switch_shadow", "image/Castle Creature/22_maskman/mask_switch_shadow.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_melee", "image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_melee_shadow", "image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_range", "image/Castle Creature/22_mask/mask_attack_range.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_range_shadow", "image/Castle Creature/22_mask/mask_attack_range.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_damaged", "image/Castle Creature/22_mask/mask_damaged.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_damaged_shadow", "image/Castle Creature/22_mask/mask_damaged_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_dead", "image/Castle Creature/22_mask/mask_dead.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_dead_shadow", "image/Castle Creature/22_mask/mask_dead_shadow.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_idle", "image/Castle Creature/22_mask/mask_idle.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_idle_shadow", "image/Castle Creature/22_mask/mask_idle_shadow.bmp", 120, 240, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_move", "image/Castle Creature/22_mask/mask_move.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_move_shadow", "image/Castle Creature/22_mask/mask_move_shadow.bmp", 1440, 240, 12, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_select", "image/Castle Creature/22_mask/mask_select.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_select_shadow", "image/Castle Creature/22_mask/mask_select_shadow.bmp", 960, 240, 8, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_switch", "image/Castle Creature/22_mask/mask_switch.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("mask_switch_shadow", "image/Castle Creature/22_mask/mask_switch_shadow.bmp", 240, 240, 2, 2, true, RGB(255, 0, 255));
 		IMAGEMANAGER->findImage("mask_melee_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("mask_range_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("mask_move_shadow")->AlphaInit();
@@ -720,24 +720,24 @@ void mainMenu::imageInit(void)
 
 	//========== swordman
 	{
-		IMAGEMANAGER->addFrameImage("sword_down", "image/Castle Creature/41_swordman/sword_attack_down.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_down_shadow", "image/Castle Creature/41_swordman/sword_attack_down_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_up", "image/Castle Creature/41_swordman/sword_attack_up.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_up_shadow", "image/Castle Creature/41_swordman/sword_attack_up_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_front", "image/Castle Creature/41_swordman/sword_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_front_shadow", "image/Castle Creature/41_swordman/sword_attack_front_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_damaged", "image/Castle Creature/41_swordman/sword_damaged.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_damaged_shadow", "image/Castle Creature/41_swordman/sword_damaged_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_dead", "image/Castle Creature/41_swordman/sword_dead.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_dead_shadow", "image/Castle Creature/41_swordman/sword_dead_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_idle", "image/Castle Creature/41_swordman/sword_idle.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_idle_shadow", "image/Castle Creature/41_swordman/sword_idle_shadow.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_move", "image/Castle Creature/41_swordman/sword_move.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_move_shadow", "image/Castle Creature/41_swordman/sword_move_shadow.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_select", "image/Castle Creature/41_swordman/sword_select.bmp", 640, 280, 4, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_select_shadow", "image/Castle Creature/41_swordman/sword_select_shadow.bmp", 640, 280, 4, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_switch", "image/Castle Creature/41_swordman/sword_switch.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("sword_switch_shadow", "image/Castle Creature/41_swordman/sword_switch_shadow.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_down", "image/Castle Creature/41_sword/sword_attack_down.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_down_shadow", "image/Castle Creature/41_sword/sword_attack_down_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_up", "image/Castle Creature/41_sword/sword_attack_up.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_up_shadow", "image/Castle Creature/41_sword/sword_attack_up_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_front", "image/Castle Creature/41_sword/sword_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_front_shadow", "image/Castle Creature/41_sword/sword_attack_front_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_damaged", "image/Castle Creature/41_sword/sword_damaged.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_damaged_shadow", "image/Castle Creature/41_sword/sword_damaged_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_dead", "image/Castle Creature/41_sword/sword_dead.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_dead_shadow", "image/Castle Creature/41_sword/sword_dead_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_idle", "image/Castle Creature/41_sword/sword_idle.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_idle_shadow", "image/Castle Creature/41_sword/sword_idle_shadow.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_move", "image/Castle Creature/41_sword/sword_move.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_move_shadow", "image/Castle Creature/41_sword/sword_move_shadow.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_select", "image/Castle Creature/41_sword/sword_select.bmp", 640, 280, 4, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_select_shadow", "image/Castle Creature/41_sword/sword_select_shadow.bmp", 640, 280, 4, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_switch", "image/Castle Creature/41_sword/sword_switch.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("sword_switch_shadow", "image/Castle Creature/41_sword/sword_switch_shadow.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
 		IMAGEMANAGER->findImage("sword_down_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("sword_up_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("sword_front_shadow")->AlphaInit();
@@ -751,24 +751,24 @@ void mainMenu::imageInit(void)
 
 	//========== crusader
 	{
-		IMAGEMANAGER->addFrameImage("cru_down", "image/Castle Creature/42_crusader/cru_attack_down.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_down_shadow", "image/Castle Creature/42_crusader/cru_attack_down_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_up", "image/Castle Creature/42_crusader/cru_attack_up.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_up_shadow", "image/Castle Creature/42_crusader/cru_attack_up_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_front", "image/Castle Creature/42_crusader/cru_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_front_shadow", "image/Castle Creature/42_crusader/cru_attack_front_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_damaged", "image/Castle Creature/42_crusader/cru_damaged.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_damaged_shadow", "image/Castle Creature/42_crusader/cru_damaged_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_dead", "image/Castle Creature/42_crusader/cru_dead.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_dead_shadow", "image/Castle Creature/42_crusader/cru_dead_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_idle", "image/Castle Creature/42_crusader/cru_idle.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_idle_shadow", "image/Castle Creature/42_crusader/cru_idle_shadow.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_move", "image/Castle Creature/42_crusader/cru_move.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_move_shadow", "image/Castle Creature/42_crusader/cru_move_shadow.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_select", "image/Castle Creature/42_crusader/cru_select.bmp", 480, 280, 3, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_select_shadow", "image/Castle Creature/42_crusader/cru_select_shadow.bmp", 480, 280, 3, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_switch", "image/Castle Creature/42_crusader/cru_switch.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("cru_switch_shadow", "image/Castle Creature/42_crusader/cru_switch_shadow.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_down", "image/Castle Creature/42_cru/cru_attack_down.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_down_shadow", "image/Castle Creature/42_cru/cru_attack_down_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_up", "image/Castle Creature/42_cru/cru_attack_up.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_up_shadow", "image/Castle Creature/42_cru/cru_attack_up_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_front", "image/Castle Creature/42_cru/cru_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_front_shadow", "image/Castle Creature/42_cru/cru_attack_front_shadow.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_damaged", "image/Castle Creature/42_cru/cru_damaged.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_damaged_shadow", "image/Castle Creature/42_cru/cru_damaged_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_dead", "image/Castle Creature/42_cru/cru_dead.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_dead_shadow", "image/Castle Creature/42_cru/cru_dead_shadow.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_idle", "image/Castle Creature/42_cru/cru_idle.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_idle_shadow", "image/Castle Creature/42_cru/cru_idle_shadow.bmp", 160, 280, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_move", "image/Castle Creature/42_cru/cru_move.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_move_shadow", "image/Castle Creature/42_cru/cru_move_shadow.bmp", 1920, 280, 12, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_select", "image/Castle Creature/42_cru/cru_select.bmp", 480, 280, 3, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_select_shadow", "image/Castle Creature/42_cru/cru_select_shadow.bmp", 480, 280, 3, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_switch", "image/Castle Creature/42_cru/cru_switch.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("cru_switch_shadow", "image/Castle Creature/42_cru/cru_switch_shadow.bmp", 320, 280, 2, 2, true, RGB(255, 0, 255));
 		IMAGEMANAGER->findImage("cru_down_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("cru_up_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("cru_front_shadow")->AlphaInit();
@@ -1352,24 +1352,24 @@ void mainMenu::imageInit(void)
 
 	//========== red dragon
 	{
-	IMAGEMANAGER->addFrameImage("red_attack_down", "image/Dungeon Creature/71_reddragon/red_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_attack_down_shadow", "image/Dungeon Creature/71_reddragon/red_attack_down_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_attack_front", "image/Dungeon Creature/71_reddragon/red_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_attack_front_shadow", "image/Dungeon Creature/71_reddragon/red_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_attack_up", "image/Dungeon Creature/71_reddragon/red_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_attack_up_shadow", "image/Dungeon Creature/71_reddragon/red_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_damaged", "image/Dungeon Creature/71_reddragon/red_damaged.bmp", 2100, 440, 7, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_damaged_shadow", "image/Dungeon Creature/71_reddragon/red_damaged.bmp", 2100, 440, 7, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_dead", "image/Dungeon Creature/71_reddragon/red_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_dead_shadow", "image/Dungeon Creature/71_reddragon/red_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_idle", "image/Dungeon Creature/71_reddragon/red_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_idle_shadow", "image/Dungeon Creature/71_reddragon/red_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_move", "image/Dungeon Creature/71_reddragon/red_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_move_shadow", "image/Dungeon Creature/71_reddragon/red_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_select", "image/Dungeon Creature/71_reddragon/red_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_select_shadow", "image/Dungeon Creature/71_reddragon/red_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_switch", "image/Dungeon Creature/71_reddragon/red_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("red_switch_shadow", "image/Dungeon Creature/71_reddragon/red_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_attack_down", "image/Dungeon Creature/71_red/red_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_attack_down_shadow", "image/Dungeon Creature/71_red/red_attack_down_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_attack_front", "image/Dungeon Creature/71_red/red_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_attack_front_shadow", "image/Dungeon Creature/71_red/red_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_attack_up", "image/Dungeon Creature/71_red/red_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_attack_up_shadow", "image/Dungeon Creature/71_red/red_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_damaged", "image/Dungeon Creature/71_red/red_damaged.bmp", 2100, 440, 7, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_damaged_shadow", "image/Dungeon Creature/71_red/red_damaged.bmp", 2100, 440, 7, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_dead", "image/Dungeon Creature/71_red/red_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_dead_shadow", "image/Dungeon Creature/71_red/red_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_idle", "image/Dungeon Creature/71_red/red_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_idle_shadow", "image/Dungeon Creature/71_red/red_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_move", "image/Dungeon Creature/71_red/red_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_move_shadow", "image/Dungeon Creature/71_red/red_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_select", "image/Dungeon Creature/71_red/red_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_select_shadow", "image/Dungeon Creature/71_red/red_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_switch", "image/Dungeon Creature/71_red/red_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("red_switch_shadow", "image/Dungeon Creature/71_red/red_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("red_attack_down_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("red_attack_up_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("red_attack_front_shadow")->AlphaInit();
@@ -1384,24 +1384,24 @@ void mainMenu::imageInit(void)
 
 	//========== black dragon
 	{
-		IMAGEMANAGER->addFrameImage("black_attack_down", "image/Dungeon Creature/72_blackdragon/black_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_attack_down_shadow", "image/Dungeon Creature/72_blackdragon/black_attack_down_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_attack_front", "image/Dungeon Creature/72_blackdragon/black_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_attack_front_shadow", "image/Dungeon Creature/72_blackdragon/black_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_attack_up", "image/Dungeon Creature/72_blackdragon/black_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_attack_up_shadow", "image/Dungeon Creature/72_blackdragon/black_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_damaged", "image/Dungeon Creature/72_blackdragon/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_damaged_shadow", "image/Dungeon Creature/72_blackdragon/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_dead", "image/Dungeon Creature/72_blackdragon/black_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_dead_shadow", "image/Dungeon Creature/72_blackdragon/black_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_idle", "image/Dungeon Creature/72_blackdragon/black_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_idle_shadow", "image/Dungeon Creature/72_blackdragon/black_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_move", "image/Dungeon Creature/72_blackdragon/black_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_move_shadow", "image/Dungeon Creature/72_blackdragon/black_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_select", "image/Dungeon Creature/72_blackdragon/black_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_select_shadow", "image/Dungeon Creature/72_blackdragon/black_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_switch", "image/Dungeon Creature/72_blackdragon/black_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addFrameImage("black_switch_shadow", "image/Dungeon Creature/72_blackdragon/black_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_attack_down", "image/Dungeon Creature/72_black/black_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_attack_down_shadow", "image/Dungeon Creature/72_black/black_attack_down_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_attack_front", "image/Dungeon Creature/72_black/black_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_attack_front_shadow", "image/Dungeon Creature/72_black/black_attack_front_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_attack_up", "image/Dungeon Creature/72_black/black_attack_up.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_attack_up_shadow", "image/Dungeon Creature/72_black/black_attack_up_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_damaged", "image/Dungeon Creature/72_black/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_damaged_shadow", "image/Dungeon Creature/72_black/black_damaged.bmp", 1500, 440, 5, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_dead", "image/Dungeon Creature/72_black/black_dead.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_dead_shadow", "image/Dungeon Creature/72_black/black_dead_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_idle", "image/Dungeon Creature/72_black/black_idle.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_idle_shadow", "image/Dungeon Creature/72_black/black_idle_shadow.bmp", 300, 440, 1, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_move", "image/Dungeon Creature/72_black/black_move.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_move_shadow", "image/Dungeon Creature/72_black/black_move_shadow.bmp", 3300, 440, 11, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_select", "image/Dungeon Creature/72_black/black_select.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_select_shadow", "image/Dungeon Creature/72_black/black_select_shadow.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_switch", "image/Dungeon Creature/72_black/black_switch.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("black_switch_shadow", "image/Dungeon Creature/72_black/black_switch_shadow.bmp", 600, 440, 2, 2, true, RGB(255, 0, 255));
 		IMAGEMANAGER->findImage("black_attack_down_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("black_attack_up_shadow")->AlphaInit();
 		IMAGEMANAGER->findImage("black_attack_front_shadow")->AlphaInit();
