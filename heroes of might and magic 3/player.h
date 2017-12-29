@@ -6,6 +6,7 @@
 
 class playMap;
 class gameScene;
+class zOrder;
 
 
 class player : public gameNode
@@ -13,6 +14,7 @@ class player : public gameNode
 private:
 	playMap* _pm;
 	gameScene* _gs;
+	zOrder* _zOrder;
 
 private:
 	typedef vector<hero*> vHero;
@@ -102,6 +104,7 @@ public:
 	//=========== ADDRESS LINK===============
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
 	void setGameSceneAddressLink(gameScene* gs) { _gs = gs; }
+	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
 
 
 

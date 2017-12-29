@@ -2,6 +2,7 @@
 #include "player.h"
 #include "playMap.h"
 #include "gameScene.h"
+#include "zOrder.h"
 
 
 
@@ -62,6 +63,8 @@ void player::update(void)
 	else
 	{
 		fieldUpdate();
+
+		//sort(_vHero.begin(), _vHero.end(), hero::comp);
 	}
 
 }
@@ -229,8 +232,8 @@ void player::camera(void)
 		
 				_pm->setCameraX(x);
 				_pm->setCameraY(y);
-				DATABASE->setPlayCameraX(x);
-				DATABASE->setPlayCameraY(y);
+				//DATABASE->setPlayCameraX(x);
+				//DATABASE->setPlayCameraY(y);
 				
 		
 			}
@@ -264,6 +267,26 @@ void player::addHero(POINT point,tagHero heroInfo)
 	he->init(point, heroInfo);
 	he->setMynum(_vHero.size());
 	_pm->setClosed(point.x, point.y, true);
+
+
+	//=============== z order¸¦ À§ÇÑ ===================
+	tagRender render;
+	ZeroMemory(&render, sizeof(tagRender));
+	
+	render.img = heroInfo.field;
+	render.shadowImg = heroInfo.fieldShadow;
+	render.flag = heroInfo.flag;
+	render.destX = (point.x - 1) * TILESIZE;
+	render.destY = (point.y - 1) * TILESIZE;
+	render.sourX = render.img->getFrameX();
+	render.sourY = render.img->getFrameY();
+	render.sizeX = 0;
+	render.sizeY = 2* TILESIZE;
+	render.identity = he->getMyNum();
+	render.kind = 1;
+
+	_zOrder->addRender(render);
+
 
 	_vHero.push_back(he);
 

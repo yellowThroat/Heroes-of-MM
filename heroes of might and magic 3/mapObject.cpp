@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "mapObject.h"
+#include "zOrder.h"
+
 
 mapObject::mapObject() {}
 mapObject::~mapObject() {}
@@ -128,7 +130,30 @@ void mapObject::loadObject(void)
 				object.imgY = _vBuildSaveInfo[i][j].imgY;
 				object.type = _vBuildSaveInfo[i][j].type;
 
-				_vObject.push_back(object);
+				
+
+				//=============== z order¸¦ À§ÇÑ ===================
+				tagRender render;
+				ZeroMemory(&render, sizeof(tagRender));
+				
+				render.img = object.img;
+				render.shadowImg = object.shadowImg;
+				render.flag = NULL;
+				render.destX = (object.point.x - object.imgX) * TILESIZE;
+				render.destY = (object.point.y - object.imgY) * TILESIZE;
+				render.sourX = object.indexX;
+				render.sourY = object.indexY;
+				render.sizeX = 0;
+				render.sizeY = (1+object.enterY + object.imgY)* TILESIZE;
+				render.identity = 255;
+				render.kind = 0;
+				_zOrder->addRender(render);
+
+
+				//==================================================
+
+
+				//_vObject.push_back(object);
 
 			}
 

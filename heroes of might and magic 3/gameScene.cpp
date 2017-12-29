@@ -12,12 +12,11 @@ HRESULT gameScene::init(void)
 	_ui = new ui;							// 플레이시 ui
 	_ob = new mapObject;					// 플레이시 나올 맵 오브젝트
 	_player = new player;
+	_zOrder = new zOrder;
 
 	//============= L O A D   I N F O ================
 	loadMap();
 	loadCamp();
-	_vCamp[0]->setNum(0);
-	_vCamp[1]->setNum(1);
 	
 
 
@@ -33,12 +32,17 @@ HRESULT gameScene::init(void)
 	_ui->setPlayerAddressLink(_player);
 	_player->setPlayMapAddressLink(_pm);
 	_player->setGameSceneAddressLink(this);
+	_player->setzOrderAddressLink(_zOrder);
+	_pm->setzOrderAddressLink(_zOrder);
+	_ob->setzOrderAddressLink(_zOrder);
+	_zOrder->setPlayerAddressLink(_player);
 
 	//============= C L A S S   I N I T ==================
 	_pm->init();
 	_ui->init();
 	_ob->init();
 	_player->init(0);
+	_zOrder->init();
 
 	//=============== T E S T ==================
 
@@ -100,6 +104,7 @@ void gameScene::update(void)
 		_vCamp[i]->update();
 	}
 
+	_zOrder->update();
 	_pm->update();
 	_ui->update();
 	_ob->update();
@@ -113,17 +118,20 @@ void gameScene::render(void)
 	if (!_player->getScene())
 	{
 		//=============== 필드 밖 렌더
-		_pm->render();
-		_ob->render();
+		_pm->render();									// z order 4 인방 장애물
+		_ob->render();									// z order 4 인방 오브젝트
 	
 
 		for (int i = 0; i < _vCamp.size(); i++)
 		{
-			_vCamp[i]->render();
+			_vCamp[i]->render();						// z order 4 인방 캠프
 		}
 
 		_pm->attributeDraw();
-		_player->render();
+		_player->render();								// z order 4 인방 영
+
+
+		_zOrder->render();
 
 		_ui->render();
 
@@ -240,7 +248,29 @@ void gameScene::loadCamp(void)
 					break;
 				}
 
-				if(build.camp != CAMP_NULL) addCamp(build);
+				if (build.camp != CAMP_NULL)
+				{
+					//=============== z order를 위한 ===================
+					tagRender render;
+					ZeroMemory(&render, sizeof(tagRender));
+					
+					render.img = build.img;
+					render.shadowImg = build.imgShadow;
+					render.flag = NULL;
+					render.destX = (build.destX - build.imgX) * TILESIZE;
+					render.destY = (build.destY - build.imgY) * TILESIZE;
+					render.sourX = build.sourX;
+					render.sourY = build.sourY;
+					render.sizeX = 5;
+					render.sizeY = 6 * TILESIZE;
+					render.identity = 255;
+					render.kind = 0;
+					_zOrder->addRender(render);
+
+
+
+					addCamp(build);
+				}
 			}
 		}
 	}
@@ -268,6 +298,10 @@ void gameScene::addCamp(tagBuildingInfo info)
 	camp->init(info);
 
 	camp->setPlayerAddressLink(_player);
+	camp->setNum(_vCamp.size());
+	camp->setzOrderAddressLink(_zOrder);
+
+
 
 	_vCamp.push_back(camp);
 

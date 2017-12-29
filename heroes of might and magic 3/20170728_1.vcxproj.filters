@@ -85,6 +85,9 @@
     <Filter Include="MainGame\gameScene\mapObject">
       <UniqueIdentifier>{9f42ecdf-06c6-4015-9b78-8055bdc43010}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\gameScene\zorder">
+      <UniqueIdentifier>{43fc6c86-e364-455d-a9bd-4dab1c96a10a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -213,6 +216,9 @@
     <ClInclude Include="heroInfo.h">
       <Filter>MainGame\gameScene\hero</Filter>
     </ClInclude>
+    <ClInclude Include="zOrder.h">
+      <Filter>MainGame\gameScene\zorder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -325,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="heroInfo.cpp">
       <Filter>MainGame\gameScene\hero</Filter>
+    </ClCompile>
+    <ClCompile Include="zOrder.cpp">
+      <Filter>MainGame\gameScene\zorder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

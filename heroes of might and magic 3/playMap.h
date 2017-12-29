@@ -25,11 +25,12 @@ struct tagPathFindSecond
 	}
 };
 
-
+class zOrder;
 
 class playMap : public gameNode
 {
 private:
+	zOrder * _zOrder;
 
 private:
 	vector<building> _vBuild;
@@ -95,7 +96,7 @@ public:
 	void setClosed(int x, int y, bool closed) { _map[x][y].isClosed = closed; }
 
 	//============ ADDRESS LINK ===============
-
+	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
 
 	playMap();
 	~playMap();

@@ -190,6 +190,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 		{
 			for (int j = -1; j <= 1; j++)
 			{
+				if (j == 1 && _map[currentNode.nodeX + i][currentNode.nodeY + j].entrance) continue;
+				if (j == -1 && _map[currentNode.nodeX][currentNode.nodeY].entrance) continue;
 
 				//=========== 현재 노드의 주변이 열려 있는지 조건문
 				if (currentNode.nodeX + i < 0 || currentNode.nodeY + j < 0 ||
@@ -202,6 +204,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 					!isClosed(currentNode.nodeX + i, currentNode.nodeY + j)					&&
 					_map[currentNode.nodeX + i][currentNode.nodeY + j].tile != TILE_WATER   ) 
 				{
+
 					ZeroMemory(&findNode, sizeof(tagPathFind));
 					findNode.nodeX = currentNode.nodeX + i;
 					findNode.nodeY = currentNode.nodeY + j;

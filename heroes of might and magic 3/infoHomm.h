@@ -158,6 +158,25 @@ typedef enum MAINMENUBUTTON
 	MMB_END
 }MMB;
 
+struct tagRender
+{
+	image* img;
+	image* shadowImg;
+	image* flag;
+
+	int destX, destY;
+	int sizeX, sizeY;
+	int sourX, sourY;
+	int alpha;
+
+	int identity;
+	int kind;
+
+	bool operator<(const tagRender &v) const {
+		return (destY + sizeY + kind< v.destY + v.sizeY + v.kind);
+	}
+};
+
 struct tagTileInfo
 {
 	TILE tile;

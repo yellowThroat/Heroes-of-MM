@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "playMap.h"
+#include "zOrder.h"
+
 
 playMap::playMap() {}
 playMap::~playMap() {}
@@ -69,7 +71,7 @@ void playMap::render(void)
 
 	roadDraw();
 
-	obstacleDraw();
+	//obstacleDraw();
 }
 
 
@@ -353,6 +355,35 @@ void playMap::loadMap(int saveNum)
 					break;
 
 				}
+
+
+
+				//=============== z order¸¦ À§ÇÑ ===================
+				tagRender render;
+				ZeroMemory(&render, sizeof(tagRender));
+				
+				render.img = build.img;
+				render.shadowImg = build.imgShadow;
+				render.flag = NULL;
+				render.destX = (build.destX - build.imgX) * TILESIZE;
+				render.destY = (build.destY - build.imgY) * TILESIZE;
+				render.sourX = build.sourX;
+				render.sourY = build.sourY;
+				render.sizeX = build.sizeX;
+				render.sizeY = (build.sizeY + build.imgY) * TILESIZE;
+				render.identity = 255;
+				render.kind = 0;
+				
+				
+				_zOrder->addRender(render);
+
+
+
+
+
+
+
+
 				_vBuild.push_back(build);
 			}
 

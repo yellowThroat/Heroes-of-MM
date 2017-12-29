@@ -67,7 +67,7 @@ void hero::update(void)
 void hero::render(void)
 {
 	if(_pl->getCurrentHero() == _myNum) pathDraw();
-	fieldDraw();
+	//fieldDraw();
 
 }
 

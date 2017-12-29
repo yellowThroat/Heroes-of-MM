@@ -74,7 +74,7 @@ void camp::fieldDraw(void)
 		_fieldPoint.x * TILESIZE - DATABASE->getPlayCameraX(),
 		_fieldPoint.y * TILESIZE - DATABASE->getPlayCameraY());
 
-
+	/*
 	if (_buildingInfo.destX - _buildingInfo.imgX - _cameraArr.x >= -8 &&
 		_buildingInfo.destX + _buildingInfo.sizeX / 2 - _cameraArr.x <= 32 &&
 		_buildingInfo.destY - _buildingInfo.imgY - _cameraArr.y >= -6 &&
@@ -107,7 +107,7 @@ void camp::fieldDraw(void)
 
 		}
 	}
-	
+	*/
 
 
 }

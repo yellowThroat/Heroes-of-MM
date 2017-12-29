@@ -55,11 +55,13 @@ struct tagRecruit
 };
 
 class player;
+class zOrder;
 
 class camp : public gameNode
 {
 private:
 	player* _play;
+	zOrder* _zOrder;
 
 private:
 	image* _fieldImg;
@@ -152,6 +154,7 @@ public:
 	//========== ADDRESS LINK ============
 
 	void setPlayerAddressLink(player* player) { _play = player; }
+	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
 
 	camp();
 	~camp();

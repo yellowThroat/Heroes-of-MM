@@ -56,7 +56,7 @@ void gameNode::release(void)
 		EFFECTMANAGER->releaseSingleton();
 		SCENEMANAGER->releaseSingleton();
 		KEYANIMANAGER->releaseSingleton();
-		DATABASE->release();
+		DATABASE->releaseSingleton();
 	}
 
 	ReleaseDC(_hWnd, _hdc);

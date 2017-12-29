@@ -10,12 +10,15 @@ struct tagPathDraw
 
 class player;
 class playMap;
+class zOrder;
+
 
 class hero : public gameNode
 {
 private:
 	player* _pl;
 	playMap* _pm;
+	zOrder* _zOrder;
 
 private:
 	typedef vector<POINT> vPath;
@@ -34,7 +37,6 @@ private:
 
 private:
 	float _x;					// 영웅의 중점 좌표
-	float _y;					// 상동
 	bool _goOn;					// 이동 중인지
 	bool _moveEnd;				// 이동 끝난 타이밍을 알리기 위해
 	bool _isInCamp;				// 캠프 안으로 들어갔는지
@@ -65,6 +67,7 @@ private:
 
 	
 public:
+	float _y;					// 상동
 
 	HRESULT init(POINT point, tagHero hero);
 	void release(void);
@@ -82,6 +85,11 @@ public:
 	void addCreature(int kind, int tier, int level, int quantity);
 	void setActionPoint();
 	int getDirection(int x, int y);
+
+
+	static bool comp(const hero *t1, const hero *t2) {
+		return (t1->_y < t2->_y);
+	}
 
 	//============= G E T T E R  ============
 	vCreature getCreature() { return _vCreature; }
@@ -116,6 +124,7 @@ public:
 	//============= ADDRESS LINK ===============
 	void setPlayerAddressLink(player* pl) { _pl = pl; }
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
+	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
 
 	hero();
 	~hero();

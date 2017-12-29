@@ -6,6 +6,8 @@
 #include "dungeon.h"
 #include "mapObject.h"
 #include "player.h"
+#include "zOrder.h"
+
 
 class gameScene : public gameNode
 {
@@ -13,12 +15,15 @@ private:
 	mapObject*		_ob;
 	playMap*		_pm;
 	player*			_player;
+	zOrder*			_zOrder;
 	ui*				_ui;
 
 
 private:
 	typedef vector<camp*> vCamp;
 	typedef vector<camp*>::iterator vCampIter;
+
+	vector<vector<void*>> _vVector;
 
 	vCamp _vCamp;
 	vCampIter _viCamp;
@@ -43,6 +48,8 @@ public:
 	void release(void);
 	void update(void);
 	void render(void);
+
+	//========================
 
 	//=========== E N T E R   C I T Y ==========
 	void enterCity(void);

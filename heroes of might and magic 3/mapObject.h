@@ -16,9 +16,13 @@ struct tagMapObject
 	bool visit;
 };
 
+class zOrder;
 
 class mapObject : public gameNode
 {
+private:
+	zOrder * _zOrder;
+
 private:
 	typedef vector<tagMapObject> vObject;
 	typedef vector<tagMapObject>::iterator vObjectIter;
@@ -53,6 +57,9 @@ public:
 	//============== G E T T E R ==============
 	vObject getObject() { return _vObject; }
 	vObjectIter getObjectIter() { return _viObject; }
+
+	//============ ADDRESS LINK ===============
+	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
 
 	mapObject();
 	~mapObject();
