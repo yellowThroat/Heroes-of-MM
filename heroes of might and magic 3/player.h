@@ -38,10 +38,11 @@ private:
 	bool _cityScene;				// 도시안에 들어갔을때
 	bool _autoCamera;				// 영웅이동중 카메라 쫓아가기
 	bool _window;					// 메뉴창을 열었을때 클릭 방지를 위해 
+	bool _creatureinfo;				// 크리쳐 정보창을 킴
 	int _myNum;						// 플레이어 값
 	int _currentHero;				// 현재 조정중인 영웅
 	int _currentCamp;				// 현재 보고있는 마을
-
+	int _currentCreature;
 
 public:
 

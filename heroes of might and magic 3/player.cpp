@@ -16,7 +16,9 @@ HRESULT player::init(int myNum)
 	_cityScene = false;
 	_autoCamera = false;
 	_window = false;
+	_creatureinfo = false;
 	_currentHero = 0;
+	_currentCreature = -1;
 	_destination = { 0,0 };
 	/*
 	tagHero tmp;
@@ -196,10 +198,30 @@ void player::heroInfoDraw(void)
 					126 + _vHero[i]->getCreature()[j].position * 66, 545);		
 			}
 
-			
+
 		}
 
+
+		if (_currentCreature != -1)
+		{
+			IMAGEMANAGER->findImage("select_creature")->render(getMemDC(), 78 + _currentCreature*66, 491);
+		}
+
+
 		
+	}
+
+	if (_creatureinfo)
+	{
+		IMAGEMANAGER->findImage("window_creatureinfo")->render(getMemDC(), 127, 72);
+		IMAGEMANAGER->findImage("window_creatureinfo_shadow")->alphaRender(getMemDC(), 127, 72, 150);
+
+
+
+
+
+
+
 	}
 	
 }
@@ -474,7 +496,6 @@ void player::inputCity(void)
 
 
 
-
 			}
 		}
 
@@ -542,19 +563,81 @@ void player::inputField(void)
 		}
 		if(_window)
 		{
-			for (int i = 0; i < 8; i++)
+
+			if (!_creatureinfo)		// 크리쳐 정보창 안열려잇음
 			{
-				if (PtInRect(&RectMake(675, 95 + 54 * i, 46, 30),_ptMouse))
+				for (int i = 0; i < 7; i++) // 이제 눌러보자
 				{
-					if(i < _vHero.size())
-					_currentHero = i;
+					
+					for (int i = 0; i < _vHero[_currentHero]->getCreature().size(); i++) // 현재 영웅의 크리쳐 정보를 가져오고
+					{
+						// 79 492
+						if (PtInRect(&RectMake(79 + 66 * i, 492, 58, 64), _ptMouse))	// 각 렉트 창을 눌럿을때
+						{
+							if (_currentCreature == -1)	// 지금 선택된게 없다면
+							{
+								
+
+
+							}
+							else
+							{
+								if (_currentCreature != i)
+								{
+									for (int j = 0; j < _vHero[_currentHero]->getCreature().size(); j++)
+									{
+										if (_vHero[_currentHero]->getCreature()[j].position == _currentCreature)
+										{
+											_vHero[_currentHero]->getCreature()[j].position = i;
+										}
+
+
+									}
+
+								}
+								else
+								{
+									_creatureinfo = true;
+									_currentCreature = -1;
+
+								}
+							}
+
+							
+						}
+
+
+					}
 				}
+
+
+
+
+
+
+				for (int i = 0; i < 8; i++)
+				{
+					if (PtInRect(&RectMake(675, 95 + 54 * i, 46, 30),_ptMouse))
+					{
+						if(i < _vHero.size())
+						_currentHero = i;
+					}
+				}
+
+
+				if (PtInRect(&RectMake(674, 523, 52, 36), _ptMouse))
+				{
+					_window = false;
+				}
+
 			}
-
-
-			if (PtInRect(&RectMake(674, 523, 52, 36), _ptMouse))
+			else
 			{
-				_window = false;
+				if (PtInRect(&RectMake(343, 309, 64, 30),_ptMouse))
+				{
+					_creatureinfo = false;
+					_currentCreature = -1;
+				}
 			}
 
 		}

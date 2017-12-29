@@ -525,7 +525,10 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("gamebutton_quit", "image/gameScene/ui/select_quit.bmp", 100, 48, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("gamebutton_return", "image/gameScene/ui/select_return.bmp", 100, 48, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("select_hero", "image/gameScene/ui/select_hero.bmp", 48, 32, true, RGB(255, 0, 255));
-	
+	IMAGEMANAGER->addImage("select_creature", "image/gameScene/ui/select_creature.bmp", 58, 64, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_creatureinfo", "image/gameScene/ui/window_creatureinfo.bmp", 306, 318, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_creatureinfo_shadow", "image/gameScene/ui/window_creatureinfo_shadow.bmp", 306, 318, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("window_creatureinfo_shadow")->AlphaInit();
 
 
 
