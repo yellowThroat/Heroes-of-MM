@@ -24,8 +24,8 @@ struct tagHero
 	int level;					// 레벨
 	int str;					// 힘
 	int def;					// 방어력
-	int wiz;					// 지혜 (마나량)
-	int inte;					// 지식 (주문 공격력)
+	int spell;					// 마법력 (마법 강도)
+	int intel;					// 지식 (마나량)
 	int myNum;					// 영웅번호 의미 없나?
 	int kind;					// 종족값
 	int job;					// 직업값

@@ -6,6 +6,7 @@ struct tagPathDraw
 	POINT point;
 	int indexX;
 	int indexY;
+	int action;
 };
 
 class player;
@@ -33,7 +34,9 @@ private:
 	tagHero _myHero;			// 영웅의 각종 정보들
 	
 	POINT _pointArr;			// 영웅 좌표 배열
-	POINT _destination;			// 아직 보류중
+	POINT _destination;			// 최종 도착지
+	POINT _previousPath;		// 이전 경로
+	POINT _nextPath;			// 다음 경로
 
 private:
 	float _x;					// 영웅의 중점 좌표
@@ -44,6 +47,9 @@ private:
 	int _player;				// 어느플레이어 영웅인지
 	int _currentActionPoint;	// 현재 행동력
 	int _maxActionPoint;		// 최대 행동력
+	int _needActionPoint;		// 이동시 필요 행동력
+	int _totalActionPoint;		// 사용한 액션 포인트
+	int _startActionPoint;		// 이동전 남은 행동력
 	int _currentMana;			// 현재 주문력
 	int _maxMana;				// 최대 주문력
 	int _exp;					// 현재 경험치
@@ -77,11 +83,14 @@ public:
 	//========== D R A W =========
 	void fieldDraw(void);
 	void pathDraw(void);
+	void uiDraw(void);
 
 	//========== S E T ============
 	void setAngle(void);
 	void setCordinate(void);
 	void heroMove(void);
+	void weekGo(void);
+	void dayGo(void);
 	void addCreature(int kind, int tier, int level, int quantity);
 	void addCreature(int kind, int tier, int level, int quantity, int position);
 	void deleteCreature(int arr);
@@ -103,6 +112,7 @@ public:
 	float getHeroY() { return _y; }
 	int getMyNum() { return _myNum; }
 	int getAP() { return _currentActionPoint; }
+	int getNeedAp() { return _needActionPoint; }
 	int getMaxAP() { return _maxActionPoint; }
 	int getMana() { return _currentMana; }
 	int getMaxMana() { return _maxMana; }
@@ -117,6 +127,7 @@ public:
 	void setHeroDest(POINT point) { _destination = point; }
 	void setHeroInfo(tagHero heroInfo) { _myHero = heroInfo; }
 	void setPath(vPath path);
+	void setPreviousPath(POINT point) { _previousPath = point; }
 	void setMynum(int num) { _myNum = num; }
 	void setGoOn(bool go) { _goOn = go; }
 	void setMoveEnd(bool end) { _moveEnd = end; }

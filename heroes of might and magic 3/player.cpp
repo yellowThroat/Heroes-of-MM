@@ -141,8 +141,8 @@ void player::heroInfoDraw(void)
 
 	numberDraw(getMemDC(), hero.str, 113, 168);					// Èû¹ÎÁöÁö
 	numberDraw(getMemDC(), hero.def, 183, 168);
-	numberDraw(getMemDC(), hero.wiz, 253, 168);
-	numberDraw(getMemDC(), hero.inte, 323, 168);
+	numberDraw(getMemDC(), hero.spell, 253, 168);
+	numberDraw(getMemDC(), hero.intel, 323, 168);
 
 	numberDraw(getMemDC(), _vHero[_currentHero]->getExp(), 132, 262);
 	numberDraw(getMemDC(), _vHero[_currentHero]->getMana(), 276, 262);
@@ -398,6 +398,59 @@ void player::camera(void)
 	}
 }
 
+void player::weekGo(void)
+{
+	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	{
+		_gs->getvCamp()[i]->weekGo();
+	}
+}
+
+void player::dayGo(void)
+{
+	for (int i = 0; i < _vHero.size(); i++)
+	{
+		_vHero[i]->dayGo();
+	}
+	_myProperty.crystal += _myBuilding.crystal;
+	_myProperty.gem += _myBuilding.gem;
+	_myProperty.iron += _myBuilding.iron;
+	_myProperty.mercury += _myBuilding.mercury;
+	_myProperty.sulfur += _myBuilding.sulfur;
+	_myProperty.wood += _myBuilding.wood;
+	
+	int gold;
+	gold = _myBuilding.gold * 1000;
+	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	{
+		_gs->getvCamp()[i]->dayGo();
+		if (_gs->getvCamp()[i]->getNum() == 0)
+		{
+			switch (_gs->getvCamp()[i]->getHall())
+			{
+			case 0:
+				break;
+
+			case 1:
+				gold += 500;
+				break;
+
+			case 2:
+				gold += 1000;
+				break;
+
+			case 3:
+				gold += 2000;
+				break;
+			case 4:
+				gold += 4000;
+				break;
+			}
+		}
+	}
+	_myProperty.gold += gold;
+}
+
 void player::addHero(POINT point,tagHero heroInfo)
 {
 	hero* he;
@@ -639,6 +692,7 @@ void player::inputField(void)
 					_vHero[i]->setPath(_pm->getPath(_vHero[i]->getHeroPoint().x,
 						_vHero[i]->getHeroPoint().y,
 						_mouseArr.x, _mouseArr.y));
+
 					if (_vHero[i]->getPath().size())
 					{
 						POINT tmp;
@@ -662,13 +716,15 @@ void player::inputField(void)
 						DATABASE->setMoveSpeed(15);
 
 					}
+					_vHero[i]->setPreviousPath(_vHero[i]->getHeroPoint());
 
 				}
 
 				else  if (_mouseArr.x == _vHero[i]->getHeroDest().x &&
 					_mouseArr.y == _vHero[i]->getHeroDest().y &&
 					!_vHero[i]->getGoOn() && _currentHero == _vHero[i]->getMyNum() &&
-					_vHero[i]->getPath().size() && !_pm->getClosed(_mouseArr.x, _mouseArr.y))
+					_vHero[i]->getPath().size() && !_pm->getClosed(_mouseArr.x, _mouseArr.y) &&
+					_vHero[i]->getNeedAp() <= _vHero[i]->getAP())
 				{
 					_vHero[i]->setGoOn(true);
 					if (!_autoCamera) _autoCamera = true;

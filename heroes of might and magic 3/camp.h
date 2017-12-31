@@ -164,6 +164,7 @@ public:
 	bool getWindow() { return _showWindow; }
 	bool getContents() { return _contents; }
 	bool getHero() { return _inHero; }
+	int getHall() { return _hall; }
 	int getNum() { return _campNum; }
 	int getPlayerNum() { return _player; }
 	int getWindowNum() { return _windowNum; }

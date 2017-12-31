@@ -58,7 +58,6 @@ public:
 	void cityUpdate(void);
 
 
-
 	//================ D R A W ===========
 	void cityScene(void);
 	void fieldScene(void);
@@ -70,6 +69,8 @@ public:
 	void inputField(void);
 	void camera(void);
 	void setFrame(void);
+	void weekGo(void);
+	void dayGo(void);
 
 	//================ E N T E R ===========
 	void enterCity(void);

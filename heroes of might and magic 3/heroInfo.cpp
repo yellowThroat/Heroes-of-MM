@@ -150,8 +150,8 @@ namespace HOMM_HERO
 				sprintf(hero.jobName, "기사");
 				hero.str = 2;
 				hero.def = 2;
-				hero.wiz = 1;
-				hero.inte = 1;
+				hero.spell = 1;
+				hero.intel = 1;
 
 
 			}
@@ -160,8 +160,8 @@ namespace HOMM_HERO
 				sprintf(hero.jobName, "클레릭");
 				hero.str = 1;
 				hero.def = 0;
-				hero.wiz = 2;
-				hero.inte = 2;
+				hero.spell = 2;
+				hero.intel = 2;
 			}
 
 		break;
@@ -180,8 +180,8 @@ namespace HOMM_HERO
 				sprintf(hero.jobName, "오버로드");
 				hero.str = 2;
 				hero.def = 2;
-				hero.wiz = 1;
-				hero.inte = 1;
+				hero.spell = 1;
+				hero.intel = 1;
 
 			}
 			else
@@ -189,8 +189,8 @@ namespace HOMM_HERO
 				sprintf(hero.jobName, "워락");
 				hero.str = 0;
 				hero.def = 0;
-				hero.wiz = 3;
-				hero.inte = 2;
+				hero.spell = 3;
+				hero.intel = 2;
 
 			}
 

@@ -140,6 +140,7 @@ void gameScene::render(void)
 
 		_ui->render();
 
+		_player->getHero()[_player->getCurrentHero()]->uiDraw();
 	}
 
 	if (_player->getScene())

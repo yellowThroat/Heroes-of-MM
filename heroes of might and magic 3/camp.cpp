@@ -516,22 +516,6 @@ void camp::castleDraw(void)
 				{
 					int remain = _saveRecruit.remain - _recruitNum;
 
-					if (_saveRecruit.num < 6)
-					{
-						_recruitMax = _property.gold / _saveRecruit.gold;
-						if (_recruitMax >= _saveRecruit.remain) _recruitMax = _saveRecruit.remain;
-					}
-					else
-					{
-						int gold = _property.gold / _saveRecruit.gold;
-						int gem = _property.gem / _saveRecruit.gem;
-						if (gold >= gem) _recruitMax = gem;
-						else _recruitMax = gold;
-						if (_recruitMax >= _saveRecruit.remain) _recruitMax = _saveRecruit.remain;
-
-					}
-					
-
 					HFONT font1 = CreateFont(24, 0, 0, 0, FW_NORMAL, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
 
 					HFONT oldfont = (HFONT)SelectObject(getMemDC(), font1);
@@ -555,14 +539,14 @@ void camp::castleDraw(void)
 
 					if (_recruitMax)
 					{
-						IMAGEMANAGER->findImage("recruit_left")->render(getMemDC(), 176, 279);
-						IMAGEMANAGER->findImage("recruit_right")->render(getMemDC(), 295, 279);
-						IMAGEMANAGER->findImage("recruit_max")->frameRender(getMemDC(), 134, 313);
-						IMAGEMANAGER->findImage("recruit_confirm")->frameRender(getMemDC(), 212, 313);
-						IMAGEMANAGER->findImage("recruit_bar")->render(getMemDC(), 192 + _recruitNum/_recruitMax * 87, 279);
+						IMAGEMANAGER->findImage("recruit_left")->frameRender(getMemDC(), 319, 296);
+						IMAGEMANAGER->findImage("recruit_right")->frameRender(getMemDC(), 438, 296);
+						IMAGEMANAGER->findImage("recruit_max")->frameRender(getMemDC(), 277, 330);
+						IMAGEMANAGER->findImage("recruit_confirm")->frameRender(getMemDC(), 355, 330);
+						IMAGEMANAGER->findImage("recruit_bar")->render(getMemDC(), 335 + (float)_recruitNum/_recruitMax * 87, 296);
 					}
 
-					IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 290, 313);
+					IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 433, 330);
 
 
 
@@ -628,6 +612,16 @@ void camp::castleDraw(void)
 				IMAGEMANAGER->findImage("window_recruit")->render(getMemDC(), 143, 16);
 				IMAGEMANAGER->findImage("window_recruit_shadow")->alphaRender(getMemDC(), 143, 16, 100);
 
+				if (_recruitMax)
+				{
+					IMAGEMANAGER->findImage("recruit_left")->frameRender(getMemDC(), 319, 296);
+					IMAGEMANAGER->findImage("recruit_right")->frameRender(getMemDC(), 438, 296);
+					IMAGEMANAGER->findImage("recruit_max")->frameRender(getMemDC(), 277, 330);
+					IMAGEMANAGER->findImage("recruit_confirm")->frameRender(getMemDC(), 355, 330);
+					IMAGEMANAGER->findImage("recruit_bar")->render(getMemDC(), 335 + (float)_recruitNum / _recruitMax * 87, 296);
+				}
+
+				IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 433, 330);
 
 				sprintf(tmp, "고용 %s", _saveRecruit.unit);
 				SelectObject(getMemDC(), font1);
@@ -999,6 +993,16 @@ void camp::dungeonDraw(void)
 					IMAGEMANAGER->findImage("window_recruit")->render(getMemDC(), 143, 16);
 					IMAGEMANAGER->findImage("window_recruit_shadow")->alphaRender(getMemDC(), 143, 16, 100);
 
+					if (_recruitMax)
+					{
+						IMAGEMANAGER->findImage("recruit_left")->frameRender(getMemDC(), 319, 296);
+						IMAGEMANAGER->findImage("recruit_right")->frameRender(getMemDC(), 438, 296);
+						IMAGEMANAGER->findImage("recruit_max")->frameRender(getMemDC(), 277, 330);
+						IMAGEMANAGER->findImage("recruit_confirm")->frameRender(getMemDC(), 355, 330);
+						IMAGEMANAGER->findImage("recruit_bar")->render(getMemDC(), 335 + (float)_recruitNum / _recruitMax * 87, 296);
+					}
+
+					IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 433, 330);
 
 					sprintf(tmp, "고용 %s", _saveRecruit.unit);
 					SelectObject(getMemDC(), font1);
@@ -1061,6 +1065,16 @@ void camp::dungeonDraw(void)
 				IMAGEMANAGER->findImage("window_recruit")->render(getMemDC(), 143, 16);
 				IMAGEMANAGER->findImage("window_recruit_shadow")->alphaRender(getMemDC(), 143, 16, 100);
 
+				if (_recruitMax)
+				{
+					IMAGEMANAGER->findImage("recruit_left")->frameRender(getMemDC(), 319, 296);
+					IMAGEMANAGER->findImage("recruit_right")->frameRender(getMemDC(), 438, 296);
+					IMAGEMANAGER->findImage("recruit_max")->frameRender(getMemDC(), 277, 330);
+					IMAGEMANAGER->findImage("recruit_confirm")->frameRender(getMemDC(), 355, 330);
+					IMAGEMANAGER->findImage("recruit_bar")->render(getMemDC(), 335 + (float)_recruitNum / _recruitMax * 87, 296);
+				}
+
+				IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 433, 330);
 
 				sprintf(tmp, "고용 %s", _saveRecruit.unit);
 				SelectObject(getMemDC(), font1);
@@ -1474,6 +1488,8 @@ void camp::inputCity(void)
 					if (getPixelC() >= 2 && getPixelC() <= 8)
 					{
 						_saveRecruit = _recruit[getPixelC() - 2];
+						setRecruit();
+						_recruitNum = _recruitMax;
 					}
 
 				}
@@ -1488,6 +1504,9 @@ void camp::inputCity(void)
 					if (getPixelD() >= 2 && getPixelD() <= 8)
 					{
 						_saveRecruit = _recruit[getPixelD() - 2];
+						setRecruit();
+						_recruitNum = _recruitMax;
+
 					}
 
 				}
@@ -1557,7 +1576,7 @@ void camp::inputCity(void)
 						{
 							if (_creature < 8) //===== 성에 있는 크리쳐 선택중
 							{								
-								if (i < 8) //========= 자신의 크리쳐끼리 교환
+								if (i < 8 && _creature != i) //========= 자신의 크리쳐끼리 교환
 								{
 									int tmp0 = 0;
 									int tmp1 = 8;
@@ -1581,9 +1600,9 @@ void camp::inputCity(void)
 									}
 
 
-										_creature = -1;
+									_creature = -1;
 								}
-								else //============ 방문중인 영웅의 크리쳐와 교환 시도
+								else if (i >= 8)//============ 방문중인 영웅의 크리쳐와 교환 시도
 								{
 									bool inHero = false;
 									tagCreature tmpCamp;			// 저장용 캠프의 크리쳐
@@ -1683,7 +1702,7 @@ void camp::inputCity(void)
 									_creature = -1;
 
 								}
-								else //========== 자신의 크리쳐끼리 교환
+								else if (i >= 8 && _creature != i) //========== 자신의 크리쳐끼리 교환
 								{
 									vector<tagCreature> tmp;
 									tmp = _hero->getCreature();
@@ -1846,10 +1865,8 @@ void camp::inputCity(void)
 							{
 								_saveRecruit = _recruit[i];
 								_contents = true;
-
-
-
-
+								setRecruit();
+								_recruitNum = _recruitMax;
 							}
 						}
 
@@ -1873,10 +1890,30 @@ void camp::inputCity(void)
 						//============== 창 닫는거
 						if (PtInRect(&RectMake(433, 329, 64, 32), _ptMouse))
 						{
-							_contents = false;
+							IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(1);
 						}
-
-
+						
+						
+						if (PtInRect(&RectMake(319, 296, 16, 16), _ptMouse))
+						{
+							if (_recruitNum < 0) _recruitNum = 0;
+							IMAGEMANAGER->findImage("recruit_left")->setFrameX(1);
+						}
+						
+						if (PtInRect(&RectMake(438, 296, 16, 16), _ptMouse))
+						{
+							IMAGEMANAGER->findImage("recruit_right")->setFrameX(1);
+						}
+												
+						if(PtInRect(&RectMake(277, 330, 64, 30), _ptMouse) && _recruitMax)
+						{
+							IMAGEMANAGER->findImage("recruit_max")->setFrameX(1);
+						}
+						
+						if (PtInRect(&RectMake(355, 330, 64, 30), _ptMouse) && _recruitMax)
+						{
+							IMAGEMANAGER->findImage("recruit_confirm")->setFrameX(1);
+						}
 					}
 
 				}
@@ -1886,7 +1923,29 @@ void camp::inputCity(void)
 
 					if (PtInRect(&RectMake(433, 329, 64, 32), _ptMouse))
 					{
-						_showWindow = false;
+						IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(1);
+					}
+
+
+					if (PtInRect(&RectMake(319, 296, 16, 16), _ptMouse))
+					{
+						if (_recruitNum < 0) _recruitNum = 0;
+						IMAGEMANAGER->findImage("recruit_left")->setFrameX(1);
+					}
+
+					if (PtInRect(&RectMake(438, 296, 16, 16), _ptMouse))
+					{
+						IMAGEMANAGER->findImage("recruit_right")->setFrameX(1);
+					}
+
+					if (PtInRect(&RectMake(277, 330, 64, 30), _ptMouse) && _recruitMax)
+					{
+						IMAGEMANAGER->findImage("recruit_max")->setFrameX(1);
+					}
+
+					if (PtInRect(&RectMake(355, 330, 64, 30), _ptMouse) && _recruitMax)
+					{
+						IMAGEMANAGER->findImage("recruit_confirm")->setFrameX(1);
 					}
 
 
@@ -1930,6 +1989,7 @@ void camp::inputCity(void)
 						{
 							if (_saveStructure.index == 0)
 							{
+								int newBuild = -1;
 								_contents = false;
 								_showWindow = false;
 								_property.crystal -= _saveStructure.crystal;
@@ -1941,45 +2001,48 @@ void camp::inputCity(void)
 								_property.gem -= _saveStructure.gem;
 								switch (_saveStructure.num)
 								{
+
 								case 0: _hall++;
-									break;
+								break;
 								case 1: _fort++;
-									break;
+								break;
 								case 2: _pub++; 
-									break;
+								break;
 								case 3: _forge++;
-									break;
+								break;
 								case 4: _market++;  
-									break;
+								break;
 								case 5: _guild++;
-									break;
+								break;
 								case 6: _special[2]++;
-									break;
+								break;
 								case 7: _special[3]++;
-									break;
+								break;
 								case 8: _special[1]++;
-									break;
-								case 9: _level[0]++;
-									break;
-								case 10: _level[1]++;
-									break;
-								case 11: _level[2]++;
-									break;
-								case 12: _level[3]++;
-									break;
-								case 13: _level[4]++;
-									break;
-								case 14: _level[5]++;
-									break;
-								case 15: _level[6]++;
-									break;
+								break;
+								case 9: _level[0]++; if (_level[0] == 1) newBuild = 0;
+								break;
+								case 10: _level[1]++; if (_level[1] == 1) newBuild = 1;
+								break;
+								case 11: _level[2]++; if (_level[2] == 1) newBuild = 2;
+								break;
+								case 12: _level[3]++; if (_level[3] == 1) newBuild = 3;
+								break;
+								case 13: _level[4]++; if (_level[4] == 1) newBuild = 4;
+								break;
+								case 14: _level[5]++; if (_level[5] == 1) newBuild = 5;
+								break;
+								case 15: _level[6]++; if (_level[6] == 1) newBuild = 6;
+								break;
 								case 16: _special[4]++;
-									break;
+								break;
 								case 17: _special[0]++;
-									break;
+								break;
 								}
 								structureInit();
+								recruitInit();
 
+								if (newBuild != -1) _recruit[newBuild].remain += _recruit[newBuild].output;
 
 
 							}
@@ -2024,24 +2087,66 @@ void camp::inputCity(void)
 					}
 					else
 					{
-						//================ recruit window가 떠잇음
-
-						//============== 창 닫는거
 						if (PtInRect(&RectMake(433, 329, 64, 32), _ptMouse))
 						{
-							_contents = false;
+							IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(1);
 						}
 
+
+						if (PtInRect(&RectMake(319, 296, 16, 16), _ptMouse))
+						{
+							if (_recruitNum < 0) _recruitNum = 0;
+							IMAGEMANAGER->findImage("recruit_left")->setFrameX(1);
+						}
+
+						if (PtInRect(&RectMake(438, 296, 16, 16), _ptMouse))
+						{
+							IMAGEMANAGER->findImage("recruit_right")->setFrameX(1);
+						}
+
+						if (PtInRect(&RectMake(277, 330, 64, 30), _ptMouse) && _recruitMax)
+						{
+							IMAGEMANAGER->findImage("recruit_max")->setFrameX(1);
+						}
+
+						if (PtInRect(&RectMake(355, 330, 64, 30), _ptMouse) && _recruitMax)
+						{
+							IMAGEMANAGER->findImage("recruit_confirm")->setFrameX(1);
+						}
 					}
 			
 				break;
 
 				case 2: case 3: case 4: case 5: case 6: case 7: case 8:
 
+
 					if (PtInRect(&RectMake(433, 329, 64, 32), _ptMouse))
 					{
-						_showWindow = false;
+						IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(1);
 					}
+
+
+					if (PtInRect(&RectMake(319, 296, 16, 16), _ptMouse))
+					{
+						if (_recruitNum < 0) _recruitNum = 0;
+						IMAGEMANAGER->findImage("recruit_left")->setFrameX(1);
+					}
+
+					if (PtInRect(&RectMake(438, 296, 16, 16), _ptMouse))
+					{
+						IMAGEMANAGER->findImage("recruit_right")->setFrameX(1);
+					}
+
+					if (PtInRect(&RectMake(277, 330, 64, 30), _ptMouse) && _recruitMax)
+					{
+						IMAGEMANAGER->findImage("recruit_max")->setFrameX(1);
+					}
+
+					if (PtInRect(&RectMake(355, 330, 64, 30), _ptMouse) && _recruitMax)
+					{
+						IMAGEMANAGER->findImage("recruit_confirm")->setFrameX(1);
+					}
+
 
 				break;
 
@@ -2057,6 +2162,109 @@ void camp::inputCity(void)
 		}
 
 	}
+
+	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
+	{
+		IMAGEMANAGER->findImage("recruit_left")->setFrameX(0);
+		IMAGEMANAGER->findImage("recruit_right")->setFrameX(0);
+		IMAGEMANAGER->findImage("recruit_confirm")->setFrameX(0);
+		IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(0);
+		IMAGEMANAGER->findImage("recruit_max")->setFrameX(0);
+
+
+		if (_showWindow)
+		{
+			if (_windowNum >= 1 && _windowNum < 9)
+			{
+				if ((_contents && _windowNum ==1) || (_windowNum > 1 && _windowNum < 9))
+				{
+					//================ recruit window가 떠잇음
+
+					//============== 창 닫는거
+					if (PtInRect(&RectMake(433, 329, 64, 32), _ptMouse))
+					{
+						_contents = false;
+						if (_windowNum > 1 && _windowNum < 9) _showWindow = false;
+					}
+
+
+					if (PtInRect(&RectMake(319, 296, 16, 16), _ptMouse))
+					{
+						_recruitNum--;
+						if (_recruitNum < 0) _recruitNum = 0;
+					}
+
+					if (PtInRect(&RectMake(438, 296, 16, 16), _ptMouse))
+					{
+						_recruitNum++;
+						if (_recruitNum > _recruitMax) _recruitNum = _recruitMax;
+					}
+
+					if (PtInRect(&RectMake(335, 296, 103, 16), _ptMouse))
+					{
+						_recruitNum = ((float)_ptMouse.x - 335) / 103 * _recruitMax;
+					}
+
+					if (PtInRect(&RectMake(277, 330, 64, 30), _ptMouse) && _recruitMax)
+					{
+						_recruitNum = _recruitMax;
+					}
+
+					if (PtInRect(&RectMake(355, 330, 64, 30), _ptMouse) && _recruitMax)
+					{
+						bool add = false;
+						if (_vCreature.size() < 7) add = true;
+						for (int i = 0; i < _vCreature.size(); i++)
+						{
+							if (_vCreature[i].kind == (int)_camp &&
+								_vCreature[i].tier == _saveRecruit.num &&
+								_vCreature[i].level == _level[_saveRecruit.num] - 1)
+							{
+								add = true;
+								break;
+							}
+						}
+
+						if (add)
+						{
+							addCreature((int)_camp, _saveRecruit.num, _level[_saveRecruit.num] - 1, _recruitNum);
+							_recruit[_saveRecruit.num].remain -= _recruitNum;
+							if (_saveRecruit.num < 6) _property.gold -= _recruitNum * _saveRecruit.gold;
+							else
+							{
+								_property.gold -= _recruitNum * _saveRecruit.gold;
+
+								switch (_camp)
+								{
+								case CAMP_CASTLE:
+									_property.gem -= _recruitNum * _saveRecruit.gem;
+
+									break;
+								case CAMP_DUNGEON:
+									_property.sulfur -= _recruitNum * _saveRecruit.sulfur;
+
+									break;
+								}
+							}
+
+						}
+						_contents = false;
+						if (_windowNum > 1 && _windowNum < 9) _showWindow = false;
+
+					}
+
+
+
+
+
+
+
+				}
+			}
+		}
+
+
+	}
 	
 
 
@@ -2065,6 +2273,21 @@ void camp::inputCity(void)
 
 void camp::setRecruit(void)
 {
+	if (_saveRecruit.num < 6)
+	{
+		_recruitMax = _property.gold / _saveRecruit.gold;
+		if (_recruitMax >= _saveRecruit.remain) _recruitMax = _saveRecruit.remain;
+	}
+	else
+	{
+		int gold = _property.gold / _saveRecruit.gold;
+		int gem = _property.gem / _saveRecruit.gem;
+		if (gold >= gem) _recruitMax = gem;
+		else _recruitMax = gold;
+		if (_recruitMax >= _saveRecruit.remain) _recruitMax = _saveRecruit.remain;
+
+	}
+
 
 }
 
@@ -3530,7 +3753,7 @@ void camp::structureInit(void)
 		{
 			sprintf(_structure[14].name, "향상된 만티코어 동굴");
 			sprintf(_structure[14].explantion, "스콜피온 생산");
-			_structure[14].img = IMAGEMANAGER->findImage("Dhall_mati2");
+			_structure[14].img = IMAGEMANAGER->findImage("Dhall_mant2");
 			_structure[14].gold = 3000;
 			_structure[14].wood = 5;
 			_structure[14].iron = 5;

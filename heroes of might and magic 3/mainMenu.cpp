@@ -531,12 +531,14 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->findImage("window_creatureinfo_shadow")->AlphaInit();
 	IMAGEMANAGER->addFrameImage("flag_large", "image/gameScene/ui/flag_large.bmp", 116, 64,2,1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("recruit_bar", "image/gameScene/camp/window/recruitBar.bmp", 16, 16, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("recruit_right", "image/gameScene/camp/window/recruitRight.bmp", 16, 16, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("recruit_left", "image/gameScene/camp/window/recruitLeft.bmp", 16, 16, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("recruit_confirm", "image/gameScene/camp/window/recruitConfirm.bmp", 128, 32, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("recruit_cancel", "image/gameScene/camp/window/recruitCancel.bmp", 128, 32, 1, 2, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addFrameImage("recruit_max", "image/gameScene/camp/window/recruitmax.bmp", 128, 32, 1, 2, true, RGB(255, 0, 255));
-
+	IMAGEMANAGER->addFrameImage("recruit_right", "image/gameScene/camp/window/recruitRight.bmp", 32, 16,2,1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_left", "image/gameScene/camp/window/recruitLeft.bmp", 32, 16,2,1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_confirm", "image/gameScene/camp/window/recruitConfirm.bmp", 128, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_cancel", "image/gameScene/camp/window/recruitCancel.bmp", 128, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_max", "image/gameScene/camp/window/recruitmax.bmp", 128, 32, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bar_empty", "image/gameScene/ui/bar_empty.bmp", 6, 30, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bar_ap", "image/gameScene/ui/bar_ap.bmp", 6, 30, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bar_mana", "image/gameScene/ui/bar_mana.bmp", 6, 30, true, RGB(255, 0, 255));
 
 	//============================== U N I T =============================
 	IMAGEMANAGER->addFrameImage("creature_portrait", "image/gameScene/hero/creature/portrait.bmp", 406, 256, 7, 4, true, RGB(255, 0, 255));

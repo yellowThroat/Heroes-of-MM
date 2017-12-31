@@ -14,6 +14,9 @@ HRESULT ui::init(void)
 	_mainButton = false;
 	_config = false;
 	_conButton = false;
+	_day = 1;
+	_week = 1;
+	_month = 1;
 	_gb = GB_NULL;
 	_firstHero = 0;
 	//================  R E C T   M A K E ===============
@@ -67,15 +70,33 @@ void ui::draw(void)
 	numberDraw(getMemDC(), _player->getProperty().crystal, 487, 582);
 	numberDraw(getMemDC(), _player->getProperty().gem, 600, 582);
 	numberDraw(getMemDC(), _player->getProperty().gold, 716, 582);
+	numberDraw(getMemDC(), _month, 858, 579);
+	numberDraw(getMemDC(), _week, 895, 579);
+	numberDraw(getMemDC(), _day, 932, 579);
 	
 	for (int i = _firstHero; i < _firstHero + 5; i++)
 	{
 		if (i >= _player->getHero().size()) break;
 
+		int ap = _player->getHero()[i]->getAP();
+		int mana = _player->getHero()[i]->getMana();
+
 		_player->getHero()[i]->getHeroInfo().portraitSmall->frameRender(getMemDC(),
 			804, 211 + 32 * i,
 			_player->getHero()[i]->getHeroInfo().indexX,
 			_player->getHero()[i]->getHeroInfo().indexY);
+
+		//=== 마나통 최대는 100 행동력통 최대는 2200
+		IMAGEMANAGER->findImage("bar_ap")->render(getMemDC(), 798,
+			211 + 32 * i + (2200 - ap)*0.01363,
+			0, (2200 - ap)*0.01363, 6, 30 - (2200 - ap)*0.01363);
+
+		IMAGEMANAGER->findImage("bar_mana")->render(getMemDC(), 851,
+			211 + 32 * i + (100 - mana)*0.3,
+			0, (100 - mana)*0.3, 6, 30 - (100- mana)*0.3);
+
+
+
 
 	}
 
@@ -376,7 +397,27 @@ void ui::input(void)
 				break;
 			case GB_HERO:
 				break;
-			case GB_TURN:
+			case GB_TURN: 
+
+				if (_day < 7)
+				{
+					_day++;
+					_player->dayGo();
+				}
+				else
+				{
+					_day = 1;
+
+					if (_week < 4)	_week++;
+					else
+					{
+						_week = 1;
+						_month++;
+					}
+					_player->dayGo();
+					_player->weekGo();
+				}
+
 				break;
 			case GB_GOON:
 				break;

@@ -54,7 +54,9 @@ private:
 	bool _config;					// 환경설정 창이 열렸는가
 	bool _conButton;				// 환경설정 창에서 버튼을 눌렀는가
 	int _firstHero;					// 초상화 나타낼 첫번재 영웅은 누규?
-
+	int _month;						// 시간 - 달
+	int _week;						// 시간 - 주
+	int _day;						// 시간 - 일
 public:
 	HRESULT init(void);
 	void release(void);

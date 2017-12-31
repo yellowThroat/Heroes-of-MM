@@ -86,10 +86,12 @@ public:
 	bool alreadyClosed(int x, int y);
 	
 	//============ G E T T E R ================
+	tagRoadInfo getRoadInfo(int x, int y) { return _road[x][y]; }
 	float getCameraX() { return _cameraX; }
 	float getCameraY() { return _cameraY; }
 	POINT getCameraArr() { return _cameraArr; }
 	bool getClosed(int x, int y) { return _map[x][y].isClosed; }
+	bool getAttribute() { return _buildAttribute; }
 	//============ S E T T E R ================
 	void setCameraX(float x) { _cameraX = x; }
 	void setCameraY(float y) { _cameraY = y; }
