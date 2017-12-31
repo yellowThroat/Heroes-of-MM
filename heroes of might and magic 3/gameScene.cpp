@@ -74,7 +74,11 @@ void gameScene::update(void)
 	//============= FIELD
 	if (!_player->getScene())
 	{
-		if (_ptMouse.x >= 788 || _ui->getConfig()) _ui->input();// 필드 : UI		키
+		if (_ptMouse.x >= 788 || _ui->getConfig())				// 필드 : UI	
+		{
+			if(!_player->getWindow())
+			_ui->input();
+		}
 		else inputPlay();										// 필드 : 겜화면	STAY
 		inputCommon();											// 필드 : 겜화면	KEY UP
 		_player->inputField();									// 필드 : 겜화면 KEY DOWN
@@ -87,7 +91,8 @@ void gameScene::update(void)
 		{
 			if (_vCamp[i]->getNum() == _player->getCurrentCamp())
 			{
-				_vCamp[i]->inputCity();
+				if(!_player->getWindow()) _vCamp[i]->inputCity();
+				else _player->inputField();
 			}
 		}
 
@@ -179,15 +184,17 @@ void gameScene::enterCity(void)
 				_player->getHero()[j]->getHeroPoint().y == _vCamp[i]->getFieldPoint().y)
 			{
 				//=========== 영웅이 성에 있던 상태가 아닌지 이동 중인건 아닌지
-				if (!_player->getHero()[j]->getInCamp() && !_player->getHero()[j]->getGoOn())
+				if (_player->getHero()[j]->getInCamp() == -1 && !_player->getHero()[j]->getGoOn())
 				{
 					//============ 그렇다면 이제 플레이어의 씬을 바꿔라
 					//============ 그 성의 번호로 커런트 번호를 바꿔줘라
 					//============ 영웅도 성안에 들어왔다고 해줘라
 					_player->setScene(true);
 					_player->setCurrentCamp(_vCamp[i]->getNum());
-					_player->getHero()[j]->setInCamp(true);
-					_vCamp[i]->setProperty(_player->getProperty());
+					_player->getHero()[j]->setInCamp(_vCamp[i]->getNum());
+					_vCamp[i]->setProperty(_player->getProperty());				// 재산을 넘겨주고
+					_vCamp[i]->setHeroAddressLink(_player->getHero()[j]);		// 들어간 영웅 넘겨주고
+					_vCamp[i]->setHero(true);									// 영웅 들어갔다고 알려주고
 				}
 			}
 		}

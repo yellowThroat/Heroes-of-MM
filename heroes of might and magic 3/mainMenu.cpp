@@ -402,7 +402,7 @@ void mainMenu::imageInit(void)
 		IMAGEMANAGER->addImage("window_4x3_hall", "image/gameScene/camp/window/window_4x3_hall.bmp", 800, 600, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addFrameImage("icon_resources", "image/gameScene/camp/window/resources.bmp", 224, 32, 7, 1, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("window_castle_fort", "image/gameScene/camp/window/window_castle_fort.bmp", 800, 600, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addImage("castle_fort_back", "image/gameScene/camp/window/castle_fort_back.bmp", 102, 122, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage("castle_fort_back", "image/gameScene/camp/window/castle_fort_back.bmp", 102, 140, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("window_castle_hall", "image/gameScene/camp/window/window_castle_hall.bmp", 800, 600, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("Dhall_academy", "image/gameScene/camp/dungeon/hall_academy.bmp", 150, 70, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("Dhall_arti", "image/gameScene/camp/dungeon/hall_arti.bmp", 150, 70, true, RGB(255, 0, 255));
@@ -499,7 +499,7 @@ void mainMenu::imageInit(void)
 		
 		//==== window
 		IMAGEMANAGER->addImage("window_dungeon_fort", "image/gameScene/camp/window/window_dungeon_fort.bmp", 800, 600, true, RGB(255, 0, 255));
-		IMAGEMANAGER->addImage("dungeon_fort_back", "image/gameScene/camp/window/dungeon_fort_back.bmp", 102, 122, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage("dungeon_fort_back", "image/gameScene/camp/window/dungeon_fort_back.bmp", 102, 140, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("window_dungeon_hall", "image/gameScene/camp/window/window_dungeon_hall.bmp", 800, 600, true, RGB(255, 0, 255));
 		
 	}
@@ -529,7 +529,13 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("window_creatureinfo", "image/gameScene/ui/window_creatureinfo.bmp", 306, 318, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window_creatureinfo_shadow", "image/gameScene/ui/window_creatureinfo_shadow.bmp", 306, 318, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("window_creatureinfo_shadow")->AlphaInit();
-
+	IMAGEMANAGER->addFrameImage("flag_large", "image/gameScene/ui/flag_large.bmp", 116, 64,2,1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("recruit_bar", "image/gameScene/camp/window/recruitBar.bmp", 16, 16, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("recruit_right", "image/gameScene/camp/window/recruitRight.bmp", 16, 16, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("recruit_left", "image/gameScene/camp/window/recruitLeft.bmp", 16, 16, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_confirm", "image/gameScene/camp/window/recruitConfirm.bmp", 128, 32, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_cancel", "image/gameScene/camp/window/recruitCancel.bmp", 128, 32, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("recruit_max", "image/gameScene/camp/window/recruitmax.bmp", 128, 32, 1, 2, true, RGB(255, 0, 255));
 
 
 	//============================== U N I T =============================

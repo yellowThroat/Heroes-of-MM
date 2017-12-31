@@ -39,7 +39,7 @@ private:
 	float _x;					// 영웅의 중점 좌표
 	bool _goOn;					// 이동 중인지
 	bool _moveEnd;				// 이동 끝난 타이밍을 알리기 위해
-	bool _isInCamp;				// 캠프 안으로 들어갔는지
+	int _isInCamp;				// 어느 캠프로 들어갔는지 아무데도 안갔다면 -1
 	int _myNum;					// 영웅 넘버
 	int _player;				// 어느플레이어 영웅인지
 	int _currentActionPoint;	// 현재 행동력
@@ -83,6 +83,8 @@ public:
 	void setCordinate(void);
 	void heroMove(void);
 	void addCreature(int kind, int tier, int level, int quantity);
+	void addCreature(int kind, int tier, int level, int quantity, int position);
+	void deleteCreature(int arr);
 	void setActionPoint();
 	int getDirection(int x, int y);
 
@@ -105,18 +107,20 @@ public:
 	int getMana() { return _currentMana; }
 	int getMaxMana() { return _maxMana; }
 	int getExp() { return _exp; }
+	int getInCamp() { return _isInCamp; }
 	bool getGoOn() { return _goOn; }
 	bool getMoveEnd() { return _moveEnd; }
-	bool getInCamp() { return _isInCamp; }
 
 	//============= S E T T E R =============
+	void setCreature(vCreature creature) { _vCreature = creature; }
+	void setCreature(tagCreature creature, int arr) { _vCreature[arr] = creature; }
 	void setHeroDest(POINT point) { _destination = point; }
 	void setHeroInfo(tagHero heroInfo) { _myHero = heroInfo; }
 	void setPath(vPath path);
 	void setMynum(int num) { _myNum = num; }
 	void setGoOn(bool go) { _goOn = go; }
 	void setMoveEnd(bool end) { _moveEnd = end; }
-	void setInCamp(bool camp) { _isInCamp = camp; }
+	void setInCamp(int camp) { _isInCamp = camp; }
 	void setAP(int ap) { _currentActionPoint = ap; }
 	void setMana(int mana) { _currentMana = mana; }
 	void setExp(int exp) { _exp = exp; }

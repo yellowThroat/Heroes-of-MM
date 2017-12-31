@@ -58,7 +58,6 @@ void timeManager::render(HDC hdc)
 
 		sprintf_s(str, "elapsedTime : %f", _timer->getElapsedTime());
 		TextOut(hdc, 20, 60, str, strlen(str));
-
 	}
 #else
 	{

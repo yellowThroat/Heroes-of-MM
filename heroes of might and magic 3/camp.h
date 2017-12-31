@@ -44,6 +44,13 @@ struct tagRecruit
 	int x, y;					// 홀 렌더시에 좌표
 	int num;					// 몇번째 칸인지
 	
+	int atk;					// 스탯
+	int def;
+	int minDmg;
+	int maxDmg;
+	int hp;
+	int speed;
+	
 	int gold;					// 필요한 자원들
 	int wood;
 	int iron;
@@ -56,12 +63,17 @@ struct tagRecruit
 
 class player;
 class zOrder;
+class hero;
 
 class camp : public gameNode
 {
 private:
 	player* _play;
 	zOrder* _zOrder;
+	hero* _hero;
+
+private:
+	vector<tagCreature> _vCreature;
 
 private:
 	image* _fieldImg;
@@ -92,7 +104,12 @@ private:
 	int _special[5];			// 특수 건물
 	int _campNum;				// 성 넘버
 	int _windowNum;				// 멀 눌렀니?
+	int _creature;				// 현재 선택한 크리쳐
+	int _recruitNum;			// 몇마리 고용할거늬?
+	int _recruitMax;			// 최대 몇마리 고용가능한지
 	bool _cityScene;			// 건물 안으로 들어왔는가
+	bool _inHero;				// 안에 영웅 있늬?
+	bool _entry;				// 영웅이 눌러 앉았늬?
 	bool _showWindow;			// 무언갈 눌렀을때
 	bool _contents;				// 내용을 띄우자
 	bool _beBuilt;				// 이번턴 건물 이미 지었나
@@ -115,13 +132,18 @@ public:
 	void fieldDraw(void);
 	void castleDraw(void);
 	void dungeonDraw(void);
+	void heroDraw(void);
 
 	//========== S E T T I N G ===========
+	void addCreature(int kind, int tier, int level, int quantity);
+	void addCreature(int kind, int tier, int level, int quantity, int position);
+	void deleteCreature(int arr);
 	void inputCity();
 	void structureInit();
 	void unitSampleInit();
 	void buildingInit();
 	void recruitInit();
+	void setRecruit();
 	void buildingCondition(void);
 	void cameraSetting(void);
 	void setCityScene(bool scene) { _cityScene = scene; }
@@ -129,6 +151,8 @@ public:
 	void setFrameCycle(void);
 	void selectBox(void);
 	void changeState(image* img, int delay);
+	void dayGo(void);
+	void weekGo(void);
 
 
 	//========== G E T T E R =============
@@ -139,14 +163,16 @@ public:
 	bool getCityScene() { return _cityScene; }
 	bool getWindow() { return _showWindow; }
 	bool getContents() { return _contents; }
+	bool getHero() { return _inHero; }
 	int getNum() { return _campNum; }
 	int getPlayerNum() { return _player; }
 	int getWindowNum() { return _windowNum; }
 	//========== S E T T E R =============
 	void setNum(int num) { _campNum = num; }
 	void setPlayer(int num) { _player = num; }
-	void setWindow(bool show) { _showWindow = show; }
+	void setHero(bool hero) { _inHero = hero; }
 	void setWindowNum(int num) { _windowNum = num; }
+	void setWindow(bool show) { _showWindow = show; }
 	void setProperty(myProperty pro) { _property = pro; }
 	void setContents(bool contents) { _contents = contents; }
 	void setSaveStructure(int stru) { _saveStructure = _structure[stru]; }
@@ -155,7 +181,7 @@ public:
 
 	void setPlayerAddressLink(player* player) { _play = player; }
 	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
-
+	void setHeroAddressLink(hero* hero) { _hero = hero; }
 	camp();
 	~camp();
 };

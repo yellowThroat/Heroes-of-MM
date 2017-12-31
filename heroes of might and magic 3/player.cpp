@@ -18,6 +18,7 @@ HRESULT player::init(int myNum)
 	_window = false;
 	_creatureinfo = false;
 	_currentHero = 0;
+	_count = 0;
 	_currentCreature = -1;
 	_destination = { 0,0 };
 	/*
@@ -66,8 +67,10 @@ void player::update(void)
 	{
 		fieldUpdate();
 
-		//sort(_vHero.begin(), _vHero.end(), hero::comp);
+
 	}
+
+	if (_creatureinfo) setFrame();
 
 }
 
@@ -122,108 +125,224 @@ void player::heroInfoDraw(void)
 	{
 		//=========== 모든 영웅의 초상화 676 95
 		_vHero[i]->getHeroInfo().portraitSmall->frameRender(getMemDC(),
-			676, 95 + _vHero[i]->getMyNum()*54,
+			676, 95 + _vHero[i]->getMyNum() * 54,
 			_vHero[i]->getHeroInfo().indexX,
 			_vHero[i]->getHeroInfo().indexY);						// 각 영웅의 초상화 그려줌
 
 		IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),		// 현재 선택된 영웅 표시
 			675, 95 + _currentHero * 54);
-
+	}
 		
-		if (_vHero[i]->getMyNum() == _currentHero) //현재 선택된 영웅 그리는것
-		{
-			tagHero hero;
-			hero = _vHero[i]->getHeroInfo();
+	tagHero hero;
+	hero = _vHero[_currentHero]->getHeroInfo();
 
-			hero.portraitLarge->frameRender(getMemDC(), 83, 26,
-				hero.indexX, hero.indexY);								//초상화 
+	hero.portraitLarge->frameRender(getMemDC(), 83, 26,
+		hero.indexX, hero.indexY);								//초상화 
 
-			numberDraw(getMemDC(), hero.str, 113, 168);					// 힘민지지
-			numberDraw(getMemDC(), hero.def, 183, 168);
-			numberDraw(getMemDC(), hero.wiz, 253, 168);
-			numberDraw(getMemDC(), hero.inte, 323, 168);
+	numberDraw(getMemDC(), hero.str, 113, 168);					// 힘민지지
+	numberDraw(getMemDC(), hero.def, 183, 168);
+	numberDraw(getMemDC(), hero.wiz, 253, 168);
+	numberDraw(getMemDC(), hero.inte, 323, 168);
 
-			numberDraw(getMemDC(), _vHero[i]->getExp(), 132, 262);
-			numberDraw(getMemDC(), _vHero[i]->getMana(), 276, 262);
-			numberDraw(getMemDC(), _vHero[i]->getMaxMana(), 314, 262);
+	numberDraw(getMemDC(), _vHero[_currentHero]->getExp(), 132, 262);
+	numberDraw(getMemDC(), _vHero[_currentHero]->getMana(), 276, 262);
+	numberDraw(getMemDC(), _vHero[_currentHero]->getMaxMana(), 314, 262);
 
-			SetTextColor(getMemDC(), RGB(255, 255, 255));
-			TextOut(getMemDC(), 299, 260, "/", 1);
-			SetTextColor(getMemDC(), RGB(0, 0, 0));
-			
-			
-			HFONT font = CreateFont(24, 0, 0, 0, 50, false, false, false,
-				HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
-			HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
-			SetTextColor(getMemDC(), RGB(248, 228, 144));
-			SelectObject(getMemDC(), font);
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
+	TextOut(getMemDC(), 299, 260, "/", 1);
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+	
+	
+	HFONT font = CreateFont(24, 0, 0, 0, 50, false, false, false,
+		HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+	HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+	SetTextColor(getMemDC(), RGB(248, 228, 144));
+	SelectObject(getMemDC(), font);
 
-			TextOut(getMemDC(), 254 - strlen(hero.name) / 2 * 16, 39, hero.name, strlen(hero.name));
+	TextOut(getMemDC(), 254 - strlen(hero.name) / 2 * 16, 39, hero.name, strlen(hero.name));
 
-			SetTextColor(getMemDC(), RGB(0, 0, 0));
-			DeleteObject(font);
-			SelectObject(getMemDC(), oldfont);
-			
-			font = CreateFont(15, 0, 0, 0, 50, false, false, false,
-				HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
-			oldfont = (HFONT)SelectObject(getMemDC(), font);
-			SetTextColor(getMemDC(), RGB(255, 255, 255));
-			SelectObject(getMemDC(), font);
-			
-			char tmp[256];
-			sprintf(tmp, "%d", hero.level);
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+	DeleteObject(font);
+	SelectObject(getMemDC(), oldfont);
+	
+	font = CreateFont(15, 0, 0, 0, 50, false, false, false,
+		HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+	oldfont = (HFONT)SelectObject(getMemDC(), font);
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
+	SelectObject(getMemDC(), font);
+	
+	char tmp[256];
+	sprintf(tmp, "%d", hero.level);
 
-			TextOut(getMemDC(), 215, 64, tmp, strlen(tmp));							// 레벨 수치
+	TextOut(getMemDC(), 215, 64, tmp, strlen(tmp));							// 레벨 수치
 
-			TextOut(getMemDC(), 232, 64, "레벨", 4);									// '레벨'
+	TextOut(getMemDC(), 232, 64, "레벨", 4);									// '레벨'
 
-			TextOut(getMemDC(), 266, 64, hero.jobName, strlen(hero.jobName));		// 직업 이름
+	TextOut(getMemDC(), 266, 64, hero.jobName, strlen(hero.jobName));		// 직업 이름
 
-			SetTextColor(getMemDC(), RGB(0, 0, 0));
-			SelectObject(getMemDC(), oldfont);
-			DeleteObject(font);
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+	SelectObject(getMemDC(), oldfont);
+	DeleteObject(font);
 
 
-			//79 - 492  크리쳐 초상화 그려주기 quantity 37 - 53
+	//79 - 492  크리쳐 초상화 그려주기 quantity 37 - 53
 
-			for (int j = 0; j < _vHero[i]->getCreature().size(); j++)
-			{
-				_vHero[i]->getCreature()[j].portrait->frameRender(getMemDC(),
-					79 + _vHero[i]->getCreature()[j].position * 66, 492,
-					_vHero[i]->getCreature()[j].tier,
-					_vHero[i]->getCreature()[j].kind *2 +
-					_vHero[i]->getCreature()[j].level);		// 초상화 그리고
+	for (int j = 0; j < _vHero[_currentHero]->getCreature().size(); j++)
+	{
+		_vHero[_currentHero]->getCreature()[j].portrait->frameRender(getMemDC(),
+			79 + _vHero[_currentHero]->getCreature()[j].position * 66, 492,
+			_vHero[_currentHero]->getCreature()[j].tier,
+			_vHero[_currentHero]->getCreature()[j].kind *2 +
+			_vHero[_currentHero]->getCreature()[j].level);		// 초상화 그리고
 
-				numberDraw(getMemDC(), _vHero[i]->getCreature()[j].quantity,	// 그게 몇마리인지
-					126 + _vHero[i]->getCreature()[j].position * 66, 545);		
-			}
+		numberDraw(getMemDC(), _vHero[_currentHero]->getCreature()[j].quantity,	// 그게 몇마리인지
+			136 - (int)log10(_vHero[_currentHero]->getCreature()[j].quantity*10)*7
+			+ _vHero[_currentHero]->getCreature()[j].position * 66, 545);
+	}
 
-
-		}
-
-
-		if (_currentCreature != -1)
-		{
-			IMAGEMANAGER->findImage("select_creature")->render(getMemDC(), 78 + _currentCreature*66, 491);
-		}
-
-
-		
+	if (_currentCreature != -1)
+	{
+		IMAGEMANAGER->findImage("select_creature")->render(getMemDC(), 78 + _currentCreature*66, 491);
 	}
 
 	if (_creatureinfo)
 	{
-		IMAGEMANAGER->findImage("window_creatureinfo")->render(getMemDC(), 127, 72);
-		IMAGEMANAGER->findImage("window_creatureinfo_shadow")->alphaRender(getMemDC(), 127, 72, 150);
+		tagCreature tmp;
+		tagHero tmpHero;
+		tmpHero = _vHero[_currentHero]->getHeroInfo();
+
+		for (int i = 0; i < _vHero[_currentHero]->getCreature().size(); i++)
+		{
+			if (_vHero[_currentHero]->getCreature()[i].position == _currentCreature)
+			{
+				tmp = _vHero[_currentHero]->getCreature()[i];
+			}
+		}
+
+		switch (tmp.kind)
+		{
+		case 0:
+			IMAGEMANAGER->findImage("castle_fort_back")->render(getMemDC(), 139, 67);
+			break;
+
+		case 1:
+			IMAGEMANAGER->findImage("dungeon_fort_back")->render(getMemDC(), 139, 67);
+			break;
+		}
+
+
+		for (int i = 0; i < _vHero[_currentHero]->getCreature().size(); i++)
+		{
+			if (_vHero[_currentHero]->getCreature()[i].position == _currentCreature)
+			{
+				_vHero[_currentHero]->getCreature()[i].imgShadow[_vHero[_currentHero]->getCreature()[i].state]->alphaFrameRender(getMemDC(),
+					189 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameWidth() / 2,
+					127 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameHeight() / 2, 150);
+
+				_vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->frameRender(getMemDC(),
+					189 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameWidth() / 2,
+					127 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameHeight() / 2);
 
 
 
 
+			}
+		}
+
+		IMAGEMANAGER->findImage("window_creatureinfo")->render(getMemDC(), 119, 21);
+		IMAGEMANAGER->findImage("window_creatureinfo_shadow")->alphaRender(getMemDC(), 119, 21, 150);
+
+		//268 42
+		HFONT font = CreateFont(14, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+		HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+
+		SelectObject(getMemDC(), font);
+
+		SetTextColor(getMemDC(), RGB(248, 228, 144));
+
+		TextOut(getMemDC(), 268 - strlen(tmp.name)/2 * 16, 42, tmp.name, strlen(tmp.name));
+		SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+		//345 71
+		char tmpChar[256];
+		sprintf(tmpChar, "%d (%d)", tmp.atk, tmp.atk + tmpHero.str);
+
+		TextOut(getMemDC(), 392 - strlen(tmpChar)*7, 70, tmpChar, strlen(tmpChar));
+
+		sprintf(tmpChar, "%d (%d)", tmp.def, tmp.def + tmpHero.def);
+
+		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 88, tmpChar, strlen(tmpChar));
+
+		sprintf(tmpChar, "%d - %d", tmp.minDmg, tmp.maxDmg);
+
+		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 125, tmpChar, strlen(tmpChar));
+
+		sprintf(tmpChar, "%d", tmp.hp);
+
+		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 145, tmpChar, strlen(tmpChar));
+
+		sprintf(tmpChar, "%d", tmp.speed);
+
+		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 183, tmpChar, strlen(tmpChar));
+
+		sprintf(tmpChar, "%d", tmp.quantity);
+
+		TextOut(getMemDC(), 238 - strlen(tmpChar) * 7, 185, tmpChar, strlen(tmpChar));
 
 
+		DeleteObject(font);
+		SelectObject(getMemDC(), oldfont);
+
+		SetTextColor(getMemDC(), RGB(0, 0, 0));
 
 	}
 	
+}
+
+void player::setFrame(void)
+{
+	tagCreature tmp;
+
+	for (int i = 0; i < _vHero[_currentHero]->getCreature().size(); i++)
+	{
+		if (_vHero[_currentHero]->getCreature()[i].position == _currentCreature)
+		{
+			tmp = _vHero[_currentHero]->getCreature()[i];
+			break;
+		}
+	}
+
+	if (!_count)
+	{
+		if (tmp.img[tmp.state]->getFrameX() >= tmp.img[tmp.state]->getMaxFrameX())
+		{
+			tmp.img[tmp.state]->setFrameX(-1);
+			tmp.imgShadow[tmp.state]->setFrameX(-1);
+
+			tmp.state = (CREATURESTATE)(tmp.state + 1);
+
+			if (tmp.state >= STATE_SWITCH) tmp.state = STATE_DOWN;
+		}
+
+
+		tmp.img[tmp.state]->setFrameX(tmp.img[tmp.state]->getFrameX() + 1);
+		tmp.imgShadow[tmp.state]->setFrameX(tmp.imgShadow[tmp.state]->getFrameX() + 1);
+
+		_count = 6;
+
+	}
+	else _count--;
+	
+
+	for (int i = 0; i < _vHero[_currentHero]->getCreature().size(); i++)
+	{
+		if (_vHero[_currentHero]->getCreature()[i].position == _currentCreature)
+		{
+			_vHero[_currentHero]->setCreature(tmp, i);
+			break;
+		}
+
+	}
 }
 
 void player::cityScene(void)
@@ -552,9 +671,14 @@ void player::inputField(void)
 					_vHero[i]->getPath().size() && !_pm->getClosed(_mouseArr.x, _mouseArr.y))
 				{
 					_vHero[i]->setGoOn(true);
-					_vHero[i]->setInCamp(false);
 					if (!_autoCamera) _autoCamera = true;
 					_pm->setClosed(_vHero[i]->getHeroPoint().x, _vHero[i]->getHeroPoint().y, false);
+					if (_vHero[i]->getInCamp() != -1)										// 캠프에 있던 중이라면
+					{
+						_gs->getvCamp()[_vHero[i]->getInCamp()]->setHero(false);	// 있었던 성은 영웅 나갔다고 알랴줌
+						_vHero[i]->setInCamp(-1);									// 캠프 나왓다고 초기화 해주고
+
+					}
 
 
 				}
@@ -563,50 +687,85 @@ void player::inputField(void)
 		}
 		if(_window)
 		{
-
 			if (!_creatureinfo)		// 크리쳐 정보창 안열려잇음
 			{
-				for (int i = 0; i < 7; i++) // 이제 눌러보자
+				for (int i = 0; i < 7; i++) // 크리쳐를 눌러보자
 				{
-					
-					for (int i = 0; i < _vHero[_currentHero]->getCreature().size(); i++) // 현재 영웅의 크리쳐 정보를 가져오고
+					bool end = false;
+					if (PtInRect(&RectMake(79 + 66*i, 492, 58, 64), _ptMouse))
 					{
-						// 79 492
-						if (PtInRect(&RectMake(79 + 66 * i, 492, 58, 64), _ptMouse))	// 각 렉트 창을 눌럿을때
+						vector<tagCreature> tmpCreature;
+						tmpCreature = _vHero[_currentHero]->getCreature();
+
+						if (_currentCreature == -1) //현재 크리쳐가 없다면
 						{
-							if (_currentCreature == -1)	// 지금 선택된게 없다면
+							//========= 그 자리에 크리쳐가 있는지 먼저 확인하고
+							for (int j = 0; j < tmpCreature.size(); j++)
 							{
-								
-
-
-							}
-							else
-							{
-								if (_currentCreature != i)
+								if (tmpCreature[j].position == i) //그 자리에 크리쳐가 있다면
 								{
-									for (int j = 0; j < _vHero[_currentHero]->getCreature().size(); j++)
+									_currentCreature = i;
+									end = true;
+								}
+							}
+						}
+						else //=================== 현재 선택된 크리쳐가 있다면
+						{
+							if (_currentCreature == i) //============== 또 같은 자리를 눌렀다면
+							{
+								_creatureinfo = true; //=============== 크리쳐 정보창을 띄우고
+								end = true;
+							}
+							else //============= 다른 자리를 눌렀다면
+							{
+								int tmp0 = 0;
+								int tmp1 = 8;
+								for (int j = 0; j < tmpCreature.size(); j++)
+								{
+									if (tmpCreature[j].position == _currentCreature)
 									{
-										if (_vHero[_currentHero]->getCreature()[j].position == _currentCreature)
-										{
-											_vHero[_currentHero]->getCreature()[j].position = i;
-										}
-
-
+										tmp0 = j;
 									}
+									if (tmpCreature[j].position == i)
+									{
+										tmp1 = j;
+									}
+								}
 
+								if (tmp1 < tmpCreature.size() &&
+									tmpCreature[tmp0].kind == tmpCreature[tmp1].kind &&
+									tmpCreature[tmp0].tier == tmpCreature[tmp1].tier &&
+									tmpCreature[tmp0].level == tmpCreature[tmp1].level)
+								{
+									tmpCreature[tmp1].quantity += tmpCreature[tmp0].quantity;
+									tmpCreature.erase(tmpCreature.begin() + tmp0);
+									_vHero[_currentHero]->setCreature(tmpCreature);
 								}
 								else
 								{
-									_creatureinfo = true;
-									_currentCreature = -1;
-
+									for (int j = 0; j < tmpCreature.size(); j++) 
+									{
+										if (tmpCreature[j].position == _currentCreature) // 현재 선택된 크리쳐를 잠시 다른데로 보내고
+										{
+											tmpCreature[j].position = -1;
+										}
+										if (tmpCreature[j].position == i) // 그 자리에 있던걸 원래 선택된 곳으로 보내고
+										{
+											tmpCreature[j].position = _currentCreature;
+										}
+										if (tmpCreature[j].position == -1) //딴 나라 보냈던 크리쳐 선택한곳으로 보냄
+										{
+											tmpCreature[j].position = i;
+										}
+										// 그리고 그걸 다시 입력해줌
+										_vHero[_currentHero]->setCreature(tmpCreature);
+									}
 								}
+								_currentCreature = -1;
+								end = true;
 							}
-
-							
 						}
-
-
+						if (end) break;
 					}
 				}
 
@@ -614,26 +773,36 @@ void player::inputField(void)
 
 
 
-
+				// ===================== 영웅 고르는거
 				for (int i = 0; i < 8; i++)
 				{
 					if (PtInRect(&RectMake(675, 95 + 54 * i, 46, 30),_ptMouse))
 					{
 						if(i < _vHero.size())
 						_currentHero = i;
+						_currentCreature = -1;
 					}
 				}
 
+				//====================== 영웅창 닫기
 
 				if (PtInRect(&RectMake(674, 523, 52, 36), _ptMouse))
 				{
+					_currentCreature = -1;
 					_window = false;
 				}
 
 			}
-			else
+			else				//=====================크리쳐 정보 창 열려 있음
 			{
-				if (PtInRect(&RectMake(343, 309, 64, 30),_ptMouse))
+
+
+
+
+
+
+				//============== 크리쳐 정보창 닫고 현재 크리쳐 초기화
+				if (PtInRect(&RectMake(335, 258, 64, 30),_ptMouse))
 				{
 					_creatureinfo = false;
 					_currentCreature = -1;

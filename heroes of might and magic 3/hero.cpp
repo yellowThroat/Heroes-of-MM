@@ -16,13 +16,18 @@ HRESULT hero::init(POINT point, tagHero hero)
 	_y = _pointArr.y * TILESIZE;
 	_goOn = false;
 	_moveEnd = false;
-	_isInCamp = false;
+	_isInCamp = -1;
 
 
 	_maxMana = _myHero.wiz * 10;
 	_currentMana = _maxMana;
 
-	addCreature(_myHero.kind, 0, 0, 1);
+	//addCreature(_myHero.kind, 0, 0, 1);
+	addCreature(_myHero.kind, 6, 0, 10);
+	addCreature(_myHero.kind, 6, 0, 5, 3);
+	//addCreature(_myHero.kind, 6, 1, 5);
+	//addCreature(_myHero.kind, 5, 0, 1);
+	//addCreature(_myHero.kind, 6, 0, 3);
 
 	setActionPoint();
 
@@ -268,13 +273,14 @@ void hero::addCreature(int kind, int tier, int level, int quantity)
 					if (_vCreature[i].position == num)
 					{
 						end = false;
+						num++;
 						break;
 					}
 
 					end = true;
 				}
 
-				num++;
+				;
 
 
 				if (end) break;
@@ -288,6 +294,51 @@ void hero::addCreature(int kind, int tier, int level, int quantity)
 	}
 
 
+}
+
+void hero::addCreature(int kind, int tier, int level, int quantity, int position)
+{
+	bool overlap = false;
+
+	tagCreature creature;
+	creature = CommonCreature(kind, tier, level);
+	creature.quantity = quantity;
+	for (int i = 0; i < _vCreature.size(); i++)
+	{
+		if (creature.kind == _vCreature[i].kind &&
+			creature.tier == _vCreature[i].tier &&
+			creature.level == _vCreature[i].level && 
+			_vCreature[i].position == position)
+		{
+			overlap = true;
+
+			_vCreature[i].quantity = _vCreature[i].quantity + creature.quantity;
+
+			break;
+		}
+
+	}
+
+
+
+	if (!overlap)
+	{
+		creature.position = position;
+
+
+		_vCreature.push_back(creature);
+	}
+
+
+}
+
+void hero::deleteCreature(int arr)
+{
+	for (int i = 0; i < STATE_END; i++)
+	{
+		SAFE_DELETE(_vCreature[arr].img[i]);
+	}
+	_vCreature.erase(_vCreature.begin() + arr);
 }
 
 

@@ -349,6 +349,23 @@ namespace IOTA_UTIL
 	}
 
 
+	float su(float x)
+	{
+		float a;
+		if (x != 0) a = (int)log10(x * 10);
+		else a = 1;
+
+		return a;
+	}
+
+	float su(int x)
+	{
+		float a;
+		if (x != 0) a = (int)log10(x * 10);
+		else a = 1;
+
+		return a;
+	}
 
 }
 

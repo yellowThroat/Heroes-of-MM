@@ -73,7 +73,9 @@ void mainGame::render(void)
 	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 	//========================================================================
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
 	if(_option)TIMEMANAGER->render(getMemDC());
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
 	//백버퍼에 있는걸 HDC로 그려주는 역할
 	this->getBackBuffer()->render(getHDC(), 0, 0);
 

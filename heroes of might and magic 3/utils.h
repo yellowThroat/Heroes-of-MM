@@ -54,4 +54,8 @@ namespace IOTA_UTIL
 	//범위 구하는용
 	int maxRange(int a, int division);
 
+	//몇자리이 인지
+	float su(float x);
+	float su(int x);
+
 }

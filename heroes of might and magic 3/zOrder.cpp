@@ -47,41 +47,49 @@ void zOrder::render(void)
 
 	for (int i = 0; i < _vRender.size(); i++)
 	{
-		if (_vRender[i].identity == 255)
+		if (_vRender[i].destX - DATABASE->getPlayCameraX() >= MINCAMERA	 * TILESIZE &&
+			_vRender[i].destX - DATABASE->getPlayCameraX() <= MAXCAMERAX * TILESIZE &&
+			_vRender[i].destY - DATABASE->getPlayCameraY() >= MINCAMERA	 * TILESIZE	&&
+			_vRender[i].destY - DATABASE->getPlayCameraY() <= MAXCAMERAY * TILESIZE)
 		{
-			_vRender[i].img->frameRender(getMemDC(),
-				_vRender[i].destX- DATABASE->getPlayCameraX(),
-				_vRender[i].destY- DATABASE->getPlayCameraY(),
-				_vRender[i].sourX, 
-				_vRender[i].sourY);
-
-			if(_vRender[i].shadowImg!=NULL)
-				_vRender[i].shadowImg->alphaFrameRender(getMemDC(),
-					_vRender[i].destX - DATABASE->getPlayCameraX(),
-					_vRender[i].destY - DATABASE->getPlayCameraY(),
-					_vRender[i].sourX,
-					_vRender[i].sourY, SHADOWALPHA);
-
-		}
-		else
-		{
-			_vRender[i].img->frameRender(getMemDC(),
-				_vRender[i].destX - DATABASE->getPlayCameraX(),
-				_vRender[i].destY - DATABASE->getPlayCameraY());
-
-			if (_vRender[i].shadowImg != NULL)
-				_vRender[i].shadowImg->alphaFrameRender(getMemDC(),
-					_vRender[i].destX - DATABASE->getPlayCameraX(),
-					_vRender[i].destY - DATABASE->getPlayCameraY(), SHADOWALPHA);
-
-			if (_vRender[i].flag != NULL)
-				_vRender[i].flag->frameRender(getMemDC(),
-					_vRender[i].destX - DATABASE->getPlayCameraX(),
-					_vRender[i].destY - DATABASE->getPlayCameraY(),
-					0,
+			if (_vRender[i].identity == 255)
+			{
+				_vRender[i].img->frameRender(getMemDC(),
+					_vRender[i].destX- DATABASE->getPlayCameraX(),
+					_vRender[i].destY- DATABASE->getPlayCameraY(),
+					_vRender[i].sourX, 
 					_vRender[i].sourY);
 
+				if(_vRender[i].shadowImg!=NULL)
+					_vRender[i].shadowImg->alphaFrameRender(getMemDC(),
+						_vRender[i].destX - DATABASE->getPlayCameraX(),
+						_vRender[i].destY - DATABASE->getPlayCameraY(),
+						_vRender[i].sourX,
+						_vRender[i].sourY, SHADOWALPHA);
+
+			}
+			else
+			{
+				_vRender[i].img->frameRender(getMemDC(),
+					_vRender[i].destX - DATABASE->getPlayCameraX(),
+					_vRender[i].destY - DATABASE->getPlayCameraY());
+
+				if (_vRender[i].shadowImg != NULL)
+					_vRender[i].shadowImg->alphaFrameRender(getMemDC(),
+						_vRender[i].destX - DATABASE->getPlayCameraX(),
+						_vRender[i].destY - DATABASE->getPlayCameraY(), SHADOWALPHA);
+
+				if (_vRender[i].flag != NULL)
+					_vRender[i].flag->frameRender(getMemDC(),
+						_vRender[i].destX - DATABASE->getPlayCameraX(),
+						_vRender[i].destY - DATABASE->getPlayCameraY(),
+						0,
+						_vRender[i].sourY);
+
+			}
+
 		}
+
 
 
 	}

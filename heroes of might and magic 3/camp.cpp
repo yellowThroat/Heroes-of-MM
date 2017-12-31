@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "camp.h"
 #include "player.h"
+#include "hero.h"
 
 camp::camp() {}
 camp::~camp() {}
@@ -21,7 +22,30 @@ HRESULT camp::init(building info)
 	buildingInit();
 	structureInit();
 	unitSampleInit();
+
+
+	//============== R E C R U I T   I N I T =============
+	for (int i = 0; i < 7; i++)
+	{
+		ZeroMemory(&_recruit[i], sizeof(tagRecruit));
+		_recruit[i].num = i;
+		if (i != 6)
+		{
+			_recruit[i].x = 10 + (i % 2) * 394;
+			_recruit[i].y = 22 + (i / 2) * 133;
+		}
+		else
+		{
+			_recruit[i].x = 206;
+			_recruit[i].y = 421;
+
+			// 사이즈는 386 * 126
+		}
+	}
+
 	recruitInit();
+	weekGo();
+	//========================================================
 
 	_fieldPoint.x = _buildingInfo.destX + _buildingInfo.enterX;
 	_fieldPoint.y = _buildingInfo.destY + _buildingInfo.enterY;
@@ -29,12 +53,24 @@ HRESULT camp::init(building info)
 	_beBuilt = false;
 	_contents = false;
 	_showWindow = false;
+	_inHero = false;
+	_entry = false;
+	_creature = -1;
+	_recruitNum = 0;
+	_recruitMax = 0;
+	_hero = NULL;
+
+	addCreature(_camp, 6, 0, 10);
+	addCreature(_camp, 6, 0, 1);
+	addCreature(_camp, 6, 0, 123);
+	addCreature(_camp, 5, 0, 1);
+
 
 	switch (_buildingInfo.camp)
 	{
 	case CAMP_CASTLE:
-		
-	break;
+
+		break;
 	
 	case CAMP_DUNGEON:
 		
@@ -112,6 +148,28 @@ void camp::fieldDraw(void)
 
 }
 
+void camp::heroDraw(void)
+{
+	if (_inHero)
+	{
+		_hero->getHeroInfo().portraitLarge->frameRender(getMemDC(), 241, 483,
+			_hero->getHeroInfo().indexX, _hero->getHeroInfo().indexY);
+		
+		for (int i = 0; i < _hero->getCreature().size(); i++)
+		{
+			_hero->getCreature()[i].portrait->frameRender(getMemDC(),
+				305 + _hero->getCreature()[i].position * 62, 483,
+				_hero->getCreature()[i].tier,
+				_hero->getCreature()[i].kind * 2 + _hero->getCreature()[i].level);
+
+			numberDraw(getMemDC(),
+				_hero->getCreature()[i].quantity,
+				362 - 7*((int)log10(_hero->getCreature()[i].quantity)+1) + _hero->getCreature()[i].position * 62, 536);
+		}
+
+	}
+}
+
 void camp::castleDraw(void)
 {
 	
@@ -164,6 +222,33 @@ void camp::castleDraw(void)
 		231, 255, _forge - 1, IMAGEMANAGER->findImage("castle_forge")->getFrameY());
 	IMAGEMANAGER->findImage("castle_door")->frameRender(getMemDC(),
 		302, 1, _level[6] - 1, IMAGEMANAGER->findImage("castle_door")->getFrameY());
+
+	if (_inHero) heroDraw();
+
+	IMAGEMANAGER->findImage("flag_large")->frameRender(getMemDC(),
+		241, 387, _play->getNum(), 0);
+
+	for (int i = 0; i < _vCreature.size(); i++)
+	{
+		_vCreature[i].portrait->frameRender(getMemDC(),
+			305 + _vCreature[i].position * 62, 387,
+			_vCreature[i].tier,
+			_vCreature[i].kind * 2 + _vCreature[i].level);
+
+		numberDraw(getMemDC(), _vCreature[i].quantity,	// 그게 몇마리인지
+			362 - 7 * ((int)log10(_vCreature[i].quantity) + 1) + _vCreature[i].position * 62, 440);
+
+
+	}
+
+	if (_creature != -1)
+	{
+		IMAGEMANAGER->findImage("select_creature")->render(getMemDC(),
+			241 + 62 * (_creature % 8), 386 + 96 * (_creature / 8));
+
+	}
+
+
 
 	if (_showWindow)
 	{
@@ -360,6 +445,65 @@ void camp::castleDraw(void)
 
 			IMAGEMANAGER->findImage("window_castle_fort")->render(getMemDC());
 
+			HFONT font = CreateFont(14, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+			HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
+			SelectObject(getMemDC(), font);
+			for (int i = 0; i < 6; i++)
+			{
+				
+				TextOut(getMemDC(), 88 + 394*(i%2) - strlen(_recruit[i].unit)/2*7,
+					24 + 133*(i/2), _recruit[i].unit, strlen(_recruit[i].unit));
+				
+				TextOut(getMemDC(), 88 + 394 * (i % 2) - strlen(_recruit[i].building) / 2 * 7,
+					115 + 133 * (i / 2), _recruit[i].building, strlen(_recruit[i].building));
+
+				if(_recruit[i].output) numberDraw(getMemDC(), _recruit[i].remain, 116 + 394*(i%2) , 136 + 133*(i/2));
+
+				numberDraw(getMemDC(), _recruit[i].atk,		391 - (int)log10(_recruit[i].atk	* 10) * 7 + 394 * (i % 2), 29 + 133 * (i / 2));
+				numberDraw(getMemDC(), _recruit[i].def,		391 - (int)log10(_recruit[i].def	* 10) * 7 + 394 * (i % 2), 49 + 133 * (i / 2));
+				numberDraw(getMemDC(), _recruit[i].minDmg,
+					391 - (int)log10(_recruit[i].minDmg * 10) * 7 - (int)log10(_recruit[i].maxDmg * 10000) * 7 + 394 * (i % 2), 69 + 133 * (i / 2));
+				numberDraw(getMemDC(), _recruit[i].maxDmg,	391 - (int)log10(_recruit[i].maxDmg * 10) * 7 + 394 * (i % 2), 69 + 133 * (i / 2));
+				numberDraw(getMemDC(), _recruit[i].hp,		391 - (int)log10(_recruit[i].hp		* 10) * 7 + 394 * (i % 2), 89 + 133 * (i / 2));
+				numberDraw(getMemDC(), _recruit[i].speed,	391 - (int)log10(_recruit[i].speed	* 10) * 7 + 394 * (i % 2), 109 + 133 * (i / 2));
+				
+				if(_recruit[i].output) numberDraw(getMemDC(), _recruit[i].output,
+					391 - (int)log10(_recruit[i].output * 10) * 7 + 394 * (i % 2), 129 + 133 * (i / 2));
+
+				TextOut(getMemDC(), 391 - (int)log10(_recruit[i].maxDmg * 1000) * 7 + 394 * (i % 2), 69 + 133 * (i / 2), "-", 1);
+			}
+
+			TextOut(getMemDC(), 285  - strlen(_recruit[6].unit) / 2 * 7,
+				423 , _recruit[6].unit, strlen(_recruit[6].unit));
+
+			TextOut(getMemDC(), 285 - strlen(_recruit[6].building) / 2 * 7,
+				514, _recruit[6].building, strlen(_recruit[6].building));
+
+			if (_recruit[6].output) numberDraw(getMemDC(), _recruit[6].remain, 313, 535);
+
+			numberDraw(getMemDC(), _recruit[6].atk, 586 - (int)log10(_recruit[6].atk * 10) * 7 , 428 );
+			numberDraw(getMemDC(), _recruit[6].def, 586 - (int)log10(_recruit[6].def * 10) * 7 , 448 );
+			numberDraw(getMemDC(), _recruit[6].maxDmg, 586 - (int)log10(_recruit[6].maxDmg * 10) * 7 , 468 );
+			numberDraw(getMemDC(), _recruit[6].hp, 586 - (int)log10(_recruit[6].hp * 10) * 7, 488 );
+			numberDraw(getMemDC(), _recruit[6].speed, 586 - (int)log10(_recruit[6].speed * 10) * 7 ,508);
+
+			numberDraw(getMemDC(), _recruit[6].minDmg,
+				586 - (int)log10(_recruit[6].minDmg * 10) * 7 - (int)log10(_recruit[6].maxDmg * 10000) * 7, 468);
+			if (_recruit[6].output) numberDraw(getMemDC(), _recruit[6].output,
+				586 - (int)log10(_recruit[6].output * 10) * 7, 528 );
+
+			TextOut(getMemDC(), 586 - (int)log10(_recruit[6].maxDmg * 1000) * 7, 468 , "-", 1);
+
+
+
+
+
+
+			SetTextColor(getMemDC(), RGB(0, 0, 0));
+			SelectObject(getMemDC(), oldfont);
+			DeleteObject(font);
+
 
 
 			//================== 리크루트 창 염
@@ -370,7 +514,25 @@ void camp::castleDraw(void)
 				
 				if (_level[_saveRecruit.num] > 0)
 				{
-					HFONT font1 = CreateFont(24, 0, 0, 0, 50, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+					int remain = _saveRecruit.remain - _recruitNum;
+
+					if (_saveRecruit.num < 6)
+					{
+						_recruitMax = _property.gold / _saveRecruit.gold;
+						if (_recruitMax >= _saveRecruit.remain) _recruitMax = _saveRecruit.remain;
+					}
+					else
+					{
+						int gold = _property.gold / _saveRecruit.gold;
+						int gem = _property.gem / _saveRecruit.gem;
+						if (gold >= gem) _recruitMax = gem;
+						else _recruitMax = gold;
+						if (_recruitMax >= _saveRecruit.remain) _recruitMax = _saveRecruit.remain;
+
+					}
+					
+
+					HFONT font1 = CreateFont(24, 0, 0, 0, FW_NORMAL, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
 
 					HFONT oldfont = (HFONT)SelectObject(getMemDC(), font1);
 					SetTextColor(getMemDC(), RGB(248, 228, 144));
@@ -391,10 +553,30 @@ void camp::castleDraw(void)
 					IMAGEMANAGER->findImage("window_recruit")->render(getMemDC(), 143, 16);
 					IMAGEMANAGER->findImage("window_recruit_shadow")->alphaRender(getMemDC(), 143, 16, 100);
 
+					if (_recruitMax)
+					{
+						IMAGEMANAGER->findImage("recruit_left")->render(getMemDC(), 176, 279);
+						IMAGEMANAGER->findImage("recruit_right")->render(getMemDC(), 295, 279);
+						IMAGEMANAGER->findImage("recruit_max")->frameRender(getMemDC(), 134, 313);
+						IMAGEMANAGER->findImage("recruit_confirm")->frameRender(getMemDC(), 212, 313);
+						IMAGEMANAGER->findImage("recruit_bar")->render(getMemDC(), 192 + _recruitNum/_recruitMax * 87, 279);
+					}
+
+					IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 290, 313);
+
+
 
 					sprintf(tmp, "고용 %s", _saveRecruit.unit);
 					SelectObject(getMemDC(), font1);
-					TextOut(getMemDC(), 389 - strlen(tmp) / 2 * 16, 36, tmp, strlen(tmp));
+
+					if (_saveRecruit.num< 6)
+					{
+						numberDraw(getMemDC(), _saveRecruit.gold, 256 - su(_saveRecruit.gold)/2*7, 298);
+						numberDraw(getMemDC(), _recruitNum * _saveRecruit.gold, 514 - su(_recruitNum * _saveRecruit.gold)/2*7, 298);
+					}
+					numberDraw(getMemDC(), remain , 347 - su(remain)/2 * 7, 264);
+					numberDraw(getMemDC(), _recruitNum, 422 - su(_recruitNum)/2*7 , 264);
+					TextOut(getMemDC(), 384 - strlen(tmp) / 2 * 12, 38, tmp, strlen(tmp));
 
 					SetTextColor(getMemDC(), RGB(0, 0, 0));
 					DeleteObject(font1);
@@ -425,6 +607,7 @@ void camp::castleDraw(void)
 
 			if (_level[_saveRecruit.num] > 0)
 			{
+				int remain = _saveRecruit.remain - _recruitNum;
 				HFONT font1 = CreateFont(24, 0, 0, 0, 50, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
 				HFONT oldfont = (HFONT)SelectObject(getMemDC(), font1);
 				SetTextColor(getMemDC(), RGB(248, 228, 144));
@@ -448,7 +631,13 @@ void camp::castleDraw(void)
 
 				sprintf(tmp, "고용 %s", _saveRecruit.unit);
 				SelectObject(getMemDC(), font1);
-				TextOut(getMemDC(), 389 - strlen(tmp) / 2 * 16, 36, tmp, strlen(tmp));
+
+				numberDraw(getMemDC(), _saveRecruit.gold, 256 - su(_saveRecruit.gold) / 2 * 7, 298);
+				numberDraw(getMemDC(), remain, 347 - su(remain) / 2 * 7, 264);
+				numberDraw(getMemDC(), _recruitNum, 422 - su(_recruitNum) / 2 * 7, 264);
+				numberDraw(getMemDC(), _recruitNum * _saveRecruit.gold, 514 - su(_recruitNum * _saveRecruit.gold) / 2 * 7, 298);
+
+				TextOut(getMemDC(), 384 - strlen(tmp) / 2 * 12, 38, tmp, strlen(tmp));
 
 				SetTextColor(getMemDC(), RGB(0, 0, 0));
 				DeleteObject(font1);
@@ -482,6 +671,8 @@ void camp::castleDraw(void)
 	numberDraw(getMemDC(), _property.gem, 446, WINSIZEY - 40);
 	numberDraw(getMemDC(), _property.gold, 528, WINSIZEY - 40);
 
+
+	
 
 }
 
@@ -559,6 +750,30 @@ void camp::dungeonDraw(void)
 
 	IMAGEMANAGER->findImage("dungeon_nest")->frameRender(getMemDC(),
 		0, 26 , _level[1] - 1, IMAGEMANAGER->findImage("dungeon_nest")->getFrameY());
+
+	if (_inHero) heroDraw();
+
+	IMAGEMANAGER->findImage("flag_large")->frameRender(getMemDC(),
+		241, 387, _play->getNum(), 0);
+
+	for (int i = 0; i < _vCreature.size(); i++)
+	{
+		_vCreature[i].portrait->frameRender(getMemDC(),
+			305 + _vCreature[i].position * 62, 387,
+			_vCreature[i].tier,
+			_vCreature[i].kind * 2 + _vCreature[i].level);
+
+		numberDraw(getMemDC(), _vCreature[i].quantity,	// 그게 몇마리인지
+			362 - 7 * ((int)log10(_vCreature[i].quantity) + 1) + _vCreature[i].position * 62, 440);
+
+	}
+
+	if (_creature != -1)
+	{
+		IMAGEMANAGER->findImage("select_creature")->render(getMemDC(),
+			241 + 62 * (_creature % 8), 386 + 96 * (_creature / 8));
+
+	}
 
 
 	if (_showWindow)
@@ -757,9 +972,10 @@ void camp::dungeonDraw(void)
 			//================== 리크루트 창 염
 			if (_contents)
 			{
+				
 				char tmp[256];
 				int num = _saveRecruit.num * 2 + _level[_saveRecruit.num] - 1;
-
+				int remain = _saveRecruit.remain - _recruitNum;
 				if (_level[_saveRecruit.num] > 0)
 				{
 					HFONT font1 = CreateFont(24, 0, 0, 0, 50, false, false, false, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
@@ -786,7 +1002,12 @@ void camp::dungeonDraw(void)
 
 					sprintf(tmp, "고용 %s", _saveRecruit.unit);
 					SelectObject(getMemDC(), font1);
-					TextOut(getMemDC(), 389 - strlen(tmp) / 2 * 16, 36, tmp, strlen(tmp));
+
+					numberDraw(getMemDC(), _saveRecruit.gold, 256 - su(_saveRecruit.gold) / 2 * 7, 298);
+					numberDraw(getMemDC(), remain, 347 - su(remain) / 2 * 7, 264);
+					numberDraw(getMemDC(), _recruitNum, 422 - su(_recruitNum) / 2 * 7, 264);
+					numberDraw(getMemDC(), _recruitNum * _saveRecruit.gold, 514 - su(_recruitNum * _saveRecruit.gold) / 2 * 7, 298);
+					TextOut(getMemDC(), 384 - strlen(tmp) / 2 * 12, 38, tmp, strlen(tmp));
 
 					SetTextColor(getMemDC(), RGB(0, 0, 0));
 					DeleteObject(font1);
@@ -813,6 +1034,7 @@ void camp::dungeonDraw(void)
 		case 2: case 3: case 4: case 5: case 6: case 7: case 8:
 		{
 			//================== 리크루트 창 염
+			int remain = _saveRecruit.remain - _recruitNum;
 			char tmp[256];
 			int num = _saveRecruit.num * 2 + _level[_saveRecruit.num] - 1;
 
@@ -842,7 +1064,12 @@ void camp::dungeonDraw(void)
 
 				sprintf(tmp, "고용 %s", _saveRecruit.unit);
 				SelectObject(getMemDC(), font1);
-				TextOut(getMemDC(), 389 - strlen(tmp) / 2 * 16, 36, tmp, strlen(tmp));
+
+				numberDraw(getMemDC(), _saveRecruit.gold, 256 - su(_saveRecruit.gold) / 2 * 7, 298);
+				numberDraw(getMemDC(), remain, 347 - su(remain) / 2 * 7, 264);
+				numberDraw(getMemDC(), _recruitNum, 422 - su(_recruitNum) / 2 * 7, 264);
+				numberDraw(getMemDC(), _recruitNum * _saveRecruit.gold, 514 - su(_recruitNum * _saveRecruit.gold) / 2 * 7, 298);
+				TextOut(getMemDC(), 384 - strlen(tmp) / 2 * 12, 38, tmp, strlen(tmp));
 
 				SetTextColor(getMemDC(), RGB(0, 0, 0));
 				DeleteObject(font1);
@@ -876,7 +1103,135 @@ void camp::dungeonDraw(void)
 
 
 
+
+	
+
+
+
+
 }
+
+void camp::dayGo(void)
+{
+	if (_beBuilt) _beBuilt = false;
+}
+
+void camp::weekGo(void)
+{
+	for (int i = 0; i < 7; i++)
+	{
+		_recruit[i].remain += _recruit[i].output;
+	}
+}
+
+void camp::addCreature(int kind, int tier, int level, int quantity)
+{
+	bool overlap = false;
+
+	tagCreature creature;
+	creature = CommonCreature(kind, tier, level);
+	creature.quantity = quantity;
+
+	for (int i = 0; i < _vCreature.size(); i++)
+	{
+		if (creature.kind == _vCreature[i].kind &&
+			creature.tier == _vCreature[i].tier &&
+			creature.level == _vCreature[i].level)
+		{
+			overlap = true;
+
+			_vCreature[i].quantity = _vCreature[i].quantity + creature.quantity;
+
+			break;
+		}
+
+	}
+
+
+
+	if (!overlap && _vCreature.size() < 7)
+	{
+		if (!_vCreature.size()) creature.position = 0;
+		else
+		{
+			bool end = false;
+			int num = 0;
+			while (true)
+			{
+				for (int i = 0; i < _vCreature.size(); i++)
+				{
+
+					if (_vCreature[i].position == num)
+					{
+						end = false;
+						num++;
+						break;
+					}
+
+					end = true;
+				}
+
+				
+
+
+				if (end) break;
+			}
+			creature.position = num;
+		}
+
+
+
+		_vCreature.push_back(creature);
+	}
+
+
+}
+
+void camp::addCreature(int kind, int tier, int level, int quantity, int position)
+{
+	bool overlap = false;
+
+	tagCreature creature;
+	creature = CommonCreature(kind, tier, level);
+	creature.quantity = quantity;
+	for (int i = 0; i < _vCreature.size(); i++)
+	{
+		if (creature.kind == _vCreature[i].kind &&
+			creature.tier == _vCreature[i].tier &&
+			creature.level == _vCreature[i].level &&
+			_vCreature[i].position == position)
+		{
+			overlap = true;
+
+			_vCreature[i].quantity = _vCreature[i].quantity + creature.quantity;
+
+			break;
+		}
+
+	}
+
+
+
+	if (!overlap)
+	{
+		creature.position = position;
+
+
+		_vCreature.push_back(creature);
+	}
+
+
+}
+
+void camp::deleteCreature(int arr)
+{
+	for (int i = 0; i < STATE_END; i++)
+	{
+		SAFE_DELETE(_vCreature[arr].img[i]);
+	}
+	_vCreature.erase(_vCreature.begin() + arr);
+}
+
 
 void camp::setFrameCycle(void)
 {
@@ -1139,12 +1494,245 @@ void camp::inputCity(void)
 
 				break;
 			}
+
+			//================ 하수인 정보를 보자 
+			for (int i = 0; i < 16; i++)
+			{
+				if (PtInRect(&RectMake(241 + 62*(i%8), 387 + 96*(i/8), 64, 58), _ptMouse))
+				{
+					if (_creature == -1 || _creature == 0 || _creature == 8) //================ 지금 선택된 게 없거나 영웅 선택중
+					{
+						if (i == 0 || i == 8) //================= 영웅을 선택함
+						{
+							if (_creature == -1) //선택된게 없는상태에서
+							{
+								if(_entry && i== 0)	_creature = 0;
+								else if (!_entry && i == 8)	_creature = 8;							
+
+							}
+							else if(_creature == i) //영웅 선택중이었는데 또 영웅 누름
+							{
+								_play->setWindow(true);
+								_creature = -1;
+							}
+
+						}
+						else	//=================== 크리쳐를 선택함
+						{
+							if (!_entry)
+							{
+								if (i < 8)
+								{
+									for (int j = 0; j < _vCreature.size(); j++)
+									{
+										if (_vCreature[j].position == i - 1)
+										{
+											_creature = i;
+											break;
+										}									
+									}
+								}
+								else
+								{
+									for (int j = 0; j < _hero->getCreature().size(); j++)
+									{
+										if (_hero->getCreature()[j].position == i - 9)
+										{
+											_creature = i;
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+					else		//============= 지금 크리쳐 선택중
+					{
+						if (i == 0 || i == 8) //============ 영웅 선택함
+						{
+							if (_entry && i == 0)	_creature = 0;
+							else if (!_entry && i == 8)	_creature = 8;
+						}
+						else
+						{
+							if (_creature < 8) //===== 성에 있는 크리쳐 선택중
+							{								
+								if (i < 8) //========= 자신의 크리쳐끼리 교환
+								{
+									int tmp0 = 0;
+									int tmp1 = 8;
+									for (int j = 0; j < _vCreature.size(); j++)
+									{
+										if (_vCreature[j].position == _creature - 1)	tmp0 = j;
+										if (_vCreature[j].position == i - 1)			tmp1 = j;
+									}
+									if (tmp1 < _vCreature.size() &&
+										_vCreature[tmp0].kind == _vCreature[tmp1].kind &&
+										_vCreature[tmp0].tier == _vCreature[tmp1].tier &&
+										_vCreature[tmp0].level == _vCreature[tmp1].level)
+									{
+										_vCreature[tmp1].quantity += _vCreature[tmp0].quantity;
+										deleteCreature(tmp0);
+									}
+									else
+									{
+										_vCreature[tmp0].position = i - 1;
+										if(tmp1 <_vCreature.size()) _vCreature[tmp1].position = _creature - 1;
+									}
+
+
+										_creature = -1;
+								}
+								else //============ 방문중인 영웅의 크리쳐와 교환 시도
+								{
+									bool inHero = false;
+									tagCreature tmpCamp;			// 저장용 캠프의 크리쳐
+									tagCreature tmpHero;			// 저장용 영웅의 크리쳐
+									ZeroMemory(&tmpHero, sizeof(tagCreature));
+									ZeroMemory(&tmpCamp, sizeof(tagCreature));
+									//============ 자리 바꿀 캠프와 영웅의 크리쳐 정보 저장하고 지우기
+									for (int j = 0; j < _hero->getCreature().size(); )
+									{
+										if (_hero->getCreature()[j].position == i - 9)
+										{
+											tmpHero = _hero->getCreature()[j];
+											_hero->deleteCreature(j);
+											inHero = true;
+											break;
+										}
+										else j++;
+									}
+									for (int j = 0; j < _vCreature.size(); )
+									{
+										if (_vCreature[j].position == _creature - 1)
+										{
+											tmpCamp = _vCreature[j];
+											deleteCreature(j);
+											break;
+										}
+										else j++;
+									}
+
+									if (tmpCamp.kind == tmpHero.kind &&
+										tmpCamp.tier == tmpHero.tier &&
+										tmpCamp.level == tmpHero.level && inHero)
+									{
+										_hero->addCreature(tmpCamp.kind, tmpCamp.tier, tmpCamp.level,
+											tmpCamp.quantity + tmpHero.quantity, i - 9);
+									}
+									else
+									{
+										//==================  그 영웅의 포지션으로 보내기
+										_hero->addCreature(tmpCamp.kind, tmpCamp.tier, tmpCamp.level, tmpCamp.quantity, i - 9);
+										if(inHero)addCreature(tmpHero.kind, tmpHero.tier, tmpHero.level, tmpHero.quantity, _creature - 1);
+
+									}
+
+									_creature = -1;
+								}
+
+							}
+							else //========== 방문중 영웅의 크리쳐 선택중
+							{
+								if (i < 8) //=========== 성에 소속된 크리쳐와 교환 시도
+								{
+									bool inCamp = false;
+									tagCreature tmpCamp;			// 저장용 캠프의 크리쳐
+									tagCreature tmpHero;			// 저장용 영웅의 크리쳐
+									ZeroMemory(&tmpCamp, sizeof(tagCreature));
+									ZeroMemory(&tmpHero, sizeof(tagCreature));
+
+									//============ 자리 바꿀 캠프와 영웅의 크리쳐 정보 저장하고 지우기
+									for (int j = 0; j < _hero->getCreature().size(); )
+									{
+										if (_hero->getCreature()[j].position == _creature - 9)
+										{
+											tmpHero = _hero->getCreature()[j];
+											_hero->deleteCreature(j);
+											break;
+										}
+										else j++;
+									}
+									for (int j = 0; j < _vCreature.size(); )
+									{
+										if (_vCreature[j].position == i - 1)
+										{
+											tmpCamp = _vCreature[j];
+											deleteCreature(j);
+											inCamp = true;
+											break;
+										}
+										else j++;
+									}
+									if (tmpCamp.kind == tmpHero.kind &&
+										tmpCamp.tier == tmpHero.tier &&
+										tmpCamp.level == tmpHero.level && inCamp)
+									{
+										addCreature(tmpCamp.kind, tmpCamp.tier, tmpCamp.level,
+											tmpCamp.quantity + tmpHero.quantity, i - 1);
+									}
+									else
+									{
+										//================== 선택중이었던걸 지웠다가 그 영웅의 포지션으로 보내기
+										if (inCamp)_hero->addCreature(tmpCamp.kind, tmpCamp.tier, tmpCamp.level, tmpCamp.quantity, _creature - 9);
+										addCreature(tmpHero.kind, tmpHero.tier, tmpHero.level, tmpHero.quantity, i - 1);
+
+									}
+
+
+									_creature = -1;
+
+								}
+								else //========== 자신의 크리쳐끼리 교환
+								{
+									vector<tagCreature> tmp;
+									tmp = _hero->getCreature();
+
+									int tmp0;
+									int tmp1 = 8;
+									for (int j = 0; j < tmp.size(); j++)
+									{
+										if (tmp[j].position == _creature - 9) tmp0 = j;
+										if (tmp[j].position == i - 9) tmp1 = j;
+									}
+
+									if (tmp1 != 8 &&
+										tmp[tmp0].kind == tmp[tmp1].kind &&
+										tmp[tmp0].tier == tmp[tmp1].tier &&
+										tmp[tmp0].level == tmp[tmp1].level)
+									{
+										tmp[tmp1].quantity += tmp[tmp0].quantity;
+										tmp.erase(tmp.begin() + tmp0);
+									}
+									else
+									{
+										tmp[tmp0].position = i - 9;
+										if(tmp1 !=8) tmp[tmp1].position = _creature - 9;
+									}
+
+									_hero->setCreature(tmp);
+									_creature = -1;
+								}
+							}
+						}					
+					}
+				}				
+			}
+
+
+
 			//===========성에서 나가는 버튼
 			if (PtInRect(&RectMake(744, 544, 48, 30), _ptMouse))
 			{
 				_play->setScene(false);
 				_play->setProperty(_property);
+				_creature = -1;
 			}
+
+			//================ 영웅과 크리쳐 정보를 탐색해보자
+
+
+
 		}
 		//=========창이 열려 있어?
 		else
@@ -1181,6 +1769,8 @@ void camp::inputCity(void)
 						{
 							if (_saveStructure.index == 0)
 							{
+								int newBuild = -1;
+
 								_contents = false;
 								_showWindow = false;
 								_property.crystal -= _saveStructure.crystal;
@@ -1210,24 +1800,25 @@ void camp::inputCity(void)
 								break;
 								case 8: _special[0]++;
 								break;
-								case 9: _level[0]++;
+								case 9: _level[0]++; if (_level[0] == 1) newBuild = 0;
 								break;
-								case 10: _level[1]++;
+								case 10: _level[1]++; if (_level[1] == 1) newBuild = 1;
 								break;
-								case 11: _level[2]++;
+								case 11: _level[2]++; if (_level[2] == 1) newBuild = 2;
 								break;
-								case 12: _level[3]++;
+								case 12: _level[3]++; if (_level[3] == 1) newBuild = 3;
 								break;
-								case 13: _level[4]++;
+								case 13: _level[4]++; if (_level[4] == 1) newBuild = 4;
 								break;
-								case 14: _level[5]++;
+								case 14: _level[5]++; if (_level[5] == 1) newBuild = 5;
 								break;
-								case 15: _level[6]++;
+								case 15: _level[6]++; if (_level[6] == 1) newBuild = 6;
 								break;
 								}
 								structureInit();
 								recruitInit();
 
+								if (newBuild != -1) _recruit[newBuild].remain += _recruit[newBuild].output;
 
 							}
 
@@ -1469,6 +2060,11 @@ void camp::inputCity(void)
 	
 
 
+
+}
+
+void camp::setRecruit(void)
+{
 
 }
 
@@ -1733,45 +2329,54 @@ void camp::buildingCondition(void)
 
 void camp::recruitInit(void)
 {
-	for (int i = 0; i < 7; i++)
-	{
-		ZeroMemory(&_recruit[i], sizeof(tagRecruit));
-		_recruit[i].num = i;
-		if (i != 6)
-		{
-			_recruit[i].x = 10 + (i % 2) * 394;
-			_recruit[i].y = 22 + (i / 2) * 133;
-		}
-		else
-		{
-			_recruit[i].x = 206;
-			_recruit[i].y = 421;
-
-			// 사이즈는 386 * 126
-		}
-	}
 	switch (_camp)
 	{
 	case CAMP_CASTLE:
-		if (_level[0] == 1)
+		if (_level[0] <= 1)
 		{
 			sprintf(_recruit[0].unit, "창병");
 			sprintf(_recruit[0].building, "경비숙소");
 			
-			
+			if(_level[0]) _recruit[0].output = 14;
+			_recruit[0].atk = 4;
+			_recruit[0].def = 5;
+			_recruit[0].hp = 10;
+			_recruit[0].minDmg = 1;
+			_recruit[0].maxDmg = 3;
+			_recruit[0].speed = 4;
 
+			_recruit[0].gold = 60;
 		}
 		else if (_level[0] == 2)
 		{
 			sprintf(_recruit[0].unit, "도끼 창병");
 			sprintf(_recruit[0].building, "향상된 경비숙소");
 
+			_recruit[0].output = 14;
+			_recruit[0].atk = 6;
+			_recruit[0].def = 5;
+			_recruit[0].hp = 10;
+			_recruit[0].minDmg = 2;
+			_recruit[0].maxDmg = 3;
+			_recruit[0].speed = 5;
+
+			_recruit[0].gold = 75;
+
 		}
 
-		if (_level[1] == 1)
+		if (_level[1] <= 1)
 		{
 			sprintf(_recruit[1].unit, "궁수");
 			sprintf(_recruit[1].building, "궁수초소");
+
+			if (_level[1]) _recruit[1].output = 9;
+			_recruit[1].atk = 6;
+			_recruit[1].def = 3;
+			_recruit[1].hp = 10;
+			_recruit[1].minDmg = 2;
+			_recruit[1].maxDmg = 3;
+			_recruit[1].speed = 4;
+			_recruit[1].gold = 100;
 
 		}
 		else if (_level[1] == 2)
@@ -1779,11 +2384,29 @@ void camp::recruitInit(void)
 			sprintf(_recruit[1].unit, "저격수");
 			sprintf(_recruit[1].building, "향상된 궁수초소");
 
+			_recruit[1].output = 9;
+			_recruit[1].atk = 6;
+			_recruit[1].def = 3;
+			_recruit[1].hp = 10;
+			_recruit[1].minDmg = 2;
+			_recruit[1].maxDmg = 3;
+			_recruit[1].speed = 6;
+			_recruit[1].gold = 150;
+
 		}
-		if (_level[2] == 1)
+		if (_level[2] <= 1)
 		{
 			sprintf(_recruit[2].unit, "그리핀");
 			sprintf(_recruit[2].building, "그리핀 타워");
+
+			if (_level[2]) _recruit[2].output = 7;
+			_recruit[2].atk = 8;
+			_recruit[2].def = 8;
+			_recruit[2].hp = 25;
+			_recruit[2].minDmg = 3;
+			_recruit[2].maxDmg = 6;
+			_recruit[2].speed = 6;
+			_recruit[2].gold = 200;
 
 		}
 		else if (_level[2] == 2)
@@ -1791,23 +2414,59 @@ void camp::recruitInit(void)
 			sprintf(_recruit[2].unit, "로열 그리핀");
 			sprintf(_recruit[2].building, "향상된 그리핀 타워");
 
+			_recruit[2].output = 7;
+			_recruit[2].atk = 9;
+			_recruit[2].def = 9;
+			_recruit[2].hp = 25;
+			_recruit[2].minDmg = 3;
+			_recruit[2].maxDmg = 6;
+			_recruit[2].speed = 9;
+			_recruit[2].gold = 240;
+
 		}
-		if (_level[3] == 1)
+		if (_level[3] <= 1)
 		{
 			sprintf(_recruit[3].unit, "검사");
 			sprintf(_recruit[3].building, "병영");
+			
+			if (_level[3]) _recruit[3].output = 4;
+			_recruit[3].atk = 10;
+			_recruit[3].def = 12;
+			_recruit[3].hp = 35;
+			_recruit[3].minDmg = 6;
+			_recruit[3].maxDmg = 9;
+			_recruit[3].speed = 5;
+			_recruit[3].gold = 300;
 
 		}
 		else if (_level[3] == 2)
 		{
 			sprintf(_recruit[3].unit, "크루세이더");
 			sprintf(_recruit[3].building, "향상된 병영");
-							 
+
+			_recruit[3].output = 4;
+			_recruit[3].atk = 12;
+			_recruit[3].def = 12;
+			_recruit[3].hp = 35;
+			_recruit[3].minDmg = 7;
+			_recruit[3].maxDmg = 10;
+			_recruit[3].speed = 6;
+			_recruit[3].gold = 400;
+
 		}
-		if (_level[4] == 1)
+		if (_level[4] <= 1)
 		{
 			sprintf(_recruit[4].unit, "수도사");
 			sprintf(_recruit[4].building, "수도원");
+
+			if (_level[4]) _recruit[4].output = 3;
+			_recruit[4].atk = 12;
+			_recruit[4].def = 7;
+			_recruit[4].hp = 30;
+			_recruit[4].minDmg = 10;
+			_recruit[4].maxDmg = 12;
+			_recruit[4].speed = 5;
+			_recruit[4].gold = 400;
 
 		}
 		else if (_level[4] == 2)
@@ -1815,12 +2474,30 @@ void camp::recruitInit(void)
 			sprintf(_recruit[4].unit, "열성 수도사");
 			sprintf(_recruit[4].building, "향상된 수도원");
 
+			_recruit[4].output = 3;
+			_recruit[4].atk = 12;
+			_recruit[4].def = 10;
+			_recruit[4].hp = 30;
+			_recruit[4].minDmg = 10;
+			_recruit[4].maxDmg = 12;
+			_recruit[4].speed = 7;
+			_recruit[4].gold = 450;
+
 
 		}
-		if (_level[5] == 1)
+		if (_level[5] <= 1)
 		{
 			sprintf(_recruit[5].unit, "기사단");
 			sprintf(_recruit[5].building, "연병장");
+
+			if (_level[5]) _recruit[5].output = 2;
+			_recruit[5].atk = 15;
+			_recruit[5].def = 15;
+			_recruit[5].hp = 100;
+			_recruit[5].minDmg = 15;
+			_recruit[5].maxDmg = 25;
+			_recruit[5].speed = 7;
+			_recruit[5].gold = 1000;
 
 		}
 		else if (_level[5] == 2)
@@ -1828,11 +2505,30 @@ void camp::recruitInit(void)
 			sprintf(_recruit[5].unit, "챔피언");
 			sprintf(_recruit[5].building, "향상된 연병장");
 
+			_recruit[5].output = 2;
+			_recruit[5].atk = 16;
+			_recruit[5].def = 16;
+			_recruit[5].hp = 100;
+			_recruit[5].minDmg = 20;
+			_recruit[5].maxDmg = 25;
+			_recruit[5].speed = 9;
+			_recruit[5].gold = 1200;
+
 		}
-		if (_level[6] == 1)
+		if (_level[6] <= 1)
 		{
 			sprintf(_recruit[6].unit, "천사");
 			sprintf(_recruit[6].building, "천상의 문");
+
+			if (_level[6]) _recruit[6].output = 1;
+			_recruit[6].atk = 20;
+			_recruit[6].def = 20;
+			_recruit[6].hp = 200;
+			_recruit[6].minDmg = 50;
+			_recruit[6].maxDmg = 50;
+			_recruit[6].speed = 12;
+			_recruit[6].gold = 3000;
+			_recruit[6].gem = 1;
 
 		}
 		else if (_level[6] == 2)
@@ -1840,16 +2536,34 @@ void camp::recruitInit(void)
 			sprintf(_recruit[6].unit, "대천사");
 			sprintf(_recruit[6].building, "향상된 천상의 문");
 
+			_recruit[6].output = 1;
+			_recruit[6].atk = 30;
+			_recruit[6].def = 30;
+			_recruit[6].hp = 250;
+			_recruit[6].minDmg = 50;
+			_recruit[6].maxDmg = 50;
+			_recruit[6].speed = 18;
+			_recruit[6].gold = 5000;
+			_recruit[6].gem = 3;
+
 		}
 
 		break;
 	case CAMP_DUNGEON:
 
-		if (_level[0] == 1)
+		if (_level[0] <= 1)
 		{
 			sprintf(_recruit[0].unit, "동굴인");
 			sprintf(_recruit[0].building, "사육장");
 
+			if (_level[0]) _recruit[0].output = 14;
+			_recruit[0].atk = 4;
+			_recruit[0].def = 3;
+			_recruit[0].hp = 5;
+			_recruit[0].minDmg = 1;
+			_recruit[0].maxDmg = 3;
+			_recruit[0].speed = 4;
+			_recruit[0].gold = 50;
 
 
 		}
@@ -1858,12 +2572,30 @@ void camp::recruitInit(void)
 			sprintf(_recruit[0].unit, "지옥의 동굴인");
 			sprintf(_recruit[0].building, "향상된 사육장");
 
+			_recruit[0].output = 14;
+			_recruit[0].atk = 5;
+			_recruit[0].def = 4;
+			_recruit[0].hp = 6;
+			_recruit[0].minDmg = 1;
+			_recruit[0].maxDmg = 3;
+			_recruit[0].speed = 5;
+			_recruit[0].gold = 65;
+
 		}
 
-		if (_level[1] == 1)
+		if (_level[1] <= 1)
 		{
 			sprintf(_recruit[1].unit, "하피");
 			sprintf(_recruit[1].building, "하피 둥지");
+
+			if (_level[1]) _recruit[1].output = 8;
+			_recruit[1].atk = 6;
+			_recruit[1].def = 5;
+			_recruit[1].hp = 14;
+			_recruit[1].minDmg = 1;
+			_recruit[1].maxDmg = 4;
+			_recruit[1].speed = 6;
+			_recruit[1].gold = 130;
 
 		}
 		else if (_level[1] == 2)
@@ -1871,11 +2603,29 @@ void camp::recruitInit(void)
 			sprintf(_recruit[1].unit, "하피마녀");
 			sprintf(_recruit[1].building, "향상된 하피 둥지");
 
+			_recruit[1].output = 8;
+			_recruit[1].atk = 6;
+			_recruit[1].def = 6;
+			_recruit[1].hp = 14;
+			_recruit[1].minDmg = 1;
+			_recruit[1].maxDmg = 4;
+			_recruit[1].speed = 9;
+			_recruit[1].gold = 170;
+
 		}
-		if (_level[2] == 1)
+		if (_level[2] <= 1)
 		{
 			sprintf(_recruit[2].unit, "주시자");
 			sprintf(_recruit[2].building, "주시의 기둥");
+
+			if (_level[2]) _recruit[2].output = 7;
+			_recruit[2].atk = 9;
+			_recruit[2].def = 7;
+			_recruit[2].hp = 22;
+			_recruit[2].minDmg = 3;
+			_recruit[2].maxDmg = 5;
+			_recruit[2].speed = 5;
+			_recruit[2].gold = 250;
 
 		}
 		else if (_level[2] == 2)
@@ -1883,11 +2633,31 @@ void camp::recruitInit(void)
 			sprintf(_recruit[2].unit, "악마의 눈");
 			sprintf(_recruit[2].building, "향상된 주시의 기둥");
 
+			_recruit[2].output = 7;
+			_recruit[2].atk = 10;
+			_recruit[2].def = 8;
+			_recruit[2].hp = 22;
+			_recruit[2].minDmg = 3;
+			_recruit[2].maxDmg = 5;
+			_recruit[2].speed = 7;
+			_recruit[2].gold = 280;
+
+
 		}
-		if (_level[3] == 1)
+		if (_level[3] <= 1)
 		{
 			sprintf(_recruit[3].unit, "메두사");
 			sprintf(_recruit[3].building, "침묵의 회당");
+
+			if (_level[3]) _recruit[3].output = 4;
+			_recruit[3].atk = 9;
+			_recruit[3].def = 9;
+			_recruit[3].hp = 25;
+			_recruit[3].minDmg = 6;
+			_recruit[3].maxDmg = 8;
+			_recruit[3].speed = 5;
+			_recruit[3].gold = 300;
+
 
 		}
 		else if (_level[3] == 2)
@@ -1895,11 +2665,30 @@ void camp::recruitInit(void)
 			sprintf(_recruit[3].unit, "메두사 퀸");
 			sprintf(_recruit[3].building, "향상된 침묵의 회당");
 
+			_recruit[3].output = 4;
+			_recruit[3].atk = 10;
+			_recruit[3].def = 10;
+			_recruit[3].hp = 30;
+			_recruit[3].minDmg = 6;
+			_recruit[3].maxDmg = 8;
+			_recruit[3].speed = 6;
+			_recruit[3].gold = 300;
+
 		}
-		if (_level[4] == 1)
+		if (_level[4] <= 1)
 		{
 			sprintf(_recruit[4].unit, "미노타우르스");
 			sprintf(_recruit[4].building, "미궁");
+
+			if (_level[4]) _recruit[4].output = 3;
+			_recruit[4].atk = 14;
+			_recruit[4].def = 12;
+			_recruit[4].hp = 50;
+			_recruit[4].minDmg = 12;
+			_recruit[4].maxDmg = 20;
+			_recruit[4].speed = 6;
+			_recruit[4].gold = 500;
+
 
 		}
 		else if (_level[4] == 2)
@@ -1907,12 +2696,29 @@ void camp::recruitInit(void)
 			sprintf(_recruit[4].unit, "미노타우르스 킹");
 			sprintf(_recruit[4].building, "향상된 미궁");
 
+			_recruit[4].output = 3;
+			_recruit[4].atk = 15;
+			_recruit[4].def = 15;
+			_recruit[4].hp = 50;
+			_recruit[4].minDmg = 12;
+			_recruit[4].maxDmg = 20;
+			_recruit[4].speed = 8;
+			_recruit[4].gold = 575;
 
 		}
-		if (_level[5] == 1)
+		if (_level[5] <= 1)
 		{
 			sprintf(_recruit[5].unit, "만티코어");
 			sprintf(_recruit[5].building, "만티코어 동굴");
+
+			if (_level[5]) _recruit[5].output = 2;
+			_recruit[5].atk = 15;
+			_recruit[5].def = 13;
+			_recruit[5].hp = 80;
+			_recruit[5].minDmg = 14;
+			_recruit[5].maxDmg = 20;
+			_recruit[5].speed = 7;
+			_recruit[5].gold = 850;
 
 		}
 		else if (_level[5] == 2)
@@ -1920,11 +2726,31 @@ void camp::recruitInit(void)
 			sprintf(_recruit[5].unit, "스코피코어");
 			sprintf(_recruit[5].building, "향상된 만티코어 동굴");
 
+			_recruit[5].output = 2;
+			_recruit[5].atk = 16;
+			_recruit[5].def = 14;
+			_recruit[5].hp = 80;
+			_recruit[5].minDmg = 14;
+			_recruit[5].maxDmg = 20;
+			_recruit[5].speed = 11;
+			_recruit[5].gold = 1050;
+
+
 		}
-		if (_level[6] == 1)
+		if (_level[6] <= 1)
 		{
 			sprintf(_recruit[6].unit, "레드 드래곤");
 			sprintf(_recruit[6].building, "드래곤 동굴");
+
+			if (_level[6]) _recruit[6].output = 1;
+			_recruit[6].atk = 19;
+			_recruit[6].def = 19;
+			_recruit[6].hp = 180;
+			_recruit[6].minDmg = 40;
+			_recruit[6].maxDmg = 50;
+			_recruit[6].speed = 11;
+			_recruit[6].gold = 2500;
+			_recruit[6].sulfur = 1;
 
 		}
 		else if (_level[6] == 2)
@@ -1932,8 +2758,35 @@ void camp::recruitInit(void)
 			sprintf(_recruit[6].unit, "블랙 드래곤");
 			sprintf(_recruit[6].building, "향상된 드래곤 동굴");
 
+			_recruit[6].output = 1;
+			_recruit[6].atk = 25;
+			_recruit[6].def = 25;
+			_recruit[6].hp = 300;
+			_recruit[6].minDmg = 40;
+			_recruit[6].maxDmg = 50;
+			_recruit[6].speed = 15;
+			_recruit[6].gold = 4000;
+			_recruit[6].sulfur = 2;
+
+
 		}
 
+		break;
+	}
+
+	//========== 생산량 보정
+	for (int i = 0; i < 7; i++)
+	{
+		if (_fort >= 2) _recruit[i].output = _recruit[i].output*(1 + (_fort - 1)*0.5);
+
+	}
+	switch (_camp)
+	{
+	case CAMP_CASTLE:
+		if (_special[0]) _recruit[2].output += 3;
+		break;
+	case CAMP_DUNGEON:
+		if (_special[0]) _recruit[0].output += 7;
 		break;
 	}
 

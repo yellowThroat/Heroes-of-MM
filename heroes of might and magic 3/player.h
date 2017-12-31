@@ -43,6 +43,7 @@ private:
 	int _currentHero;				// 현재 조정중인 영웅
 	int _currentCamp;				// 현재 보고있는 마을
 	int _currentCreature;
+	int _count;						// 인덱스 돌리는용
 
 public:
 
@@ -68,6 +69,7 @@ public:
 	void inputCity(void);
 	void inputField(void);
 	void camera(void);
+	void setFrame(void);
 
 	//================ E N T E R ===========
 	void enterCity(void);

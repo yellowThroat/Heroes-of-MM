@@ -80,6 +80,10 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 			for (int j = -1; j <= 1; j++)
 			{
 				if (i == 0 && j == 0) continue;
+				if (currentNode.nodeX + i < 0 || currentNode.nodeX + i >= MAXTILE ||
+					currentNode.nodeY + j < 0 || currentNode.nodeY + j >= MAXTILE) continue;
+
+				if (_map[currentNode.nodeX + i][currentNode.nodeY + j].entrance && j == 1 && i == 0) continue;
 
 				if (alreadyOpend(currentNode.nodeX + i, currentNode.nodeY + j))
 				{
@@ -132,6 +136,13 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 				}
 				else if(alreadyClosed(currentNode.nodeX + i, currentNode.nodeY + j))
 				{
+					if (currentNode.nodeX + i < 0 || currentNode.nodeX + i >= MAXTILE ||
+						currentNode.nodeY + j < 0 || currentNode.nodeY + j >= MAXTILE) continue;
+
+					if (_map[currentNode.nodeX + i][currentNode.nodeY + j].entrance && j == 1) continue;
+
+
+
 					ZeroMemory(&findNode, sizeof(tagPathFind));
 					for (int k = 0; k < _closelist.size(); k++)
 					{
@@ -194,10 +205,6 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 					j + currentNode.nodeY < 0 || j + currentNode.nodeY >= MAXTILE) continue;
 				if (j == 1 && _map[currentNode.nodeX + i][currentNode.nodeY + j].entrance) continue;
 				if (j == -1 && _map[currentNode.nodeX][currentNode.nodeY].entrance) continue;
-
-				//=========== 현재 노드의 주변이 열려 있는지 조건문
-				if (currentNode.nodeX + i < 0 || currentNode.nodeY + j < 0 ||
-					currentNode.nodeX + i >= MAXTILE || currentNode.nodeY + j >= MAXTILE) continue;
 
 
 
