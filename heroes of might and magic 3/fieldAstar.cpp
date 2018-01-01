@@ -347,16 +347,16 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 
 
 					shortestPath.insert(shortestPath.begin(), point);
-
+					break;
 				}
 
 
 
+			}
 				if (point.x == x && point.y == y)
 				{
 					return shortestPath;
 				}
-			}
 		}
 
 	}

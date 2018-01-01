@@ -505,6 +505,23 @@ void hero::deleteCreature(int arr)
 	_vCreature.erase(_vCreature.begin() + arr);
 }
 
+void hero::setGoOn(bool go)
+{
+	_goOn = go; 
+
+	if (_goOn)
+	{
+		if (!_pl->getAutoCamera()) _pl->setAutoCamera(true);
+		_pm->setClosed(_pointArr.x, _pointArr.y, false);
+		if (_isInCamp != -1)
+		{
+			_isInCamp = -1;
+
+		}
+
+	}
+}
+
 
 void hero::setPath(vPath path)
 {

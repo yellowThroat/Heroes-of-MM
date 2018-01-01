@@ -396,6 +396,19 @@ void ui::input(void)
 			case GB_CONFIG: _config = true;
 				break;
 			case GB_HERO:
+				int tmp;
+				tmp = _player->getCurrentHero() +1;
+				if (_player->getHero().size() <= tmp) tmp = 0;
+				_player->setCurrentHero(tmp);
+
+				POINT point;
+				point.x = _player->getHero()[_player->getCurrentHero()]->getHeroPoint().x;
+				point.y = _player->getHero()[_player->getCurrentHero()]->getHeroPoint().y;
+
+				_pm->setCameraX((point.x - 12) * TILESIZE);
+				_pm->setCameraY((point.y - 9) * TILESIZE);
+
+
 				break;
 			case GB_TURN: 
 
@@ -420,6 +433,12 @@ void ui::input(void)
 
 				break;
 			case GB_GOON:
+				if (_player->getHero()[_player->getCurrentHero()]->getPath().size())
+				{
+					_player->getHero()[_player->getCurrentHero()]->setGoOn(true);
+					_gs->getvCamp()[_player->getHero()[_player->getCurrentHero()]->getInCamp()]->setHero(false);
+				}
+
 				break;
 			case GB_NULL:
 				break;

@@ -727,12 +727,12 @@ void player::inputField(void)
 					_vHero[i]->getNeedAp() <= _vHero[i]->getAP())
 				{
 					_vHero[i]->setGoOn(true);
-					if (!_autoCamera) _autoCamera = true;
-					_pm->setClosed(_vHero[i]->getHeroPoint().x, _vHero[i]->getHeroPoint().y, false);
+					//if (!_autoCamera) _autoCamera = true;
+					//_pm->setClosed(_vHero[i]->getHeroPoint().x, _vHero[i]->getHeroPoint().y, false);
 					if (_vHero[i]->getInCamp() != -1)										// 캠프에 있던 중이라면
 					{
 						_gs->getvCamp()[_vHero[i]->getInCamp()]->setHero(false);	// 있었던 성은 영웅 나갔다고 알랴줌
-						_vHero[i]->setInCamp(-1);									// 캠프 나왓다고 초기화 해주고
+						//_vHero[i]->setInCamp(-1);									// 캠프 나왓다고 초기화 해주고
 
 					}
 

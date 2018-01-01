@@ -12,7 +12,7 @@ struct tagPathDraw
 class player;
 class playMap;
 class zOrder;
-
+class gameScene;
 
 class hero : public gameNode
 {
@@ -129,7 +129,7 @@ public:
 	void setPath(vPath path);
 	void setPreviousPath(POINT point) { _previousPath = point; }
 	void setMynum(int num) { _myNum = num; }
-	void setGoOn(bool go) { _goOn = go; }
+	void setGoOn(bool go);
 	void setMoveEnd(bool end) { _moveEnd = end; }
 	void setInCamp(int camp) { _isInCamp = camp; }
 	void setAP(int ap) { _currentActionPoint = ap; }
