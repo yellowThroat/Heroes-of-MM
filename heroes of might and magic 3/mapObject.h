@@ -16,6 +16,27 @@ struct tagMapObject
 	bool visit;
 };
 
+//============================
+// 0 : mine
+// 1 : 
+//
+//
+//
+//
+//
+//============================
+
+struct tagObject
+{
+	int type;
+	int sub;
+	int x;
+	int y;
+	int possesion;
+	int player;
+	vector<tagCreature> vCreature;
+};
+
 class zOrder;
 
 class mapObject : public gameNode
@@ -29,6 +50,9 @@ private:
 
 	vObject _vObject;
 	vObjectIter _viObject;
+
+	vector<tagObject> _vOb;
+	
 
 private:
 	tagSaveInfo _mapSaveInfo[MAXTILE][MAXTILE];
@@ -49,14 +73,20 @@ public:
 	
 	void draw(void);
 
-
+	//=================================
+	bool checkObject(int x, int y);
 
 	//============== L O A D ================
 	void loadObject(void);
+	void addLoot(int x, int y, int kind);
 
 	//============== G E T T E R ==============
+	tagObject getvOb(int x, int y);
 	vObject getObject() { return _vObject; }
 	vObjectIter getObjectIter() { return _viObject; }
+
+	//============== S E T T E R ===============
+	void setOb(int x, int y, tagObject ob);
 
 	//============ ADDRESS LINK ===============
 	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }

@@ -67,6 +67,52 @@ void mapObject::draw(void)
 
 }
 
+void mapObject::addLoot(int x, int y, int kind)
+{
+
+}
+
+bool mapObject::checkObject(int x, int y)
+{
+
+	for (auto i : _vOb)
+	{
+		if (i.x == x && i.y == y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+tagObject mapObject::getvOb(int x, int y)
+{
+	tagObject ob;
+	ZeroMemory(&ob, sizeof(tagObject));
+	ob.type - 1;
+
+	for (int i = 0; i < _vOb.size(); i++)
+	{
+		if (_vOb[i].x == x && _vOb[i].y == y)
+		{
+			return _vOb[i];
+		}
+	}
+
+	return ob;
+}
+
+void mapObject::setOb(int x, int y, tagObject ob)
+{
+	for (int i = 0; i < _vOb.size(); i++)
+	{
+		if (_vOb[i].x == x && _vOb[i].y == y)
+		{
+			_vOb[i] = ob;
+		}
+	}
+
+}
 
 void mapObject::loadObject(void)
 {
@@ -110,6 +156,21 @@ void mapObject::loadObject(void)
 				object.type = _vBuildSaveInfo[i][j].type;
 
 				_vObject.push_back(object);
+
+				//================== 오브젝트 추가를 위한 ======================
+
+				tagObject ob;
+				ZeroMemory(&ob, sizeof(tagObject));
+				ob.type = 0;
+				ob.sub = object.indexY;
+				ob.x = object.point.x;
+				ob.y = object.point.y;
+				ob.player = -1;
+				
+				_vOb.push_back(ob);
+
+				//===========================================================
+
 			}
 			else if ((_vBuildSaveInfo[i][j].type & ELEMENTEVENT) == ELEMENTEVENT)
 			{

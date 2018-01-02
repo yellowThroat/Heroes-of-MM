@@ -469,6 +469,8 @@ void ui::input(void)
 				if (_player->getHero()[_player->getCurrentHero()]->getPath().size())
 				{
 					_player->getHero()[_player->getCurrentHero()]->setGoOn(true);
+
+					if(_player->getHero()[_player->getCurrentHero()]->getInCamp() != -1)
 					_gs->getvCamp()[_player->getHero()[_player->getCurrentHero()]->getInCamp()]->setHero(false);
 				}
 

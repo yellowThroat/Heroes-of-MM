@@ -27,7 +27,7 @@ HRESULT hero::init(POINT point, tagHero hero)
 	//addCreature(_myHero.kind, 0, 0, 1);
 	addCreature(_myHero.kind, 0, 0, 10);
 	addCreature(_myHero.kind, 0, 0, 5, 3);
-	//addCreature(_myHero.kind, 6, 1, 5);
+	addCreature(_myHero.kind, 6, 1, 5);
 	//addCreature(_myHero.kind, 5, 0, 1);
 	//addCreature(_myHero.kind, 6, 0, 3);
 
