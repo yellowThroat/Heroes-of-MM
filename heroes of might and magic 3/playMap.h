@@ -8,8 +8,8 @@ struct tagPathFind
 	int h;
 	int nodeX, nodeY;
 	int parentX, parentY;
-	int road;
-	int direction;;
+	//int road;
+	//int direction;;
 	bool operator<(const tagPathFind &v) const {
 		return (f  < v.f );
 	}

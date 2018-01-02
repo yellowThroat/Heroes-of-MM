@@ -32,7 +32,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 	currentNode.parentX = x;
 	currentNode.parentY = y;
 	currentNode.g = 0;
-	currentNode.direction = 0;
+	//currentNode.direction = 0;
 	//if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
 	//	_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
 	//{
@@ -81,8 +81,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 			currentNode.h = _openlist[0].h;
 			currentNode.parentX = _openlist[0].parentX;
 			currentNode.parentY = _openlist[0].parentY;
-			currentNode.road = _openlist[0].road;
-			currentNode.direction = _openlist[0].direction;
+			//currentNode.road = _openlist[0].road;
+			//currentNode.direction = _openlist[0].direction;
 			_openlist.erase(_openlist.begin());
 
 
@@ -117,8 +117,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 							findNode.h = _openlist[k].h;
 							findNode.parentX = _openlist[k].parentX;
 							findNode.parentY = _openlist[k].parentY;
-							findNode.direction = _openlist[k].direction;
-							findNode.road = _openlist[k].road;
+							//findNode.direction = _openlist[k].direction;
+							//findNode.road = _openlist[k].road;
 							break;
 						}
 					}
@@ -366,12 +366,12 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 					findNode.parentX = currentNode.nodeX;
 					findNode.parentY = currentNode.nodeY;						
 				
-					if (_road[findNode.nodeX][findNode.nodeY].road == ROAD_NORMAL ||
-						_road[findNode.nodeX][findNode.nodeY].road == ROAD_ROCK)
-					{
-						findNode.road = 2;
-					}
-					else findNode.road = 0;
+					//if (_road[findNode.nodeX][findNode.nodeY].road == ROAD_NORMAL ||
+					//	_road[findNode.nodeX][findNode.nodeY].road == ROAD_ROCK)
+					//{
+					//	findNode.road = 2;
+					//}
+					//else findNode.road = 0;
 
 
 
