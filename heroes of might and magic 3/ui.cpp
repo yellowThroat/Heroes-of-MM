@@ -19,6 +19,7 @@ HRESULT ui::init(void)
 	_month = 1;
 	_gb = GB_NULL;
 	_firstHero = 0;
+	_firstCamp = 0;
 	//================  R E C T   M A K E ===============
 	_miniMapRect = RectMake(817, 24, 140, 144);
 	_summaryRect = RectMake(863, 193, 32, 32);
@@ -99,6 +100,23 @@ void ui::draw(void)
 
 
 	}
+
+	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	{
+		if (_gs->getvCamp()[i]->getPlayerNum() == 0)
+		{
+			IMAGEMANAGER->findImage("camp_portrait1")->frameRender(getMemDC(),
+				931,
+				211 + _gs->getvCamp()[i]->getNum() * 32,
+				_gs->getvCamp()[i]->getCityInfo().camp,
+				(int)_gs->getvCamp()[i]->getBuilt());
+
+		}
+	}
+
+	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
+		930, 210 + (_player->getCurrentCamp() - _firstCamp) * 32);
+
 
 	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
 		803, 210 + (_player->getCurrentHero() - _firstHero) * 32);
@@ -374,12 +392,23 @@ void ui::input(void)
 
 					}
 				}
+
+				if (PtInRect(&RectMake(930, 211 + i *32, 46, 30), _ptMouse))
+				{
+					if (i + _firstCamp < _player->getBuilding().camp)
+					{
+						if (i + _firstCamp != _player->getCurrentCamp())
+						{
+							_player->setCurrentCamp(i + _firstCamp);
+						}
+						else
+						{
+							_player->setScene(true);
+						}
+					}
+				}
 			}
-
-
 		}
-		
-
 	}
 
 

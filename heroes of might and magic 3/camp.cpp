@@ -2,7 +2,7 @@
 #include "camp.h"
 #include "player.h"
 #include "hero.h"
-
+#include "gameScene.h"
 camp::camp() {}
 camp::~camp() {}
 
@@ -248,6 +248,24 @@ void camp::castleDraw(void)
 
 	}
 
+	IMAGEMANAGER->findImage("camp_portrait0")->frameRender(getMemDC(),
+		15, 387, (bool)_fort, _camp);
+
+	IMAGEMANAGER->findImage("camp_hall")->frameRender(getMemDC(),
+		80, 413, _hall -1, 0);
+
+	IMAGEMANAGER->findImage("camp_fort")->frameRender(getMemDC(),
+		122, 413, _fort-1, 0);
+
+	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	{
+		//745 57
+		IMAGEMANAGER->findImage("camp_portrait1")->frameRender(getMemDC(),
+			745,
+			431 + _gs->getvCamp()[i]->getNum() * 32, 
+			_gs->getvCamp()[i]->getCityInfo().camp,
+			_gs->getvCamp()[i]->getBuilt());
+	}
 
 
 	if (_showWindow)
@@ -769,6 +787,24 @@ void camp::dungeonDraw(void)
 
 	}
 
+	IMAGEMANAGER->findImage("camp_portrait0")->frameRender(getMemDC(),
+		15, 387, (bool)_fort, _camp);
+
+	IMAGEMANAGER->findImage("camp_hall")->frameRender(getMemDC(),
+		80, 413, _hall - 1, 0);
+
+	IMAGEMANAGER->findImage("camp_fort")->frameRender(getMemDC(),
+		122, 413, _fort - 1, 0);
+
+	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	{
+		//745 57
+		IMAGEMANAGER->findImage("camp_portrait1")->frameRender(getMemDC(),
+			745,
+			431 + _gs->getvCamp()[i]->getNum() * 32,
+			_gs->getvCamp()[i]->getCityInfo().camp,
+			_gs->getvCamp()[i]->getBuilt());
+	}
 
 	if (_showWindow)
 	{
@@ -3106,14 +3142,14 @@ void camp::structureInit(void)
 			break;
 		case 1:
 			sprintf(_structure[1].name, "성채");
-			sprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50%% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort2");
 			_structure[1].gold = 2500;
 			_structure[1].iron = 5;
 			break;
 		case 2:
 			sprintf(_structure[1].name, "성");
-			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50%% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
@@ -3121,7 +3157,7 @@ void camp::structureInit(void)
 			break;
 		default:
 			sprintf(_structure[1].name, "성");
-			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50%% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Chall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
@@ -3491,14 +3527,14 @@ void camp::structureInit(void)
 			break;
 		case 1:
 			sprintf(_structure[1].name, "성채");
-			sprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].explantion, "성채를 건설하면 기본유닛의 성장률이 50%% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort2");
 			_structure[1].gold = 2500;
 			_structure[1].iron = 5;
 			break;
 		case 2:
 			sprintf(_structure[1].name, "성");
-			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50%% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;
@@ -3506,7 +3542,7 @@ void camp::structureInit(void)
 			break;
 		default:
 			sprintf(_structure[1].name, "성");
-			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
+			sprintf(_structure[1].explantion, "성을 건설하면 기본유닛의 성장률이 50%% 향상되고, 본성과 장애물이 설치되어 마을의 방어도가 상승한다.");
 			_structure[1].img = IMAGEMANAGER->findImage("Dhall_fort3");
 			_structure[1].gold = 5000;
 			_structure[1].iron = 10;

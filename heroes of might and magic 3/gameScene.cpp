@@ -308,7 +308,9 @@ void gameScene::addCamp(tagBuildingInfo info)
 	camp->setPlayerAddressLink(_player);
 	camp->setNum(_vCamp.size());
 	camp->setzOrderAddressLink(_zOrder);
+	camp->setGameSceneAddressLink(this);
 
+	
 
 
 	_vCamp.push_back(camp);

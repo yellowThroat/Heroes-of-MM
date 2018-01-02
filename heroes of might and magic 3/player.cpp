@@ -18,6 +18,7 @@ HRESULT player::init(int myNum)
 	_window = false;
 	_creatureinfo = false;
 	_currentHero = 0;
+	_currentCamp = 0;
 	_count = 0;
 	_currentCreature = -1;
 	_destination = { 0,0 };
@@ -46,7 +47,7 @@ HRESULT player::init(int myNum)
 	_myProperty.sulfur = 1234;
 	
 
-
+	setMyInfo();
 
 
 	return S_OK;
@@ -113,6 +114,17 @@ void player::fieldScene(void)
 		(*_viHero)->render();
 	}
 
+}
+
+void player::setMyInfo(void)
+{
+	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	{
+		if (_gs->getvCamp()[i]->getPlayerNum() == 0)
+		{
+			_myBuilding.camp++;
+		}
+	}
 }
 
 void player::heroInfoDraw(void)

@@ -11,7 +11,8 @@ private:
 	SAVE _saveFile[MAXSAVE];
 
 	RECT _mapTool;
-	RECT _saveWindow;
+	RECT _saveWindow0;
+	RECT _saveWindow1;
 
 private:
 	bool _buttonActive;

@@ -243,6 +243,7 @@ typedef struct tagBuildingInfo
 	MINE mine;
 	image* img;
 	image* imgShadow;
+	image* portrait;
 	struct tagCampInfo campInfo;
 	int elements;
 	int imgX, imgY;

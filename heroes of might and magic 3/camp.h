@@ -64,6 +64,8 @@ struct tagRecruit
 class player;
 class zOrder;
 class hero;
+class gameScene;
+
 
 class camp : public gameNode
 {
@@ -71,6 +73,7 @@ private:
 	player* _play;
 	zOrder* _zOrder;
 	hero* _hero;
+	gameScene* _gs;
 
 private:
 	vector<tagCreature> _vCreature;
@@ -164,6 +167,7 @@ public:
 	bool getWindow() { return _showWindow; }
 	bool getContents() { return _contents; }
 	bool getHero() { return _inHero; }
+	bool getBuilt() { return _beBuilt; }
 	int getHall() { return _hall; }
 	int getNum() { return _campNum; }
 	int getPlayerNum() { return _player; }
@@ -183,6 +187,7 @@ public:
 	void setPlayerAddressLink(player* player) { _play = player; }
 	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
 	void setHeroAddressLink(hero* hero) { _hero = hero; }
+	void setGameSceneAddressLink(gameScene* gs) { _gs = gs; }
 	camp();
 	~camp();
 };

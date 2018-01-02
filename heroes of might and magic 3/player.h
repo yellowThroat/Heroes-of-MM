@@ -65,6 +65,7 @@ public:
 
 	
 	//================ S E T T I N G =========
+	void setMyInfo(void);
 	void inputCity(void);
 	void inputField(void);
 	void camera(void);

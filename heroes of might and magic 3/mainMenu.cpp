@@ -33,8 +33,8 @@ HRESULT	mainMenu::init(void)
 
 	//=================== R E C T   M A K E ============================
 	_mapTool = RectMake(600, 246, 96, 112);
-	_saveWindow = RectMake(-450, 10, 450, 580);
-
+	_saveWindow0 = RectMake(-402, 6, 402, 593);
+	_saveWindow1 = RectMake(WINSIZEX + 402, 6, 369, 593);
 	return S_OK;
 }
 
@@ -60,9 +60,9 @@ void mainMenu::render(void)
 
 	backgroundDraw();
 
-	windowDraw();
-
 	buttonDraw();
+
+	windowDraw();
 
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
 
@@ -76,11 +76,18 @@ void mainMenu::backgroundDraw(void)
 
 void mainMenu::windowDraw(void)
 {
-	IMAGEMANAGER->findImage("window_save")->render(getMemDC(),
-		_saveWindow.left, _saveWindow.top);
+	IMAGEMANAGER->findImage("window_begin0")->render(getMemDC(),
+		_saveWindow0.left, _saveWindow0.top);
+	IMAGEMANAGER->findImage("window_begin0_shadow")->alphaRender(getMemDC(),
+		_saveWindow0.left, _saveWindow0.top,150);
 
-	IMAGEMANAGER->findImage("save_selectbox")->render(getMemDC(),
-		_saveWindow.left + 23, _saveWindow.top + 116 + 25 * _saveNum);
+	IMAGEMANAGER->findImage("window_begin1")->render(getMemDC(),
+		_saveWindow1.left, _saveWindow0.top);
+	IMAGEMANAGER->findImage("window_begin1_shadow")->alphaRender(getMemDC(),
+		_saveWindow1.left, _saveWindow0.top, 150);
+
+	IMAGEMANAGER->findImage("select_begin")->render(getMemDC(),
+		_saveWindow1.left + 7, _saveWindow1.top + 105 + 24 * _saveNum);
 	
 	SetBkMode(getMemDC(), TRANSPARENT);
 	SetTextColor(getMemDC(), RGB(255, 255, 255));
@@ -88,11 +95,29 @@ void mainMenu::windowDraw(void)
 	{
 		
 		if (_saveFile[i].fileName.size())
-			TextOut(getMemDC(), _saveWindow.left + 70, _saveWindow.top + 118 + 25 * _saveFile[i].number,
+			TextOut(getMemDC(), _saveWindow1.left + 48, _saveWindow1.top + 109+ 24 * _saveFile[i].number,
 				_saveFile[i].fileName.c_str(), _saveFile[i].fileName.length());
 	}
 
 	SetTextColor(getMemDC(), RGB(0, 0, 0));
+
+	HFONT font = CreateFont(24, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("µ¸¿òÃ¼"));
+	HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+	SetTextColor(getMemDC(), RGB(248, 228, 120));
+	SelectObject(getMemDC(), font);
+
+	TextOut(getMemDC(), _saveWindow1.left + 18, _saveWindow1.top + 40, _saveFile[_saveNum].fileName.c_str(), strlen(_saveFile[_saveNum].fileName.c_str()));
+
+
+
+	SelectObject(getMemDC(), oldfont);
+	DeleteObject(font);
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+
+
+
+
+
 
 }
 
@@ -131,26 +156,62 @@ void mainMenu::windowMove(void)
 {
 	if (_newActive)
 	{
-		_saveWindow.left += 20;
-		_saveWindow.right += 20;
 
-		if (_saveWindow.right >= 450)
+		if (_saveWindow0.right >= 550)
 		{
-			_saveWindow.right = 450;
-			_saveWindow.left = 0;
+			_saveWindow0.right = 550;
+			_saveWindow0.left = 148;
 		}
+		else
+		{
+			_saveWindow0.left += 20;
+			_saveWindow0.right += 20;
+
+		}
+
+		if (_saveWindow1.left <= 550)
+		{
+			_saveWindow1.left = 550;
+			_saveWindow1.right = 919;
+		}
+		else
+		{
+			_saveWindow1.left -= 20;
+			_saveWindow1.right -= 20;
+
+		}
+
+
 
 	}
 
 	else
 	{
-		_saveWindow.left -= 20;
-		_saveWindow.right -= 20;
-		if (_saveWindow.right < 0)
+		if (_saveWindow0.right < 0)
 		{
-			_saveWindow.left = -450;
-			_saveWindow.right = 0;
+			_saveWindow0.left = -402;
+			_saveWindow0.right = 0;
 		}
+		else
+		{
+			_saveWindow0.left -= 20;
+			_saveWindow0.right -= 20;
+
+		}
+
+
+		if (_saveWindow1.left >= WINSIZEX)
+		{
+			_saveWindow1.left = WINSIZEX;
+			_saveWindow1.right = WINSIZEX + 369;
+		}
+		else
+		{
+			_saveWindow1.left += 20;
+			_saveWindow1.right += 20;
+
+		}
+
 	}
 
 }
@@ -246,17 +307,18 @@ void mainMenu::inputMenu(void)
 {
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
-		if (_newActive && _ptMouse.x > 450)
-		{
-			_newActive = false;
-		}
-
 	}
 
 
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
 		//====258 460
+
+		if (_newActive && !checkPointInRect(_saveWindow0, _ptMouse) && !checkPointInRect(_saveWindow1, _ptMouse))
+		{
+			_newActive = false;
+		}
+
 
 
 		if (_buttonActive)
@@ -265,6 +327,7 @@ void mainMenu::inputMenu(void)
 			{
 			case MMB_NEW:
 				_newActive = true;
+				_buttonActive = false;
 				break;
 			case MMB_LOAD:
 				break;
@@ -278,21 +341,26 @@ void mainMenu::inputMenu(void)
 			}
 		}
 
-		if (!_sceneChange&& _newActive && _ptMouse.x <= 450)
+		if (!_sceneChange&& _newActive)
 		{
 			for (int i = 0; i < MAXSAVE; i++)
 			{
-				if (PtInRect(&RectMake(_saveWindow.left + 23,
-					_saveWindow.top + 116 + i * 25, 360, 25), _ptMouse))
+				if (PtInRect(&RectMake(_saveWindow1.left + 7,
+					_saveWindow1.top + 105+ i * 24, 338, 24), _ptMouse))
 				{
 					_saveNum = i;
 				}
 			}
 
-			if (PtInRect(&RectMake(_saveWindow.left + 258, _saveWindow.top + 460, 94, 42), _ptMouse))
+			if (PtInRect(&RectMake(_saveWindow1.left + 9, _saveWindow0.top + 529, 166, 40), _ptMouse))
 			{
 				_sceneChange = true;
 			}
+			if (PtInRect(&RectMake(_saveWindow1.left + 179, _saveWindow0.top + 529, 166, 40), _ptMouse))
+			{
+				_newActive = false;
+			}
+
 		}
 
 	}
@@ -304,6 +372,11 @@ void mainMenu::imageInit(void)
 
 	//===================== M A I N   M E N U ===========================
 	{
+		IMAGEMANAGER->addImage("window_begin0", "image/mainMenu/window_begin0.bmp", 402, 593, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage("window_begin0_shadow", "image/mainMenu/window_begin0_shadow.bmp", 402, 593, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage("window_begin1", "image/mainMenu/window_begin1.bmp", 369, 593, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage("window_begin1_shadow", "image/mainMenu/window_begin1_shadow.bmp", 369, 593, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage("select_begin", "image/mainMenu/select_begin.bmp", 338, 24, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("mainBackground", "image/ui/mainMenuBackGround.bmp", 800, 600, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("mainBackgroundSecond", "image/ui/mainMenuSecond.bmp", 300, 600, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("font_maptool", "image/font/font_mapTool.bmp", 175, 30, true, RGB(255, 0, 255));
@@ -315,7 +388,8 @@ void mainMenu::imageInit(void)
 		IMAGEMANAGER->addImage("button_main_quit", "image/mainMenu/button_mainMenu_quit.bmp", 111, 107, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("fade", "image/ui/fade.bmp", 1100, 600, true, RGB(255, 0, 255));
 		IMAGEMANAGER->findImage("fade")->AlphaInit();
-
+		IMAGEMANAGER->findImage("window_begin0_shadow")->AlphaInit();
+		IMAGEMANAGER->findImage("window_begin1_shadow")->AlphaInit();
 	}
 	
 	//===================== U I ===============================
@@ -386,7 +460,10 @@ void mainMenu::imageInit(void)
 		IMAGEMANAGER->addFrameImage("castle_forge", "image/gameScene/camp/castle/forge.bmp", 127, 238, 1, 2, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addImage("castle_RGB", "image/gameScene/camp/castle/castle_RGB.bmp", 800, 374, true, RGB(255, 0, 255));
 		IMAGEMANAGER->addFrameImage("hall_color", "image/gameScene/camp/window/hall_color.bmp", 152, 72, 1, 4, true, RGB(255, 0, 255));
-
+		IMAGEMANAGER->addFrameImage("camp_portrait0", "image/gameScene/camp/camp_portrait.bmp", 116, 128, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("camp_portrait1", "image/gameScene/camp/camp_portrait0.bmp", 92, 60, 2, 2, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("camp_fort", "image/gameScene/camp/camp_fort.bmp", 114, 38, 3, 1, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addFrameImage("camp_hall", "image/gameScene/camp/camp_hall.bmp", 152, 38, 4, 1, true, RGB(255, 0, 255));
 	}
 
 	//==== window
