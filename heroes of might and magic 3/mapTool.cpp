@@ -116,6 +116,7 @@ HRESULT mapTool::init(void)
 	_page = 0;
 	_boxLength = 128;
 	_saveNum = 0;
+	_changePossesion = -1;
 	_area = false;
 	_foldMini= false;
 	_move = false;
@@ -124,6 +125,7 @@ HRESULT mapTool::init(void)
 	_saveAndLoad = false;
 	_changeName = false;
 	_newMap = false;
+	_cp = false;
 	_vBuild.clear();
 	_vLoot.clear();
 
@@ -395,6 +397,7 @@ void mapTool::saveMap(string fileName)
 		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].campInfo = _vBuild[i].campInfo;
 		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].enterX = _vBuild[i].enterX;
 		_vBuildSaveInfo[_vBuild[i].destX][_vBuild[i].destY].enterY = _vBuild[i].enterY;
+
 		//================ Building ===================
 		if (_vBuild[i].camp != CAMP_NULL)
 		{
@@ -441,7 +444,7 @@ void mapTool::saveMap(string fileName)
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].sizeY = _vLoot[i].sizeY;
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].enterX = _vLoot[i].enterX;
 		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].enterY = _vLoot[i].enterY;
-
+		_vLootSaveInfo[_vLoot[i].destX][_vLoot[i].destY].possesion = _vLoot[i].possesion;
 	}
 	
 
@@ -792,6 +795,7 @@ void mapTool::loadMap(string fileName)
 				build.elements = _vLootSaveInfo[i][j].type;
 				build.enterX = _vLootSaveInfo[i][j].enterX;
 				build.enterY = _vLootSaveInfo[i][j].enterY;
+				build.possesion = _vLootSaveInfo[i][j].possesion;
 				
 				if ((_vLootSaveInfo[i][j].type & ELEMENTRESOURCE) == ELEMENTRESOURCE)
 				{
@@ -2764,6 +2768,55 @@ void mapTool::buttonDraw(void)
 
 void mapTool::windowDraw(void)
 {
+	if (_changePossesion != -1)
+	{
+		int possesion = _vLoot[_changePossesion].possesion;
+		int indexX;
+		int indexY;
+		char tmp[256];
+
+
+
+		if ((_vLoot[_changePossesion].elements & ELEMENTCASTLE) == ELEMENTCASTLE) indexY = 0;
+		else if ((_vLoot[_changePossesion].elements & ELEMENTDUNGEON) == ELEMENTDUNGEON) indexY = 2;
+
+		if (_vLoot[_changePossesion].sourX % 2 == 1) indexY++;
+
+		indexX = _vLoot[_changePossesion].sourX / 2 + 2 * _vLoot[_changePossesion].sourY;
+
+		IMAGEMANAGER->findImage("creature_portrait")->frameRender(getMemDC(), 355, 186, indexX, indexY);
+
+		IMAGEMANAGER->findImage("window_unit")->render(getMemDC(),256, 160);
+		IMAGEMANAGER->findImage("window_unit_shadow")->alphaRender(getMemDC(), 256, 160, 150);
+
+
+
+		if (_cp)
+		{
+			Rectangle(getMemDC(), 355, 288, 419, 310);
+		}
+
+		HFONT font = CreateFont(24, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+		HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+		if(!_cp)SetTextColor(getMemDC(), RGB(248, 228, 120));
+		else SetTextColor(getMemDC(), RGB(0, 0, 0));
+		SelectObject(getMemDC(), font);
+
+		sprintf(tmp, "%d", possesion);
+
+
+		TextOut(getMemDC(), 384 - strlen(tmp)/2*12, 288, tmp, strlen(tmp));
+
+
+		SelectObject(getMemDC(), oldfont);
+		DeleteObject(font);
+
+		IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 352, 355);
+
+	}
+
+
+
 	if (_confirm )
 	{
 		switch (_currentConfirm)
@@ -4350,7 +4403,7 @@ void mapTool::addUnit(int arrX, int arrY)
 	build.mine = MINE_NULL;
 	build.camp = CAMP_NULL;
 	build.ev = EV_NULL;
-
+	build.possesion = 10;
 	switch (_categorySmall)
 	{
 	case SMC_ZERO:
@@ -5190,7 +5243,7 @@ void mapTool::inputCommon(void)
 		_saveIndex.y = 0;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD1))
+	if (KEYMANAGER->isOnceKeyDown(VK_HOME))
 	{
 		switch (_buildAttribute)
 		{
@@ -5239,10 +5292,50 @@ void mapTool::inputCommon(void)
 		}
 	}
 
+	if (_cp)
+	{
+		if (KEYMANAGER->isOnceKeyDown(VK_BACK))
+		{
+			if (_vLoot[_changePossesion].possesion)
+			{
+				_vLoot[_changePossesion].possesion = _vLoot[_changePossesion].possesion / 10;
+			}
+		}
+		
+			
+
+		for (int i = 0x60; i < 0x60 + 10; i++)
+		{
+			if (su(_vLoot[_changePossesion].possesion) < 4 && KEYMANAGER->isOnceKeyDown(i))
+			{
+				_vLoot[_changePossesion].possesion =
+					_vLoot[_changePossesion].possesion * 10 + i - 96;
+			}
+		}
+
+		if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
+		{
+			_cp = false;
+		}
+
+	}
 
 
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
+		//============ 크리쳐 정보 닫기
+		if (_changePossesion != -1)
+		{
+
+			if (PtInRect(&RectMake(352, 355, 64, 32), _ptMouse) && 
+				IMAGEMANAGER->findImage("recruit_cancel")->getFrameX() == 1)
+			{
+				_changePossesion = -1;
+			}
+			IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(0);
+		}
+
+
 
 		//=================== 마우스 움직일때 체인지 변수 변환 ============
 		for (int i = 0; i < 2; i++)
@@ -5831,7 +5924,44 @@ void mapTool::inputCommon(void)
 
 void mapTool::inputOnMap(void)
 {
-	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON) && _brushNum != 2)
+	if (_changePossesion == -1 &&
+		_categoryLarge == CATE_UNIT &&
+		_categorySmall == SMC_FIVE &&
+		KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
+	{
+		for (int i = 0; i < _vLoot.size(); i++)
+		{
+			if (_vLoot[i].destX == _mouseArr.x && _vLoot[i].destY == _mouseArr.y)
+			{
+				_changePossesion = i;
+
+			}
+		}
+	}
+
+
+	if (_changePossesion != -1 && KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		//IMAGEMANAGER->findImage("recruit_cancel")->frameRender(getMemDC(), 352, 355);
+
+
+
+		if (!_cp && PtInRect(&RectMake(355, 288, 64, 22), _ptMouse))
+		{
+			_cp = true;
+		}
+
+
+		if (PtInRect(&RectMake(352, 355, 64, 32), _ptMouse))
+		{
+			IMAGEMANAGER->findImage("recruit_cancel")->setFrameX(1);
+
+		}
+
+	}
+
+
+	if (_changePossesion == -1 && KEYMANAGER->isStayKeyDown(VK_LBUTTON) && _brushNum != 2)
 	{
 		if (_categoryLarge != CATE_OBS)
 		{
@@ -6211,7 +6341,7 @@ void mapTool::inputOnMap(void)
 		}
 		}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	if (_changePossesion == -1 && KEYMANAGER->isOnceKeyDown(VK_LBUTTON) )
 	{
 		//================ Draw Object =====================
 		switch (_categoryLarge)
@@ -6522,7 +6652,7 @@ void mapTool::inputOnUI(void)
 		{
 			IMAGEMANAGER->findImage("button_ma")->setFrameX(1);
 		}
-		if (PtInRect(&RectMake(_miniMap.left -28 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
+		if (PtInRect(&RectMake(_miniMap.left -18 + _menuLength, _miniMap.top - 42, 32, 32), _ptMouse))
 		{
 			IMAGEMANAGER->findImage("button_re")->setFrameX(1);
 		}

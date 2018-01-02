@@ -60,6 +60,7 @@ private:
 	bool _saveAndLoad;
 	bool _changeName;
 	bool _newMap;
+	bool _cp;
 
 	char _cor[256];
 	char _msCorX[256], _msCorY[256];
@@ -74,7 +75,7 @@ private:
 	int _brushNum;
 	int _page;
 	int _saveNum;
-	
+	int _changePossesion;
 
 
 public:

@@ -17,11 +17,13 @@ HRESULT player::init(int myNum)
 	_autoCamera = false;
 	_window = false;
 	_creatureinfo = false;
+	_enemyInfo = -1;
 	_currentHero = 0;
 	_currentCamp = 0;
 	_count = 0;
 	_currentCreature = -1;
 	_destination = { 0,0 };
+	_enemyCor = { 0,0 };
 	/*
 	tagHero tmp;
 	tmp.field = IMAGEMANAGER->findImage("hero_castle");
@@ -114,6 +116,8 @@ void player::fieldScene(void)
 		(*_viHero)->render();
 	}
 
+	if (_enemyInfo != -1) enemyInfoDraw();
+
 }
 
 void player::setMyInfo(void)
@@ -125,6 +129,58 @@ void player::setMyInfo(void)
 			_myBuilding.camp++;
 		}
 	}
+}
+
+void player::enemyInfoDraw(void)
+{
+	char tmp[256];
+	int indexX;
+	int indexY;
+	int possesion;
+
+	if (_ob->checkObject(_enemyCor.x, _enemyCor.y))
+	{
+		possesion = _ob->getvOb(_enemyCor.x, _enemyCor.y).possesion;
+		
+
+		if (_ob->getvOb(_enemyCor.x, _enemyCor.y).type == 4) indexY = 0;
+		else if (_ob->getvOb(_enemyCor.x, _enemyCor.y).type == 5) indexY = 2;
+
+		if (_ob->getvOb(_enemyCor.x, _enemyCor.y).sub % 2 == 1) indexY++;
+
+		indexX = _ob->getvOb(_enemyCor.x, _enemyCor.y).sub / 2;
+
+		IMAGEMANAGER->findImage("creature_portrait")->frameRender(getMemDC(), 355, 186, indexX, indexY);
+
+		IMAGEMANAGER->findImage("window_unit")->render(getMemDC(), 256, 160);
+		IMAGEMANAGER->findImage("window_unit_shadow")->alphaRender(getMemDC(), 256, 160, 150);
+
+		HFONT font = CreateFont(14, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
+		HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
+		SelectObject(getMemDC(), font);
+		if (possesion <= 5) sprintf(tmp, "몇몇의 %s", _enemyName);
+		else if (possesion <= 15) sprintf(tmp, "열댓의 %s", _enemyName);
+		else if (possesion <= 35) sprintf(tmp, "수십의 %s", _enemyName);
+		else if (possesion <= 85) sprintf(tmp, "다수의 %s", _enemyName);
+		else if (possesion <= 150) sprintf(tmp, "한 무리의 %s", _enemyName);
+		else if (possesion > 150) sprintf(tmp, "%s 군대", _enemyName);
+
+		SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+		TextOut(getMemDC(), 387 - strlen(tmp) / 2 * 7, 264, tmp, strlen(tmp));
+		
+
+
+		SetTextColor(getMemDC(), RGB(0, 0, 0));
+		SelectObject(getMemDC(), oldfont);
+		DeleteObject(font);
+
+	}
+
+
+
+
+
 }
 
 void player::heroInfoDraw(void)
@@ -690,6 +746,29 @@ void player::inputCity(void)
 
 void player::inputField(void)
 {
+	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
+	{
+		if (_ob->checkObject(_mouseArr.x, _mouseArr.y) &&
+			_ob->getvOb(_mouseArr.x, _mouseArr.y).type >= 4 &&
+			_enemyInfo == -1)
+		{
+			sprintf(_enemyName,"%s", CommonCreature(
+				_ob->getvOb(_mouseArr.x, _mouseArr.y).type - 4,
+				_ob->getvOb(_mouseArr.x, _mouseArr.y).sub / 2,
+				_ob->getvOb(_mouseArr.x, _mouseArr.y).sub % 2).name);
+			_enemyCor.x = _mouseArr.x;
+			_enemyCor.y = _mouseArr.y;
+			_enemyInfo = _ob->getvOb(_mouseArr.x, _mouseArr.y).sub;
+		}
+	}
+	
+	if (KEYMANAGER->isOnceKeyUp(VK_RBUTTON))
+	{
+		_enemyInfo = -1;
+	}
+
+
+
 	if(KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		//====================  F I E L D   S C E N E =====================

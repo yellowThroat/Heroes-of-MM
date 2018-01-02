@@ -163,8 +163,8 @@ void mapObject::loadObject(void)
 				ZeroMemory(&ob, sizeof(tagObject));
 				ob.type = 0;
 				ob.sub = object.indexY;
-				ob.x = object.point.x;
-				ob.y = object.point.y;
+				ob.x = object.point.x + object.enterX;
+				ob.y = object.point.y + object.enterY;
 				ob.player = -1;
 				
 				_vOb.push_back(ob);
@@ -191,7 +191,19 @@ void mapObject::loadObject(void)
 				object.imgY = _vBuildSaveInfo[i][j].imgY;
 				object.type = _vBuildSaveInfo[i][j].type;
 
-				
+				//================== 오브젝트 추가를 위한 ======================
+
+				tagObject ob;
+				ZeroMemory(&ob, sizeof(tagObject));
+				ob.type = 1;
+				ob.sub = object.indexY;
+				ob.x = object.point.x + object.enterX;
+				ob.y = object.point.y + object.enterY;
+				ob.active = false;
+				_vOb.push_back(ob);
+
+				//===========================================================
+
 
 				//=============== z order를 위한 ===================
 				tagRender render;
@@ -237,6 +249,21 @@ void mapObject::loadObject(void)
 				object.type = _vLootSaveInfo[i][j].type;
 				_vObject.push_back(object);
 
+				//================== 오브젝트 추가를 위한 ======================
+
+				tagObject ob;
+				ZeroMemory(&ob, sizeof(tagObject));
+				ob.type = 2;
+				ob.sub = object.indexX + 3*object.indexY;
+				ob.x = object.point.x + object.enterX;
+				ob.y = object.point.y + object.enterY;
+
+
+				_vOb.push_back(ob);
+
+				//===========================================================
+
+
 			}
 			else if ((_vLootSaveInfo[i][j].type & ELEMENTARTIFACT) == ELEMENTARTIFACT )
 			{
@@ -277,6 +304,20 @@ void mapObject::loadObject(void)
 					break;
 
 				}
+
+				//================== 오브젝트 추가를 위한 ======================
+
+				tagObject ob;
+				ZeroMemory(&ob, sizeof(tagObject));
+				ob.type = 3;
+				ob.sub = object.type *10 + object.indexX;
+				ob.x = object.point.x + object.enterX;
+				ob.y = object.point.y + object.enterY;
+
+
+				_vOb.push_back(ob);
+
+				//===========================================================
 
 				//=============== z order를 위한 ===================
 				tagRender render;
@@ -320,6 +361,19 @@ void mapObject::loadObject(void)
 				object.img = IMAGEMANAGER->findImage("unit_castle");
 				object.shadowImg = IMAGEMANAGER->findImage("unit_castle_shadow");
 
+				//================== 오브젝트 추가를 위한 ======================
+
+				tagObject ob;
+				ZeroMemory(&ob, sizeof(tagObject));
+				ob.type = 4;
+				ob.sub = object.indexX + object.indexY * 4;
+				ob.x = object.point.x + object.enterX;
+				ob.y = object.point.y + object.enterY;
+				ob.possesion = _vLootSaveInfo[i][j].possesion;
+
+				_vOb.push_back(ob);
+
+				//===========================================================
 
 				//=============== z order를 위한 ===================
 				tagRender render;
@@ -362,6 +416,20 @@ void mapObject::loadObject(void)
 				object.type = _vLootSaveInfo[i][j].type;
 				object.img = IMAGEMANAGER->findImage("unit_dungeon");
 				object.shadowImg = IMAGEMANAGER->findImage("unit_dungeon_shadow");
+
+				//================== 오브젝트 추가를 위한 ======================
+
+				tagObject ob;
+				ZeroMemory(&ob, sizeof(tagObject));
+				ob.type = 5;
+				ob.sub = object.indexX + object.indexY * 4;
+				ob.x = object.point.x + object.enterX;
+				ob.y = object.point.y + object.enterY;
+				ob.possesion = _vLootSaveInfo[i][j].possesion;
+
+				_vOb.push_back(ob);
+
+				//===========================================================
 
 
 				//=============== z order를 위한 ===================

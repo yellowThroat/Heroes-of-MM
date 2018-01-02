@@ -246,6 +246,7 @@ typedef struct tagBuildingInfo
 	image* imgShadow;
 	image* portrait;
 	struct tagCampInfo campInfo;
+	int possesion;
 	int elements;
 	int imgX, imgY;
 	int sizeX, sizeY;
@@ -310,6 +311,7 @@ struct tagSaveInfo
 	int imgX,  imgY;
 	int sizeX,  sizeY;
 	int enterX, enterY;
+	int possesion;
 	bool closed;
 	bool enter;
 	bool loot;

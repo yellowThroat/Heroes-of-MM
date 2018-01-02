@@ -16,25 +16,27 @@ struct tagMapObject
 	bool visit;
 };
 
-//============================
-// 0 : mine
-// 1 : 
-//
-//
-//
-//
-//
-//============================
+//========== type ==============//
+//								//
+//		0 : mine				//
+//		1 : event				//
+//		2 : resources			//
+//		3 : artifact			//
+//		4 : castle creature		//
+//		5 : dungeon creature	//
+//								//
+//==============================//
 
 struct tagObject
 {
-	int type;
-	int sub;
-	int x;
-	int y;
-	int possesion;
-	int player;
-	vector<tagCreature> vCreature;
+	int type;						// 무슨 종류 인가
+	int sub;						// 그 중 어떤 물건인가
+	int x;							// x 좌표
+	int y;							// y 좌표
+	int possesion;					// 가지고 있는 자원량 
+	int player;						// 어느 플레이어거 상태인가
+	bool active;					// 이번 주 활성화된적 있는가
+	vector<int> visitor;			// 방문한적 있는 영웅들 모음
 };
 
 class zOrder;

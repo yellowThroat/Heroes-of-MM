@@ -7,6 +7,7 @@
 class playMap;
 class gameScene;
 class zOrder;
+class mapObject;
 
 
 class player : public gameNode
@@ -15,6 +16,7 @@ private:
 	playMap* _pm;
 	gameScene* _gs;
 	zOrder* _zOrder;
+	mapObject* _ob;
 
 private:
 	typedef vector<hero*> vHero;
@@ -32,13 +34,16 @@ private:
 	myBuilding _myBuilding;			// 플레이어가 가진 건물수
 	POINT _mouseArr;
 	POINT _destination;
+	POINT _enemyCor;				// 적 정보 보기
 
 private:
+	char _enemyName[256];			// 적 이름 보기
 	bool _myTurn;					// 플레이어 차례인가
 	bool _cityScene;				// 도시안에 들어갔을때
 	bool _autoCamera;				// 영웅이동중 카메라 쫓아가기
 	bool _window;					// 메뉴창을 열었을때 클릭 방지를 위해 
 	bool _creatureinfo;				// 크리쳐 정보창을 킴
+	int _enemyInfo;					// 적 정보창을 띄우는용 -1 이면 false
 	int _myNum;						// 플레이어 값
 	int _currentHero;				// 현재 조정중인 영웅
 	int _currentCamp;				// 현재 보고있는 마을
@@ -62,6 +67,7 @@ public:
 	void cityScene(void);
 	void fieldScene(void);
 	void heroInfoDraw(void);
+	void enemyInfoDraw(void);
 
 	
 	//================ S E T T I N G =========
@@ -110,6 +116,7 @@ public:
 	void setPlayMapAddressLink(playMap* pm) { _pm = pm; }
 	void setGameSceneAddressLink(gameScene* gs) { _gs = gs; }
 	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }
+	void setMapObjectAddressLink(mapObject* mo) { _ob= mo; }
 
 
 

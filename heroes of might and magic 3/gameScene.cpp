@@ -33,6 +33,7 @@ HRESULT gameScene::init(void)
 	_player->setPlayMapAddressLink(_pm);
 	_player->setGameSceneAddressLink(this);
 	_player->setzOrderAddressLink(_zOrder);
+	_player->setMapObjectAddressLink(_ob);
 	_pm->setzOrderAddressLink(_zOrder);
 	_ob->setzOrderAddressLink(_zOrder);
 	_zOrder->setPlayerAddressLink(_player);

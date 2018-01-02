@@ -1620,6 +1620,9 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("unit_dungeon_shadow", "image/mapTool/unit/unit_dungeon_shadow.bmp", 256, 256, 4, 4, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("unit_castle_shadow")->AlphaInit();
 	IMAGEMANAGER->findImage("unit_dungeon_shadow")->AlphaInit();
+	IMAGEMANAGER->addImage("window_unit", "image/mapTool/unit/window_unit.bmp", 264, 264, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window_unit_shadow", "image/mapTool/unit/window_unit_shadow.bmp", 264, 264, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("window_unit_shadow")->AlphaInit();
 
 	//================ M I N I   M A P =====================
 	IMAGEMANAGER->addImage("miniView72", "image/mapTool/miniView72_.bmp", 48, 36, true, RGB(255, 0, 255));
