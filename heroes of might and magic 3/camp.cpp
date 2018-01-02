@@ -55,6 +55,7 @@ HRESULT camp::init(building info)
 	_showWindow = false;
 	_inHero = false;
 	_entry = false;
+	_firstCamp = 0;
 	_creature = -1;
 	_recruitNum = 0;
 	_recruitMax = 0;
@@ -257,15 +258,21 @@ void camp::castleDraw(void)
 	IMAGEMANAGER->findImage("camp_fort")->frameRender(getMemDC(),
 		122, 413, _fort-1, 0);
 
-	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	for (int i = _firstCamp; i < _firstCamp +3; i++)
 	{
 		//745 57
+		if(i < _gs->getvCamp().size())
 		IMAGEMANAGER->findImage("camp_portrait1")->frameRender(getMemDC(),
 			745,
-			431 + _gs->getvCamp()[i]->getNum() * 32, 
+			431 + (i - _firstCamp)* 32, 
 			_gs->getvCamp()[i]->getCityInfo().camp,
 			_gs->getvCamp()[i]->getBuilt());
+
+	
 	}
+
+	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(), 744,
+		430 + (_play->getCurrentCamp() - _firstCamp)*32);
 
 
 	if (_showWindow)
@@ -805,6 +812,9 @@ void camp::dungeonDraw(void)
 			_gs->getvCamp()[i]->getCityInfo().camp,
 			_gs->getvCamp()[i]->getBuilt());
 	}
+
+	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(), 744,
+		430 + (_play->getCurrentCamp() - _firstCamp) * 32);
 
 	if (_showWindow)
 	{
@@ -1513,6 +1523,21 @@ void camp::inputCity(void)
 	{
 		if (!_showWindow)
 		{
+			// 다른 성을 봐볼까?
+			for (int i = 0; i < 3; i++)
+			{
+				if (PtInRect(&RectMake(745, 431 + i*32 , 46, 30), _ptMouse) && i+_firstCamp < _gs->getvCamp().size())
+				{
+					if (_play->getCurrentCamp() != i + _firstCamp)
+					{
+						_play->setCurrentCamp(i + _firstCamp);
+						_gs->getvCamp()[i + _firstCamp]->setProperty(_property);
+					}
+				}
+			}
+
+
+
 			switch (_camp)
 			{
 			case CAMP_CASTLE:

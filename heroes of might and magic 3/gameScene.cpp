@@ -133,10 +133,10 @@ void gameScene::render(void)
 		}
 
 		_pm->attributeDraw();
-		_player->render();								// z order 4 인방 영
-
 
 		_zOrder->render();
+
+		_player->render();								// z order 4 인방 영
 
 		_ui->render();
 

@@ -169,8 +169,8 @@ struct tagRender
 	int sourX, sourY;
 	int alpha;
 
-	int identity;
-	int kind;
+	int identity;						// 영웅 누구인지
+	int kind;							// 종류
 
 	bool operator<(const tagRender &v) const {
 		return (destY + sizeY + kind< v.destY + v.sizeY + v.kind);
@@ -185,6 +185,7 @@ struct tagTileInfo
 	bool isChanged;
 	bool isClosed;
 	bool entrance;
+	bool loot;
 	int sourX, sourY;
 	int destX, destY;
 	int miniX, miniY;
@@ -254,6 +255,8 @@ typedef struct tagBuildingInfo
 	int miniX;
 	bool isClosed;
 	bool enter;
+	bool loot;
+
 
 	bool operator<(const tagBuildingInfo &v) const {
 		return (destY + enterY < v.destY + v.enterY);
@@ -309,6 +312,7 @@ struct tagSaveInfo
 	int enterX, enterY;
 	bool closed;
 	bool enter;
+	bool loot;
 	struct tagCampInfo campInfo;
 
 };

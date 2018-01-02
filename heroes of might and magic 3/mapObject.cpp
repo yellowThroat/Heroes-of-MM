@@ -169,8 +169,8 @@ void mapObject::loadObject(void)
 				object.indexX = _vLootSaveInfo[i][j].sourX;
 				object.indexY = _vLootSaveInfo[i][j].sourY;
 				object.visit = false;
-				object.enterX = i;
-				object.enterY = j;
+				object.enterX = _vBuildSaveInfo[i][j].enterX;
+				object.enterY = _vBuildSaveInfo[i][j].enterY;
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
@@ -187,8 +187,8 @@ void mapObject::loadObject(void)
 				object.indexX = _vLootSaveInfo[i][j].sourX;
 				object.indexY = _vLootSaveInfo[i][j].sourY;
 				object.visit = false;
-				object.enterX = i;
-				object.enterY = j;
+				object.enterX = _vBuildSaveInfo[i][j].enterX;
+				object.enterY = _vBuildSaveInfo[i][j].enterY;
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
@@ -217,9 +217,28 @@ void mapObject::loadObject(void)
 
 				}
 
+				//=============== z order를 위한 ===================
+				tagRender render;
+				ZeroMemory(&render, sizeof(tagRender));
+
+				render.img = object.img;
+				render.shadowImg = object.shadowImg;
+				render.flag = NULL;
+				render.destX = (object.point.x - object.imgX) * TILESIZE;
+				render.destY = (object.point.y - object.imgY) * TILESIZE;
+				render.sourX = object.indexX;
+				render.sourY = object.indexY;
+				render.sizeX = 0;
+				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
+				render.identity = 255;
+				render.kind = 0;
+				_zOrder->addRender(render);
 
 
-				_vObject.push_back(object);
+				//==================================================
+
+
+				//_vObject.push_back(object);
 
 			}
 			else if ((_vLootSaveInfo[i][j].type & ELEMENTCASTLE) == ELEMENTCASTLE )
@@ -232,8 +251,8 @@ void mapObject::loadObject(void)
 				object.indexX = _vLootSaveInfo[i][j].sourX;
 				object.indexY = _vLootSaveInfo[i][j].sourY;
 				object.visit = false;
-				object.enterX = i;
-				object.enterY = j;
+				object.enterX = _vBuildSaveInfo[i][j].enterX;
+				object.enterY = _vBuildSaveInfo[i][j].enterY;
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
@@ -241,8 +260,28 @@ void mapObject::loadObject(void)
 				object.shadowImg = IMAGEMANAGER->findImage("unit_castle_shadow");
 
 
+				//=============== z order를 위한 ===================
+				tagRender render;
+				ZeroMemory(&render, sizeof(tagRender));
 
-				_vObject.push_back(object);
+				render.img = object.img;
+				render.shadowImg = object.shadowImg;
+				render.flag = NULL;
+				render.destX = (object.point.x - object.imgX) * TILESIZE;
+				render.destY = (object.point.y - object.imgY) * TILESIZE;
+				render.sourX = object.indexX;
+				render.sourY = object.indexY;
+				render.sizeX = 0;
+				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
+				render.identity = 255;
+				render.kind = 0;
+				_zOrder->addRender(render);
+
+
+				//==================================================
+
+
+				//_vObject.push_back(object);
 
 			}
 			else if((_vLootSaveInfo[i][j].type & ELEMENTDUNGEON) == ELEMENTDUNGEON)
@@ -255,8 +294,8 @@ void mapObject::loadObject(void)
 				object.indexX = _vLootSaveInfo[i][j].sourX;
 				object.indexY = _vLootSaveInfo[i][j].sourY;
 				object.visit = false;
-				object.enterX = i;
-				object.enterY = j;
+				object.enterX = _vBuildSaveInfo[i][j].enterX;
+				object.enterY = _vBuildSaveInfo[i][j].enterY;
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
@@ -264,8 +303,28 @@ void mapObject::loadObject(void)
 				object.shadowImg = IMAGEMANAGER->findImage("unit_dungeon_shadow");
 
 
+				//=============== z order를 위한 ===================
+				tagRender render;
+				ZeroMemory(&render, sizeof(tagRender));
 
-				_vObject.push_back(object);
+				render.img = object.img;
+				render.shadowImg = object.shadowImg;
+				render.flag = NULL;
+				render.destX = (object.point.x - object.imgX) * TILESIZE;
+				render.destY = (object.point.y - object.imgY) * TILESIZE;
+				render.sourX = object.indexX;
+				render.sourY = object.indexY;
+				render.sizeX = 0;
+				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
+				render.identity = 255;
+				render.kind = 0;
+				_zOrder->addRender(render);
+
+
+				//==================================================
+
+
+				//_vObject.push_back(object);
 
 
 			}

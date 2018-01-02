@@ -83,7 +83,7 @@ void ui::draw(void)
 		int mana = _player->getHero()[i]->getMana();
 
 		_player->getHero()[i]->getHeroInfo().portraitSmall->frameRender(getMemDC(),
-			804, 211 + 32 * i,
+			804, 211 + 32 * (i-_firstHero),
 			_player->getHero()[i]->getHeroInfo().indexX,
 			_player->getHero()[i]->getHeroInfo().indexY);
 
@@ -101,13 +101,13 @@ void ui::draw(void)
 
 	}
 
-	for (int i = 0; i < _gs->getvCamp().size(); i++)
+	for (int i = _firstCamp; i < _firstCamp + 5; i++)
 	{
-		if (_gs->getvCamp()[i]->getPlayerNum() == 0)
+		if (i < _gs->getvCamp().size())
 		{
 			IMAGEMANAGER->findImage("camp_portrait1")->frameRender(getMemDC(),
 				931,
-				211 + _gs->getvCamp()[i]->getNum() * 32,
+				211 + (i - _firstCamp) * 32,
 				_gs->getvCamp()[i]->getCityInfo().camp,
 				(int)_gs->getvCamp()[i]->getBuilt());
 
@@ -393,6 +393,8 @@ void ui::input(void)
 					}
 				}
 
+
+				//============ 성 선택할때
 				if (PtInRect(&RectMake(930, 211 + i *32, 46, 30), _ptMouse))
 				{
 					if (i + _firstCamp < _player->getBuilding().camp)
@@ -400,10 +402,12 @@ void ui::input(void)
 						if (i + _firstCamp != _player->getCurrentCamp())
 						{
 							_player->setCurrentCamp(i + _firstCamp);
+							
 						}
 						else
 						{
 							_player->setScene(true);
+							_gs->getvCamp()[_player->getCurrentCamp()]->setProperty(_player->getProperty());
 						}
 					}
 				}

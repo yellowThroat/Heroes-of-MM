@@ -165,6 +165,9 @@ void playMap::attributeDraw(void)
 					if (_map[i][j].entrance)
 						IMAGEMANAGER->findImage("enter")->render(getMemDC(),
 							i*TILESIZE - _cameraX, j*TILESIZE - _cameraY);
+					if (_map[i][j].loot)
+						IMAGEMANAGER->findImage("loot")->render(getMemDC(),
+							i*TILESIZE - _cameraX, j*TILESIZE - _cameraY);
 
 				}
 
@@ -314,6 +317,7 @@ void playMap::loadMap(int saveNum)
 			//====================== load build ========================
 			_map[i][j].isClosed = _buildSaveInfo[i][j].closed;
 			_map[i][j].entrance = _buildSaveInfo[i][j].enter;
+			_map[i][j].loot = _buildSaveInfo[i][j].loot;
 
 			if ((_vBuildSaveInfo[i][j].type & ELEMENTOBS) ==  ELEMENTOBS)
 			{

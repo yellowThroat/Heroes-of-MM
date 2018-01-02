@@ -489,7 +489,7 @@ void player::addHero(POINT point,tagHero heroInfo)
 	render.sizeX = 0;
 	render.sizeY = 2* TILESIZE;
 	render.identity = he->getMyNum();
-	render.kind = 1;
+	render.kind = 10;
 
 	_zOrder->addRender(render);
 
@@ -732,10 +732,13 @@ void player::inputField(void)
 
 				}
 
-				else  if (_mouseArr.x == _vHero[i]->getHeroDest().x &&
-					_mouseArr.y == _vHero[i]->getHeroDest().y &&
-					!_vHero[i]->getGoOn() && _currentHero == _vHero[i]->getMyNum() &&
-					_vHero[i]->getPath().size() && !_pm->getClosed(_mouseArr.x, _mouseArr.y) &&
+				else  if (
+					_mouseArr.x == _vHero[i]->getHeroDest().x	&&
+					_mouseArr.y == _vHero[i]->getHeroDest().y	&&
+					!_vHero[i]->getGoOn()						&&
+					_currentHero == _vHero[i]->getMyNum()		&&
+					_vHero[i]->getPath().size()					&& 
+					!(_pm->getClosed(_mouseArr.x, _mouseArr.y)	&& !_pm->getTileInfo(_mouseArr.x,_mouseArr.y).loot)	&&
 					_vHero[i]->getNeedAp() <= _vHero[i]->getAP())
 				{
 					_vHero[i]->setGoOn(true);

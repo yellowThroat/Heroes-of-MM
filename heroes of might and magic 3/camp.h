@@ -110,6 +110,7 @@ private:
 	int _creature;				// 현재 선택한 크리쳐
 	int _recruitNum;			// 몇마리 고용할거늬?
 	int _recruitMax;			// 최대 몇마리 고용가능한지
+	int _firstCamp;				// 첫번째 캠프는 어듸?
 	bool _cityScene;			// 건물 안으로 들어왔는가
 	bool _inHero;				// 안에 영웅 있늬?
 	bool _entry;				// 영웅이 눌러 앉았늬?

@@ -8,8 +8,8 @@ struct tagPathFind
 	int h;
 	int nodeX, nodeY;
 	int parentX, parentY;
-	//int road;
-	//int direction;;
+	int road;
+	int direction;;
 	bool operator<(const tagPathFind &v) const {
 		return (f  < v.f );
 	}
@@ -25,7 +25,7 @@ struct tagPathFindSecond
 	int road;
 	int direction;
 	bool operator<(const tagPathFindSecond &v) const {
-		return (h < v.h);
+		return (h - road - direction < v.h - v.road - v.direction);
 	}
 };
 
@@ -91,6 +91,7 @@ public:
 	
 	//============ G E T T E R ================
 	tagRoadInfo getRoadInfo(int x, int y) { return _road[x][y]; }
+	tagTileInfo getTileInfo(int x, int y) { return _map[x][y]; }
 	float getCameraX() { return _cameraX; }
 	float getCameraY() { return _cameraY; }
 	POINT getCameraArr() { return _cameraArr; }

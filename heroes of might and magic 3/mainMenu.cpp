@@ -1649,10 +1649,13 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("width", "image/mapTool/line_width.bmp", 768, 2, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("height", "image/mapTool/line_height.bmp", 2, 576, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("closed", "image/mapTool/closedArea.bmp", 32, 32, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("loot", "image/mapTool/loot.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("closed")->AlphaInit();
 	IMAGEMANAGER->findImage("closed")->setAlphaSource(50);
 	IMAGEMANAGER->addImage("enter", "image/mapTool/enter.bmp", 32, 32, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("enter")->AlphaInit();
+	IMAGEMANAGER->findImage("loot")->AlphaInit();
+	
 
 	//=============== B U T T O N =========================
 	IMAGEMANAGER->addFrameImage("button_ma", "image/mapTool/button_ma.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));

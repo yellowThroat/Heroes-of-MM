@@ -362,16 +362,16 @@ void mapTool::saveMap(string fileName)
 			_mapSaveInfo[i][j].miniX = _mapArr[i][j].miniX;
 			_mapSaveInfo[i][j].miniY = _mapArr[i][j].miniY;
 			//====================== 길 저장 ====================
-			if (_roadArr[i][j].road != ROAD_END)
-			{
-				 _roadSaveInfo[i][j].sourX = _roadArr[i][j].sourX;
-				 _roadSaveInfo[i][j].sourY = _roadArr[i][j].sourY;
-				 _roadSaveInfo[i][j].type = _roadArr[i][j].road +1;
-			}
+			//if (_roadArr[i][j].road != ROAD_END)
+			//{
+			 _roadSaveInfo[i][j].sourX = _roadArr[i][j].sourX;
+			 _roadSaveInfo[i][j].sourY = _roadArr[i][j].sourY;
+			 _roadSaveInfo[i][j].type = _roadArr[i][j].road +1;
+			//}
 			//====================== closed & enter ==============
 			_buildSaveInfo[i][j].closed = _buildArr[i][j].isClosed;
 			_buildSaveInfo[i][j].enter = _buildArr[i][j].enter;
-
+			_buildSaveInfo[i][j].loot = _buildArr[i][j].loot;
 			//================== vBuild _vLoot 초기화 ==========================
 			
 			ZeroMemory(&_vBuildSaveInfo[i][j], sizeof(tagSaveInfo));
@@ -585,6 +585,10 @@ void mapTool::loadMap(string fileName)
 				_roadArr[i][j].road = ROAD_RIVER;
 
 			break;
+			case 4:
+				_roadArr[i][j].img = NULL;
+				_roadArr[i][j].road = ROAD_END;
+			break;
 			}
 			_roadArr[i][j].sourX = _roadSaveInfo[i][j].sourX;
 			_roadArr[i][j].sourY = _roadSaveInfo[i][j].sourY;
@@ -592,7 +596,7 @@ void mapTool::loadMap(string fileName)
 			//====================== load build ========================
 			_buildArr[i][j].isClosed = _buildSaveInfo[i][j].closed;
 			_buildArr[i][j].enter = _buildSaveInfo[i][j].enter;
-
+			_buildArr[i][j].loot = _buildSaveInfo[i][j].loot;
 
 
 			//====================== load vBuild =======================
@@ -4319,7 +4323,8 @@ void mapTool::addLooting(int arrX, int arrY)
 	}
 
 	//================= 입구 설정
-	_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+	//_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+	_buildArr[build.destX + build.enterX][build.destY + build.enterY].loot = true;
 
 	//=============== 금지 구역 설정
 	for (int i = build.destX; i < build.destX + build.sizeX; i++)
@@ -4408,7 +4413,8 @@ void mapTool::addUnit(int arrX, int arrY)
 		}
 
 		//================= 입구 설정
-		_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+		//_buildArr[build.destX + build.enterX][build.destY + build.enterY].enter = true;
+		_buildArr[build.destX + build.enterX][build.destY + build.enterY].loot = true;
 
 		//=============== 금지 구역 설정
 		for (int i = build.destX; i < build.destX + build.sizeX; i++)

@@ -17,7 +17,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 
 
 
-	if (_map[destX][destY].isClosed ||
+	if ((_map[destX][destY].isClosed && !_map[destX][destY].loot)||
 		_map[destX][destY].tile == TILE_WATER ) return shortestPath;
 
 
@@ -32,32 +32,32 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 	currentNode.parentX = x;
 	currentNode.parentY = y;
 	currentNode.g = 0;
-	//currentNode.direction = 0;
-	//if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
-	//	_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
-	//{
-	//	currentNode.road = 2;
-	//}
-	//else currentNode.road = 0;
+	currentNode.direction = 0;
+	if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
+		_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
+	{
+		currentNode.road = 2;
+	}
+	else currentNode.road = 0;
 
 	if (abs(destX - currentNode.nodeX) >= abs(destY - currentNode.nodeY))
 	{
 		int diagonal = abs(destY - currentNode.nodeY);
 		int vertical = abs(destX - currentNode.nodeX) - diagonal;
 
-		currentNode.h = diagonal * 14 + vertical * 10;
+		currentNode.h = diagonal * 140 + vertical * 100;
 
-		//if (currentNode.road == 2 && diagonal) currentNode.h -= 35;
-		//else if (currentNode.road == 2 && !diagonal) currentNode.h -= 25;
+		if (currentNode.road == 2 && diagonal) currentNode.h -= 35;
+		else if (currentNode.road == 2 && !diagonal) currentNode.h -= 25;
 	}
 	else
 	{
 		int diagonal = abs(destX - currentNode.nodeX);
 		int vertical = abs(destY - currentNode.nodeY) - diagonal;
-		currentNode.h = diagonal * 14 + vertical * 10;
+		currentNode.h = diagonal * 140 + vertical * 100;
 
-		//if (currentNode.road == 2 && diagonal) currentNode.h -= 35;
-		//else if (currentNode.road == 2 && !diagonal) currentNode.h -= 25;
+		if (currentNode.road == 2 && diagonal) currentNode.h -= 35;
+		else if (currentNode.road == 2 && !diagonal) currentNode.h -= 25;
 
 	}
 	currentNode.f = currentNode.g + currentNode.h;
@@ -81,8 +81,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 			currentNode.h = _openlist[0].h;
 			currentNode.parentX = _openlist[0].parentX;
 			currentNode.parentY = _openlist[0].parentY;
-			//currentNode.road = _openlist[0].road;
-			//currentNode.direction = _openlist[0].direction;
+			currentNode.road = _openlist[0].road;
+			currentNode.direction = _openlist[0].direction;
 			_openlist.erase(_openlist.begin());
 
 
@@ -102,123 +102,123 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 
 				if (_map[currentNode.nodeX + i][currentNode.nodeY + j].entrance && j == 1 && i == 0) continue;
 
-				if (alreadyOpend(currentNode.nodeX + i, currentNode.nodeY + j))
-				{
-					ZeroMemory(&findNode, sizeof(tagPathFind));
-					for (int k = 0; k < _openlist.size(); k++)
-					{
-						if (_openlist[k].nodeX == currentNode.nodeX + i &&
-							_openlist[k].nodeY == currentNode.nodeY + j)
-						{
-							findNode.nodeX = _openlist[k].nodeX;
-							findNode.nodeY = _openlist[k].nodeY;
-							findNode.f = _openlist[k].f;
-							findNode.g = _openlist[k].g;
-							findNode.h = _openlist[k].h;
-							findNode.parentX = _openlist[k].parentX;
-							findNode.parentY = _openlist[k].parentY;
-							//findNode.direction = _openlist[k].direction;
-							//findNode.road = _openlist[k].road;
-							break;
-						}
-					}
-
-
-					if (i == 0 || j == 0)
-					{
-						//if (findNode.road == 2)
-						//{
-						//	if (currentNode.g >= findNode.g + 75)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 75;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//
-						//
-						//
-						//}
-						//else
-						//{
-						//	if (currentNode.g >= findNode.g + 100)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 100;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//}
-
-
-
-
-
-
-						if (currentNode.g >= findNode.g + 10)
-						{
-							_closelist[_closelist.size() - 1].g = findNode.g + 10;
-							_closelist[_closelist.size() - 1].f = 
-								_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-							_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-							_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						}
-					}
-					else
-					{
-						//if (findNode.road == 2)
-						//{
-						//	if (currentNode.g >= findNode.g + 105)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 105;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//
-						//
-						//
-						//}
-						//else
-						//{
-						//	if (currentNode.g >= findNode.g + 140)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 140;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//}
-
-
-
-
-
-						if (currentNode.g >= findNode.g + 14)
-						{
-							_closelist[_closelist.size() - 1].g = findNode.g + 14;
-							_closelist[_closelist.size() - 1].f =
-								_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-							_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-							_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						}
-
-					}
-					currentNode.g = _closelist[_closelist.size() - 1].g;
-					currentNode.f = _closelist[_closelist.size() - 1].f;
-					currentNode.parentX = _closelist[_closelist.size() - 1].parentX;
-					currentNode.parentY = _closelist[_closelist.size() - 1].parentY;
-
-				}
-				else if(alreadyClosed(currentNode.nodeX + i, currentNode.nodeY + j))
+				//if (alreadyOpend(currentNode.nodeX + i, currentNode.nodeY + j))
+				//{
+				//	ZeroMemory(&findNode, sizeof(tagPathFind));
+				//	for (int k = 0; k < _openlist.size(); k++)
+				//	{
+				//		if (_openlist[k].nodeX == currentNode.nodeX + i &&
+				//			_openlist[k].nodeY == currentNode.nodeY + j)
+				//		{
+				//			findNode.nodeX = _openlist[k].nodeX;
+				//			findNode.nodeY = _openlist[k].nodeY;
+				//			findNode.f = _openlist[k].f;
+				//			findNode.g = _openlist[k].g;
+				//			findNode.h = _openlist[k].h;
+				//			findNode.parentX = _openlist[k].parentX;
+				//			findNode.parentY = _openlist[k].parentY;
+				//			findNode.direction = _openlist[k].direction;
+				//			findNode.road = _openlist[k].road;
+				//			break;
+				//		}
+				//	}
+				//
+				//
+				//	if (i == 0 || j == 0)
+				//	{
+				//		if (findNode.road == 2)
+				//		{
+				//			if (currentNode.g >= findNode.g + 75)
+				//			{
+				//				_closelist[_closelist.size() - 1].g = findNode.g + 75;
+				//				_closelist[_closelist.size() - 1].f =
+				//					_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+				//				_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+				//				_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+				//			}
+				//		
+				//		
+				//		
+				//		
+				//		}
+				//		else
+				//		{
+				//			if (currentNode.g >= findNode.g + 100)
+				//			{
+				//				_closelist[_closelist.size() - 1].g = findNode.g + 100;
+				//				_closelist[_closelist.size() - 1].f =
+				//					_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+				//				_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+				//				_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+				//			}
+				//		
+				//		}
+				//
+				//
+				//
+				//
+				//
+				//
+				//		//if (currentNode.g >=findNode.g + 10)
+				//		//{
+				//		//	_closelist[_closelist.size() - 1].g = findNode.g + 10;
+				//		//	_closelist[_closelist.size() - 1].f = 
+				//		//		_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+				//		//	_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+				//		//	_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+				//		//}
+				//	}
+				//	else
+				//	{
+				//		if (findNode.road == 2)
+				//		{
+				//			if (currentNode.g >= findNode.g + 105)
+				//			{
+				//				_closelist[_closelist.size() - 1].g = findNode.g + 105;
+				//				_closelist[_closelist.size() - 1].f =
+				//					_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+				//				_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+				//				_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+				//			}
+				//		
+				//		
+				//		
+				//		
+				//		}
+				//		else
+				//		{
+				//			if (currentNode.g >= findNode.g + 140)
+				//			{
+				//				_closelist[_closelist.size() - 1].g = findNode.g + 140;
+				//				_closelist[_closelist.size() - 1].f =
+				//					_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+				//				_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+				//				_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+				//			}
+				//		
+				//		}
+				//
+				//
+				//
+				//
+				//
+				//		//if (currentNode.g >= findNode.g + 14)
+				//		//{
+				//		//	_closelist[_closelist.size() - 1].g = findNode.g + 14;
+				//		//	_closelist[_closelist.size() - 1].f =
+				//		//		_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+				//		//	_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+				//		//	_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+				//		//}
+				//
+				//	}
+				//	currentNode.g = _closelist[_closelist.size() - 1].g;
+				//	currentNode.f = _closelist[_closelist.size() - 1].f;
+				//	currentNode.parentX = _closelist[_closelist.size() - 1].parentX;
+				//	currentNode.parentY = _closelist[_closelist.size() - 1].parentY;
+				//
+				//}
+				if(alreadyClosed(currentNode.nodeX + i, currentNode.nodeY + j))
 				{
 					if (currentNode.nodeX + i < 0 || currentNode.nodeX + i >= MAXTILE ||
 						currentNode.nodeY + j < 0 || currentNode.nodeY + j >= MAXTILE) continue;
@@ -247,86 +247,86 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 
 					if (i == 0 || j == 0)
 					{
-						//if (findNode.road == 2)
-						//{
-						//	if (currentNode.g >= findNode.g + 75)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 75;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//
-						//
-						//
-						//}
-						//else
-						//{
-						//	if (currentNode.g >= findNode.g + 100)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 100;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//}
-
-
-
-
-						if (currentNode.g >= findNode.g + 10)
+						if (findNode.road == 2)
 						{
-							_closelist[_closelist.size() - 1].g = findNode.g + 10;
-							_closelist[_closelist.size() - 1].f =
-								_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-							_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-							_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+							if (currentNode.g >= findNode.g + 75)
+							{
+								_closelist[_closelist.size() - 1].g = findNode.g + 75;
+								_closelist[_closelist.size() - 1].f =
+									_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+								_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+								_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+							}
+						
+						
+						
+						
 						}
+						else
+						{
+							if (currentNode.g >= findNode.g + 100)
+							{
+								_closelist[_closelist.size() - 1].g = findNode.g + 100;
+								_closelist[_closelist.size() - 1].f =
+									_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+								_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+								_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+							}
+						
+						}
+
+
+
+
+						//if (currentNode.g >= findNode.g + 10)
+						//{
+						//	_closelist[_closelist.size() - 1].g = findNode.g + 10;
+						//	_closelist[_closelist.size() - 1].f =
+						//		_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+						//	_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+						//	_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+						//}
 					}
 					else 
 					{
-						//if (findNode.road == 2)
-						//{
-						//	if (currentNode.g >= findNode.g + 105)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 105;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//
-						//
-						//
-						//}
-						//else
-						//{
-						//	if (currentNode.g >= findNode.g + 140)
-						//	{
-						//		_closelist[_closelist.size() - 1].g = findNode.g + 140;
-						//		_closelist[_closelist.size() - 1].f =
-						//			_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-						//		_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-						//		_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
-						//	}
-						//
-						//}
-
-
-
-						if (currentNode.g >= findNode.g + 14)
+						if (findNode.road == 2)
 						{
-							_closelist[_closelist.size() - 1].g = findNode.g + 14;
-							_closelist[_closelist.size() - 1].f =
-								_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
-							_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
-							_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+							if (currentNode.g >= findNode.g + 105)
+							{
+								_closelist[_closelist.size() - 1].g = findNode.g + 105;
+								_closelist[_closelist.size() - 1].f =
+									_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+								_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+								_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+							}
+						
+						
+						
+						
 						}
+						else
+						{
+							if (currentNode.g >= findNode.g + 140)
+							{
+								_closelist[_closelist.size() - 1].g = findNode.g + 140;
+								_closelist[_closelist.size() - 1].f =
+									_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+								_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+								_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+							}
+						
+						}
+
+
+
+						//if (currentNode.g >= findNode.g + 14)
+						//{
+						//	_closelist[_closelist.size() - 1].g = findNode.g + 14;
+						//	_closelist[_closelist.size() - 1].f =
+						//		_closelist[_closelist.size() - 1].g + _closelist[_closelist.size() - 1].h;
+						//	_closelist[_closelist.size() - 1].parentX = findNode.nodeX;
+						//	_closelist[_closelist.size() - 1].parentY = findNode.nodeY;
+						//}
 
 					}
 					currentNode.g = _closelist[_closelist.size() - 1].g;
@@ -354,7 +354,8 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 
 
 
-				if (!_map[currentNode.nodeX + i][currentNode.nodeY + j].isClosed			&&
+				if ((!_map[currentNode.nodeX + i][currentNode.nodeY + j].isClosed			||
+					(currentNode.nodeX + i == destX && currentNode.nodeY + j == destY))		&&
 					!isClosed(currentNode.nodeX + i, currentNode.nodeY + j)					&&
 					_map[currentNode.nodeX + i][currentNode.nodeY + j].tile != TILE_WATER   ) 
 				{
@@ -366,12 +367,12 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 					findNode.parentX = currentNode.nodeX;
 					findNode.parentY = currentNode.nodeY;						
 				
-					//if (_road[findNode.nodeX][findNode.nodeY].road == ROAD_NORMAL ||
-					//	_road[findNode.nodeX][findNode.nodeY].road == ROAD_ROCK)
-					//{
-					//	findNode.road = 2;
-					//}
-					//else findNode.road = 0;
+					if (_road[findNode.nodeX][findNode.nodeY].road == ROAD_NORMAL ||
+						_road[findNode.nodeX][findNode.nodeY].road == ROAD_ROCK)
+					{
+						findNode.road = 2;
+					}
+					else findNode.road = 0;
 
 
 
@@ -379,32 +380,32 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 					//=======넣기 전에 FGH값 계산을 하고 =========
 					if (i == 0 || j == 0)
 					{
-						//if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
-						//	_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
-						//{
-						//	findNode.g = 75;
-						//}
-						//else findNode.g = 100;
-						//
-						//findNode.direction = 1;
+						if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
+							_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
+						{
+							findNode.g += 75;
+						}
+						else findNode.g += 100;
+						
+						findNode.direction = 1;
 
 
 
-						findNode.g += 10;
+						//findNode.g += 10;
 					}
 					else
 					{
-						//if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
-						//	_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
-						//{
-						//	findNode.g = 105;
-						//}
-						//else findNode.g = 140;
-						//
-						//
-						//findNode.direction = 0;
+						if (_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_NORMAL ||
+							_road[currentNode.nodeX][currentNode.nodeY].road == ROAD_ROCK)
+						{
+							findNode.g += 105;
+						}
+						else findNode.g += 140;
+						
+						
+						findNode.direction = 0;
 
-						findNode.g += 14;
+						//findNode.g += 14;
 					}
 
 					if (abs(destX - findNode.nodeX) >= abs(destY - findNode.nodeY))
@@ -412,19 +413,19 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 						int diagonal = abs(destY - findNode.nodeY);
 						int vertical = abs(destX - findNode.nodeX) - diagonal;
 
-						findNode.h = diagonal * 14 + vertical * 10;
+						findNode.h = diagonal * 140 + vertical * 100;
 
-						//if (findNode.road == 2 && diagonal) findNode.h -= 35;
-						//else if (findNode.road == 2 && !diagonal) findNode.h -= 25;
+						if (findNode.road == 2 && diagonal) findNode.h -= 35;
+						else if (findNode.road == 2 && !diagonal) findNode.h -= 25;
 					}
 					else
 					{
 						int diagonal = abs(destX - findNode.nodeX);
 						int vertical = abs(destY - findNode.nodeY) - diagonal;
-						findNode.h = diagonal * 14 + vertical * 10;
+						findNode.h = diagonal * 140 + vertical * 100;
 
-						//if (findNode.road == 2 && diagonal) findNode.h -= 35;
-						//else if (findNode.road == 2 && !diagonal) findNode.h -= 25;
+						if (findNode.road == 2 && diagonal) findNode.h -= 35;
+						else if (findNode.road == 2 && !diagonal) findNode.h -= 25;
 					}
 					findNode.f = findNode.g + findNode.h;
 
