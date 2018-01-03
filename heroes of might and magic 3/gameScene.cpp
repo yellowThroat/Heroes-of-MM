@@ -141,6 +141,7 @@ void gameScene::render(void)
 
 		_ui->render();
 
+		if(_player->getHero().size())
 		_player->getHero()[_player->getCurrentHero()]->uiDraw();
 	}
 

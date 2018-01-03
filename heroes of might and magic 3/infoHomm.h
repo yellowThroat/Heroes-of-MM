@@ -165,6 +165,7 @@ struct tagRender
 	image* flag;
 
 	int destX, destY;
+	int arrX, arrY;
 	int sizeX, sizeY;
 	int sourX, sourY;
 	int alpha;

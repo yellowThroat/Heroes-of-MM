@@ -61,10 +61,10 @@ HRESULT camp::init(building info)
 	_recruitMax = 0;
 	_hero = NULL;
 
-	addCreature(_camp, 6, 0, 10);
-	addCreature(_camp, 6, 0, 1);
-	addCreature(_camp, 6, 0, 123);
-	addCreature(_camp, 5, 0, 1);
+	//addCreature(_camp, 6, 0, 10);
+	//addCreature(_camp, 6, 0, 1);
+	//addCreature(_camp, 6, 0, 123);
+	//addCreature(_camp, 5, 0, 1);
 
 
 	switch (_buildingInfo.camp)

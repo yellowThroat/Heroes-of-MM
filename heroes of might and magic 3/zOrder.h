@@ -21,6 +21,7 @@ public:
 	void render(void);
 
 	void addRender(tagRender render);
+	void deleteRender(int x, int y);
 
 	void setPlayerAddressLink(player* pl) { _player = pl; }
 

@@ -49,6 +49,9 @@ struct tagCreature
 
 	int position;			// 위치 0~6
 
+	int startX;				// 그릴때 좌표
+	int startY;				// 상동
+
 	char name[256];			// 이름
 
 	int atk;				// 공격력

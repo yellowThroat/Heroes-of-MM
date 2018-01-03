@@ -244,6 +244,8 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 3;
 					creature.speed = 4;
+					creature.startX = 58;
+					creature.startY = 119;
 
 					creature.img[0]->init("image/Castle Creature/11_pikeman/pikeman_attack_down.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/11_pikeman/pikeman_attack_front.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
@@ -279,7 +281,9 @@ namespace HOMM_HERO
 					creature.minDmg = 2;
 					creature.maxDmg = 3;
 					creature.speed = 5;
-
+					creature.startX = 57;
+					creature.startY = 119;
+					 
 					creature.img[0]->init("image/Castle Creature/12_halberdier/halberdier_attack_down.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/12_halberdier/halberdier_attack_front.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
 					creature.img[2]->init("image/Castle Creature/12_halberdier/halberdier_attack_up.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
@@ -319,6 +323,9 @@ namespace HOMM_HERO
 					creature.minDmg = 2;
 					creature.maxDmg = 3;
 					creature.speed = 4;
+					creature.startX = 57;
+					creature.startY = 100;
+
 					creature.img[0]->init("image/Castle Creature/21_archer/archer_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/21_archer/archer_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[2]->init("image/Castle Creature/21_archer/archer_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
@@ -355,6 +362,8 @@ namespace HOMM_HERO
 					creature.minDmg = 2;
 					creature.maxDmg = 3;
 					creature.speed = 6;
+					creature.startX = 57;
+					creature.startY = 100;
 
 					creature.img[0]->init("image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/22_mask/mask_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
@@ -396,6 +405,8 @@ namespace HOMM_HERO
 					creature.minDmg = 3;
 					creature.maxDmg = 6;
 					creature.speed = 6;
+					creature.startX = 100;
+					creature.startY = 120;
 
 					creature.img[0]->init("image/Castle Creature/31_griffin/griffin_attack_down.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/31_griffin/griffin_attack_front.bmp", 1400, 280, 7, 2, true, RGB(255, 0, 255));
@@ -432,6 +443,8 @@ namespace HOMM_HERO
 					creature.minDmg = 3;
 					creature.maxDmg = 6;
 					creature.speed = 9;
+					creature.startX = 126;
+					creature.startY = 126;
 
 					creature.img[0]->init("image/Castle Creature/32_royal/royal_attack_down.bmp", 1760, 320, 8, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/32_royal/royal_attack_front.bmp", 1540, 320, 7, 2, true, RGB(255, 0, 255));
@@ -472,6 +485,8 @@ namespace HOMM_HERO
 					creature.minDmg = 6;
 					creature.maxDmg = 9;
 					creature.speed = 5;
+					creature.startX = 80;
+					creature.startY = 120;
 
 					creature.img[0]->init("image/Castle Creature/41_sword/sword_attack_down.bmp", 960, 280, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/41_sword/sword_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
@@ -507,7 +522,8 @@ namespace HOMM_HERO
 					creature.minDmg = 7;
 					creature.maxDmg = 10;
 					creature.speed = 6;
-
+					creature.startX = 80;
+					creature.startY = 120;
 					creature.img[0]->init("image/Castle Creature/42_cru/cru_attack_down.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/42_cru/cru_attack_front.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
 					creature.img[2]->init("image/Castle Creature/42_cru/cru_attack_up.bmp", 1120, 280, 7, 2, true, RGB(255, 0, 255));
@@ -547,6 +563,8 @@ namespace HOMM_HERO
 					creature.minDmg = 10;
 					creature.maxDmg = 12;
 					creature.speed = 5;
+					creature.startX = 57;
+					creature.startY = 100;
 
 					creature.img[0]->init("image/Castle Creature/51_monk/monk_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/51_monk/monk_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
@@ -584,7 +602,8 @@ namespace HOMM_HERO
 					creature.minDmg = 10;
 					creature.maxDmg = 12;
 					creature.speed = 7;
-
+					creature.startX = 57;
+					creature.startY = 100;
 					creature.img[0]->init("image/Castle Creature/52_zealot/zealot_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/52_zealot/zealot_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[2]->init("image/Castle Creature/52_zealot/zealot_attack_melee.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
@@ -625,6 +644,8 @@ namespace HOMM_HERO
 					creature.minDmg = 15;
 					creature.maxDmg = 25;
 					creature.speed = 7;
+					creature.startX = 74;
+					creature.startY = 120;
 
 					creature.img[0]->init("image/Castle Creature/61_cavalier/cavalier_attack_down.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/61_cavalier/cavalier_attack_front.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
@@ -661,6 +682,8 @@ namespace HOMM_HERO
 					creature.minDmg = 20;
 					creature.maxDmg = 25;
 					creature.speed = 9;
+					creature.startX = 74;
+					creature.startY = 120;
 
 					creature.img[0]->init("image/Castle Creature/62_champion/champion_attack_down.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/62_champion/champion_attack_front.bmp", 1800, 280, 9, 2, true, RGB(255, 0, 255));
@@ -701,6 +724,8 @@ namespace HOMM_HERO
 					creature.minDmg = 50;
 					creature.maxDmg = 50;
 					creature.speed = 12;
+					creature.startX = 96;
+					creature.startY = 128;
 
 					creature.img[0]->init("image/Castle Creature/71_angel/angel_attack_down.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/71_angel/angel_attack_front.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
@@ -736,6 +761,8 @@ namespace HOMM_HERO
 					creature.minDmg = 50;
 					creature.maxDmg = 50;
 					creature.speed = 18;
+					creature.startX = 100;
+					creature.startY = 130;
 
 					creature.img[0]->init("image/Castle Creature/72_arc/arc_attack_down.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Castle Creature/72_arc/arc_attack_front.bmp", 1200, 280, 6, 2, true, RGB(255, 0, 255));
@@ -787,6 +814,8 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 3;
 					creature.speed = 4;
+					creature.startX = 57;
+					creature.startY = 120;
 
 					creature.img[0]->init("image/Dungeon Creature/11_troglodyte/troglodyte_down.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/11_troglodyte/troglodyte_front.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
@@ -822,6 +851,8 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 3;
 					creature.speed = 5;
+					creature.startX = 56;
+					creature.startY = 120;
 
 					creature.img[0]->init("image/Dungeon Creature/12_infernal/infernal_attack_down.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/12_infernal/infernal_attack_front.bmp", 960, 320, 6, 2, true, RGB(255, 0, 255));
@@ -861,6 +892,9 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 4;
 					creature.speed = 6;
+					creature.startX = 64;
+					creature.startY = 100;
+
 
 					creature.img[0]->init("image/Dungeon Creature/21_harpy/harpy_attack_down.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/21_harpy/harpy_attack_front.bmp", 1600, 240, 10, 2, true, RGB(255, 0, 255));
@@ -896,6 +930,8 @@ namespace HOMM_HERO
 					creature.minDmg = 1;
 					creature.maxDmg = 5;
 					creature.speed = 9;
+					creature.startX = 64;
+					creature.startY = 100;
 
 					creature.img[0]->init("image/Dungeon Creature/22_hag/hag_attack_down.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/22_hag/hag_attack_front.bmp", 1120, 240, 7, 2, true, RGB(255, 0, 255));
@@ -935,6 +971,8 @@ namespace HOMM_HERO
 					creature.minDmg = 3;
 					creature.maxDmg = 5;
 					creature.speed = 5;
+					creature.startX = 74;
+					creature.startY = 104;
 
 					creature.img[0]->init("image/Dungeon Creature/31_beholder/beholder_attack_down.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/31_beholder/beholder_attack_front.bmp", 960, 240, 6, 2, true, RGB(255, 0, 255));
@@ -972,6 +1010,8 @@ namespace HOMM_HERO
 					creature.minDmg = 3;
 					creature.maxDmg = 5;
 					creature.speed = 7;
+					creature.startX = 86;
+					creature.startY = 100;
 
 					creature.img[0]->init("image/Dungeon Creature/32_evil/evil_attack_down.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/32_evil/evil_attack_front.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
@@ -1014,6 +1054,8 @@ namespace HOMM_HERO
 					creature.minDmg = 6;
 					creature.maxDmg = 8;
 					creature.speed = 5;
+					creature.startX = 68;
+					creature.startY = 111;
 
 					creature.img[0]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/41_medusa/medusa_attack_melee.bmp", 640, 240, 4, 2, true, RGB(255, 0, 255));
@@ -1052,6 +1094,8 @@ namespace HOMM_HERO
 					creature.minDmg = 6;
 					creature.maxDmg = 8;
 					creature.speed = 6;
+					creature.startX = 89;
+					creature.startY = 110;
 
 
 					creature.img[0]->init("image/Dungeon Creature/42_queen/queen_attack_melee.bmp", 1080, 240, 6, 2, true, RGB(255, 0, 255));
@@ -1094,6 +1138,8 @@ namespace HOMM_HERO
 					creature.minDmg = 12;
 					creature.maxDmg = 20;
 					creature.speed = 6;
+					creature.startX = 58;
+					creature.startY = 100;
 
 					creature.img[0]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_down.bmp", 840, 240, 7, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/51_minotaur/minotaur_attack_front.bmp", 720, 240, 6, 2, true, RGB(255, 0, 255));
@@ -1129,6 +1175,8 @@ namespace HOMM_HERO
 					creature.minDmg = 12;
 					creature.maxDmg = 20;
 					creature.speed = 8;
+					creature.startX = 65;
+					creature.startY = 114;
 
 					creature.img[0]->init("image/Dungeon Creature/52_king/king_attack_down.bmp", 980, 280, 7, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/52_king/king_attack_front.bmp", 840, 280, 6, 2, true, RGB(255, 0, 255));
@@ -1170,6 +1218,9 @@ namespace HOMM_HERO
 					creature.minDmg = 14;
 					creature.maxDmg = 20;
 					creature.speed = 7;
+					creature.startX = 104;
+					creature.startY = 121;
+
 
 					creature.img[0]->init("image/Dungeon Creature/61_manticore/manticore_attack_down.bmp", 1000, 280, 5, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/61_manticore/manticore_attack_front.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
@@ -1205,6 +1256,8 @@ namespace HOMM_HERO
 					creature.minDmg = 14;
 					creature.maxDmg = 20;
 					creature.speed = 11;
+					creature.startX = 102;
+					creature.startY = 122;
 
 					creature.img[0]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_down.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/62_scorpicore/scorpicore_attack_front.bmp", 1600, 280, 8, 2, true, RGB(255, 0, 255));
@@ -1247,6 +1300,8 @@ namespace HOMM_HERO
 					creature.minDmg = 40;
 					creature.maxDmg = 50;
 					creature.speed = 11;
+					creature.startX = 110;
+					creature.startY = 154;
 
 					creature.img[0]->init("image/Dungeon Creature/71_red/red_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/71_red/red_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
@@ -1282,6 +1337,8 @@ namespace HOMM_HERO
 					creature.minDmg = 40;
 					creature.maxDmg = 50;
 					creature.speed = 15;
+					creature.startX = 140;
+					creature.startY = 154;
 
 					creature.img[0]->init("image/Dungeon Creature/72_black/black_attack_down.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));
 					creature.img[1]->init("image/Dungeon Creature/72_black/black_attack_front.bmp", 1800, 440, 6, 2, true, RGB(255, 0, 255));

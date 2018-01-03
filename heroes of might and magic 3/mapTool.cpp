@@ -1110,6 +1110,9 @@ void mapTool::attributeDraw(void)
 					if (_buildArr[i][j].enter)
 						IMAGEMANAGER->findImage("enter")->render(getMemDC(),
 							20 + i*TILESIZE - _mapX, 20 + j*TILESIZE - _mapY);
+					if (_buildArr[i][j].loot)
+						IMAGEMANAGER->findImage("loot")->render(getMemDC(),
+							20 + i * TILESIZE - _mapX, 20 + j * TILESIZE - _mapY);
 
 				}
 			}
@@ -3372,6 +3375,7 @@ void mapTool::deleteAll(int arrX, int arrY)
 						_buildArr[i][j].mine = MINE_NULL;
 						_buildArr[i][j].ev = EV_NULL;
 						_buildArr[i][j].isClosed = false;
+						_buildArr[i][j].loot = false;
 					}
 				}
 				_buildArr[_viLoot->destX + _viLoot->enterX][_viLoot->destY + _viLoot->enterY].enter = false;
@@ -3396,6 +3400,7 @@ void mapTool::deleteAll(int arrX, int arrY)
 						_buildArr[i][j].mine = MINE_NULL;
 						_buildArr[i][j].ev = EV_NULL;
 						_buildArr[i][j].isClosed = false;
+						_buildArr[i][j].loot = false;
 					}
 				}
 				_buildArr[_viLoot->destX + _viLoot->enterX][_viLoot->destY + _viLoot->enterY].enter = false;
@@ -6985,7 +6990,7 @@ void mapTool::inputOnUI(void)
 				{
 				case SMC_ZERO:
 
-					if (_ptMouse.y < _contents.top + 128)
+					if (_ptMouse.y < _contents.top + 96)
 					{
 						_saveIndex.x = (_ptMouse.x - _contents.left) / TILESIZE/2;
 						_saveIndex.y = (_ptMouse.y - _contents.top) / TILESIZE;

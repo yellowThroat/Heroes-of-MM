@@ -33,20 +33,20 @@ HRESULT player::init(int myNum)
 	tmp.angle = 0;
 	tmp.kind = 0;
 	*/
-	addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
-	addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
-	addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
+	//addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
+	//addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
+	//addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
 	ZeroMemory(&_myProperty, sizeof(myProperty));
 	ZeroMemory(&_myBuilding, sizeof(myBuilding));
 
 
-	_myProperty.gold = 123456;
-	_myProperty.gem = 36;
-	_myProperty.wood = 356;
-	_myProperty.iron = 785;
-	_myProperty.crystal = 99;
-	_myProperty.mercury = 123;
-	_myProperty.sulfur = 1234;
+	//_myProperty.gold = 123456;
+	//_myProperty.gem = 36;
+	//_myProperty.wood = 356;
+	//_myProperty.iron = 785;
+	//_myProperty.crystal = 99;
+	//_myProperty.mercury = 123;
+	//_myProperty.sulfur = 1234;
 	
 
 	setMyInfo();
@@ -304,17 +304,34 @@ void player::heroInfoDraw(void)
 			if (_vHero[_currentHero]->getCreature()[i].position == _currentCreature)
 			{
 				_vHero[_currentHero]->getCreature()[i].imgShadow[_vHero[_currentHero]->getCreature()[i].state]->alphaFrameRender(getMemDC(),
-					189 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameWidth() / 2,
-					127 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameHeight() / 2, 150);
+					189 - _vHero[_currentHero]->getCreature()[i].startX,
+					189 - _vHero[_currentHero]->getCreature()[i].startY, 150);
 
 				_vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->frameRender(getMemDC(),
-					189 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameWidth() / 2,
-					127 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameHeight() / 2);
+					189 - _vHero[_currentHero]->getCreature()[i].startX,
+					189 - _vHero[_currentHero]->getCreature()[i].startY);
 
 
 
 
 			}
+
+
+
+			//if (_vHero[_currentHero]->getCreature()[i].position == _currentCreature)
+			//{
+			//	_vHero[_currentHero]->getCreature()[i].imgShadow[_vHero[_currentHero]->getCreature()[i].state]->alphaFrameRender(getMemDC(),
+			//		189 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameWidth() / 2,
+			//		127 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameHeight() / 2, 150);
+			//
+			//	_vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->frameRender(getMemDC(),
+			//		189 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameWidth() / 2,
+			//		127 - _vHero[_currentHero]->getCreature()[i].img[_vHero[_currentHero]->getCreature()[i].state]->getFrameHeight() / 2);
+			//
+			//
+			//
+			//
+			//}
 		}
 
 		IMAGEMANAGER->findImage("window_creatureinfo")->render(getMemDC(), 119, 21);
@@ -458,11 +475,97 @@ void player::camera(void)
 			_pm->setCameraX(x);
 			_pm->setCameraY(y);
 			_autoCamera = false;
+			
 			(*_viHero)->setMoveEnd(false);
+
 		}
 
 		
 
+	}
+}
+
+void player::activeObject(void)
+{
+	for (int i = 0; i < _vHero.size(); i++)
+	{
+		
+		if (_ob->checkObject(_vHero[i]->getHeroDest().x, _vHero[i]->getHeroDest().y) &&
+			_pm->getTileInfo(_vHero[i]->getHeroDest().x, _vHero[i]->getHeroDest().y).loot &&
+			_vHero[i]->getGoOn())
+		{
+			int x = _vHero[i]->getHeroDest().x;
+			int y = _vHero[i]->getHeroDest().y;
+
+			switch (_ob->getvOb(x, y).type)
+			{
+			case 2:
+			{
+				switch (_ob->getvOb(x, y).sub)
+				{
+				case 0:
+				{
+					_myProperty.gold += RND->getFromIntTo(500, 1000);
+					int ran = RND->getInt(4);
+					if (!ran) _myProperty.gem += RND->getFromFloatTo(5, 7);
+					if (ran == 1) _myProperty.crystal += RND->getFromIntTo(5, 7);
+					if (ran == 2) _myProperty.sulfur += RND->getFromIntTo(5, 7);
+					if (ran == 3) _myProperty.mercury += RND->getFromIntTo(5, 7);
+
+				}
+
+				break;
+				case 1:
+
+				break;
+				case 2:
+					_myProperty.crystal += RND->getFromIntTo(3, 4);
+				break;
+				case 3:
+					_myProperty.gem += RND->getFromIntTo(3, 4);
+
+				break;
+				case 4:
+					_myProperty.gold += RND->getFromIntTo(1000, 1500);
+
+				break;
+				case 5:
+					_myProperty.mercury += RND->getFromIntTo(3, 4);
+
+				break;
+				case 6:
+					_myProperty.iron += RND->getFromIntTo(3, 4);
+
+				break;
+				case 7:
+					_myProperty.sulfur += RND->getFromIntTo(3, 4);
+
+				break;
+				case 8:
+					_myProperty.wood += RND->getFromIntTo(3, 4);
+
+				break;
+				}
+				_zOrder->deleteRender(x, y);
+				_pm->setClosed(x, y, false);
+				_pm->setLoot(x,y, false);
+				_ob->deleteOb(x, y);
+
+			}
+			break;
+			case 3:
+
+			break;
+			case 4:
+
+			break;
+			case 5:
+
+			break;
+			}
+
+
+		}
 	}
 }
 
@@ -821,6 +924,16 @@ void player::inputField(void)
 					_vHero[i]->getNeedAp() <= _vHero[i]->getAP())
 				{
 					_vHero[i]->setGoOn(true);
+					if (_pm->getTileInfo(_mouseArr.x, _mouseArr.y).loot)
+					{
+						if (_vHero[i]->getPath().size() == 1 )
+						{
+							activeObject();
+							_vHero[i]->setGoOn(false);
+							_vHero[i]->clearDraw();
+						}
+							_vHero[i]->deletePath(_vHero[i]->getPath().size() - 1);
+					}
 					//if (!_autoCamera) _autoCamera = true;
 					//_pm->setClosed(_vHero[i]->getHeroPoint().x, _vHero[i]->getHeroPoint().y, false);
 					if (_vHero[i]->getInCamp() != -1)										// 캠프에 있던 중이라면

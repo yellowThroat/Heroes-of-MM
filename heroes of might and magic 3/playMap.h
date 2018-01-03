@@ -101,6 +101,7 @@ public:
 	void setCameraX(float x) { _cameraX = x; }
 	void setCameraY(float y) { _cameraY = y; }
 	void setClosed(int x, int y, bool closed) { _map[x][y].isClosed = closed; }
+	void setLoot(int x, int y, bool loot) { _map[x][y].loot = loot; }
 
 	//============ ADDRESS LINK ===============
 	void setzOrderAddressLink(zOrder* zor) { _zOrder = zor; }

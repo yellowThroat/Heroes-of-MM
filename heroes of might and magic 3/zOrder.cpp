@@ -100,3 +100,16 @@ void zOrder::addRender(tagRender render)
 
 	_vRender.push_back(render);
 }
+
+void zOrder::deleteRender(int x, int y)
+{
+	for (int i = 0; i < _vRender.size(); )
+	{
+		if (_vRender[i].arrX == x && _vRender[i].arrY == y)
+		{
+			_vRender.erase(_vRender.begin() + i);
+			break;
+		}
+		else i++;
+	}
+}

@@ -78,6 +78,7 @@ public:
 	void setFrame(void);
 	void weekGo(void);
 	void dayGo(void);
+	void activeObject(void);
 
 	//================ E N T E R ===========
 	void enterCity(void);

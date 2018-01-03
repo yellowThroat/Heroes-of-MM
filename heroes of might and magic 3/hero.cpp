@@ -47,22 +47,22 @@ void hero::update(void)
 	setAngle();
 	setCordinate();
 	heroMove();
-	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD9))
-	{
-		//_myHero.angle +=0.1;
-		frameCycle(_myHero.field, 4);
-
-		if (_myHero.angle > PI2) _myHero.angle = 0;
-		_x += 3;
-		
-	}
-	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD7))
-	{
-		//_myHero.angle -= 0.1;
-		frameCycle(_myHero.field, 4);
-		if (_myHero.angle < 0) _myHero.angle = PI2;
-		_x -= 3;
-	}
+	//if (KEYMANAGER->isStayKeyDown(VK_NUMPAD9))
+	//{
+	//	//_myHero.angle +=0.1;
+	//	frameCycle(_myHero.field, 4);
+	//
+	//	if (_myHero.angle > PI2) _myHero.angle = 0;
+	//	_x += 3;
+	//	
+	//}
+	//if (KEYMANAGER->isStayKeyDown(VK_NUMPAD7))
+	//{
+	//	//_myHero.angle -= 0.1;
+	//	frameCycle(_myHero.field, 4);
+	//	if (_myHero.angle < 0) _myHero.angle = PI2;
+	//	_x -= 3;
+	//}
 
 
 }
@@ -120,32 +120,32 @@ void hero::pathDraw(void)
 			(_vDraw[i].point.y)*TILESIZE - DATABASE->getPlayCameraY());
 	}
 
-	//============== µµÂøÁ¡
-	if (_vPath.size() >= 1 && _totalActionPoint <= _startActionPoint)
-	{
-		IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
-		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(), 
-		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY(),0,0);
-
-		if (_pm->getAttribute())
-		numberDraw(getMemDC(), _totalActionPoint,
-			_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(),
-			_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY());
-
-
-	}
-	else if(_vPath.size() >= 1 && _totalActionPoint > _startActionPoint)
-	{
-		IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
-			_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(),
-			_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY(), 3, 0);
-
-		if (_pm->getAttribute())
-		numberDraw(getMemDC(), _totalActionPoint,
-			_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(),
-			_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY());
-
-	}
+	////============== µµÂøÁ¡
+	//if (_vPath.size() >= 1 && _totalActionPoint <= _startActionPoint)
+	//{
+	//	IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
+	//	_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(), 
+	//	_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY(),0,0);
+	//
+	//	if (_pm->getAttribute())
+	//	numberDraw(getMemDC(), _totalActionPoint,
+	//		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(),
+	//		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY());
+	//
+	//
+	//}
+	//else if(_vPath.size() >= 1 && _totalActionPoint > _startActionPoint)
+	//{
+	//	IMAGEMANAGER->findImage("path")->frameRender(getMemDC(),
+	//		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(),
+	//		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY(), 3, 0);
+	//
+	//	if (_pm->getAttribute())
+	//	numberDraw(getMemDC(), _totalActionPoint,
+	//		_vPath[_vPath.size() - 1].x *TILESIZE - DATABASE->getPlayCameraX(),
+	//		_vPath[_vPath.size() - 1].y *TILESIZE - DATABASE->getPlayCameraY());
+	//
+	//}
 
 	
 }
@@ -237,7 +237,6 @@ void hero::heroMove(void)
 		frameRotation(_myHero.flag, 8, _myHero.angle, false, true);
 
 		
-
 		_myHero.angle = atan2f(_vPath[0].y*TILESIZE +16 - (_y+16),
 			_vPath[0].x*TILESIZE + 16 - (_x+16));
 
@@ -284,14 +283,57 @@ void hero::heroMove(void)
 			if(_vDraw.size()) _vDraw.erase(_vDraw.end()-1);
 			if (!_vPath.size())
 			{
+				if (_vDraw.size())
+				{
+					if (_previousPath.x - _vDraw[0].point.x == 0 || _previousPath.y - _vDraw[0].point.y == 0)
+					{
+						if (_pm->getRoadInfo(_previousPath.x, _previousPath.y).road == ROAD_NORMAL ||
+							_pm->getRoadInfo(_previousPath.x, _previousPath.y).road == ROAD_ROCK)
+						{
+							_needActionPoint = 75;
+						}
+						else
+						{
+							_needActionPoint = 100;
+
+						}
+
+					}
+					else
+					{
+						if (_pm->getRoadInfo(_previousPath.x, _previousPath.y).road == ROAD_NORMAL ||
+							_pm->getRoadInfo(_previousPath.x, _previousPath.y).road == ROAD_ROCK)
+						{
+							_needActionPoint = 105;
+						}
+						else
+						{
+							_needActionPoint = 140;
+
+						}
+					}
+
+					if (_currentActionPoint >= _needActionPoint)
+					{
+						_currentActionPoint -= _needActionPoint;
+						_pl->activeObject();
+						_vDraw.clear();
+
+					}
+				}
+
+
+
+
+
+
 				_pointArr.x = _x / TILESIZE;
-				_pointArr.y = _y / TILESIZE;
-
-
+				_pointArr.y = _y / TILESIZE;				
+				_destination.x = 0;
+				_destination.y = 0;
 				_goOn = false;
 				_moveEnd = true;
 				_pm->setClosed(_pointArr.x, _pointArr.y, true);
-				
 			}
 
 		}
@@ -519,9 +561,14 @@ void hero::setGoOn(bool go)
 
 		}
 
+		
 	}
 }
 
+void hero::deletePath(int arr)
+{
+	_vPath.erase(_vPath.begin() + arr);
+}
 
 void hero::setPath(vPath path)
 {
@@ -555,10 +602,21 @@ void hero::setPath(vPath path)
 			 else _totalActionPoint = 140;
 
 		 }
+		 
+		 tagPathDraw p;
+		 p.point.x = _vPath[0].x;
+		 p.point.y = _vPath[0].y;
+		 p.indexX = 0;
+		 p.indexY = 0;
+		 p.action = _totalActionPoint;
+
+		 if (_totalActionPoint > _currentActionPoint) p.indexX += 3;
+
+		 _vDraw.push_back(p);
 	 }
 	if (path.size() <= 2) return;
 
-	 for (int i = 0; i <= _vPath.size()-2; i++)
+	 for (int i = 0; i <= _vPath.size()-1; i++)
 	 {
 		 tagPathDraw p;
 		 ZeroMemory(&p, sizeof(tagPathDraw));
@@ -582,7 +640,7 @@ void hero::setPath(vPath path)
 			 next = getDirection(tmp0, tmp1);
 
 		 }
-		 else if (i!=0 )
+		 else if (i != 0 && i != _vPath.size() - 1)
 		 {
 			 tmp0 = _vPath[i-1].x - _vPath[i].x;
 			 tmp1 = _vPath[i-1].y - _vPath[i].y;
@@ -595,7 +653,13 @@ void hero::setPath(vPath path)
 			 next = getDirection(tmp0, tmp1);
 
 		 }
-
+		 else if (i == _vPath.size() - 1)
+		 {
+			 previous = -1;
+			 next = -1;
+			 p.indexX = 0;
+			 p.indexY = 0;
+		 }
 		 if (previous == 1)
 		 {
 			 p.indexY = 7;
@@ -712,28 +776,28 @@ void hero::setPath(vPath path)
 		 
 	 }
 
-	 int tmp0 = _vPath[_vPath.size() - 2].x - _vPath[_vPath.size() - 1].x;
-	 int tmp1 = _vPath[_vPath.size() - 2].y - _vPath[_vPath.size() - 1].y;
-
-	 if (tmp0 == 0 || tmp1 == 0)
-	 {
-		 if (_pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_NORMAL ||
-			 _pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_ROCK)
-		 {
-			 _totalActionPoint += 75;
-		 }
-		 else _totalActionPoint += 100;
-	 }
-	 else
-	 {
-		 if (_pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_NORMAL ||
-			 _pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_ROCK)
-		 {
-			 _totalActionPoint += 105;
-		 }
-		 else _totalActionPoint += 140;
-
-	 }
+	//int tmp0 = _vPath[_vPath.size() - 2].x - _vPath[_vPath.size() - 1].x;
+	//int tmp1 = _vPath[_vPath.size() - 2].y - _vPath[_vPath.size() - 1].y;
+	//
+	//if (tmp0 == 0 || tmp1 == 0)
+	//{
+	//	 if (_pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_NORMAL ||
+	//		 _pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_ROCK)
+	//	 {
+	//		 _totalActionPoint += 75;
+	//	 }
+	//	 else _totalActionPoint += 100;
+	//}
+	//else
+	//{
+	//	 if (_pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_NORMAL ||
+	//		 _pm->getRoadInfo(_vPath[_vPath.size() - 2].x, _vPath[_vPath.size() - 2].y).road == ROAD_ROCK)
+	//	 {
+	//		 _totalActionPoint += 105;
+	//	 }
+	//	 else _totalActionPoint += 140;
+	//
+	//}
 
 
 

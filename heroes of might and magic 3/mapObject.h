@@ -81,6 +81,7 @@ public:
 	//============== L O A D ================
 	void loadObject(void);
 	void addLoot(int x, int y, int kind);
+	void deleteOb(int x, int y);
 
 	//============== G E T T E R ==============
 	tagObject getvOb(int x, int y);

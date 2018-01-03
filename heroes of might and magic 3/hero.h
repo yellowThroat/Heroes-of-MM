@@ -86,6 +86,8 @@ public:
 	void uiDraw(void);
 
 	//========== S E T ============
+	void deletePath(int arr);
+	void clearDraw() { _vDraw.clear(); }
 	void setAngle(void);
 	void setCordinate(void);
 	void heroMove(void);

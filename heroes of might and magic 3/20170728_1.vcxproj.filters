@@ -88,6 +88,9 @@
     <Filter Include="MainGame\gameScene\zorder">
       <UniqueIdentifier>{43fc6c86-e364-455d-a9bd-4dab1c96a10a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\gameScene\battle">
+      <UniqueIdentifier>{69b0cc0b-51cb-44d2-9daa-e41630600a13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -219,6 +222,9 @@
     <ClInclude Include="zOrder.h">
       <Filter>MainGame\gameScene\zorder</Filter>
     </ClInclude>
+    <ClInclude Include="battle.h">
+      <Filter>MainGame\gameScene\battle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -334,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="zOrder.cpp">
       <Filter>MainGame\gameScene\zorder</Filter>
+    </ClCompile>
+    <ClCompile Include="battle.cpp">
+      <Filter>MainGame\gameScene\battle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

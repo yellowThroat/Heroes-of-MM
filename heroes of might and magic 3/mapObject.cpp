@@ -102,6 +102,19 @@ tagObject mapObject::getvOb(int x, int y)
 	return ob;
 }
 
+void mapObject::deleteOb(int x, int y)
+{
+	for (int i = 0; i < _vOb.size(); )
+	{
+		if (_vOb[i].x == x && _vOb[i].y == y)
+		{
+			_vOb.erase(_vOb.begin() + i);
+			break;
+		}
+		else i++;
+	}
+}
+
 void mapObject::setOb(int x, int y, tagObject ob)
 {
 	for (int i = 0; i < _vOb.size(); i++)
@@ -247,7 +260,7 @@ void mapObject::loadObject(void)
 				object.imgX = _vLootSaveInfo[i][j].imgX;
 				object.imgY = _vLootSaveInfo[i][j].imgY;
 				object.type = _vLootSaveInfo[i][j].type;
-				_vObject.push_back(object);
+				//_vObject.push_back(object);
 
 				//================== 오브젝트 추가를 위한 ======================
 
@@ -255,13 +268,36 @@ void mapObject::loadObject(void)
 				ZeroMemory(&ob, sizeof(tagObject));
 				ob.type = 2;
 				ob.sub = object.indexX + 3*object.indexY;
-				ob.x = object.point.x + object.enterX;
-				ob.y = object.point.y + object.enterY;
+				ob.x = object.point.x;
+				ob.y = object.point.y;
 
 
 				_vOb.push_back(ob);
 
 				//===========================================================
+
+				//=============== z order를 위한 ===================
+				tagRender render;
+				ZeroMemory(&render, sizeof(tagRender));
+
+				render.img = object.img;
+				render.shadowImg = object.shadowImg;
+				render.flag = NULL;
+				render.destX = (object.point.x - object.imgX) * TILESIZE;
+				render.destY = (object.point.y - object.imgY) * TILESIZE;
+				render.sourX = object.indexX;
+				render.sourY = object.indexY;
+				render.arrX = object.point.x ;
+				render.arrY = object.point.y ;
+				render.sizeX = 0;
+				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
+				render.identity = 255;
+				render.kind = 0;
+				_zOrder->addRender(render);
+
+
+				//==================================================
+
 
 
 			}
@@ -330,6 +366,8 @@ void mapObject::loadObject(void)
 				render.destY = (object.point.y - object.imgY) * TILESIZE;
 				render.sourX = object.indexX;
 				render.sourY = object.indexY;
+				render.arrX = object.point.x ;
+				render.arrY = object.point.y ;
 				render.sizeX = 0;
 				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
 				render.identity = 255;
@@ -386,6 +424,8 @@ void mapObject::loadObject(void)
 				render.destY = (object.point.y - object.imgY) * TILESIZE;
 				render.sourX = object.indexX;
 				render.sourY = object.indexY;
+				render.arrX = object.point.x;
+				render.arrY = object.point.y;
 				render.sizeX = 0;
 				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
 				render.identity = 255;
@@ -443,6 +483,8 @@ void mapObject::loadObject(void)
 				render.destY = (object.point.y - object.imgY) * TILESIZE;
 				render.sourX = object.indexX;
 				render.sourY = object.indexY;
+				render.arrX = object.point.x ;
+				render.arrY = object.point.y ;
 				render.sizeX = 0;
 				render.sizeY = (1 + object.enterY + object.imgY)* TILESIZE;
 				render.identity = 255;

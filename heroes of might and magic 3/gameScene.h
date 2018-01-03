@@ -7,6 +7,8 @@
 #include "mapObject.h"
 #include "player.h"
 #include "zOrder.h"
+#include "battle.h"
+
 
 
 class gameScene : public gameNode
@@ -16,6 +18,7 @@ private:
 	playMap*		_pm;
 	player*			_player;
 	zOrder*			_zOrder;
+	battle*			_battle;
 	ui*				_ui;
 
 
