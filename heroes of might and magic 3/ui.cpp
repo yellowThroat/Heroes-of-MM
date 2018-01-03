@@ -4,7 +4,7 @@
 #include "player.h"
 #include "gameScene.h"
 
-ui::ui(){}
+ui::ui() { _changeScene = false; }
 ui::~ui(){}
 
 HRESULT ui::init(void)
@@ -51,6 +51,8 @@ void ui::update(void)
 void ui::render(void)
 {
 	draw();
+
+
 }
 
 void ui::draw(void)
@@ -491,7 +493,8 @@ void ui::input(void)
 				break;
 			case CONFIG_RE:
 				break;
-			case CONFIG_MAIN: SCENEMANAGER->changeScene("mainMenu");
+			case CONFIG_MAIN: 
+				_changeScene = true;
 				break;
 			case CONFIG_QUIT: PostQuitMessage(0);
 				break;

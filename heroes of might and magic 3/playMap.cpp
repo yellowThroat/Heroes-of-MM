@@ -4,7 +4,12 @@
 
 
 playMap::playMap() {}
-playMap::~playMap() {}
+playMap::~playMap()
+{
+
+	ZeroMemory(&_saveFile, sizeof(tagSaveFile)*MAXSAVE);
+
+}
 
 HRESULT playMap::init()
 {

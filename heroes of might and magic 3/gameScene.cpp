@@ -55,7 +55,11 @@ HRESULT gameScene::init(void)
 
 void gameScene::release(void)
 {
-
+	SAFE_DELETE(_ui);
+	SAFE_DELETE(_ob);
+	SAFE_DELETE(_zOrder);
+	SAFE_DELETE(_player);
+	SAFE_DELETE(_pm);	
 }
 
 void gameScene::update(void)
@@ -115,6 +119,9 @@ void gameScene::update(void)
 	_ui->update();
 	_ob->update();
 	_player->update();
+
+	if (_ui->getChangeScene()) SCENEMANAGER->changeScene("mainMenu");
+
 	
 }
 
@@ -139,10 +146,10 @@ void gameScene::render(void)
 
 		_player->render();								// z order 4 ÀÎ¹æ ¿µ
 
-		_ui->render();
 
 		if(_player->getHero().size())
 		_player->getHero()[_player->getCurrentHero()]->uiDraw();
+		_ui->render();
 	}
 
 	if (_player->getScene())
@@ -174,6 +181,7 @@ void gameScene::render(void)
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
+
 }
 
 void gameScene::enterCity(void)

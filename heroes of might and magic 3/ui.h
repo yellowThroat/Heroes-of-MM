@@ -58,6 +58,8 @@ private:
 	int _month;						// 시간 - 달
 	int _week;						// 시간 - 주
 	int _day;						// 시간 - 일
+
+	bool _changeScene;				// 체인지 신
 public:
 	HRESULT init(void);
 	void release(void);
@@ -75,7 +77,7 @@ public:
 	RECT getMiniMapRect() { return _miniMapRect; }
 	bool getMiniMapMove() { return _miniMapMove; }
 	bool getConfig() { return _config; }
-
+	bool getChangeScene() { return _changeScene; }
 
 	//=============== S E T T E R ===============
 	void setMiniMapMove(bool move) { _miniMapMove = move; }

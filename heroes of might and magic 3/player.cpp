@@ -33,9 +33,9 @@ HRESULT player::init(int myNum)
 	tmp.angle = 0;
 	tmp.kind = 0;
 	*/
-	//addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
-	//addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
-	//addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
+	addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
+	addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
+	addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
 	ZeroMemory(&_myProperty, sizeof(myProperty));
 	ZeroMemory(&_myBuilding, sizeof(myBuilding));
 
