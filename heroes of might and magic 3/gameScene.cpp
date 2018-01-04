@@ -13,6 +13,7 @@ HRESULT gameScene::init(void)
 	_ob = new mapObject;					// 플레이시 나올 맵 오브젝트
 	_player = new player;
 	_zOrder = new zOrder;
+	_battle = new battle;
 
 	//============= L O A D   I N F O ================
 	loadMap();
@@ -34,6 +35,7 @@ HRESULT gameScene::init(void)
 	_player->setGameSceneAddressLink(this);
 	_player->setzOrderAddressLink(_zOrder);
 	_player->setMapObjectAddressLink(_ob);
+	_player->setBattletAddressLink(_battle);
 	_pm->setzOrderAddressLink(_zOrder);
 	_ob->setzOrderAddressLink(_zOrder);
 	_zOrder->setPlayerAddressLink(_player);
@@ -60,6 +62,7 @@ void gameScene::release(void)
 	SAFE_DELETE(_zOrder);
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_pm);	
+	SAFE_DELETE(_battle);
 }
 
 void gameScene::update(void)
@@ -77,7 +80,7 @@ void gameScene::update(void)
 	//================== INPUT KEY ==================
 
 	//============= FIELD
-	if (!_player->getScene())
+	if (!_player->getScene() && !_player->getBattleScene())
 	{
 		if (_ptMouse.x >= 788 || _ui->getConfig())				// 필드 : UI	
 		{
@@ -106,7 +109,10 @@ void gameScene::update(void)
 
 	}
 	//============= BATTLE SCENE
-
+	if (_player->getBattleScene())
+	{
+		_battle->inputBattle();									// 전투 중 입력
+	}
 	//========= C L A S S   U P D A T E=================
 	
 	for (int i = 0; i < _vCamp.size(); i++)
@@ -119,8 +125,12 @@ void gameScene::update(void)
 	_ui->update();
 	_ob->update();
 	_player->update();
+	if (_player->getBattleScene()) _battle->update();
 
-	if (_ui->getChangeScene()) SCENEMANAGER->changeScene("mainMenu");
+	if (_ui->getChangeScene() || _battle->getChangeScene())
+	{
+		SCENEMANAGER->changeScene("mainMenu");
+	}
 
 	
 }
@@ -128,7 +138,7 @@ void gameScene::update(void)
 void gameScene::render(void)
 {
 	//============= C L A S S   R E N D E R ===============
-	if (!_player->getScene())
+	if (!_player->getScene() && !_player->getBattleScene())
 	{
 		//=============== 필드 밖 렌더
 		_pm->render();									// z order 4 인방 장애물
@@ -178,6 +188,7 @@ void gameScene::render(void)
 	}
 	
 	if (_player->getWindow()) _player->heroInfoDraw();
+	if (_player->getBattleScene()) _battle->render();
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);

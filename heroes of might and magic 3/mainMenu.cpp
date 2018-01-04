@@ -1771,4 +1771,35 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("save_confirm", "image/mapTool/savebox.bmp", 419, 180, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("tile_select", "image/mapTool/tileSelect.bmp", 256, 512, 1, 4, true, RGB(255, 0, 255));
 
+	//================= B A T T L E ===================================
+	IMAGEMANAGER->addImage("battle_green", "image/battle/battle_green.bmp", 800, 556, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("battle_lava", "image/battle/battle_lava.bmp", 800, 556, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("battle_ui", "image/battle/battle_ui.bmp", 800, 44, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("grid_set", "image/battle/grid_set.bmp", 800, 556, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("grid", "image/battle/grid.bmp", 43, 50, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("grid")->AlphaInit();
+	IMAGEMANAGER->addImage("grid_closed", "image/battle/closed.bmp", 43, 50, true, RGB(255, 0, 255));
+
+
+	IMAGEMANAGER->addImage("pond", "image/battle/pond.bmp", 206, 95, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("hill", "image/battle/hill.bmp", 481, 158, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("log", "image/battle/log.bmp", 84, 48, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("rock", "image/battle/rock.bmp", 171, 135, true, RGB(255, 0, 255));
+
+	IMAGEMANAGER->addFrameImage("battle_config", "image/battle/battle_config.bmp", 100, 38, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_run", "image/battle/battle_run.bmp", 100, 38, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_wait", "image/battle/battle_wait.bmp", 100, 38, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_def", "image/battle/battle_def.bmp", 100, 38, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_spell", "image/battle/battle_spell.bmp", 100, 38, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("battle_window_config", "image/battle/battle_window_config.bmp", 489, 499, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("battle_window_config_shadow", "image/battle/battle_window_config_shadow.bmp", 489, 499, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("battle_window_config_shadow")->AlphaInit();
+	IMAGEMANAGER->addImage("battle_off", "image/battle/battle_off.bmp", 30, 22, true, RGB(255, 0, 255));
+	
+	IMAGEMANAGER->addFrameImage("battle_load", "image/battle/battle_load.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_re", "image/battle/battle_re.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_main", "image/battle/battle_main.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_return", "image/battle/battle_return.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_default", "image/battle/battle_default.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
+
 }

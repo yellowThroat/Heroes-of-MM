@@ -302,9 +302,6 @@
     <ClCompile Include="mainMenu.cpp">
       <Filter>MainGame\mainMenuScene</Filter>
     </ClCompile>
-    <ClCompile Include="gameScene.cpp">
-      <Filter>MainGame\gameScene</Filter>
-    </ClCompile>
     <ClCompile Include="dataBase.cpp">
       <Filter>MainGame\dataBase</Filter>
     </ClCompile>
@@ -343,6 +340,12 @@
     </ClCompile>
     <ClCompile Include="battle.cpp">
       <Filter>MainGame\gameScene\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="battleAstar.cpp">
+      <Filter>MainGame\gameScene\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="gameScene.cpp">
+      <Filter>MainGame\gameScene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

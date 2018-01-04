@@ -17,6 +17,7 @@ HRESULT player::init(int myNum)
 	_autoCamera = false;
 	_window = false;
 	_creatureinfo = false;
+	_battleScene = false;
 	_enemyInfo = -1;
 	_currentHero = 0;
 	_currentCamp = 0;
@@ -34,8 +35,8 @@ HRESULT player::init(int myNum)
 	tmp.kind = 0;
 	*/
 	addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
-	addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
-	addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
+	//addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
+	//addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
 	ZeroMemory(&_myProperty, sizeof(myProperty));
 	ZeroMemory(&_myBuilding, sizeof(myBuilding));
 
@@ -556,11 +557,17 @@ void player::activeObject(void)
 			case 3:
 
 			break;
-			case 4:
+			case 4: case 5:
+			{
+				_battleScene = true;
+				if (_pm->getTileInfo(x, y).tile == TILE_GREEN) _battle->init(0);
+				else if (_pm->getTileInfo(x, y).tile == TILE_VOLCANO) _battle->init(1);
 
-			break;
-			case 5:
 
+
+
+
+			}
 			break;
 			}
 

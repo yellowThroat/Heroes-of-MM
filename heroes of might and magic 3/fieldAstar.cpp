@@ -218,6 +218,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 				//	currentNode.parentY = _closelist[_closelist.size() - 1].parentY;
 				//
 				//}
+
 				if(alreadyClosed(currentNode.nodeX + i, currentNode.nodeY + j))
 				{
 					if (currentNode.nodeX + i < 0 || currentNode.nodeX + i >= MAXTILE ||
@@ -487,7 +488,7 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 	{
 		while (true)
 		{
-			for (int i = 0; i < _closelist.size(); i++)
+			for (int i = _closelist.size() -1; i >= 0; i--)
 			{
 				if (_closelist[i].nodeX == shortestPath[0].x &&
 					_closelist[i].nodeY == shortestPath[0].y)
@@ -497,14 +498,13 @@ vector<POINT> playMap::getPath(int x, int y, int destX, int destY)
 
 
 					shortestPath.insert(shortestPath.begin(),point);
+					if (point.x == x && point.y == y)return shortestPath;
 
+					break;
 				}
 
 
-				if (point.x == x && point.y == y)
-				{
-					return shortestPath;
-				}
+				
 
 				
 			}

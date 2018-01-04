@@ -42,6 +42,8 @@ struct tagCreature
 	image* img[STATE_END];
 	image* imgShadow[STATE_END];
 
+	char name[256];			// 이름
+
 	int kind;				// 종족값
 	int tier;				// 몇 티어?
 	int level;				// 레벨업 했니?
@@ -52,7 +54,6 @@ struct tagCreature
 	int startX;				// 그릴때 좌표
 	int startY;				// 상동
 
-	char name[256];			// 이름
 
 	int atk;				// 공격력
 	int def;				// 방어력
@@ -64,6 +65,8 @@ struct tagCreature
 
 	int morale;				// 사기
 	int luck;				// 행운
+
+	int arrNum;				// 전투시 배열번호
 
 	CREATURESTATE state;	// 크리쳐 상태
 

@@ -219,6 +219,7 @@ namespace HOMM_HERO
 		creature.luck = 0;
 		creature.state = STATE_IDLE;
 		creature.quantity = 1;
+		creature.arrNum = 0;
 
 		for (int i = 0; i < STATE_END; i++)
 		{

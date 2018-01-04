@@ -126,6 +126,7 @@
     <ClCompile Include="action.cpp" />
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="battle.cpp" />
+    <ClCompile Include="battleAstar.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camp.cpp" />
     <ClCompile Include="castle.cpp" />
