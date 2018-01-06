@@ -560,6 +560,14 @@ void player::activeObject(void)
 			case 4: case 5:
 			{
 				_battleScene = true;
+				for (int j = 0; j < _vHero[i]->getCreature().size(); j++)
+				{
+					_battle->joinCreature(_vHero[i]->getCreature()[j]);
+
+				}
+
+
+
 				if (_pm->getTileInfo(x, y).tile == TILE_GREEN) _battle->init(0);
 				else if (_pm->getTileInfo(x, y).tile == TILE_VOLCANO) _battle->init(1);
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "battle.h"
 
-vector<POINT> battle::getPath(int x, int y, int destX, int destY)
+vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 {
 	vector<POINT> shortestPath;
 	bool findPath = false;
@@ -130,7 +130,7 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY)
 				if (alreadyOpend(currentNode.nodeX + i, currentNode.nodeY + j)) continue;
 
 
-				if (_battleArr[currentNode.nodeX + i][currentNode.nodeY + j].closed) continue;
+				if (!fly && _battleArr[currentNode.nodeX + i][currentNode.nodeY + j].closed) continue;
 
 				ZeroMemory(&findNode, sizeof(tagHexaFind));
 				findNode.nodeX = currentNode.nodeX + i;

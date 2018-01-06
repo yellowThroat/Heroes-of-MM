@@ -46,6 +46,7 @@ HRESULT gameScene::init(void)
 	_ob->init();
 	_player->init(0);
 	_zOrder->init();
+	_battle->init(0);
 
 	//=============== T E S T ==================
 

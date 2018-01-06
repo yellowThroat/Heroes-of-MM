@@ -53,7 +53,8 @@ struct tagCreature
 
 	int startX;				// 그릴때 좌표
 	int startY;				// 상동
-
+	int moveStart;			// 움직일때 뜨는 프레임
+	int moveEnd;			// 움직일때 착지 프레임
 
 	int atk;				// 공격력
 	int def;				// 방어력
@@ -65,8 +66,13 @@ struct tagCreature
 
 	int morale;				// 사기
 	int luck;				// 행운
+	int size;				// 크리쳐 사이즈
+
+	bool  fly;				// 날아다녀?
+	int isDead;				// 죽었어?
 
 	int arrNum;				// 전투시 배열번호
+	int target;				// 가리키는게 어떤건지
 
 	CREATURESTATE state;	// 크리쳐 상태
 

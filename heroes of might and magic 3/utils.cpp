@@ -38,7 +38,7 @@ namespace IOTA_UTIL
 	float getAngle(float x, float y)
 	{
 		float angle;
-		if (y > 0) 	angle = atan2f(y, x);
+		if (y >= 0) 	angle = atan2f(y, x);
 		else angle = PI2 + atan2f(y, x);
 		return angle;
 	}

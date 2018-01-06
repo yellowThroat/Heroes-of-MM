@@ -26,6 +26,7 @@ struct tagGridInfo
 	int ground;					// 땅 좌표
 	int center;					// 중점
 	bool closed;				// 이동 가능?
+	bool range;				// 이동 범위에 있는가?
 	
 };
 
@@ -55,12 +56,20 @@ struct tagBattleCreature
 {
 
 	float x, y;				// ==== 좌표 
+	float angle;			// ==== 각도
+	
 	int arrX, arrY;			// ==== 배열 좌표
 	int target;				// ==== 어떤놈을 가리키느냐
-	int num;				// ==== 가라키는놈의 배열번호
+	int arrNum;
+
+	int sourX;				// ==== 프레임 x
+	int sourY;				// ==== 프레임 y
+	int count;				// ==== 프레임 돌리는용
+
 	
 	bool isRight;			// 어디 보고 있늬?
 	bool player;			// 플레이어냐 아니냐
+	bool turn;
 
 	bool operator<(const tagBattleCreature&v) const {
 		return (y< v.y);
@@ -87,9 +96,12 @@ private:
 private:
 	int _battleNum;									// 어떤 전장에서 싸우나
 	int _obstacle;									// 어떤 장애물을 깔까
+	int _currentCreature;							// 현재 턴인 크리쳐는 무엇인가?
 	bool _showGrid;									// 그리드 보여줌?
 	bool _attribute;								// closed grid 보여줌?
 	bool _changeScene;								// 신 바꾸는용
+	bool _move;										// 이동 중
+
 public:
 	HRESULT init(int x);
 	void release(void);
@@ -99,20 +111,27 @@ public:
 	//============  D R A W =============
 	void battleDraw(void);
 	void buttonDraw(void);
-
+	void creatureDraw(void);
 
 	//============ U P D A T E ==========
 	void setObstacle(void);
 	void inputBattle(void);
 	void activeButton(void);
 	void joinCreature(tagCreature creature);
+	void joinCreature(tagObject object);
+	void setArrNum(void);							// 두 벡터간 상호간의 통신을 위해
+	void setCondition(void);						// 크리쳐의 위치가 어디 배열인지
+	void creatureMove(void);						// 현재 크리쳐를 이동 시켜보자
+	void setTurn(void);								// 턴이 돌아가는것
+	void frameCycle(void);
 	POINT getMouseArr(void);
+	POINT getArr(POINT xy);
 
 	//========== HEXA A STAR =============
 	bool alreadyClosed(int x, int y);
 	bool alreadyOpend(int x, int y);
 	int getValueH(int x, int y, int destX,int destY);
-	vector<POINT> getPath(int x, int y, int destX, int destY);	// 찾은 경로
+	vector<POINT> getPath(int x, int y, int destX, int destY, bool fly);	// 찾은 경로
 
 
 	//============ G E T T E R ===========
