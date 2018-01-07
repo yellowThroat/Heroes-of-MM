@@ -51,6 +51,8 @@ private:
 	int _currentCamp;				// 현재 보고있는 마을
 	int _currentCreature;
 	int _count;						// 인덱스 돌리는용
+	int _saveCorX;					// 좌표 저장용
+	int _saveCorY;
 
 public:
 
@@ -73,6 +75,7 @@ public:
 
 	
 	//================ S E T T I N G =========
+	void setBattle(void);
 	void setMyInfo(void);
 	void inputCity(void);
 	void inputField(void);

@@ -23,6 +23,8 @@ HRESULT player::init(int myNum)
 	_currentCamp = 0;
 	_count = 0;
 	_currentCreature = -1;
+	_saveCorX = 0;
+	_saveCorY = 0;
 	_destination = { 0,0 };
 	_enemyCor = { 0,0 };
 	/*
@@ -85,6 +87,7 @@ void player::fieldUpdate(void)
 		(*_viHero)->update();
 	}
 	camera();
+	setBattle();
 
 }
 
@@ -486,6 +489,28 @@ void player::camera(void)
 	}
 }
 
+void player::setBattle(void)
+{
+	if (_battle->getWin() || _battle->getLose())
+	{
+		_battleScene = false;
+		
+		if (_battle->getWin())
+		{
+			_zOrder->deleteRender(_saveCorX, _saveCorY);
+			_pm->setClosed(_saveCorX, _saveCorY, false);
+			_pm->setLoot(_saveCorX, _saveCorY, false);
+			_ob->deleteOb(_saveCorX, _saveCorY);
+
+			_battle->init(0);
+
+		}
+
+	}
+
+
+}
+
 void player::activeObject(void)
 {
 	for (int i = 0; i < _vHero.size(); i++)
@@ -565,13 +590,14 @@ void player::activeObject(void)
 					_battle->joinCreature(_vHero[i]->getCreature()[j]);
 
 				}
-
+				_battle->joinCreature(_ob->getvOb(_vHero[i]->getHeroDest().x, _vHero[i]->getHeroDest().y));
 
 
 				if (_pm->getTileInfo(x, y).tile == TILE_GREEN) _battle->init(0);
 				else if (_pm->getTileInfo(x, y).tile == TILE_VOLCANO) _battle->init(1);
 
-
+				_saveCorX = x;
+				_saveCorY = y;
 
 
 

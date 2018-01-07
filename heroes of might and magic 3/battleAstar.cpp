@@ -131,6 +131,9 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 
 
 				if (!fly && _battleArr[currentNode.nodeX + i][currentNode.nodeY + j].closed) continue;
+				if (!fly && _battleArr[currentNode.nodeX + i][currentNode.nodeY + j].unit) continue;
+				//if (!fly && !_battleArr[currentNode.nodeX + i][currentNode.nodeY + j].range) continue;
+
 
 				ZeroMemory(&findNode, sizeof(tagHexaFind));
 				findNode.nodeX = currentNode.nodeX + i;

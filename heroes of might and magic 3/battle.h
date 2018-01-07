@@ -26,7 +26,9 @@ struct tagGridInfo
 	int ground;					// 땅 좌표
 	int center;					// 중점
 	bool closed;				// 이동 가능?
-	bool range;				// 이동 범위에 있는가?
+	bool unit;					// 이미 누가 있는가?
+	bool range;					// 이동 범위에 있는가?
+	bool attack;				// 공격 범위에 있는가?
 	
 };
 
@@ -52,6 +54,15 @@ enum BATTLECONFIG
 	BAC_END
 };
 
+enum BATTLECURSOR
+{
+	CUR_IDLE,
+	CUR_MOVE,
+	CUR_ATKMELEE,
+	CUR_ATKRANGE,
+	CUR_END
+};
+
 struct tagBattleCreature
 {
 
@@ -65,8 +76,9 @@ struct tagBattleCreature
 	int sourX;				// ==== 프레임 x
 	int sourY;				// ==== 프레임 y
 	int count;				// ==== 프레임 돌리는용
+	int attackTarget;		// ==== 누구 때림?
 
-	
+	bool counter;			// ==== 반격했늬?
 	bool isRight;			// 어디 보고 있늬?
 	bool player;			// 플레이어냐 아니냐
 	bool turn;
@@ -77,10 +89,10 @@ struct tagBattleCreature
 
 };
 
+
 class battle : public gameNode
 {
 private:
-
 
 private:
 	tagGridInfo _battleArr[MAXGRIDX][MAXGRIDY];		// 전장 좌표
@@ -92,6 +104,7 @@ private:
 private:
 	BATTLEBUTTON _button;
 	BATTLECONFIG _buttonConfig;
+	BATTLECURSOR _cursor;
 
 private:
 	int _battleNum;									// 어떤 전장에서 싸우나
@@ -101,7 +114,13 @@ private:
 	bool _attribute;								// closed grid 보여줌?
 	bool _changeScene;								// 신 바꾸는용
 	bool _move;										// 이동 중
-
+	bool _attack;									// 때리러 가는 중
+	bool _cursorInGrid;								// 마우스가 격자 안에 있는가?
+	bool _turn;										// 이번턴이 끝났는가?
+	bool _youWin;									// 이겻늬??
+	bool _youLose;									// 졌늬?
+	float _angle;									// 마우스 근접공격 앵글
+	
 public:
 	HRESULT init(int x);
 	void release(void);
@@ -114,6 +133,9 @@ public:
 	void creatureDraw(void);
 
 	//============ U P D A T E ==========
+	void endBattle(void);
+	void enemyAction(void);
+	void cursorChange(void);
 	void setObstacle(void);
 	void inputBattle(void);
 	void activeButton(void);
@@ -126,6 +148,9 @@ public:
 	void frameCycle(void);
 	POINT getMouseArr(void);
 	POINT getArr(POINT xy);
+	int isAnybody(int x, int y);					// 누가 거기에 있는지 없는지
+	int isAnybody(int x, int y, bool arrNum);		// 누가 거기에 있는지 없는지 배열 넘버
+	bool canGo(int destX, int destY, int x,int size);						// 그 방향으로 갈수 있늬?
 
 	//========== HEXA A STAR =============
 	bool alreadyClosed(int x, int y);
@@ -136,6 +161,9 @@ public:
 
 	//============ G E T T E R ===========
 	bool getChangeScene() { return _changeScene; }
+	bool getWin() { return _youWin; }
+	bool getLose() { return _youLose; }
+
 
 	battle();
 	~battle();

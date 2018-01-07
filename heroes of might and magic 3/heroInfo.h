@@ -60,6 +60,7 @@ struct tagCreature
 	int def;				// 방어력
 
 	int hp;					// 체력
+	int currentHp;			// 현재 체력
 	int maxDmg;				// 맥뎀
 	int minDmg;				// 민뎀
 	int speed;				// 속도

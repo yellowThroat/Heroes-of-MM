@@ -39,7 +39,6 @@ HRESULT gameScene::init(void)
 	_pm->setzOrderAddressLink(_zOrder);
 	_ob->setzOrderAddressLink(_zOrder);
 	_zOrder->setPlayerAddressLink(_player);
-
 	//============= C L A S S   I N I T ==================
 	_pm->init();
 	_ui->init();
@@ -193,6 +192,9 @@ void gameScene::render(void)
 
 	if(_fadeAlpha >0)
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
+
+	if(!_player->getBattleScene())
+	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 }
 

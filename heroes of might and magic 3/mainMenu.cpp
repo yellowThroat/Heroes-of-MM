@@ -66,6 +66,8 @@ void mainMenu::render(void)
 
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
 
+	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
+
 }
 
 void mainMenu::backgroundDraw(void)
@@ -1778,8 +1780,10 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("grid_set", "image/battle/grid_set.bmp", 800, 556, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("grid", "image/battle/grid.bmp", 43, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("grid")->AlphaInit();
+	IMAGEMANAGER->addImage("grid_purple", "image/battle/attackgrid.bmp", 43, 50, true, RGB(255, 0, 255));
+	IMAGEMANAGER->findImage("grid_purple")->AlphaInit();
 	IMAGEMANAGER->addImage("grid_closed", "image/battle/closed.bmp", 43, 50, true, RGB(255, 0, 255));
-
+	IMAGEMANAGER->addImage("battle_quantity", "image/battle/battle_quantity.bmp", 30, 11, true, RGB(255, 0, 255));
 
 	IMAGEMANAGER->addImage("pond", "image/battle/pond.bmp", 206, 95, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("hill", "image/battle/hill.bmp", 481, 158, true, RGB(255, 0, 255));
@@ -1801,5 +1805,11 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addFrameImage("battle_main", "image/battle/battle_main.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("battle_return", "image/battle/battle_return.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("battle_default", "image/battle/battle_default.bmp", 200, 48, 2, 1, true, RGB(255, 0, 255));
+
+	IMAGEMANAGER->addFrameImage("battle_cursor_melee", "image/battle/battle_cursor_melee0.bmp", 384, 64, 6, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_cursor_range", "image/battle/battle_cursor_range.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("battle_cursor_move", "image/battle/battle_cursor_move.bmp", 128, 64, 2, 1, true, RGB(255, 0, 255));
+
+
 
 }

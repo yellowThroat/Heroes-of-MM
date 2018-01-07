@@ -70,7 +70,6 @@ void mainGame::render(void)
 	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, BLACKNESS);
 	//==============================================================
 	SCENEMANAGER->render();
-	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 	//========================================================================
 	SetTextColor(getMemDC(), RGB(255, 255, 255));

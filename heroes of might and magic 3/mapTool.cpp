@@ -224,6 +224,7 @@ void mapTool::render(void)
 	//====================== C O N F I R M =====================
 	windowDraw();
 
+	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 }
 

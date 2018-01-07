@@ -1444,6 +1444,8 @@ namespace HOMM_HERO
 		break;
 		}
 
+		creature.currentHp = creature.hp;
+
 
 
 
