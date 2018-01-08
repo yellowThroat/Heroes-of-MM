@@ -204,8 +204,8 @@ void battle::battleDraw()
 		IMAGEMANAGER->findImage("grid_set")->render(getMemDC());
 	}
 
-	if (!_turn)
-	{
+	//if (!_turn)
+	//{
 		for (int j = 0; j < MAXGRIDX; j++)
 		{
 			for (int k = 0; k < MAXGRIDY; k++)
@@ -222,7 +222,7 @@ void battle::battleDraw()
 
 			}
 		}
-	}
+	//}
 
 	for (int i = 0; i < _vCreature.size(); i++)
 	{
@@ -252,7 +252,7 @@ void battle::battleDraw()
 			for (int j = 0; j < MAXGRIDY; j++)
 			{
 				char tmp[256];
-				sprintf(tmp, "(%d,%d)", i, j);	
+				sprintf_s(tmp, "(%d,%d)", i, j);	
 		
 				TextOut(getMemDC(), _battleArr[i][j].center - strlen(tmp)*3 , _battleArr[i][j].ground - 24, tmp, strlen(tmp));
 			}
@@ -552,7 +552,7 @@ void battle::enemyAction(void)
 			{
 				_vPath.erase(_vPath.begin() + (_vPath.size() -1));
 			}
-
+			_battleArr[0][0];
 			_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
 			if (_vCreature[_currentCreature].size == 2) _battleArr[_vBattle[current].arrX - 1][_vBattle[current].arrY].unit = false;
 			_vCreature[_currentCreature].state = STATE_MOVE;
@@ -2077,8 +2077,8 @@ void battle::inputBattle(void)
 						getMouseArr().x + revise, getMouseArr().y,
 						_vCreature[_currentCreature].fly);
 
-					if (_vPath.size())
-						_vPath.erase(_vPath.begin());
+					//if (_vPath.size())
+					//	_vPath.erase(_vPath.begin());
 
 					 _vBattle[_vCreature[_currentCreature].arrNum].sourX = 0;
 					 _vBattle[_vCreature[_currentCreature].arrNum].sourY = 0;

@@ -64,6 +64,21 @@ void gameScene::release(void)
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_pm);	
 	SAFE_DELETE(_battle);
+
+	SOUNDMANAGER->stop("castle");
+	SOUNDMANAGER->stop("dungeon");
+	SOUNDMANAGER->stop("combat0");
+	SOUNDMANAGER->stop("combat1");
+	SOUNDMANAGER->stop("combat2");
+	SOUNDMANAGER->stop("combat3");
+	SOUNDMANAGER->stop("win");
+	SOUNDMANAGER->stop("lose");
+	SOUNDMANAGER->stop("good");
+	SOUNDMANAGER->stop("green");
+	SOUNDMANAGER->stop("rough");
+
+
+
 }
 
 void gameScene::update(void)
@@ -131,6 +146,7 @@ void gameScene::update(void)
 	if (_ui->getChangeScene() || _battle->getChangeScene())
 	{
 		SCENEMANAGER->changeScene("mainMenu");
+
 	}
 
 	
@@ -215,6 +231,9 @@ void gameScene::enterCity(void)
 					//============ 그렇다면 이제 플레이어의 씬을 바꿔라
 					//============ 그 성의 번호로 커런트 번호를 바꿔줘라
 					//============ 영웅도 성안에 들어왔다고 해줘라
+					if (_vCamp[i]->getCityInfo().camp == CAMP_CASTLE) SOUNDMANAGER->play("castle");
+					if (_vCamp[i]->getCityInfo().camp == CAMP_DUNGEON) SOUNDMANAGER->play("dungeon");
+					SOUNDMANAGER->stop("green");
 					_player->setScene(true);
 					_player->setCurrentCamp(_vCamp[i]->getNum());
 					_player->getHero()[j]->setInCamp(_vCamp[i]->getNum());

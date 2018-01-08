@@ -53,21 +53,21 @@ namespace IOTA_UTIL
 		d = num % 10;
 		char tmp[256];
 		if (su == 4) {
-			IMAGEMANAGER->findImage(itoa(a, tmp, 10))->render(hdc, x, y);
-			IMAGEMANAGER->findImage(itoa(b, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth(), y);
-			IMAGEMANAGER->findImage(itoa(c, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth() * 2, y);
-			IMAGEMANAGER->findImage(itoa(d, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth() * 3, y);
+			IMAGEMANAGER->findImage(_itoa(a, tmp, 10))->render(hdc, x, y);
+			IMAGEMANAGER->findImage(_itoa(b, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth(), y);
+			IMAGEMANAGER->findImage(_itoa(c, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth() * 2, y);
+			IMAGEMANAGER->findImage(_itoa(d, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth() * 3, y);
 		}
 		if (su == 3) {
-			IMAGEMANAGER->findImage(itoa(b, tmp, 10))->render(hdc, x, y);
-			IMAGEMANAGER->findImage(itoa(c, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth(), y);
-			IMAGEMANAGER->findImage(itoa(d, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth() * 2, y);
+			IMAGEMANAGER->findImage(_itoa(b, tmp, 10))->render(hdc, x, y);
+			IMAGEMANAGER->findImage(_itoa(c, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth(), y);
+			IMAGEMANAGER->findImage(_itoa(d, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth() * 2, y);
 		}
 		if (su == 2) {
-			IMAGEMANAGER->findImage(itoa(c, tmp, 10))->render(hdc, x, y);
-			IMAGEMANAGER->findImage(itoa(d, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth(), y);
+			IMAGEMANAGER->findImage(_itoa(c, tmp, 10))->render(hdc, x, y);
+			IMAGEMANAGER->findImage(_itoa(d, tmp, 10))->render(hdc, x + IMAGEMANAGER->findImage("0")->getWidth(), y);
 		}
-		if (su == 1) IMAGEMANAGER->findImage(itoa(d, tmp, 10))->render(hdc, x, y);
+		if (su == 1) IMAGEMANAGER->findImage(_itoa(d, tmp, 10))->render(hdc, x, y);
 	}
 
 	void numberDraw(HDC hdc, int num, int x, int y)
@@ -266,7 +266,7 @@ namespace IOTA_UTIL
 	//	HANGUL_CHARSET, 0, 0, 0, 0, TEXT("ÈÞ¸Õ±¼¸²"));
 	//
 	//oldFont = (HFONT)SelectObject(getMemDC(), font1);
-	//sprintf(str, "Ä¡Å²¸Ô±¸½Í´Ù");
+	//sprintf_s(str, "Ä¡Å²¸Ô±¸½Í´Ù");
 	//TextOut(getMemDC(), 10, 100, str, strlen(str));
 	//DeleteObject(font1);
 

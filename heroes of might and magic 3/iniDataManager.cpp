@@ -38,7 +38,7 @@ void iniDataManager::iniSave(char* fileName)
 	char dir[256];
 
 	ZeroMemory(dir, sizeof(dir));
-	sprintf(dir, "\\%s,ini", fileName);
+	sprintf_s(dir, "\\%s,ini", fileName);
 
 	GetCurrentDirectory(256, str);
 	strncat_s(str, 256, dir, 254);
@@ -60,7 +60,7 @@ char* iniDataManager::loadDataString(const char* fileName, const char* subject, 
 	char dir[256];
 
 	ZeroMemory(dir, sizeof(dir));
-	sprintf(dir, "\\%s,ini", fileName);
+	sprintf_s(dir, "\\%s,ini", fileName);
 
 	GetCurrentDirectory(256, str);
 	strncat_s(str, 256, dir, 254);
@@ -77,7 +77,7 @@ int iniDataManager::loadDataInterger(const char* fileName, const char* subject, 
 	char dir[256];
 
 	ZeroMemory(dir, sizeof(dir));
-	sprintf(dir, "\\%s.ini", fileName);
+	sprintf_s(dir, "\\%s.ini", fileName);
 
 	GetCurrentDirectory(256, str);
 	strncat_s(str, 256, dir, 254);

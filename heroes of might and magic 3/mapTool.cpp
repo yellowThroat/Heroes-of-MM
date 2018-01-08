@@ -1029,7 +1029,7 @@ void mapTool::cordinateDraw(void)
 	for (int i = 0; i < MAXTILE; i++)
 	{
 
-		sprintf(_cor, "%d", i);
+		sprintf_s(_cor, "%d", i);
 
 
 		if (i < 10)
@@ -1383,26 +1383,26 @@ void mapTool::selectDraw(void)
 						switch (_saveIndex.x)
 						{
 						case 0:
-							sprintf(evName, "ev_lvlup");
+							sprintf_s(evName, "ev_lvlup");
 							adjustY = 1;
 							adjustX = 0;
 							sizeX = 1;
 							sizeY = 1;
 							break;
 						case 1:
-							sprintf(evName, "ev_physical");
+							sprintf_s(evName, "ev_physical");
 							adjustY = 1;
 							adjustX = 0;
 							sizeX = 2;
 							sizeY = 1;
 							break;
-						case 2: sprintf(evName, "ev_magical");
+						case 2: sprintf_s(evName, "ev_magical");
 							adjustY = 0;
 							adjustX = 0;
 							sizeX = 1;
 							sizeY = 1;
 							break;
-						case 3: sprintf(evName, "ev_skill");
+						case 3: sprintf_s(evName, "ev_skill");
 							adjustY = 0;
 							adjustX = -1;
 							sizeX = 3;
@@ -1412,71 +1412,71 @@ void mapTool::selectDraw(void)
 					else if (_page == 1 && !_foldMini)
 						switch (_saveIndex.x)
 						{
-						case 0:	sprintf(evName, "ev_movement");
+						case 0:	sprintf_s(evName, "ev_movement");
 							adjustY = 0;
 							adjustX = 0;
 							sizeX = 2;
 							sizeY = 1;
 							break;
-						case 1:	sprintf(evName, "ev_resource");
+						case 1:	sprintf_s(evName, "ev_resource");
 							adjustY = 0;
 							adjustX = -1;
 							sizeX = 3;
 							sizeY = 2;
 							break;
 						}
-					else sprintf(evName, "empty");
+					else sprintf_s(evName, "empty");
 					break;
 				case 1:
 					if (_page == 0 || _foldMini)
 						switch (_saveIndex.x)
 						{
-						case 0: sprintf(evName, "ev_magic");
+						case 0: sprintf_s(evName, "ev_magic");
 							adjustY = 0;
 							adjustX = 0;
 							sizeX = 1;
 							sizeY = 1;
 							break;
-						case 1: sprintf(evName, "ev_luck");
+						case 1: sprintf_s(evName, "ev_luck");
 							adjustY = 0;
 							adjustX = 0;
 							sizeX = 2;
 							sizeY = 1;
 							break;
-						case 2: sprintf(evName, "ev_morale");
+						case 2: sprintf_s(evName, "ev_morale");
 							adjustY = 0;
 							adjustX = 0;
 							sizeX = 2;
 							sizeY = 1;
 							break;
-						case 3: sprintf(evName, "ev_explore");
+						case 3: sprintf_s(evName, "ev_explore");
 							adjustY = 1;
 							adjustX = 0;
 							sizeX = 1;
 							sizeY = 1;
 							break;
 						}
-					else sprintf(evName, "empty");
+					else sprintf_s(evName, "empty");
 
 					break;
 				case 2:
 					if (_foldMini)
 						switch (_saveIndex.x)
 						{
-						case 0: sprintf(evName, "ev_movement");
+						case 0: sprintf_s(evName, "ev_movement");
 							adjustY = 0;
 							adjustX = 0;
 							sizeX = 2;
 							sizeY = 1;
 							break;
-						case 1: sprintf(evName, "ev_resource");
+						case 1: sprintf_s(evName, "ev_resource");
 							adjustY = 0;
 							adjustX = -1;
 							sizeX = 3;
 							sizeY = 2;
 							break;
 						}
-					else sprintf(evName, "empty");
+					else sprintf_s(evName, "empty");
 					break;
 				}
 
@@ -2806,7 +2806,7 @@ void mapTool::windowDraw(void)
 		else SetTextColor(getMemDC(), RGB(0, 0, 0));
 		SelectObject(getMemDC(), font);
 
-		sprintf(tmp, "%d", possesion);
+		sprintf_s(tmp, "%d", possesion);
 
 
 		TextOut(getMemDC(), 384 - strlen(tmp)/2*12, 288, tmp, strlen(tmp));
@@ -4948,8 +4948,8 @@ void mapTool::setCor(void)
 	_mouseArr.y = ((_ptMouse.y - 20) / TILESIZE) + (int)_mapY / TILESIZE;
 
 	
-	sprintf(_msCorX, "%d", _mouseArr.x );
-	sprintf(_msCorY, "%d", _mouseArr.y );
+	sprintf_s(_msCorX, "%d", _mouseArr.x );
+	sprintf_s(_msCorY, "%d", _mouseArr.y );
 	
 	if (_mouseArr.x != _saveX || _mouseArr.y != _saveY)
 	{

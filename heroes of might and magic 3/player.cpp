@@ -163,12 +163,12 @@ void player::enemyInfoDraw(void)
 		HFONT font = CreateFont(14, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("돋움체"));
 		HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
 		SelectObject(getMemDC(), font);
-		if (possesion <= 5) sprintf(tmp, "몇몇의 %s", _enemyName);
-		else if (possesion <= 15) sprintf(tmp, "열댓의 %s", _enemyName);
-		else if (possesion <= 35) sprintf(tmp, "수십의 %s", _enemyName);
-		else if (possesion <= 85) sprintf(tmp, "다수의 %s", _enemyName);
-		else if (possesion <= 150) sprintf(tmp, "한 무리의 %s", _enemyName);
-		else if (possesion > 150) sprintf(tmp, "%s 군대", _enemyName);
+		if (possesion <= 5) sprintf_s(tmp, "몇몇의 %s", _enemyName);
+		else if (possesion <= 15) sprintf_s(tmp, "열댓의 %s", _enemyName);
+		else if (possesion <= 35) sprintf_s(tmp, "수십의 %s", _enemyName);
+		else if (possesion <= 85) sprintf_s(tmp, "다수의 %s", _enemyName);
+		else if (possesion <= 150) sprintf_s(tmp, "한 무리의 %s", _enemyName);
+		else if (possesion > 150) sprintf_s(tmp, "%s 군대", _enemyName);
 
 		SetTextColor(getMemDC(), RGB(255, 255, 255));
 
@@ -245,7 +245,7 @@ void player::heroInfoDraw(void)
 	SelectObject(getMemDC(), font);
 	
 	char tmp[256];
-	sprintf(tmp, "%d", hero.level);
+	sprintf_s(tmp, "%d", hero.level);
 
 	TextOut(getMemDC(), 215, 64, tmp, strlen(tmp));							// 레벨 수치
 
@@ -355,27 +355,27 @@ void player::heroInfoDraw(void)
 
 		//345 71
 		char tmpChar[256];
-		sprintf(tmpChar, "%d (%d)", tmp.atk, tmp.atk + tmpHero.str);
+		sprintf_s(tmpChar, "%d (%d)", tmp.atk, tmp.atk + tmpHero.str);
 
 		TextOut(getMemDC(), 392 - strlen(tmpChar)*7, 70, tmpChar, strlen(tmpChar));
 
-		sprintf(tmpChar, "%d (%d)", tmp.def, tmp.def + tmpHero.def);
+		sprintf_s(tmpChar, "%d (%d)", tmp.def, tmp.def + tmpHero.def);
 
 		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 88, tmpChar, strlen(tmpChar));
 
-		sprintf(tmpChar, "%d - %d", tmp.minDmg, tmp.maxDmg);
+		sprintf_s(tmpChar, "%d - %d", tmp.minDmg, tmp.maxDmg);
 
 		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 125, tmpChar, strlen(tmpChar));
 
-		sprintf(tmpChar, "%d", tmp.hp);
+		sprintf_s(tmpChar, "%d", tmp.hp);
 
 		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 145, tmpChar, strlen(tmpChar));
 
-		sprintf(tmpChar, "%d", tmp.speed);
+		sprintf_s(tmpChar, "%d", tmp.speed);
 
 		TextOut(getMemDC(), 392 - strlen(tmpChar) * 7, 183, tmpChar, strlen(tmpChar));
 
-		sprintf(tmpChar, "%d", tmp.quantity);
+		sprintf_s(tmpChar, "%d", tmp.quantity);
 
 		TextOut(getMemDC(), 238 - strlen(tmpChar) * 7, 185, tmpChar, strlen(tmpChar));
 
@@ -495,7 +495,15 @@ void player::setBattle(void)
 	if (_battle->getWin() || _battle->getLose())
 	{
 		_battleScene = false;
-		
+
+		SOUNDMANAGER->stop("combat0");
+		SOUNDMANAGER->stop("combat1");
+		SOUNDMANAGER->stop("combat2");
+		SOUNDMANAGER->stop("combat3");
+
+		if (_battle->getWin()) SOUNDMANAGER->play("win", 1.0);
+		if (_battle->getLose()) SOUNDMANAGER->play("lose", 1.0);
+
 		if (_battle->getWin())
 		{
 			_zOrder->deleteRender(_saveCorX, _saveCorY);
@@ -506,6 +514,8 @@ void player::setBattle(void)
 			_battle->init(0);
 
 		}
+
+
 
 	}
 
@@ -585,6 +595,11 @@ void player::activeObject(void)
 			break;
 			case 4: case 5:
 			{
+				int tmp = RND->getInt(4);
+				if (tmp == 0) SOUNDMANAGER->play("combat0", 1.0);
+				if (tmp == 1) SOUNDMANAGER->play("combat1", 1.0);
+				if (tmp == 2) SOUNDMANAGER->play("combat2", 1.0);
+				if (tmp == 3) SOUNDMANAGER->play("combat3", 1.0);
 				_battleScene = true;
 				for (int j = 0; j < _vHero[i]->getCreature().size(); j++)
 				{
@@ -897,7 +912,7 @@ void player::inputField(void)
 			_ob->getvOb(_mouseArr.x, _mouseArr.y).type >= 4 &&
 			_enemyInfo == -1)
 		{
-			sprintf(_enemyName,"%s", CommonCreature(
+			sprintf_s(_enemyName,"%s", CommonCreature(
 				_ob->getvOb(_mouseArr.x, _mouseArr.y).type - 4,
 				_ob->getvOb(_mouseArr.x, _mouseArr.y).sub / 2,
 				_ob->getvOb(_mouseArr.x, _mouseArr.y).sub % 2).name);

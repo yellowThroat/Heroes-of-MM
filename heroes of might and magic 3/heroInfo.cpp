@@ -24,7 +24,7 @@ namespace HOMM_HERO
 		{
 		case NAME_CHRISTIAN:
 		{
-			sprintf(hero.name, "크리스티안");
+			sprintf_s(hero.name, "크리스티안");
 			hero.kind = 0;
 			hero.job = 0;
 			hero.indexX = 1;
@@ -34,7 +34,7 @@ namespace HOMM_HERO
 		case NAME_TIRIS:
 		{
 			hero.indexX = 0;
-			sprintf(hero.name, "티리스");
+			sprintf_s(hero.name, "티리스");
 			hero.kind = 0;
 			hero.job = 0;
 			hero.indexX = 0;
@@ -44,7 +44,7 @@ namespace HOMM_HERO
 
 		case NAME_ADELLA:
 		{
-			sprintf(hero.name, "아델라");
+			sprintf_s(hero.name, "아델라");
 			hero.kind = 0;
 			hero.job = 1;
 			hero.indexX = 2;
@@ -55,7 +55,7 @@ namespace HOMM_HERO
 
 		case NAME_ADELAIDE:
 		{
-			sprintf(hero.name, "아델레이드");
+			sprintf_s(hero.name, "아델레이드");
 			hero.kind = 0;
 			hero.job = 1;
 			hero.indexX = 3;
@@ -65,7 +65,7 @@ namespace HOMM_HERO
 		break;
 		case NAME_RYAN:
 		{
-			sprintf(hero.name, "라이언");
+			sprintf_s(hero.name, "라이언");
 			hero.kind = 0;
 			hero.job = 1;
 			hero.indexX = 4;
@@ -76,7 +76,7 @@ namespace HOMM_HERO
 
 		case NAME_DAYS:
 		{
-			sprintf(hero.name, "데이스");
+			sprintf_s(hero.name, "데이스");
 			hero.kind = 1;
 			hero.job = 0;
 			hero.indexX = 1;
@@ -87,7 +87,7 @@ namespace HOMM_HERO
 
 		case NAME_DAMACON:
 		{
-			sprintf(hero.name, "다마콘");
+			sprintf_s(hero.name, "다마콘");
 			hero.kind = 1;
 			hero.job = 0;
 			hero.indexX = 0;
@@ -98,7 +98,7 @@ namespace HOMM_HERO
 
 		case NAME_DARKSTONE:
 		{
-			sprintf(hero.name, "다크스톤");
+			sprintf_s(hero.name, "다크스톤");
 			hero.kind = 1;
 			hero.job = 1;
 			hero.indexX = 4;
@@ -109,7 +109,7 @@ namespace HOMM_HERO
 
 		case NAME_ZEDITE:
 		{
-			sprintf(hero.name, "제다이트");
+			sprintf_s(hero.name, "제다이트");
 			hero.kind = 1;
 			hero.job = 1;
 			hero.indexX = 2;
@@ -120,7 +120,7 @@ namespace HOMM_HERO
 
 		case NAME_SEPHINE:
 		{
-			sprintf(hero.name, "세핀로스");
+			sprintf_s(hero.name, "세핀로스");
 			hero.kind = 1;
 			hero.job = 1;
 			hero.indexX = 3;
@@ -147,7 +147,7 @@ namespace HOMM_HERO
 
 			if (hero.job == 0)
 			{
-				sprintf(hero.jobName, "기사");
+				sprintf_s(hero.jobName, "기사");
 				hero.str = 2;
 				hero.def = 2;
 				hero.spell = 1;
@@ -157,7 +157,7 @@ namespace HOMM_HERO
 			}
 			else
 			{
-				sprintf(hero.jobName, "클레릭");
+				sprintf_s(hero.jobName, "클레릭");
 				hero.str = 1;
 				hero.def = 0;
 				hero.spell = 2;
@@ -177,7 +177,7 @@ namespace HOMM_HERO
 
 			if (hero.job == 0)
 			{
-				sprintf(hero.jobName, "오버로드");
+				sprintf_s(hero.jobName, "오버로드");
 				hero.str = 2;
 				hero.def = 2;
 				hero.spell = 1;
@@ -186,7 +186,7 @@ namespace HOMM_HERO
 			}
 			else
 			{
-				sprintf(hero.jobName, "워락");
+				sprintf_s(hero.jobName, "워락");
 				hero.str = 0;
 				hero.def = 0;
 				hero.spell = 3;
@@ -244,7 +244,7 @@ namespace HOMM_HERO
 			case 0:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "창병");
+					sprintf_s(creature.name, "창병");
 					creature.atk = 4;
 					creature.def = 5;
 					creature.hp = 10;
@@ -282,7 +282,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "도끼 창병");
+					sprintf_s(creature.name, "도끼 창병");
 					creature.atk = 6;
 					creature.def = 5;
 					creature.hp = 10;
@@ -325,7 +325,7 @@ namespace HOMM_HERO
 			case 1:
 				if (!creature.level)
 				{				
-					sprintf(creature.name, "궁수");
+					sprintf_s(creature.name, "궁수");
 					creature.atk = 6;
 					creature.def =3;
 					creature.hp = 10;
@@ -365,7 +365,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "저격수");
+					sprintf_s(creature.name, "저격수");
 					creature.atk = 6;
 					creature.def = 3;
 					creature.hp = 10;
@@ -409,7 +409,7 @@ namespace HOMM_HERO
 				if (!creature.level)
 				{
 
-					sprintf(creature.name, "그리핀");
+					sprintf_s(creature.name, "그리핀");
 					creature.atk = 8;
 					creature.def = 8;
 					creature.hp = 25;
@@ -451,7 +451,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "로열 그리핀");
+					sprintf_s(creature.name, "로열 그리핀");
 					creature.atk = 9;
 					creature.def = 9;
 					creature.hp = 25;
@@ -497,7 +497,7 @@ namespace HOMM_HERO
 			case 3:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "검사");
+					sprintf_s(creature.name, "검사");
 					creature.atk = 10;
 					creature.def = 12;
 					creature.hp = 35;
@@ -535,7 +535,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "크루세이더");
+					sprintf_s(creature.name, "크루세이더");
 					creature.atk = 12;
 					creature.def = 12;
 					creature.hp = 35;
@@ -577,7 +577,7 @@ namespace HOMM_HERO
 			case 4:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "수도사");
+					sprintf_s(creature.name, "수도사");
 					creature.atk = 12;
 					creature.def = 7;
 					creature.hp = 30;
@@ -617,7 +617,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "열성 수도사");
+					sprintf_s(creature.name, "열성 수도사");
 					creature.atk = 12;
 					creature.def = 10;
 					creature.hp = 30;
@@ -660,7 +660,7 @@ namespace HOMM_HERO
 			case 5:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "기사단");
+					sprintf_s(creature.name, "기사단");
 					creature.atk = 15;
 					creature.def = 15;
 					creature.hp = 100;
@@ -702,7 +702,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "챔피언");
+					sprintf_s(creature.name, "챔피언");
 					creature.atk = 16;
 					creature.def = 16;
 					creature.hp = 100;
@@ -747,7 +747,7 @@ namespace HOMM_HERO
 			case 6:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "천사");
+					sprintf_s(creature.name, "천사");
 					creature.atk = 20;
 					creature.def = 20;
 					creature.hp = 200;
@@ -788,7 +788,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "대천사");
+					sprintf_s(creature.name, "대천사");
 					creature.atk = 30;
 					creature.def = 30;
 					creature.hp = 250;
@@ -845,7 +845,7 @@ namespace HOMM_HERO
 			case 0:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "동굴인");
+					sprintf_s(creature.name, "동굴인");
 					creature.atk = 4;
 					creature.def = 3;
 					creature.hp = 5;
@@ -883,7 +883,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "지옥의 동굴인");
+					sprintf_s(creature.name, "지옥의 동굴인");
 					creature.atk = 5;
 					creature.def = 4;
 					creature.hp = 6;
@@ -925,7 +925,7 @@ namespace HOMM_HERO
 			case 1:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "하피");
+					sprintf_s(creature.name, "하피");
 					creature.atk = 6;
 					creature.def = 5;
 					creature.hp = 14;
@@ -967,7 +967,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "마녀 하피");
+					sprintf_s(creature.name, "마녀 하피");
 					creature.atk = 6;
 					creature.def = 6;
 					creature.hp = 14;
@@ -1012,7 +1012,7 @@ namespace HOMM_HERO
 			case 2:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "주시자");
+					sprintf_s(creature.name, "주시자");
 					creature.atk = 9;
 					creature.def = 7;
 					creature.hp = 22;
@@ -1052,7 +1052,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "악마의 눈");
+					sprintf_s(creature.name, "악마의 눈");
 					creature.atk = 10;
 					creature.def = 8;
 					creature.hp = 22;
@@ -1097,7 +1097,7 @@ namespace HOMM_HERO
 			case 3:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "메두사");
+					sprintf_s(creature.name, "메두사");
 					creature.atk = 9;
 					creature.def = 9;
 					creature.hp = 25;
@@ -1138,7 +1138,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "메두사 퀸");
+					sprintf_s(creature.name, "메두사 퀸");
 					creature.atk = 10;
 					creature.def = 10;
 					creature.hp = 30;
@@ -1183,7 +1183,7 @@ namespace HOMM_HERO
 			case 4:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "미노타우르스");
+					sprintf_s(creature.name, "미노타우르스");
 					creature.atk = 14;
 					creature.def = 12;
 					creature.hp = 50;
@@ -1221,7 +1221,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "미노타우르스 킹");
+					sprintf_s(creature.name, "미노타우르스 킹");
 					creature.atk = 15;
 					creature.def = 15;
 					creature.hp = 50;
@@ -1265,7 +1265,7 @@ namespace HOMM_HERO
 			case 5:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "만티코어");
+					sprintf_s(creature.name, "만티코어");
 					creature.atk = 15;
 					creature.def = 13;
 					creature.hp = 80;
@@ -1307,7 +1307,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "스코피코어");
+					sprintf_s(creature.name, "스코피코어");
 					creature.atk = 16;
 					creature.def = 14;
 					creature.hp = 80;
@@ -1355,7 +1355,7 @@ namespace HOMM_HERO
 			case 6:
 				if (!creature.level)
 				{
-					sprintf(creature.name, "레드 드래곤");
+					sprintf_s(creature.name, "레드 드래곤");
 					creature.atk = 19;
 					creature.def = 19;
 					creature.hp = 180;
@@ -1396,7 +1396,7 @@ namespace HOMM_HERO
 				}
 				else if (creature.level)
 				{
-					sprintf(creature.name, "블랙 드래곤");
+					sprintf_s(creature.name, "블랙 드래곤");
 					creature.atk = 25;
 					creature.def = 25;
 					creature.hp = 300;

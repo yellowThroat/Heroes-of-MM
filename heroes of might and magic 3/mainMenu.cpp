@@ -9,6 +9,9 @@ HRESULT	mainMenu::init(void)
 {
 	//============================= I N I T ============================
 	imageInit();
+	soundInit();
+
+	SOUNDMANAGER->play("main", 1.0);
 
 	//==================================
 	for (int i = 0; i < MAXSAVE; i++)
@@ -252,6 +255,8 @@ void mainMenu::sceneChange(void)
 				DATABASE->setSaveName(_saveFile[_saveNum].fileName);
 				DATABASE->loadFileList();
 				SCENEMANAGER->changeScene("gameScene");
+				SOUNDMANAGER->stop("main");
+				SOUNDMANAGER->play("green");
 				break;
 			case MMB_LOAD:
 				break;
@@ -366,6 +371,23 @@ void mainMenu::inputMenu(void)
 		}
 
 	}
+
+}
+
+void mainMenu::soundInit(void)
+{
+	SOUNDMANAGER->addSound("castle", "sound/castle.mp3", true, true);
+	SOUNDMANAGER->addSound("dungeon", "sound/dungeon.mp3", true, true);
+	SOUNDMANAGER->addSound("combat0", "sound/combat0.mp3", true, true);
+	SOUNDMANAGER->addSound("combat1", "sound/combat1.mp3", true, true);
+	SOUNDMANAGER->addSound("combat2", "sound/combat2.mp3", true, true);
+	SOUNDMANAGER->addSound("combat3", "sound/combat3.mp3", true, true);
+	SOUNDMANAGER->addSound("main", "sound/main.mp3", true, true);
+	SOUNDMANAGER->addSound("good", "sound/good.mp3", false, false);
+	SOUNDMANAGER->addSound("green", "sound/green.mp3", true, true);
+	SOUNDMANAGER->addSound("rough", "sound/rough.mp3", true, true);
+	SOUNDMANAGER->addSound("win", "sound/win.mp3", false, false);
+	SOUNDMANAGER->addSound("lose", "sound/lose.mp3", false, false);
 
 }
 

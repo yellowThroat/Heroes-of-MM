@@ -38,6 +38,7 @@ public:
 
 	//============= S E T T I N G ==========
 	void imageInit(void);
+	void soundInit(void);
 	void buttonActive(void);
 	void inputMenu(void);
 	void windowMove(void);

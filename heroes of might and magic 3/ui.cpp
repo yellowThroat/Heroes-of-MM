@@ -58,7 +58,7 @@ void ui::render(void)
 void ui::draw(void)
 {
 	char tmp[10];
-	IMAGEMANAGER->findImage(itoa(DATABASE->getSaveNum(),tmp,10))->render(getMemDC(),817,24);
+	IMAGEMANAGER->findImage(_itoa(DATABASE->getSaveNum(),tmp,10))->render(getMemDC(),817,24);
 
 	IMAGEMANAGER->findImage("gameMiniview")->render(getMemDC(),
 		_miniMapRect.left + _pm->getCameraArr().x * 2,
@@ -410,6 +410,10 @@ void ui::input(void)
 						{
 							_player->setScene(true);
 							_gs->getvCamp()[_player->getCurrentCamp()]->setProperty(_player->getProperty());
+							if (_gs->getvCamp()[_player->getCurrentCamp()]->getCityInfo().camp == CAMP_CASTLE) SOUNDMANAGER->play("castle", 1.0);
+							if (_gs->getvCamp()[_player->getCurrentCamp()]->getCityInfo().camp == CAMP_DUNGEON) SOUNDMANAGER->play("dungeon", 1.0);
+
+
 						}
 					}
 				}

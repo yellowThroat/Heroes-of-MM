@@ -93,7 +93,7 @@ void dataBase::loadFileList(void)
 
 		
 		char tmp1[10];
-		IMAGEMANAGER->addImage(itoa(i, tmp1, 10), tmp.c_str(), 144, 144, true, RGB(255, 0, 255));
+		IMAGEMANAGER->addImage(_itoa(i, tmp1, 10), tmp.c_str(), 144, 144, true, RGB(255, 0, 255));
 		int a = 0;
 	}
 

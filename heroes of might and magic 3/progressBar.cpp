@@ -39,8 +39,8 @@ HRESULT progressBar::init(char* topImage, char* bottomImage, float x, float y, i
 	ZeroMemory(strTopImageName, sizeof(strTopImageName));
 	ZeroMemory(strBottomImageName, sizeof(strBottomImageName));
 
-	sprintf(strTopImageName, "%s.bmp", topImage);
-	sprintf(strBottomImageName, "%s.bmp", bottomImage);
+	sprintf_s(strTopImageName, "%s.bmp", topImage);
+	sprintf_s(strBottomImageName, "%s.bmp", bottomImage);
 
 	_progressBarBottom = IMAGEMANAGER->addImage(bottomImage, strBottomImageName, x, y, width, height, true, RGB(255, 0, 255));
 	_progressBarTop = IMAGEMANAGER->addImage(topImage, strTopImageName, x, y, width, height, true, RGB(255, 0, 255));

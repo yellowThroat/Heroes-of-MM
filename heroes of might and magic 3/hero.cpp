@@ -83,7 +83,7 @@ void hero::uiDraw(void)
 
 	SelectObject(getMemDC(), font);
 	
-	sprintf(tmp, "Movement Point : ( %d / %d )", _currentActionPoint, _maxActionPoint);
+	sprintf_s(tmp, "Movement Point : ( %d / %d )", _currentActionPoint, _maxActionPoint);
 
 	TextOut(getMemDC(), 400 - strlen(tmp) / 2 * 7, 558, tmp, strlen(tmp));
 
