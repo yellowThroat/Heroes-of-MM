@@ -25,6 +25,7 @@ HRESULT player::init(int myNum)
 	_currentCreature = -1;
 	_saveCorX = 0;
 	_saveCorY = 0;
+	_saveHero = 0;
 	_destination = { 0,0 };
 	_enemyCor = { 0,0 };
 	/*
@@ -598,7 +599,7 @@ void player::activeObject(void)
 
 				_saveCorX = x;
 				_saveCorY = y;
-
+				_saveHero = i;
 
 
 			}

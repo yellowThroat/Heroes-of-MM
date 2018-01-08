@@ -131,7 +131,8 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 
 
 				if (!fly && _battleArr[currentNode.nodeX + i][currentNode.nodeY + j].closed) continue;
-				if (!fly && _battleArr[currentNode.nodeX + i][currentNode.nodeY + j].unit) continue;
+				if (!fly && _battleArr[currentNode.nodeX + i][currentNode.nodeY + j].unit &&
+					(currentNode.nodeX + i != destX || currentNode.nodeY + j != destY)) continue;
 				//if (!fly && !_battleArr[currentNode.nodeX + i][currentNode.nodeY + j].range) continue;
 
 
@@ -197,7 +198,11 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 					point.y = _closelist[i].parentY;
 
 					shortestPath.insert(shortestPath.begin(), point);
-					if(point.x == x && point.y == y) return shortestPath;
+					if (point.x == x && point.y == y)
+					{
+						shortestPath.erase(shortestPath.begin());
+						return shortestPath;
+					}
 
 					break;
 				}

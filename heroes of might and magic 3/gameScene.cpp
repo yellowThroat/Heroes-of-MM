@@ -39,6 +39,7 @@ HRESULT gameScene::init(void)
 	_pm->setzOrderAddressLink(_zOrder);
 	_ob->setzOrderAddressLink(_zOrder);
 	_zOrder->setPlayerAddressLink(_player);
+	_battle->setPlayerAddressLink(_player);
 	//============= C L A S S   I N I T ==================
 	_pm->init();
 	_ui->init();

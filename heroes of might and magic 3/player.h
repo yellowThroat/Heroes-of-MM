@@ -49,10 +49,11 @@ private:
 	int _myNum;						// 플레이어 값
 	int _currentHero;				// 현재 조정중인 영웅
 	int _currentCamp;				// 현재 보고있는 마을
-	int _currentCreature;
+	int _currentCreature;			// 머더라
 	int _count;						// 인덱스 돌리는용
 	int _saveCorX;					// 좌표 저장용
 	int _saveCorY;
+	int _saveHero;					// 어떤영웅이었는지 저장용
 
 public:
 
@@ -97,6 +98,7 @@ public:
 
 
 	//=========== G E T T E R ===============
+	int getHeroNum() { return _saveHero; }
 	int getNum() { return _myNum; }
 	int getCurrentCamp() { return _currentCamp; }
 	int getCurrentHero() { return _currentHero; }

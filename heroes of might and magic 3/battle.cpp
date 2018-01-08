@@ -60,7 +60,7 @@ HRESULT battle::init(int x)
 	switch (_battleNum)
 	{
 	case 0:
-		//_obstacle = RND->getInt(2);
+		_obstacle = RND->getInt(2);
 
 		_obstacle = 0;
 	break;
@@ -103,12 +103,13 @@ void battle::update(void)
 	//	_vCreature[_currentCreature].fly);
 	////==========================================
 
-
+	sort(_vBattle.begin(), _vBattle.end());
+	setArrNum();
+	
 	activeButton();
 	setCondition();
 	frameCycle();
 	creatureMove();
-	setArrNum();
 	cursorChange();
 	enemyAction();
 	endBattle();
@@ -436,10 +437,130 @@ void battle::creatureDraw(void)
 
 void battle::enemyAction(void)
 {
-	if (!_vBattle[_vCreature[_currentCreature].arrNum].player)
+	if (!_vBattle[_vCreature[_currentCreature].arrNum].player && !_turn)
 	{
-		setTurn();
-		_turn = false;
+		//setTurn();
+		//_turn = false;
+		int shortest = 30;												// 언놈이 제일 가까이 있나
+		int current = _vCreature[_currentCreature].arrNum;				// 현재 크리쳐 
+		int target = -1;												// 때리러 갈놈 지정
+		int destX;														// 이동 목표지점 X
+		int destY;														// 이동 목표지점 Y
+
+		//=========== 먼저 공격 범위에 누가 있는지? 누가 젤 가까운지
+		for (int i = 0; i < _vBattle.size(); i++)
+		{
+			if (_vBattle[i].player && _battleArr[_vBattle[i].arrX][_vBattle[i].arrY].attack && !_vCreature[_vBattle[i].arrNum].isDead)
+			{
+				if (shortest > getPath(_vBattle[current].arrX, _vBattle[current].arrY, 
+					_vBattle[i].arrX, _vBattle[i].arrY,_vCreature[_currentCreature].fly).size())
+				{
+					shortest = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
+						_vBattle[i].arrX, _vBattle[i].arrY, _vCreature[_currentCreature].fly).size();
+
+					target = _vBattle[i].arrNum;
+
+					_vBattle[current].attackTarget = _vBattle[i].target;
+				}
+			}
+		}
+
+		//=============== 공격 범위에 누군가가 있다면?
+		if (target != -1)
+		{
+			//=============== 바로 옆에 붙어 있다?  바로 고놈을 때려라==================
+			if (getValueH(_vBattle[current].arrX, _vBattle[current].arrY, _vBattle[_vCreature[target].arrNum].arrX, _vBattle[_vCreature[target].arrNum].arrY) == 1)
+			{
+				_attack = true;
+				_turn = true;
+				attackSomeone(_currentCreature, target);
+
+			}
+			//=================== 좀 떨어져 있다면 이동후 때려야 할텐데..
+			else
+			{
+				int shortestMove = 30;
+				for (int i = -1; i <= 1; i++)
+				{
+					for (int j = -1; j <= 1; j++)
+					{
+						if (!_battleArr[_vBattle[target].arrX + i][_vBattle[target].arrY + j].range) continue;
+
+						if (i == 0 && j == 0) continue;
+
+						if (_vBattle[target].arrY % 2 == 0)
+						{
+							if (i == -1 && j == -1) continue;
+							if (i == -1 && j == 1) continue;
+						}
+						else
+						{
+							if (i == 1 && j == -1) continue;
+							if (i == 1 && j == 1) continue;
+						}
+
+						if (shortestMove > getValueH(_vBattle[current].arrX, _vBattle[current].arrY,
+							_vBattle[_vCreature[target].arrNum].arrX + i, _vBattle[_vCreature[target].arrNum].arrY + j))
+						{
+							shortestMove = getValueH(_vBattle[current].arrX, _vBattle[current].arrY,
+								_vBattle[_vCreature[target].arrNum].arrX +i , _vBattle[_vCreature[target].arrNum].arrY + j);
+							destX = _vBattle[_vCreature[target].arrNum].arrX + i;
+							destY = _vBattle[_vCreature[target].arrNum].arrY + j;
+						}
+					}
+				}
+
+				_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
+				if(_vCreature[_currentCreature].size ==2) _battleArr[_vBattle[current].arrX-1][_vBattle[current].arrY].unit = false;
+
+				_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY, destX, destY, _vCreature[_currentCreature].fly);
+				_move = true;
+				_attack = true;
+				_turn = true;
+				_vCreature[_currentCreature].state = STATE_MOVE;
+
+			}
+		}
+		
+		//======================= 이동할 자리를 찾아보자 =================
+		//======================= 먼저 누가 제일 가깝냐 ? ================
+		//=============== target이 -1 인거는 공격범위에 아무도 없다는뜻 =====
+		else if (target == -1)
+		{
+			for (int i = 0; i < _vBattle.size(); i++)
+			{
+				if (_vBattle[i].player)
+				{
+					if (shortest > getPath(_vBattle[current].arrX, _vBattle[current].arrY,
+						_vBattle[i].arrX, _vBattle[i].arrY, _vCreature[_currentCreature].fly).size())
+					{
+						shortest = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
+							_vBattle[i].arrX, _vBattle[i].arrY, _vCreature[_currentCreature].fly).size();
+						target = _vBattle[i].arrNum;
+
+					}
+				}
+			}
+
+			_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
+				_vBattle[_vCreature[target].arrNum].arrX, _vBattle[_vCreature[target].arrNum].arrY,
+				_vCreature[_currentCreature].fly);
+
+			int tmp = _vPath.size();
+
+			for (int i = 0; i < tmp - _vCreature[_currentCreature].speed; i++)
+			{
+				_vPath.erase(_vPath.begin() + (_vPath.size() -1));
+			}
+
+			_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
+			if (_vCreature[_currentCreature].size == 2) _battleArr[_vBattle[current].arrX - 1][_vBattle[current].arrY].unit = false;
+			_vCreature[_currentCreature].state = STATE_MOVE;
+			_move = true;
+			_turn = true;
+
+		}
+
 	}
 }
 
@@ -720,18 +841,51 @@ void battle::endBattle(void)
 
 		if (isAliveEnemy == 0 && i == _vCreature.size() - 1)
 		{
-			_vCreature.clear();
-			_vBattle.clear();
+			//_vCreature.clear();
+			//_vBattle.clear();
 			_youWin = true;
 
 		}
 		else if (isAlivePlayer == 0 && i == _vCreature.size() - 1)
 		{
-			_vCreature.clear();
-			_vBattle.clear();
+			//_vCreature.clear();
+			//_vBattle.clear();
 			_youLose = false;
 		}
 	}
+
+	if (_youLose || _youWin)
+	{
+		for (int i = 0; i < _vCreature.size();)
+		{
+			if (!_vBattle[_vCreature[i].arrNum].player || _vCreature[i].isDead)
+			{
+				_vCreature.erase(_vCreature.begin() + i);
+				continue;
+			}
+			else i++;
+		}
+		for (int i = 0; i < _vCreature.size(); i++)
+		{
+			_vCreature[i].currentHp = _vCreature[i].hp;
+			for (int j = 0; j < STATE_END; j++)
+			{
+				if(j != 6)
+				_vCreature[i].img[j]->setFrameY(0);
+			}
+		}
+
+		_player->getHero()[_player->getHeroNum()]->setCreature(_vCreature);
+		_vCreature.clear();
+		_vBattle.clear();
+
+	}
+
+
+	
+
+
+
 }
 
 void battle::creatureMove(void)
@@ -787,9 +941,27 @@ void battle::creatureMove(void)
 
 				 if (!_attack)
 				 {
+					 if(_vBattle[_vCreature[_currentCreature].arrNum].player)
 					 _vBattle[_vCreature[_currentCreature].arrNum].isRight = true;
 
+					 else _vBattle[_vCreature[_currentCreature].arrNum].isRight = false;
+
+					 //_turn = false;
 					 //setTurn();
+				 }
+				 else
+				 {
+					//setArrNum();
+					//int target;
+					//for (int i = 0; i < _vBattle.size(); i++)
+					//{
+					//	if (_vBattle[_vCreature[_currentCreature].arrNum].attackTarget == _vBattle[i].target)
+					//	{
+					//		target = _vBattle[i].arrNum;
+					//		break;
+					//	}
+					//}
+					//attackSomeone(_currentCreature, target);
 				 }
 
 			}
@@ -804,7 +976,7 @@ void battle::creatureMove(void)
 		}
 
 	}
-
+	/*
 	if (_attack && !_move && _vCreature[_currentCreature].state == STATE_IDLE)
 	{
 		setArrNum();
@@ -860,7 +1032,7 @@ void battle::creatureMove(void)
 		}
 		_vBattle[current].sourX = 0;
 	}
-
+	*/
 }
 
 void battle::setArrNum(void)
@@ -1047,7 +1219,7 @@ void battle::joinCreature(tagCreature creature)
 	tmp0.player = true;
 	tmp0.arrNum = tmp.arrNum;
 	tmp0.angle = 0;
-
+	tmp0.counter = false;
 
 	
 	_vCreature.push_back(tmp);
@@ -1085,6 +1257,7 @@ void battle::joinCreature(tagObject object)
 		tmp0.player = false;
 		tmp0.arrNum = tmp.arrNum;
 		tmp0.angle = 0;
+		tmp0.counter = false;
 
 		_vCreature.push_back(tmp);
 		_vBattle.push_back(tmp0);
@@ -1173,7 +1346,7 @@ void battle::frameCycle(void)
 		{
 			if (!_move && _vCreature[i].state == STATE_MOVE )
 			{
-				if (_vCreature[_currentCreature].moveEnd == 0)
+				if (_vCreature[i].moveEnd == 0)
 				{
 					_vCreature[i].state = STATE_IDLE;
 					_vBattle[_vCreature[i].arrNum].sourX = 0;
@@ -1182,6 +1355,21 @@ void battle::frameCycle(void)
 					{
 						setTurn();
 						_turn = false;
+					}
+					else
+					{
+						setArrNum();
+						int target;
+						for (int j = 0; j < _vBattle.size(); j++)
+						{
+							if (_vBattle[_vCreature[i].arrNum].attackTarget == _vBattle[j].target)
+							{
+								target = _vBattle[j].arrNum;
+								break;
+							}
+						}
+						attackSomeone(i, target);
+
 					}
 					
 					break;
@@ -1202,13 +1390,29 @@ void battle::frameCycle(void)
 
 						 setTurn();
 					 }
+					 else
+					 {
+						 setArrNum();
+						 int target;
+						 for (int j = 0; j < _vBattle.size(); j++)
+						 {
+							 if (_vBattle[_vCreature[i].arrNum].attackTarget == _vBattle[j].target)
+							 {
+								 target = _vBattle[j].arrNum;
+								 break;
+							 }
+						 }
+						 attackSomeone(i, target);
+
+					 }
+
 
 				}
 
 			}
 
 		}
-
+		/*
 		if (_vCreature[_currentCreature].state == STATE_DOWN ||
 			_vCreature[_currentCreature].state == STATE_FRONT ||
 			_vCreature[_currentCreature].state == STATE_UP)
@@ -1281,10 +1485,11 @@ void battle::frameCycle(void)
 
 
 		}
-
+		*/
 
 		for (int i = 0; i < _vCreature.size(); i++)
 		{
+			
 
 			if (_vCreature[i].state == STATE_DAMAGED)
 			{
@@ -1292,17 +1497,29 @@ void battle::frameCycle(void)
 
 				if (_vBattle[_vCreature[i].arrNum].sourX >= _vCreature[i].img[STATE_DAMAGED]->getMaxFrameX())
 				{
+					int target;
+
+					for (int j = 0; j < _vBattle.size(); j++)
+					{
+						if (_vBattle[_vCreature[i].arrNum].attackTarget == _vBattle[j].target)
+						{
+							target = _vBattle[j].arrNum;
+						}
+					}
+
 					_vCreature[i].state = STATE_IDLE;
 					_vBattle[_vCreature[i].arrNum].sourX = 0;
 					
-					if (_vBattle[_vCreature[i].arrNum].counter)
+					if (_vBattle[_vCreature[i].arrNum].counter || i == _currentCreature)
 					{
 						_turn = false;
+						_attack = false;
 						setTurn();
 					}
-					else
+					else if(!_vBattle[_vCreature[i].arrNum].counter && i != _currentCreature)
 					{
-
+						attackSomeone(i, target);
+						_vBattle[_vCreature[i].arrNum].counter = true;
 					}
 				}
 			}
@@ -1318,7 +1535,89 @@ void battle::frameCycle(void)
 				{
 					_vCreature[i].isDead = true;
 					_turn = false;
+					_attack = false;
 					setTurn();
+				}
+
+			}
+			else if (_vCreature[i].state == STATE_FRONT || _vCreature[i].state == STATE_DOWN || _vCreature[i].state == STATE_UP)
+			{
+				
+				_vBattle[_vCreature[i].arrNum].sourX++;
+
+				if (_vBattle[_vCreature[i].arrNum].sourX >=
+					_vCreature[i].img[_vCreature[i].state]->getMaxFrameX())
+				{
+					_vCreature[i].state = STATE_IDLE;
+					_vBattle[_vCreature[i].arrNum].sourX = 0;
+					
+				}
+
+				if (_vBattle[_vCreature[i].arrNum].sourX ==
+					_vCreature[i].img[_vCreature[i].state]->getMaxFrameX() - 1)
+				{
+					int target;
+
+					for (int j = 0; j < _vBattle.size(); j++)
+					{
+						if (_vBattle[_vCreature[i].arrNum].attackTarget == _vBattle[j].target)
+						{
+							target = _vBattle[j].arrNum;
+							_vBattle[j].attackTarget = _vBattle[_vCreature[i].arrNum].target;
+
+						}
+					}
+
+					int dmg = RND->getFromIntTo(_vCreature[i].minDmg, _vCreature[i].maxDmg);
+					int atk = _vCreature[i].atk;
+					int def = _vCreature[target].def;
+					int totalDmg = dmg * _vCreature[i].quantity;
+					int revise = atk - def;
+					int hp = _vCreature[target].currentHp;
+					int totalHp = (_vCreature[target].quantity - 1) * _vCreature[target].hp + hp;
+
+					if (revise >= 60) revise = 60;
+					if (revise <= -28) revise = -28;
+					if (revise >= 0)
+					{
+						totalDmg = totalDmg * (1 + 0.05*revise);
+					}
+					else
+					{
+						totalDmg = totalDmg * (1 - 0.025*abs(revise));
+					}
+
+
+					if (totalDmg >= totalHp)
+					{
+						_vCreature[target].state = STATE_DEAD;
+					}
+					else
+					{
+						totalHp -= totalDmg;
+						_vCreature[target].quantity = totalHp / _vCreature[target].hp + 1;
+						_vCreature[target].currentHp = totalHp % _vCreature[target].hp;
+
+						if (_vCreature[target].currentHp == 0)
+						{
+							_vCreature[target].quantity -= 1;
+							_vCreature[target].currentHp = _vCreature[target].hp;
+
+						}
+
+						_vCreature[target].state = STATE_DAMAGED;
+
+						//attackSomeone(target, i);
+					}
+
+
+					
+
+					
+				}
+				else if (_vCreature[i].state == STATE_IDLE)
+				{
+					_vBattle[_vCreature[i].arrNum].sourX = 0;
 				}
 
 			}
@@ -1360,6 +1659,60 @@ void battle::frameCycle(void)
 		 _vBattle[_vCreature[_currentCreature].arrNum].count = 6;
 	}
 
+
+}
+
+void battle::attackSomeone(int x, int y)
+{
+	setArrNum();
+
+	int attacker = _vCreature[x].arrNum;
+	int victim = _vCreature[y].arrNum;
+
+
+	if (_vBattle[attacker].arrY % 2 == 0)
+	{
+		if (_vBattle[attacker].arrX < _vBattle[victim].arrX)
+		{
+			_vBattle[attacker].isRight = true;
+			_vBattle[victim].isRight = false;
+		}
+		else
+		{
+			_vBattle[attacker].isRight = false;
+			_vBattle[victim].isRight = true;
+		}
+
+	}
+	else
+	{
+		if (_vBattle[attacker].arrX > _vBattle[victim].arrX)
+		{
+			_vBattle[attacker].isRight = false;
+			_vBattle[victim].isRight = true;
+		}
+		else
+		{
+			_vBattle[attacker].isRight = true;
+			_vBattle[victim].isRight = false;
+		}
+	}
+
+	
+
+	if (_vBattle[attacker].arrY == _vBattle[victim].arrY)
+	{
+		_vCreature[x].state = STATE_FRONT;
+	}
+	else if (_vBattle[attacker].arrY > _vBattle[victim].arrY)
+	{
+		_vCreature[x].state = STATE_UP;
+	}
+	else if (_vBattle[attacker].arrY < _vBattle[victim].arrY)
+	{
+		_vCreature[x].state = STATE_DOWN;
+	}
+	_vBattle[attacker].sourX = 0;
 
 }
 
@@ -1620,10 +1973,19 @@ void battle::inputBattle(void)
 					{
 						_battleArr[_vBattle[_vCreature[_currentCreature].arrNum].arrX - 1][_vBattle[_vCreature[_currentCreature].arrNum].arrY].unit = false;
 					}
-
+					
 					int tmp0 = 0;	// === X 좌표 보정용
 					int tmp1 = 0;	// === Y 좌표 보정용
+					int target;		// ==== 누구 때릴래
 					_vBattle[_vCreature[_currentCreature].arrNum].attackTarget = isAnybody(getMouseArr().x, getMouseArr().y);
+
+					for (int i = 0; i < _vBattle.size(); i++)
+					{
+						if (_vBattle[_vCreature[_currentCreature].arrNum].attackTarget == _vBattle[i].target)
+						{
+							target = _vBattle[i].arrNum;
+						}
+					}
 
 					switch (IMAGEMANAGER->findImage("battle_cursor_melee")->getFrameX())
 					{
@@ -1677,6 +2039,10 @@ void battle::inputBattle(void)
 						_vBattle[_vCreature[_currentCreature].arrNum].count = 0;
 						_vCreature[_currentCreature].state = STATE_MOVE;
 						_move = true;
+					}
+					else
+					{
+						attackSomeone(_currentCreature, target);
 					}
 
 					_attack = true;

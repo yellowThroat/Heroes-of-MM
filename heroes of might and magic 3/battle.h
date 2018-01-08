@@ -89,11 +89,12 @@ struct tagBattleCreature
 
 };
 
+class player;
 
 class battle : public gameNode
 {
 private:
-
+	player* _player;
 private:
 	tagGridInfo _battleArr[MAXGRIDX][MAXGRIDY];		// ÀüÀå ÁÂÇ¥
 	vector<tagHexaFind> _openlist;					// Çí»ç a½ºÅ¸ 
@@ -133,6 +134,7 @@ public:
 	void creatureDraw(void);
 
 	//============ U P D A T E ==========
+	void attackSomeone(int x, int y);
 	void endBattle(void);
 	void enemyAction(void);
 	void cursorChange(void);
@@ -164,6 +166,8 @@ public:
 	bool getWin() { return _youWin; }
 	bool getLose() { return _youLose; }
 
+	//============ L I N K ==================
+	void setPlayerAddressLink(player* player) { _player = player; }
 
 	battle();
 	~battle();
