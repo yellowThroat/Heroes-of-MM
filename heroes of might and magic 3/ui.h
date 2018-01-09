@@ -58,6 +58,8 @@ private:
 	int _month;						// 시간 - 달
 	int _week;						// 시간 - 주
 	int _day;						// 시간 - 일
+	float _bgmVolume;					// 브금 소리 조절
+	float _effectVolume;				// 효과음 소리 조절
 
 	bool _changeScene;				// 체인지 신
 public:
@@ -72,6 +74,8 @@ public:
 	//=============== S E T T I N G ===========
 	void input(void);
 	void setButton(void);
+	void bgmVolumeControl();
+	void effectVolumeControl();
 
 	//=============== G E T T E R ===============
 	RECT getMiniMapRect() { return _miniMapRect; }

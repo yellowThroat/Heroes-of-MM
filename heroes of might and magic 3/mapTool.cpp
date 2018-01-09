@@ -78,6 +78,7 @@ HRESULT mapTool::init(void)
 		ZeroMemory(&_saveFile, sizeof(SAVE));
 
 		_saveFile[i].number = i;
+		_saveFile[i].fileName = TEXT(" ");
 	}
 	
 	for (int i = 0; i < MAXTILE; i++)
@@ -148,7 +149,7 @@ HRESULT mapTool::init(void)
 
 void mapTool::release(void)
 {
-
+	SOUNDMANAGER->stop("maptool");
 }
 
 void mapTool::update(void)

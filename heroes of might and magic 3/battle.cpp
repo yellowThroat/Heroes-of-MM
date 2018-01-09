@@ -441,7 +441,7 @@ void battle::enemyAction(void)
 	{
 		//setTurn();
 		//_turn = false;
-		int shortest = 30;												// 언놈이 제일 가까이 있나
+		int shortest = 50;												// 언놈이 제일 가까이 있나
 		int current = _vCreature[_currentCreature].arrNum;				// 현재 크리쳐 
 		int target = -1;												// 때리러 갈놈 지정
 		int destX;														// 이동 목표지점 X
@@ -450,6 +450,8 @@ void battle::enemyAction(void)
 		//=========== 먼저 공격 범위에 누가 있는지? 누가 젤 가까운지
 		for (int i = 0; i < _vBattle.size(); i++)
 		{
+			//setArrNum();
+
 			if (_vBattle[i].player && _battleArr[_vBattle[i].arrX][_vBattle[i].arrY].attack && !_vCreature[_vBattle[i].arrNum].isDead)
 			{
 				if (shortest > getPath(_vBattle[current].arrX, _vBattle[current].arrY, 
@@ -484,7 +486,7 @@ void battle::enemyAction(void)
 				{
 					for (int j = -1; j <= 1; j++)
 					{
-						if (!_battleArr[_vBattle[target].arrX + i][_vBattle[target].arrY + j].range) continue;
+						if (!_battleArr[_vBattle[_vCreature[target].arrNum].arrX +i][_vBattle[_vCreature[target].arrNum].arrY + j].range) continue;
 
 						if (i == 0 && j == 0) continue;
 
@@ -514,8 +516,28 @@ void battle::enemyAction(void)
 				if(_vCreature[_currentCreature].size ==2) _battleArr[_vBattle[current].arrX-1][_vBattle[current].arrY].unit = false;
 
 				_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY, destX, destY, _vCreature[_currentCreature].fly);
-				_move = true;
+				
 				_attack = true;
+
+				if (_vCreature[_currentCreature].size == 2)
+				{
+					
+					if (!_battleArr[_vPath[_vPath.size() - 1].x - 1][_vPath[_vPath.size() - 1].y].range)
+						_vPath[_vPath.size() - 1].x += 1;
+				}
+
+
+
+				while (_vPath.size())
+				{
+					if (!_battleArr[_vPath[_vPath.size() - 1].x][_vPath[_vPath.size() - 1].y].unit) break;
+				
+					_vPath.erase(_vPath.begin() + _vPath.size() - 1);
+					_attack = false;
+				
+				}
+
+				_move = true;
 				_turn = true;
 				_vCreature[_currentCreature].state = STATE_MOVE;
 
@@ -527,9 +549,11 @@ void battle::enemyAction(void)
 		//=============== target이 -1 인거는 공격범위에 아무도 없다는뜻 =====
 		else if (target == -1)
 		{
+			int revise = 0;
+			
 			for (int i = 0; i < _vBattle.size(); i++)
 			{
-				if (_vBattle[i].player)
+				if (_vBattle[i].player && !_vCreature[_vBattle[i].arrNum].isDead)
 				{
 					if (shortest > getPath(_vBattle[current].arrX, _vBattle[current].arrY,
 						_vBattle[i].arrX, _vBattle[i].arrY, _vCreature[_currentCreature].fly).size())
@@ -542,6 +566,8 @@ void battle::enemyAction(void)
 				}
 			}
 
+			if (target == -1) return;
+
 			_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
 				_vBattle[_vCreature[target].arrNum].arrX, _vBattle[_vCreature[target].arrNum].arrY,
 				_vCreature[_currentCreature].fly);
@@ -552,9 +578,16 @@ void battle::enemyAction(void)
 			{
 				_vPath.erase(_vPath.begin() + (_vPath.size() -1));
 			}
-			_battleArr[0][0];
+			
+
+
 			_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
-			if (_vCreature[_currentCreature].size == 2) _battleArr[_vBattle[current].arrX - 1][_vBattle[current].arrY].unit = false;
+			if (_vCreature[_currentCreature].size == 2)
+			{
+				_battleArr[_vBattle[current].arrX - 1][_vBattle[current].arrY].unit = false;
+				if (!_battleArr[_vPath[_vPath.size() - 1].x - 1][_vPath[_vPath.size() - 1].y].range)
+					_vPath[_vPath.size() - 1].x += 1;
+			}
 			_vCreature[_currentCreature].state = STATE_MOVE;
 			_move = true;
 			_turn = true;
@@ -850,7 +883,7 @@ void battle::endBattle(void)
 		{
 			//_vCreature.clear();
 			//_vBattle.clear();
-			_youLose = false;
+			_youLose = true;
 		}
 	}
 
@@ -1349,7 +1382,7 @@ void battle::frameCycle(void)
 				if (_vCreature[i].moveEnd == 0)
 				{
 					_vCreature[i].state = STATE_IDLE;
-					_vBattle[_vCreature[i].arrNum].sourX = 0;
+					_vBattle[_vCreature[i].arrNum].sourX = -1;
 					sort(_vBattle.begin(), _vBattle.end());
 					if (!_attack)
 					{
@@ -1377,12 +1410,11 @@ void battle::frameCycle(void)
 				}
 
 
-				 _vBattle[_vCreature[i].arrNum].sourX++;
 
 				if ( _vBattle[_vCreature[i].arrNum].sourX >= _vCreature[i].img[STATE_MOVE]->getMaxFrameX())
 				{
 					_vCreature[i].state = STATE_IDLE;
-					 _vBattle[_vCreature[i].arrNum].sourX = 0;
+					 _vBattle[_vCreature[i].arrNum].sourX = -1;
 					 sort(_vBattle.begin(), _vBattle.end());
 					 if (!_attack)
 					 {
@@ -1408,6 +1440,7 @@ void battle::frameCycle(void)
 
 
 				}
+				_vBattle[_vCreature[i].arrNum].sourX++;
 
 			}
 

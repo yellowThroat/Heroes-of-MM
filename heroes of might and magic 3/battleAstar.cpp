@@ -16,6 +16,7 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 	if (destX < 0 || destY < 0 || destX >= MAXGRIDX || destY >= MAXGRIDY) return shortestPath;
 
 	if (_battleArr[destX][destY].closed) return shortestPath;
+	
 
 	_openlist.clear();
 	_closelist.clear();

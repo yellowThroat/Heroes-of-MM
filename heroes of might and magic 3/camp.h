@@ -117,6 +117,7 @@ private:
 	bool _showWindow;			// 무언갈 눌렀을때
 	bool _contents;				// 내용을 띄우자
 	bool _beBuilt;				// 이번턴 건물 이미 지었나
+	bool _test;					// 테스트용으로다가
 	float _cameraX;				// 카메라 X
 	float _cameraY;				// 카메라 Y
 	myProperty _property;		// 플레이어 자원

@@ -57,8 +57,7 @@ void mainGame::update(void)
 		}
 	}
 	//=================================
-
-
+	
 	SCENEMANAGER->update();
 
 }

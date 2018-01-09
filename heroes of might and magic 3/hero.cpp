@@ -20,13 +20,12 @@ HRESULT hero::init(POINT point, tagHero hero)
 	_needActionPoint = 0;
 	_totalActionPoint = 0;
 	_startActionPoint = 0;
-
 	_maxMana = _myHero.intel * 10;
 	_currentMana = _maxMana;
 
 	//addCreature(_myHero.kind, 0, 0, 1);
 	//addCreature(_myHero.kind, 0, 0, 10);
-	addCreature(_myHero.kind, 6, 1, 5, 3);
+	//addCreature(_myHero.kind, 6, 1, 5, 3);
 	addCreature(_myHero.kind, 3, 1, 5);
 	//addCreature(_myHero.kind, 5, 0, 1);
 	//addCreature(_myHero.kind, 6, 0, 3);
@@ -183,6 +182,15 @@ void hero::dayGo(void)
 	_currentMana++;
 	setActionPoint();
 	if (_isInCamp != -1) _currentMana = _maxMana;
+	
+	for (int i = 0; i < _vDraw.size(); i++)
+	{
+		if (_vDraw[i].action <= _currentActionPoint)
+		{
+			_vDraw[i].indexX -= 3;
+		}
+	}
+
 }
 
 void hero::weekGo(void)
@@ -192,6 +200,13 @@ void hero::weekGo(void)
 
 void hero::setActionPoint(void)
 {
+	int tmp = _startActionPoint - _currentActionPoint;
+
+	for (int i = 0; i < _vDraw.size(); i++)
+	{
+		_vDraw[i].action -= tmp;
+	}
+
 	switch (_vCreature[0].speed)
 	{
 	case 1: case 2: case 3:	_maxActionPoint = 1500;		
@@ -222,8 +237,8 @@ void hero::setActionPoint(void)
 	break;
 	}
 
-	_currentActionPoint = _maxActionPoint;
 
+	_currentActionPoint = _maxActionPoint;
 }
 
 void hero::heroMove(void)
@@ -245,6 +260,7 @@ void hero::heroMove(void)
 		if (checkPointInRect(RectMakeCenter(
 			TILESIZE*_vPath[0].x +16, TILESIZE*_vPath[0].y+16, 16, 16), _x + 16, _y+16))
 		{
+			int tmp = 0;
 			if (_previousPath.x - _vPath[0].x == 0 || _previousPath.y - _vPath[0].y == 0)
 			{
 				if (_pm->getRoadInfo(_previousPath.x, _previousPath.y).road == ROAD_NORMAL ||
@@ -265,10 +281,12 @@ void hero::heroMove(void)
 					_pm->getRoadInfo(_previousPath.x, _previousPath.y).road == ROAD_ROCK)
 				{
 					_currentActionPoint -= 105;
+
 				}
 				else
 				{
 					_currentActionPoint -= 140;
+
 
 				}
 			}
@@ -326,6 +344,7 @@ void hero::heroMove(void)
 
 
 
+				SOUNDMANAGER->stop("move");
 
 				_pointArr.x = _x / TILESIZE;
 				_pointArr.y = _y / TILESIZE;				
@@ -380,6 +399,7 @@ void hero::heroMove(void)
 				_pointArr.x = _x / TILESIZE;
 				_pointArr.y = _y / TILESIZE;
 
+				SOUNDMANAGER->stop("move");
 
 				_goOn = false;
 				_moveEnd = true;
@@ -563,6 +583,10 @@ void hero::setGoOn(bool go)
 
 		
 	}
+	else
+	{
+		SOUNDMANAGER->stop("move");
+	}
 }
 
 void hero::deletePath(int arr)
@@ -574,6 +598,7 @@ void hero::setPath(vPath path)
 {
 	_totalActionPoint = 0;
 	_startActionPoint = _currentActionPoint;
+
 
 	 _vPath = path; 
 	if(_vPath.size()) _vPath.erase(_vPath.begin()); 

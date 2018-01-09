@@ -9,19 +9,33 @@ HRESULT	mainMenu::init(void)
 {
 	//============================= I N I T ============================
 	imageInit();
+	//SOUNDMANAGER->release();
 	soundInit();
 
-	SOUNDMANAGER->play("main", 1.0);
+	SOUNDMANAGER->play("main", DATABASE->getBgmVolume());
 
 	//==================================
 	for (int i = 0; i < MAXSAVE; i++)
 	{
 		ZeroMemory(&_saveFile[i], sizeof(SAVE));
 		_saveFile[i].number = i;
+		_saveFile[i].fileName = TEXT("");
 	}
 
 	//==================================
-	loadFileList();
+	//loadFileList();
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile("map/saveFileList.map", GENERIC_READ, 0, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _saveFile, sizeof(SAVE)*MAXSAVE, &read, NULL);
+
+	CloseHandle(file);
+
+
+
 
 
 	_currentButton = MMB_NEW;
@@ -64,11 +78,11 @@ void mainMenu::render(void)
 	backgroundDraw();
 
 	buttonDraw();
-
+	
 	windowDraw();
-
+	
 	IMAGEMANAGER->findImage("fade")->alphaRender(getMemDC(), _fadeAlpha);
-
+	
 	IMAGEMANAGER->findImage("mouse_idle")->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 }
@@ -99,22 +113,22 @@ void mainMenu::windowDraw(void)
 	for (int i = 0; i < MAXSAVE; i++)
 	{
 		
-		if (_saveFile[i].fileName.size())
+		if (_saveFile[i].fileName.size() >= 1)
 			TextOut(getMemDC(), _saveWindow1.left + 48, _saveWindow1.top + 109+ 24 * _saveFile[i].number,
 				_saveFile[i].fileName.c_str(), _saveFile[i].fileName.length());
 	}
-
+	
 	SetTextColor(getMemDC(), RGB(0, 0, 0));
-
+	
 	HFONT font = CreateFont(24, 0, 0, 0, FW_NORMAL, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, TEXT("µ¸¿òÃ¼"));
 	HFONT oldfont = (HFONT)SelectObject(getMemDC(), font);
 	SetTextColor(getMemDC(), RGB(248, 228, 120));
 	SelectObject(getMemDC(), font);
-
+	
 	TextOut(getMemDC(), _saveWindow1.left + 18, _saveWindow1.top + 40, _saveFile[_saveNum].fileName.c_str(), strlen(_saveFile[_saveNum].fileName.c_str()));
-
-
-
+	
+	
+	
 	SelectObject(getMemDC(), oldfont);
 	DeleteObject(font);
 	SetTextColor(getMemDC(), RGB(0, 0, 0));
@@ -256,12 +270,14 @@ void mainMenu::sceneChange(void)
 				DATABASE->loadFileList();
 				SCENEMANAGER->changeScene("gameScene");
 				SOUNDMANAGER->stop("main");
-				SOUNDMANAGER->play("green");
+				SOUNDMANAGER->play("green",DATABASE->getBgmVolume());
 				break;
 			case MMB_LOAD:
 				break;
 			case MMB_MAP:
 				SCENEMANAGER->changeScene("mapTool");
+				SOUNDMANAGER->stop("main");
+				SOUNDMANAGER->play("maptool");
 				break;
 			case MMB_CREDIT:
 				break;
@@ -388,7 +404,10 @@ void mainMenu::soundInit(void)
 	SOUNDMANAGER->addSound("rough", "sound/rough.mp3", true, true);
 	SOUNDMANAGER->addSound("win", "sound/win.mp3", false, false);
 	SOUNDMANAGER->addSound("lose", "sound/lose.mp3", false, false);
-
+	SOUNDMANAGER->addSound("move", "sound/move.wav", false, true);
+	SOUNDMANAGER->addSound("loot", "sound/loot.wav", false, false);
+	SOUNDMANAGER->addSound("maptool", "sound/mapTool.wav", true, true);
+	
 }
 
 void mainMenu::imageInit(void)
@@ -640,7 +659,7 @@ void mainMenu::imageInit(void)
 	IMAGEMANAGER->addImage("bar_empty", "image/gameScene/ui/bar_empty.bmp", 6, 30, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("bar_ap", "image/gameScene/ui/bar_ap.bmp", 6, 30, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("bar_mana", "image/gameScene/ui/bar_mana.bmp", 6, 30, true, RGB(255, 0, 255));
-
+	IMAGEMANAGER->addImage("select_volume", "image/gameScene/ui/select_volume.bmp", 18, 35, true, RGB(255, 0, 255));
 	//============================== U N I T =============================
 	IMAGEMANAGER->addFrameImage("creature_portrait", "image/gameScene/hero/creature/portrait.bmp", 406, 256, 7, 4, true, RGB(255, 0, 255));
 

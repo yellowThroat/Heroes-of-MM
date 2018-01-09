@@ -62,7 +62,7 @@ void timeManager::render(HDC hdc)
 #else
 	{
 		wsprintf(str, "framePerSec(FPS) : %d", _timer->getFrameRate());
-		TextOut(hdc, 0, 0, str, strlen(str));
+		TextOut(hdc, 20, 20, str, strlen(str));
 	}
 #endif
 }

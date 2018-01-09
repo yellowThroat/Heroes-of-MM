@@ -38,19 +38,27 @@ HRESULT player::init(int myNum)
 	tmp.kind = 0;
 	*/
 	addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
-	//addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
-	//addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
+	addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
+	addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
+	addHero(PointMake(12, 12), CommonHero(NAME_DAMACON));
+	addHero(PointMake(14, 14), CommonHero(NAME_DARKSTONE));
+	addHero(PointMake(16, 16), CommonHero(NAME_TIRIS));
+	addHero(PointMake(18, 18), CommonHero(NAME_DAYS));
+
+	
+	
+	
 	ZeroMemory(&_myProperty, sizeof(myProperty));
 	ZeroMemory(&_myBuilding, sizeof(myBuilding));
 
 
-	//_myProperty.gold = 123456;
-	//_myProperty.gem = 36;
-	//_myProperty.wood = 356;
-	//_myProperty.iron = 785;
-	//_myProperty.crystal = 99;
-	//_myProperty.mercury = 123;
-	//_myProperty.sulfur = 1234;
+	_myProperty.gold = 123456;
+	_myProperty.gem = 36;
+	_myProperty.wood = 356;
+	_myProperty.iron = 785;
+	_myProperty.crystal = 99;
+	_myProperty.mercury = 123;
+	_myProperty.sulfur = 1234;
 	
 
 	setMyInfo();
@@ -501,8 +509,8 @@ void player::setBattle(void)
 		SOUNDMANAGER->stop("combat2");
 		SOUNDMANAGER->stop("combat3");
 
-		if (_battle->getWin()) SOUNDMANAGER->play("win", 1.0);
-		if (_battle->getLose()) SOUNDMANAGER->play("lose", 1.0);
+		if (_battle->getWin()) SOUNDMANAGER->play("win", DATABASE->getEffectVolume());
+		if (_battle->getLose()) SOUNDMANAGER->play("lose", DATABASE->getEffectVolume());
 
 		if (_battle->getWin())
 		{
@@ -516,7 +524,7 @@ void player::setBattle(void)
 		}
 
 
-
+		SOUNDMANAGER->play("green", DATABASE->getBgmVolume());
 	}
 
 
@@ -548,7 +556,7 @@ void player::activeObject(void)
 					if (ran == 1) _myProperty.crystal += RND->getFromIntTo(5, 7);
 					if (ran == 2) _myProperty.sulfur += RND->getFromIntTo(5, 7);
 					if (ran == 3) _myProperty.mercury += RND->getFromIntTo(5, 7);
-
+					SOUNDMANAGER->play("loot",DATABASE->getEffectVolume());
 				}
 
 				break;
@@ -556,29 +564,36 @@ void player::activeObject(void)
 
 				break;
 				case 2:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.crystal += RND->getFromIntTo(3, 4);
 				break;
 				case 3:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.gem += RND->getFromIntTo(3, 4);
 
 				break;
 				case 4:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.gold += RND->getFromIntTo(1000, 1500);
 
 				break;
 				case 5:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.mercury += RND->getFromIntTo(3, 4);
 
 				break;
 				case 6:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.iron += RND->getFromIntTo(3, 4);
 
 				break;
 				case 7:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.sulfur += RND->getFromIntTo(3, 4);
 
 				break;
 				case 8:
+					SOUNDMANAGER->play("loot", DATABASE->getEffectVolume());
 					_myProperty.wood += RND->getFromIntTo(3, 4);
 
 				break;
@@ -596,10 +611,12 @@ void player::activeObject(void)
 			case 4: case 5:
 			{
 				int tmp = RND->getInt(4);
-				if (tmp == 0) SOUNDMANAGER->play("combat0", 1.0);
-				if (tmp == 1) SOUNDMANAGER->play("combat1", 1.0);
-				if (tmp == 2) SOUNDMANAGER->play("combat2", 1.0);
-				if (tmp == 3) SOUNDMANAGER->play("combat3", 1.0);
+				if (tmp == 0) SOUNDMANAGER->play("combat0", DATABASE->getBgmVolume());
+				if (tmp == 1) SOUNDMANAGER->play("combat1", DATABASE->getBgmVolume());
+				if (tmp == 2) SOUNDMANAGER->play("combat2", DATABASE->getBgmVolume());
+				if (tmp == 3) SOUNDMANAGER->play("combat3", DATABASE->getBgmVolume());
+				SOUNDMANAGER->stop("green");
+
 				_battleScene = true;
 				for (int j = 0; j < _vHero[i]->getCreature().size(); j++)
 				{
@@ -980,6 +997,7 @@ void player::inputField(void)
 					!(_pm->getClosed(_mouseArr.x, _mouseArr.y)	&& !_pm->getTileInfo(_mouseArr.x,_mouseArr.y).loot)	&&
 					_vHero[i]->getNeedAp() <= _vHero[i]->getAP())
 				{
+					SOUNDMANAGER->play("move", DATABASE->getEffectVolume());
 					_vHero[i]->setGoOn(true);
 					if (_pm->getTileInfo(_mouseArr.x, _mouseArr.y).loot)
 					{

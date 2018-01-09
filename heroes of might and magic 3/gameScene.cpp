@@ -77,7 +77,7 @@ void gameScene::release(void)
 	SOUNDMANAGER->stop("green");
 	SOUNDMANAGER->stop("rough");
 
-
+	//SOUNDMANAGER->release();
 
 }
 
@@ -174,9 +174,9 @@ void gameScene::render(void)
 		_player->render();								// z order 4 인방 영
 
 
+		_ui->render();
 		if(_player->getHero().size())
 		_player->getHero()[_player->getCurrentHero()]->uiDraw();
-		_ui->render();
 	}
 
 	if (_player->getScene())
@@ -231,8 +231,8 @@ void gameScene::enterCity(void)
 					//============ 그렇다면 이제 플레이어의 씬을 바꿔라
 					//============ 그 성의 번호로 커런트 번호를 바꿔줘라
 					//============ 영웅도 성안에 들어왔다고 해줘라
-					if (_vCamp[i]->getCityInfo().camp == CAMP_CASTLE) SOUNDMANAGER->play("castle");
-					if (_vCamp[i]->getCityInfo().camp == CAMP_DUNGEON) SOUNDMANAGER->play("dungeon");
+					if (_vCamp[i]->getCityInfo().camp == CAMP_CASTLE) SOUNDMANAGER->play("castle",DATABASE->getBgmVolume());
+					if (_vCamp[i]->getCityInfo().camp == CAMP_DUNGEON) SOUNDMANAGER->play("dungeon",DATABASE->getBgmVolume());
 					SOUNDMANAGER->stop("green");
 					_player->setScene(true);
 					_player->setCurrentCamp(_vCamp[i]->getNum());
@@ -346,7 +346,7 @@ void gameScene::addCamp(tagBuildingInfo info)
 
 		break;
 	}
-
+	
 	camp->init(info);
 
 	camp->setPlayerAddressLink(_player);

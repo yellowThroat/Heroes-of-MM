@@ -20,6 +20,8 @@ HRESULT ui::init(void)
 	_gb = GB_NULL;
 	_firstHero = 0;
 	_firstCamp = 0;
+	_bgmVolume = 1.0f;
+	_effectVolume = 1.0f;
 	//================  R E C T   M A K E ===============
 	_miniMapRect = RectMake(817, 24, 140, 144);
 	_summaryRect = RectMake(863, 193, 32, 32);
@@ -34,6 +36,9 @@ HRESULT ui::init(void)
 		_conRect[i] = RectMake(_windowConfig.left + 246 + 111 * (i % 2),
 			_windowConfig.top + 298 + 59 * (i / 2),100,48);
 	}
+
+	DATABASE->setBgmVolume(_bgmVolume);
+	DATABASE->setEffectVolume(_effectVolume);
 
 	return S_OK;
 }
@@ -91,11 +96,11 @@ void ui::draw(void)
 
 		//=== 마나통 최대는 100 행동력통 최대는 2200
 		IMAGEMANAGER->findImage("bar_ap")->render(getMemDC(), 798,
-			211 + 32 * i + (2200 - ap)*0.01363,
+			211 + 32 * (i - _firstHero) + (2200 - ap)*0.01363,
 			0, (2200 - ap)*0.01363, 6, 30 - (2200 - ap)*0.01363);
 
 		IMAGEMANAGER->findImage("bar_mana")->render(getMemDC(), 851,
-			211 + 32 * i + (100 - mana)*0.3,
+			211 + 32 * (i -_firstHero) + (100 - mana)*0.3,
 			0, (100 - mana)*0.3, 6, 30 - (100- mana)*0.3);
 
 
@@ -116,12 +121,22 @@ void ui::draw(void)
 		}
 	}
 
-	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
-		930, 210 + (_player->getCurrentCamp() - _firstCamp) * 32);
+	if (_player->getCurrentCamp() - _firstCamp >= 0 && _player->getCurrentCamp() - _firstCamp <= 4)
+	{
+		IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
+			930, 210 + (_player->getCurrentCamp() - _firstCamp) * 32);
+
+	}
 
 
-	IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
-		803, 210 + (_player->getCurrentHero() - _firstHero) * 32);
+	if (_player->getCurrentHero() - _firstHero >= 0 && _player->getCurrentHero() - _firstHero <= 4)
+	{
+		IMAGEMANAGER->findImage("select_hero")->render(getMemDC(),
+			803, 210 + (_player->getCurrentHero() - _firstHero) * 32);
+
+	}
+
+
 
 
 	if (_mainButton)
@@ -167,7 +182,11 @@ void ui::draw(void)
 	{
 		IMAGEMANAGER->findImage("window_config")->render(getMemDC(), _windowConfig.left, _windowConfig.top);
 		
+		IMAGEMANAGER->findImage("select_volume")->render(getMemDC(),
+			_windowConfig.left + 10 + _bgmVolume * 10 * 19, _windowConfig.top + 359);
 
+		IMAGEMANAGER->findImage("select_volume")->render(getMemDC(),
+			_windowConfig.left + 10 + _effectVolume * 10 * 19, _windowConfig.top + 425);
 
 		if (_conButton)
 		{
@@ -209,6 +228,32 @@ void ui::draw(void)
 
 
 
+
+}
+
+void ui::bgmVolumeControl()
+{
+	//================ 브금 ======================
+	SOUNDMANAGER->setVolume("castle", _bgmVolume );
+	SOUNDMANAGER->setVolume("dungeon", _bgmVolume);
+	SOUNDMANAGER->setVolume("combat0", _bgmVolume);
+	SOUNDMANAGER->setVolume("combat1", _bgmVolume);
+	SOUNDMANAGER->setVolume("combat2", _bgmVolume);
+	SOUNDMANAGER->setVolume("combat3", _bgmVolume);
+	SOUNDMANAGER->setVolume("main", _bgmVolume);
+	SOUNDMANAGER->setVolume("good", _bgmVolume);
+	SOUNDMANAGER->setVolume("green", _bgmVolume);
+	SOUNDMANAGER->setVolume("rought", _bgmVolume);
+
+
+
+}
+
+void ui::effectVolumeControl()
+{
+	//================= 효과음 ======================
+	SOUNDMANAGER->setVolume("win", _effectVolume);
+	SOUNDMANAGER->setVolume("lose", _effectVolume);
 
 }
 
@@ -320,6 +365,28 @@ void ui::input(void)
 						_conButton = true;
 					}
 				}
+
+
+				for (int i = 1; i <= 10; i++)
+				{
+					if (PtInRect(&RectMake(_windowConfig.left + 10 + i * 19, _windowConfig.top + 359, 18, 35), _ptMouse))
+					{
+						_bgmVolume = (float)i / 10;
+						DATABASE->setBgmVolume(_bgmVolume);
+						bgmVolumeControl();
+					}
+				}
+				for (int i = 1; i <= 10; i++)
+				{
+					if (PtInRect(&RectMake(_windowConfig.left + 10 + i * 19, _windowConfig.top + 425, 18, 35), _ptMouse))
+					{
+						_effectVolume = (float)i / 10;
+						DATABASE->setEffectVolume(_effectVolume);
+						effectVolumeControl();
+					}
+				}
+
+
 			}
 
 			//======================= 
@@ -355,6 +422,21 @@ void ui::input(void)
 					_gb = GB_GOON;
 					_mainButton = true;
 				}
+			}
+
+
+			if (PtInRect(&RectMake(797, 195, 61, 14), _ptMouse))
+			{
+				_firstHero -= 1;
+				if (_firstHero <= 0) _firstHero = 0;
+			}
+
+			if (PtInRect(&RectMake(797, 371, 61, 14), _ptMouse))
+			{
+				if(_firstHero < _player->getHero().size()-5)
+				_firstHero += 1;
+
+				if (_firstHero >= 3) _firstHero = 3;
 			}
 
 			//================ 영웅 선택할때
@@ -410,8 +492,9 @@ void ui::input(void)
 						{
 							_player->setScene(true);
 							_gs->getvCamp()[_player->getCurrentCamp()]->setProperty(_player->getProperty());
-							if (_gs->getvCamp()[_player->getCurrentCamp()]->getCityInfo().camp == CAMP_CASTLE) SOUNDMANAGER->play("castle", 1.0);
-							if (_gs->getvCamp()[_player->getCurrentCamp()]->getCityInfo().camp == CAMP_DUNGEON) SOUNDMANAGER->play("dungeon", 1.0);
+							SOUNDMANAGER->stop("green");
+							if (_gs->getvCamp()[_player->getCurrentCamp()]->getCityInfo().camp == CAMP_CASTLE) SOUNDMANAGER->play("castle", DATABASE->getBgmVolume());
+							if (_gs->getvCamp()[_player->getCurrentCamp()]->getCityInfo().camp == CAMP_DUNGEON) SOUNDMANAGER->play("dungeon", DATABASE->getBgmVolume());
 
 
 						}
@@ -419,6 +502,7 @@ void ui::input(void)
 				}
 			}
 		}
+
 	}
 
 
@@ -474,6 +558,7 @@ void ui::input(void)
 			case GB_GOON:
 				if (_player->getHero()[_player->getCurrentHero()]->getPath().size())
 				{
+					SOUNDMANAGER->play("move", DATABASE->getEffectVolume());
 					_player->getHero()[_player->getCurrentHero()]->setGoOn(true);
 
 					if(_player->getHero()[_player->getCurrentHero()]->getInCamp() != -1)

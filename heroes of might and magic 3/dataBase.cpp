@@ -11,6 +11,8 @@ HRESULT	dataBase::init()
 	_playCameraX = _playCameraY = 0;
 	//loadFileList();
 	_moveSpeed = 4;
+	_bgmVolume = 1;
+	_effectVolume = 1;
 	return S_OK;
 }
 
