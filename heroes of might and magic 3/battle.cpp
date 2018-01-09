@@ -572,6 +572,8 @@ void battle::enemyAction(void)
 				_vBattle[_vCreature[target].arrNum].arrX, _vBattle[_vCreature[target].arrNum].arrY,
 				_vCreature[_currentCreature].fly);
 
+			//getPath(11, 0, 9, 0, false);
+
 			int tmp = _vPath.size();
 
 			for (int i = 0; i < tmp - _vCreature[_currentCreature].speed; i++)
@@ -1648,11 +1650,11 @@ void battle::frameCycle(void)
 
 					
 				}
-				else if (_vCreature[i].state == STATE_IDLE)
-				{
-					_vBattle[_vCreature[i].arrNum].sourX = 0;
-				}
 
+			}
+			else if (_vCreature[i].state == STATE_IDLE)
+			{
+				_vBattle[_vCreature[i].arrNum].sourX = 0;
 			}
 
 		}
@@ -1810,11 +1812,12 @@ void battle::setTurn(void)
 
 			if (getValueH(_vBattle[current].arrX, _vBattle[current].arrY, i, j) <= _vCreature[_currentCreature].speed)
 			{
-
+				
 				int size = getPath(_vBattle[_vCreature[_currentCreature].arrNum].arrX, _vBattle[_vCreature[_currentCreature].arrNum].arrY,
 					i, j, _vCreature[_currentCreature].fly).size();
 
-				if (size <= _vCreature[_currentCreature].speed && !_battleArr[i][j].closed)
+				if (size <= _vCreature[_currentCreature].speed && !_battleArr[i][j].closed &&
+					(!_battleArr[i][j].unit || (_battleArr[i][j].unit && _vBattle[current].arrX == i && _vBattle[current].arrY == j)))
 				{
 					if (!_battleArr[i][j].unit) _battleArr[i][j].range = true;
 					if (i == _vBattle[current].arrX && j == _vBattle[current].arrY) _battleArr[i][j].range = true;

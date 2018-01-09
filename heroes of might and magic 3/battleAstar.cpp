@@ -7,10 +7,10 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 	bool findPath = false;
 	bool end = false;
 	POINT point;
-	tagHexaFind currentNode;
+	tagHexaFindSecond currentNode;
 	tagHexaFind findNode;
 
-	ZeroMemory(&currentNode, sizeof(tagHexaFind));
+	ZeroMemory(&currentNode, sizeof(tagHexaFindSecond));
 	ZeroMemory(&findNode, sizeof(tagHexaFind));
 
 	if (destX < 0 || destY < 0 || destX >= MAXGRIDX || destY >= MAXGRIDY) return shortestPath;
@@ -37,7 +37,7 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 	{
 		if (_openlist.size() != 0)
 		{
-			ZeroMemory(&currentNode, sizeof(tagHexaFind));
+			ZeroMemory(&currentNode, sizeof(tagHexaFindSecond));
 			currentNode.nodeX = _openlist[0].nodeX;
 			currentNode.nodeY = _openlist[0].nodeY;
 			currentNode.f = _openlist[0].f;
@@ -164,7 +164,16 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 				end = true;
 				findPath = true;
 
-				_closelist.push_back(_openlist[i]);
+				tagHexaFindSecond tmp;
+				tmp.f = _openlist[i].f;
+				tmp.g = _openlist[i].g;
+				tmp.h = _openlist[i].h;
+				tmp.nodeX = _openlist[i].nodeX;
+				tmp.nodeY = _openlist[i].nodeY;
+				tmp.parentX = _openlist[i].parentX;
+				tmp.parentY = _openlist[i].parentY;
+
+				_closelist.push_back(tmp);
 
 				point.x = _openlist[i].nodeX;
 				point.y = _openlist[i].nodeY;
@@ -217,8 +226,53 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 	else
 	{
 
+		sort(_closelist.begin(), _closelist.end());
+		if (_closelist[0].nodeX == x && _closelist[0].nodeY == y)
+		{
+			if (_closelist.size() == 1) return shortestPath;
 
-		return shortestPath;
+			_closelist.erase(_closelist.begin());
+		}
+		
+		
+		point.x = _closelist[0].nodeX;
+		point.y = _closelist[0].nodeY;
+
+		shortestPath.push_back(point);
+		while (true)
+		{
+			for (int i = 0; i < _closelist.size(); i++)
+			{
+				if (_closelist[i].nodeX == shortestPath[0].x &&
+					_closelist[i].nodeY == shortestPath[0].y)
+				{
+					point.x = _closelist[i].parentX;
+					point.y = _closelist[i].parentY;
+
+
+					shortestPath.insert(shortestPath.begin(), point);
+					break;
+				}
+
+
+
+			}
+			if (point.x == x && point.y == y)
+			{
+				return shortestPath;
+			}
+		}
+
+
+		
+
+
+
+
+
+
+
+		//return shortestPath;
 
 	}
 }

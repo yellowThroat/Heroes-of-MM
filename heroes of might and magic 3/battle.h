@@ -17,6 +17,20 @@ struct tagHexaFind
 	}
 };
 
+struct tagHexaFindSecond
+{
+	int f;
+	int g;
+	int h;
+	int nodeX, nodeY;
+	int parentX, parentY;
+
+	bool operator<(const tagHexaFindSecond &v) const {
+		return (h  < v.h);
+	}
+};
+
+
 struct tagGridInfo
 {
 	int arrX;					// 배열 좌표 x
@@ -98,7 +112,7 @@ private:
 private:
 	tagGridInfo _battleArr[MAXGRIDX][MAXGRIDY];		// 전장 좌표
 	vector<tagHexaFind> _openlist;					// 헥사 a스타 
-	vector<tagHexaFind> _closelist;					// 헥사 a스타
+	vector<tagHexaFindSecond> _closelist;					// 헥사 a스타
 	vector<POINT> _vPath;							// 사용할 경로
 	vector<tagBattleCreature> _vBattle;				// 좌표, 등에 사용
 	vector<tagCreature> _vCreature;					// 전투에 참여하는 얘들 
