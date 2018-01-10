@@ -37,13 +37,13 @@ HRESULT player::init(int myNum)
 	tmp.angle = 0;
 	tmp.kind = 0;
 	*/
-	addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
+	//addHero(PointMake(5,5),CommonHero(NAME_CHRISTIAN));
 	addHero(PointMake(8, 8), CommonHero(NAME_SEPHINE));
 	addHero(PointMake(10, 10), CommonHero(NAME_ADELAIDE));
-	addHero(PointMake(12, 12), CommonHero(NAME_DAMACON));
-	addHero(PointMake(14, 14), CommonHero(NAME_DARKSTONE));
-	addHero(PointMake(16, 16), CommonHero(NAME_TIRIS));
-	addHero(PointMake(18, 18), CommonHero(NAME_DAYS));
+	//addHero(PointMake(12, 12), CommonHero(NAME_DAMACON));
+	//addHero(PointMake(14, 14), CommonHero(NAME_DARKSTONE));
+	//addHero(PointMake(16, 16), CommonHero(NAME_TIRIS));
+	//addHero(PointMake(18, 18), CommonHero(NAME_DAYS));
 
 	
 	
@@ -666,10 +666,11 @@ void player::dayGo(void)
 	
 	int gold;
 	gold = _myBuilding.gold * 1000;
+
 	for (int i = 0; i < _gs->getvCamp().size(); i++)
 	{
 		_gs->getvCamp()[i]->dayGo();
-		if (_gs->getvCamp()[i]->getNum() == 0)
+		if (_gs->getvCamp()[i]->getPlayerNum() == 0)
 		{
 			switch (_gs->getvCamp()[i]->getHall())
 			{

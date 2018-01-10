@@ -62,7 +62,6 @@ HRESULT battle::init(int x)
 	case 0:
 		_obstacle = RND->getInt(2);
 
-		_obstacle = 0;
 	break;
 	case 1:
 		
@@ -204,8 +203,8 @@ void battle::battleDraw()
 		IMAGEMANAGER->findImage("grid_set")->render(getMemDC());
 	}
 
-	//if (!_turn)
-	//{
+	if (!_turn)
+	{
 		for (int j = 0; j < MAXGRIDX; j++)
 		{
 			for (int k = 0; k < MAXGRIDY; k++)
@@ -219,22 +218,27 @@ void battle::battleDraw()
 					IMAGEMANAGER->findImage("grid_purple")->alphaRender(getMemDC(),
 						_battleArr[j][k].destX,
 						_battleArr[j][k].destY, 50);
+				//if (_battleArr[j][k].range)
+				//	IMAGEMANAGER->findImage("grid_purple")->render(getMemDC(),
+				//		_battleArr[j][k].destX,
+				//		_battleArr[j][k].destY);
 
 			}
 		}
-	//}
-
-	for (int i = 0; i < _vCreature.size(); i++)
-	{
-		IMAGEMANAGER->findImage("grid")->alphaRender(getMemDC(),
-			_battleArr[_vBattle[_vCreature[i].arrNum].arrX][_vBattle[_vCreature[i].arrNum].arrY].destX,
-			_battleArr[_vBattle[_vCreature[i].arrNum].arrX][_vBattle[_vCreature[i].arrNum].arrY].destY, 150);
-		if (_vCreature[i].size == 2)
-			IMAGEMANAGER->findImage("grid")->alphaRender(getMemDC(),
-				_battleArr[_vBattle[_vCreature[i].arrNum].arrX - 1][_vBattle[_vCreature[i].arrNum].arrY].destX,
-				_battleArr[_vBattle[_vCreature[i].arrNum].arrX - 1][_vBattle[_vCreature[i].arrNum].arrY].destY, 150);
-
 	}
+		
+
+	//for (int i = 0; i < _vCreature.size(); i++)
+	//{
+	//	IMAGEMANAGER->findImage("grid")->alphaRender(getMemDC(),
+	//		_battleArr[_vBattle[_vCreature[i].arrNum].arrX][_vBattle[_vCreature[i].arrNum].arrY].destX,
+	//		_battleArr[_vBattle[_vCreature[i].arrNum].arrX][_vBattle[_vCreature[i].arrNum].arrY].destY, 150);
+	//	if (_vCreature[i].size == 2)
+	//		IMAGEMANAGER->findImage("grid")->alphaRender(getMemDC(),
+	//			_battleArr[_vBattle[_vCreature[i].arrNum].arrX - 1][_vBattle[_vCreature[i].arrNum].arrY].destX,
+	//			_battleArr[_vBattle[_vCreature[i].arrNum].arrX - 1][_vBattle[_vCreature[i].arrNum].arrY].destY, 150);
+	//
+	//}
 
 
 
@@ -292,24 +296,28 @@ void battle::battleDraw()
 
 
 	//==============  T E S T ========================
-	numberDraw(getMemDC(), getMouseArr().x, WINSIZEX / 2 - 14, 10);
-	numberDraw(getMemDC(), getMouseArr().y, WINSIZEX / 2 + 14, 10);
+	//numberDraw(getMemDC(), getMouseArr().x, WINSIZEX / 2 - 14, 10);
+	//numberDraw(getMemDC(), getMouseArr().y, WINSIZEX / 2 + 14, 10);
 
 	if (getMouseArr().x >= 0 && getMouseArr().x < MAXGRIDX &&
 		getMouseArr().y >= 0 && getMouseArr().y < MAXGRIDY)
 	{
-		IMAGEMANAGER->findImage("grid")->render(getMemDC(),
+		IMAGEMANAGER->findImage("grid")->alphaRender(getMemDC(),
 			_battleArr[getMouseArr().x][getMouseArr().y].destX,
-			_battleArr[getMouseArr().x][getMouseArr().y].destY);
+			_battleArr[getMouseArr().x][getMouseArr().y].destY,100);
 	}
 
-	for (int i = 0; i < _vPath.size(); i++)
+	if (_attribute)
 	{
-		Rectangle(getMemDC(),
-			_battleArr[_vPath[i].x][_vPath[i].y].center - 10,
-			_battleArr[_vPath[i].x][_vPath[i].y].destY + 20,
-			_battleArr[_vPath[i].x][_vPath[i].y].center + 10,
-			_battleArr[_vPath[i].x][_vPath[i].y].destY + 40);
+		for (int i = 0; i < _vPath.size(); i++)
+		{
+			Rectangle(getMemDC(),
+				_battleArr[_vPath[i].x][_vPath[i].y].center - 10,
+				_battleArr[_vPath[i].x][_vPath[i].y].destY + 20,
+				_battleArr[_vPath[i].x][_vPath[i].y].center + 10,
+				_battleArr[_vPath[i].x][_vPath[i].y].destY + 40);
+		}
+
 	}
 
 }
@@ -457,8 +465,16 @@ void battle::enemyAction(void)
 				if (shortest > getPath(_vBattle[current].arrX, _vBattle[current].arrY, 
 					_vBattle[i].arrX, _vBattle[i].arrY,_vCreature[_currentCreature].fly).size())
 				{
+					//vector<POINT> tmp;
+					//tmp = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
+					//	_vBattle[i].arrX, _vBattle[i].arrY, _vCreature[_currentCreature].fly);
+
 					shortest = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
 						_vBattle[i].arrX, _vBattle[i].arrY, _vCreature[_currentCreature].fly).size();
+					
+					//if (tmp[tmp.size() - 1].x != _vBattle[i].arrX && tmp[tmp.size() - 1].y != _vBattle[i].arrY) continue;
+
+
 
 					target = _vBattle[i].arrNum;
 
@@ -490,7 +506,7 @@ void battle::enemyAction(void)
 
 						if (i == 0 && j == 0) continue;
 
-						if (_vBattle[target].arrY % 2 == 0)
+						if (_vBattle[_vCreature[target].arrNum].arrY % 2 == 0)
 						{
 							if (i == -1 && j == -1) continue;
 							if (i == -1 && j == 1) continue;
@@ -504,6 +520,7 @@ void battle::enemyAction(void)
 						if (shortestMove > getValueH(_vBattle[current].arrX, _vBattle[current].arrY,
 							_vBattle[_vCreature[target].arrNum].arrX + i, _vBattle[_vCreature[target].arrNum].arrY + j))
 						{
+
 							shortestMove = getValueH(_vBattle[current].arrX, _vBattle[current].arrY,
 								_vBattle[_vCreature[target].arrNum].arrX +i , _vBattle[_vCreature[target].arrNum].arrY + j);
 							destX = _vBattle[_vCreature[target].arrNum].arrX + i;
@@ -515,27 +532,65 @@ void battle::enemyAction(void)
 				_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
 				if(_vCreature[_currentCreature].size ==2) _battleArr[_vBattle[current].arrX-1][_vBattle[current].arrY].unit = false;
 
-				_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY, destX, destY, _vCreature[_currentCreature].fly);
-				
-				_attack = true;
-
-				if (_vCreature[_currentCreature].size == 2)
+				if (shortestMove != 30)
 				{
+					_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY, destX, destY, _vCreature[_currentCreature].fly);
+				
+					_attack = true;
+					if (getValueH(_vPath[_vPath.size() - 1].x, _vPath[_vPath.size() - 1].y, _vBattle[_vCreature[target].arrNum].arrX, _vBattle[_vCreature[target].arrNum].arrY) != 1)
+					{
+						_attack = false;
+					}
+
+					if (_vCreature[_currentCreature].size == 2)
+					{
 					
-					if (!_battleArr[_vPath[_vPath.size() - 1].x - 1][_vPath[_vPath.size() - 1].y].range)
-						_vPath[_vPath.size() - 1].x += 1;
+						if (!_battleArr[_vPath[_vPath.size() - 1].x - 1][_vPath[_vPath.size() - 1].y].range)
+							_vPath[_vPath.size() - 1].x += 1;
+					}
+
+					while (_vPath.size())
+					{
+						if (!_battleArr[_vPath[_vPath.size() - 1].x][_vPath[_vPath.size() - 1].y].unit && 
+							_battleArr[_vPath[_vPath.size() - 1].x][_vPath[_vPath.size() - 1].y].range) break;
+				
+						_vPath.erase(_vPath.begin() + _vPath.size() - 1);
+						_attack = false;
+				
+					}
+
 				}
 
-
-
-				while (_vPath.size())
+				if (shortestMove == 30)
 				{
-					if (!_battleArr[_vPath[_vPath.size() - 1].x][_vPath[_vPath.size() - 1].y].unit) break;
-				
-					_vPath.erase(_vPath.begin() + _vPath.size() - 1);
-					_attack = false;
-				
+					_vPath = getPath(_vBattle[current].arrX, _vBattle[current].arrY,
+						_vBattle[_vCreature[target].arrNum].arrX, _vBattle[_vCreature[target].arrNum].arrY,
+						_vCreature[_currentCreature].fly);
+
+					//getPath(11, 0, 9, 0, false);
+
+					while (true)
+					{
+						if (_battleArr[_vPath[_vPath.size() - 1].x][_vPath[_vPath.size() - 1].y].range) break;
+						
+						_vPath.erase(_vPath.begin() + _vPath.size() - 1);
+					}
+
+
+					_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
+					if (_vCreature[_currentCreature].size == 2)
+					{
+						_battleArr[_vBattle[current].arrX - 1][_vBattle[current].arrY].unit = false;
+						if (!_battleArr[_vPath[_vPath.size() - 1].x - 1][_vPath[_vPath.size() - 1].y].range)
+							_vPath[_vPath.size() - 1].x += 1;
+					}
+
 				}
+
+
+
+
+
 
 				_move = true;
 				_turn = true;
@@ -580,7 +635,12 @@ void battle::enemyAction(void)
 			{
 				_vPath.erase(_vPath.begin() + (_vPath.size() -1));
 			}
-			
+			while (true)
+			{
+				if (_battleArr[_vPath[_vPath.size() - 1].x][_vPath[_vPath.size() - 1].y].range) break;
+				
+				_vPath.erase(_vPath.end()-1);
+			}
 
 
 			_battleArr[_vBattle[current].arrX][_vBattle[current].arrY].unit = false;
@@ -905,8 +965,11 @@ void battle::endBattle(void)
 			_vCreature[i].currentHp = _vCreature[i].hp;
 			for (int j = 0; j < STATE_END; j++)
 			{
-				if(j != 6)
-				_vCreature[i].img[j]->setFrameY(0);
+				if (j != 6)
+				{
+					_vCreature[i].img[j]->setFrameY(0);
+					_vCreature[i].img[j]->setFrameX(0);
+				}
 			}
 		}
 
@@ -1230,6 +1293,7 @@ void battle::joinCreature(tagCreature creature)
 	tagCreature tmp = creature;
 	tmp.arrNum = _vCreature.size();
 	tmp.target = tmp.arrNum;
+	tmp.state = STATE_IDLE;
 
 	tagBattleCreature tmp0;
 	ZeroMemory(&tmp0, sizeof(tagBattleCreature));
@@ -1238,6 +1302,7 @@ void battle::joinCreature(tagCreature creature)
 	tmp0.sourY = 0;
 	tmp0.count = 0;
 	tmp0.attackTarget = 0;
+	tmp0.inAttack = 0;
 	if (tmp.position == 0) tmp0.arrY = 0;
 	else if (tmp.position == 1) tmp0.arrY = 2;
 	else if (tmp.position == 2) tmp0.arrY = 4;
@@ -1286,6 +1351,7 @@ void battle::joinCreature(tagObject object)
 		tmp0.x = _battleArr[tmp0.arrX][tmp0.arrY].center;
 		tmp0.y = _battleArr[tmp0.arrX][tmp0.arrY].ground;
 		tmp0.attackTarget = 0;
+		tmp0.inAttack = 0;
 
 		tmp0.isRight = false;
 		tmp0.target = tmp.arrNum;
@@ -1384,7 +1450,7 @@ void battle::frameCycle(void)
 				if (_vCreature[i].moveEnd == 0)
 				{
 					_vCreature[i].state = STATE_IDLE;
-					_vBattle[_vCreature[i].arrNum].sourX = -1;
+					_vBattle[_vCreature[i].arrNum].sourX = 0;
 					sort(_vBattle.begin(), _vBattle.end());
 					if (!_attack)
 					{
@@ -1416,7 +1482,7 @@ void battle::frameCycle(void)
 				if ( _vBattle[_vCreature[i].arrNum].sourX >= _vCreature[i].img[STATE_MOVE]->getMaxFrameX())
 				{
 					_vCreature[i].state = STATE_IDLE;
-					 _vBattle[_vCreature[i].arrNum].sourX = -1;
+					 _vBattle[_vCreature[i].arrNum].sourX = 0;
 					 sort(_vBattle.begin(), _vBattle.end());
 					 if (!_attack)
 					 {
@@ -1442,7 +1508,12 @@ void battle::frameCycle(void)
 
 
 				}
-				_vBattle[_vCreature[i].arrNum].sourX++;
+				
+				if (_vCreature[i].state == STATE_MOVE)
+				{
+					_vBattle[_vCreature[i].arrNum].sourX++;
+
+				}
 
 			}
 
@@ -1584,6 +1655,7 @@ void battle::frameCycle(void)
 					_vCreature[i].img[_vCreature[i].state]->getMaxFrameX())
 				{
 					_vCreature[i].state = STATE_IDLE;
+					_vBattle[_vCreature[i].arrNum].inAttack = 0;
 					_vBattle[_vCreature[i].arrNum].sourX = 0;
 					
 				}
@@ -1748,7 +1820,7 @@ void battle::attackSomeone(int x, int y)
 		_vCreature[x].state = STATE_DOWN;
 	}
 	_vBattle[attacker].sourX = 0;
-
+	_vBattle[attacker].inAttack = 30;
 }
 
 void battle::setTurn(void)
@@ -1762,6 +1834,9 @@ void battle::setTurn(void)
 			_battleArr[_vBattle[i].arrX - 1][_vBattle[i].arrY].unit = true;
 		
 		}
+		if (_vBattle[i].player) _vBattle[i].isRight = true;
+		else _vBattle[i].isRight = false;
+
 		
 	}
 	
@@ -1770,6 +1845,7 @@ void battle::setTurn(void)
 	{
 		//======== 그 다음턴 얘 설정
 		_vBattle[_vCreature[_currentCreature].arrNum].turn = false;
+
 	}
 
 	while(true)
@@ -1812,14 +1888,20 @@ void battle::setTurn(void)
 
 			if (getValueH(_vBattle[current].arrX, _vBattle[current].arrY, i, j) <= _vCreature[_currentCreature].speed)
 			{
-				
-				int size = getPath(_vBattle[_vCreature[_currentCreature].arrNum].arrX, _vBattle[_vCreature[_currentCreature].arrNum].arrY,
-					i, j, _vCreature[_currentCreature].fly).size();
+				vector<POINT> tmp;
+				tmp = getPath(_vBattle[_vCreature[_currentCreature].arrNum].arrX, _vBattle[_vCreature[_currentCreature].arrNum].arrY,
+					i, j, _vCreature[_currentCreature].fly);
+				int size = tmp.size();
+				if (size)
+				{
+					if (tmp[tmp.size() - 1].x != i || tmp[tmp.size() - 1].y != j)continue;
+
+				}
 
 				if (size <= _vCreature[_currentCreature].speed && !_battleArr[i][j].closed &&
 					(!_battleArr[i][j].unit || (_battleArr[i][j].unit && _vBattle[current].arrX == i && _vBattle[current].arrY == j)))
 				{
-					if (!_battleArr[i][j].unit) _battleArr[i][j].range = true;
+					_battleArr[i][j].range = true;
 					if (i == _vBattle[current].arrX && j == _vBattle[current].arrY) _battleArr[i][j].range = true;
 
 					if (_vCreature[_currentCreature].size == 2 && i == _vBattle[current].arrX -1&& j == _vBattle[current].arrY) _battleArr[i][j].range = true;
@@ -2067,6 +2149,12 @@ void battle::inputBattle(void)
 						_vBattle[_vCreature[_currentCreature].arrNum].arrY,
 						getMouseArr().x + tmp0, getMouseArr().y + tmp1, 
 						_vCreature[_currentCreature].fly);
+
+					int tmpx = getMouseArr().x;
+					int tmpy = getMouseArr().y;
+
+					vector<POINT> tmp;
+					tmp = getPath(9, 0, 9, 0,false);
 
 					if (_vPath.size() >= 1)
 					{

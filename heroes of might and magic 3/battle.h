@@ -91,6 +91,7 @@ struct tagBattleCreature
 	int sourY;				// ==== 프레임 y
 	int count;				// ==== 프레임 돌리는용
 	int attackTarget;		// ==== 누구 때림?
+	int inAttack;			// ==== 공격중
 
 	bool counter;			// ==== 반격했늬?
 	bool isRight;			// 어디 보고 있늬?
@@ -98,7 +99,7 @@ struct tagBattleCreature
 	bool turn;
 
 	bool operator<(const tagBattleCreature&v) const {
-		return (y< v.y);
+		return (y + inAttack < v.y + v.inAttack);
 	}
 
 };

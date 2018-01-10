@@ -24,9 +24,18 @@ HRESULT hero::init(POINT point, tagHero hero)
 	_currentMana = _maxMana;
 
 	//addCreature(_myHero.kind, 0, 0, 1);
-	//addCreature(_myHero.kind, 0, 0, 10);
 	//addCreature(_myHero.kind, 6, 1, 5, 3);
-	addCreature(_myHero.kind, 3, 1, 5);
+	addCreature(_myHero.kind, 6, 1, 5);
+	if (_myHero.kind == 0)
+	{
+		addCreature(_myHero.kind, 5, 1, 20);
+
+	}
+	else
+	{
+		addCreature(_myHero.kind, 4, 1, 20);
+
+	}
 	//addCreature(_myHero.kind, 5, 0, 1);
 	//addCreature(_myHero.kind, 6, 0, 3);
 

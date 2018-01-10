@@ -17,6 +17,7 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 
 	if (_battleArr[destX][destY].closed) return shortestPath;
 	
+	if (x == destX && y == destY) return shortestPath;
 
 	_openlist.clear();
 	_closelist.clear();
@@ -184,6 +185,22 @@ vector<POINT> battle::getPath(int x, int y, int destX, int destY, bool fly)
 
 			}
 		}
+
+		//for (int i = 0; i < _closelist.size(); i++)
+		//{
+		//	if (_closelist[i].nodeX == destX && _closelist[i].nodeY == destY)
+		//	{
+		//		end = true;
+		//		findPath = true;
+		//
+		//		point.x = _closelist[i].nodeX;
+		//		point.y = _closelist[i].nodeY;
+		//
+		//		shortestPath.push_back(point);
+		//
+		//		break;
+		//	}
+		//}
 
 
 		sort(_openlist.begin(), _openlist.end());
